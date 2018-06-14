@@ -35,8 +35,8 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import { menuIcon } from './my-icons.js';
-import './snack-bar.js';
+import { menuIcon } from './styles/my-icons.js';
+import './snack-bar/snack-bar.js';
 
 class MyApp extends connect(store)(LitElement) {
   _render({appTitle, _page, _narrowDrawer, _snackbarOpened, _offline}) {

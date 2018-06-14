@@ -4,7 +4,7 @@
       "type": "script",
       "weight": 1
     },
-    "src/components/my-view1.js": {
+    "src/components/module1/view1.js": {
       "type": "script",
       "weight": 1
     },
@@ -18,7 +18,7 @@
       "type": "script",
       "weight": 1
     },
-    "src/components/my-view1.js": {
+    "src/components/module1/view1.js": {
       "type": "script",
       "weight": 1
     },
@@ -32,7 +32,7 @@
       "type": "script",
       "weight": 1
     },
-    "src/components/my-view2.js": {
+    "src/components/module2/view2.js": {
       "type": "script",
       "weight": 1
     },
@@ -46,7 +46,7 @@
       "type": "script",
       "weight": 1
     },
-    "src/components/my-view3.js": {
+    "src/components/module3/view3.js": {
       "type": "script",
       "weight": 1
     },

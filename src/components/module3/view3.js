@@ -9,16 +9,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { html } from '@polymer/lit-element';
-import { PageViewElement } from './page-view-element.js';
+import { PageViewElement } from '../common/page-view-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 // This element is connected to the Redux store.
-import { store } from '../store.js';
+import { store } from '../../store.js';
 
 
 // These are the shared styles needed by this element.
-import { SharedStyles } from './shared-styles.js';
-import { ButtonSharedStyles } from './button-shared-styles.js';
+import { SharedStyles } from '../styles/shared-styles.js';
+import { ButtonSharedStyles } from '../styles/button-shared-styles.js';
 
 class MyView3 extends connect(store)(PageViewElement) {
   _render({_quantity, _error}) {
@@ -49,21 +49,6 @@ class MyView3 extends connect(store)(PageViewElement) {
           simulate where you would add failure handling). </p>
         <p>This view, as well as its 2 child elements, <code>&lt;shop-products&gt;</code> and
         <code>&lt;shop-cart&gt;</code> are connected to the Redux store.</p>
-      </section>
-      <section>
-        <h3>Products</h3>
-
-        <br>
-        <h3>Your Cart</h3>
-        <shop-cart></shop-cart>
-
-        <div>${_error}</div>
-        <br>
-        <p>
-          <button class="checkout" hidden="${_quantity < 0}">
-            Checkout
-          </button>
-        </p>
       </section>
     `;
   }

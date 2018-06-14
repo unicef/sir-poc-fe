@@ -9,10 +9,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { html } from '@polymer/lit-element';
-import { PageViewElement } from './common/page-view-element.js';
+import { PageViewElement } from '../common/page-view-element.js';
 
 // These are the shared styles needed by this element.
-import { SharedStyles } from './styles/shared-styles.js';
+import { SharedStyles } from '../styles/shared-styles.js';
 
 class MyView1 extends PageViewElement {
   _render(props) {

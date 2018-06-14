@@ -78,13 +78,13 @@ export const updateOffline = (offline) => (dispatch, getState) => {
 };
 
 export const updateLayout = (wide) => (dispatch, getState) => {
-  if (getState().app.drawerOpened) {
+  if (getState().app.narrowDrawer) {
     dispatch(updateDrawerState(false));
   }
 }
 
 export const updateDrawerState = (opened) => (dispatch, getState) => {
-  if (getState().app.drawerOpened !== opened) {
+  if (getState().app.narrowDrawer !== opened) {
     dispatch({
       type: UPDATE_DRAWER_STATE,
       opened

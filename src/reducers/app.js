@@ -16,7 +16,7 @@ import {
   UPDATE_DRAWER_STATE
 } from '../actions/app.js';
 
-const app = (state = {drawerOpened: false}, action) => {
+const app = (state = {narrowDrawer: false}, action) => {
   switch (action.type) {
     case UPDATE_PAGE:
       return {
@@ -31,7 +31,7 @@ const app = (state = {drawerOpened: false}, action) => {
     case UPDATE_DRAWER_STATE:
       return {
         ...state,
-        drawerOpened: action.opened
+        narrowDrawer: action.opened
       }
     case OPEN_SNACKBAR:
       return {

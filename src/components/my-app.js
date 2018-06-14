@@ -29,6 +29,8 @@ import {
 
 // These are the elements needed by this element.
 import '@polymer/app-layout/app-drawer/app-drawer.js';
+import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
+import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
@@ -36,184 +38,88 @@ import { menuIcon } from './my-icons.js';
 import './snack-bar.js';
 
 class MyApp extends connect(store)(LitElement) {
-  _render({appTitle, _page, _drawerOpened, _snackbarOpened, _offline}) {
+  _render({appTitle, _page, _narrowDrawer, _snackbarOpened, _offline}) {
     // Anything that's related to rendering should be done in here.
     return html`
     <style>
-      :host {
-        --app-drawer-width: 256px;
-        display: block;
+        :host {
+          --app-primary-color: #4285f4;
+          --app-secondary-color: black;
 
-        --app-primary-color: #E91E63;
-        --app-secondary-color: #293237;
-        --app-dark-text-color: var(--app-secondary-color);
-        --app-light-text-color: white;
-        --app-section-even-color: #f7f7f7;
-        --app-section-odd-color: white;
-
-        --app-header-background-color: white;
-        --app-header-text-color: var(--app-dark-text-color);
-        --app-header-selected-color: var(--app-primary-color);
-
-        --app-drawer-background-color: var(--app-secondary-color);
-        --app-drawer-text-color: var(--app-light-text-color);
-        --app-drawer-selected-color: #78909C;
-      }
-
-      app-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        background-color: var(--app-header-background-color);
-        color: var(--app-header-text-color);
-        border-bottom: 1px solid #eee;
-      }
-
-      .toolbar-top {
-        background-color: var(--app-header-background-color);
-      }
-
-      [main-title] {
-        font-family: 'Pacifico';
-        text-transform: lowercase;
-        font-size: 30px;
-        /* In the narrow layout, the toolbar is offset by the width of the
-        drawer button, and the text looks not centered. Add a padding to
-        match that button */
-        padding-right: 44px;
-      }
-
-      .toolbar-list {
-        display: none;
-      }
-
-      .toolbar-list > a {
-        display: inline-block;
-        color: var(--app-header-text-color);
-        text-decoration: none;
-        line-height: 30px;
-        padding: 4px 24px;
-      }
-
-      .toolbar-list > a[selected] {
-        color: var(--app-header-selected-color);
-        border-bottom: 4px solid var(--app-header-selected-color);
-      }
-
-      .menu-btn {
-        background: none;
-        border: none;
-        fill: var(--app-header-text-color);
-        cursor: pointer;
-        height: 44px;
-        width: 44px;
-      }
-
-      .drawer-list {
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
-        padding: 24px;
-        background: var(--app-drawer-background-color);
-        position: relative;
-      }
-
-      .drawer-list > a {
-        display: block;
-        text-decoration: none;
-        color: var(--app-drawer-text-color);
-        line-height: 40px;
-        padding: 0 24px;
-      }
-
-      .drawer-list > a[selected] {
-        color: var(--app-drawer-selected-color);
-      }
-
-      .main-content {
-        padding-top: 64px;
-        min-height: 100vh;
-      }
-
-      .page {
-        display: none;
-      }
-
-      .page[active] {
-        display: block;
-      }
-
-      footer {
-        padding: 24px;
-        background: var(--app-drawer-background-color);
-        color: var(--app-drawer-text-color);
-        text-align: center;
-      }
-
-      /* Wide layout: when the viewport width is bigger than 460px, layout
-      changes to a wide layout. */
-      @media (min-width: 460px) {
-        .toolbar-list {
           display: block;
         }
 
-        .menu-btn {
+        app-drawer-layout:not([narrow]) [drawer-toggle] {
           display: none;
         }
 
-        .main-content {
-          padding-top: 107px;
+        app-header {
+          color: #fff;
+          background-color: var(--app-primary-color);
         }
 
-        /* The drawer button isn't shown in the wide layout, so we don't
-        need to offset the title */
-        [main-title] {
-          padding-right: 0px;
+        app-header paper-icon-button {
+          --paper-icon-button-ink-color: white;
         }
-      }
-    </style>
 
-    <!-- Header -->
-    <app-header condenses reveals effects="waterfall">
-      <app-toolbar class="toolbar-top">
-        <button class="menu-btn" title="Menu" on-click="${_ => store.dispatch(updateDrawerState(true))}">${menuIcon}</button>
-        <div main-title>${appTitle}</div>
-      </app-toolbar>
+        .drawer-list {
+          margin: 0 20px;
+        }
 
-      <!-- This gets hidden on a small screen-->
-      <nav class="toolbar-list">
-        <a selected?="${_page === 'view1'}" href="/view1">View One</a>
-        <a selected?="${_page === 'view2'}" href="/view2">View Two</a>
-        <a selected?="${_page === 'view3'}" href="/view3">View Three</a>
-      </nav>
-    </app-header>
+        .drawer-list a {
+          display: block;
+          padding: 0 16px;
+          text-decoration: none;
+          color: var(--app-secondary-color);
+          line-height: 40px;
+        }
 
-    <!-- Drawer content -->
-    <app-drawer opened="${_drawerOpened}"
-        on-opened-changed="${e => store.dispatch(updateDrawerState(e.target.opened))}">
-      <nav class="drawer-list">
-        <a selected?="${_page === 'view1'}" href="/view1">View One</a>
-        <a selected?="${_page === 'view2'}" href="/view2">View Two</a>
-        <a selected?="${_page === 'view3'}" href="/view3">View Three</a>
-      </nav>
-    </app-drawer>
+        .drawer-list > a[selected] {
+          color: var(--app-drawer-selected-color);
+          font-weight: bold;
+        }
 
-    <!-- Main content -->
-    <main class="main-content">
-      <my-view1 class="page" active?="${_page === 'view1'}"></my-view1>
-      <my-view2 class="page" active?="${_page === 'view2'}"></my-view2>
-      <my-view3 class="page" active?="${_page === 'view3'}"></my-view3>
-      <my-view404 class="page" active?="${_page === 'view404'}"></my-view404>
-    </main>
+        footer {
+          padding: 24px;
+          background: var(--app-drawer-background-color);
+          color: var(--app-drawer-text-color);
+          text-align: center;
+        }
 
-    <footer>
-      <p>Made with &hearts; by the Polymer team.</p>
-    </footer>
+      </style>
 
-    <snack-bar active?="${_snackbarOpened}">
-        You are now ${_offline ? 'offline' : 'online'}.</snack-bar>
+      <app-drawer-layout fullbleed="" narrow="${_narrowDrawer}">
+        <!-- Drawer content -->
+        <app-drawer id="drawer" slot="drawer" swipe-open="${_narrowDrawer}">
+          <app-toolbar>Menu</app-toolbar>
+          <iron-selector class="drawer-list">
+            <a selected?="${_page === 'view1'}" href="/view1">View One</a>
+            <a selected?="${_page === 'view2'}" href="/view2">View Two</a>
+            <a selected?="${_page === 'view3'}" href="/view3">View Three</a>
+          </iron-selector>
+        </app-drawer>
+
+        <!-- Main content -->
+        <app-header-layout has-scrolling-region="">
+
+          <app-header slot="header" condenses="" reveals="" effects="waterfall">
+            <app-toolbar>
+              <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
+              <div main-title>${appTitle}</div>
+            </app-toolbar>
+          </app-header>
+
+          <main class="main-content">
+            <my-view1 class="page" active?="${_page === 'view1'}"></my-view1>
+            <my-view2 class="page" active?="${_page === 'view2'}"></my-view2>
+            <my-view3 class="page" active?="${_page === 'view3'}"></my-view3>
+            <my-view404 class="page" active?="${_page === 'view404'}"></my-view404>
+          </main>
+        </app-header-layout>
+      </app-drawer-layout>
+
+      <snack-bar active?="${_snackbarOpened}">
+          You are now ${_offline ? 'offline' : 'online'}.</snack-bar>
     `;
   }
 
@@ -221,7 +127,7 @@ class MyApp extends connect(store)(LitElement) {
     return {
       appTitle: String,
       _page: String,
-      _drawerOpened: Boolean,
+      _narrowDrawer: Boolean,
       _snackbarOpened: Boolean,
       _offline: Boolean
     }
@@ -256,7 +162,7 @@ class MyApp extends connect(store)(LitElement) {
     this._page = state.app.page;
     this._offline = state.app.offline;
     this._snackbarOpened = state.app.snackbarOpened;
-    this._drawerOpened = state.app.drawerOpened;
+    this._narrowDrawer = state.app.narrowDrawer;
   }
 }
 

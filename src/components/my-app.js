@@ -30,6 +30,7 @@ import {
 // These are the elements needed by this element.
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
+import '@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
@@ -46,6 +47,13 @@ class MyApp extends connect(store)(LitElement) {
           --app-primary-color: #4285f4;
           --app-secondary-color: black;
 
+          display: block;
+        }
+        .page {
+          display: none;
+        }
+
+        .page[active] {
           display: block;
         }
 
@@ -79,13 +87,6 @@ class MyApp extends connect(store)(LitElement) {
           font-weight: bold;
         }
 
-        footer {
-          padding: 24px;
-          background: var(--app-drawer-background-color);
-          color: var(--app-drawer-text-color);
-          text-align: center;
-        }
-
       </style>
 
       <app-drawer-layout fullbleed="" narrow="${_narrowDrawer}">
@@ -109,12 +110,12 @@ class MyApp extends connect(store)(LitElement) {
             </app-toolbar>
           </app-header>
 
-          <main class="main-content">
-            <my-view1 class="page" active?="${_page === 'view1'}"></my-view1>
-            <my-view2 class="page" active?="${_page === 'view2'}"></my-view2>
-            <my-view3 class="page" active?="${_page === 'view3'}"></my-view3>
-            <my-view404 class="page" active?="${_page === 'view404'}"></my-view404>
-          </main>
+        <main class="main-content">
+          <my-view1 class="page" active?="${_page === 'view1'}"></my-view1>
+          <my-view2 class="page" active?="${_page === 'view2'}"></my-view2>
+          <my-view3 class="page" active?="${_page === 'view3'}"></my-view3>
+          <my-view404 class="page" active?="${_page === 'view404'}"></my-view404>
+        </main>
         </app-header-layout>
       </app-drawer-layout>
 

@@ -15,18 +15,6 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 // This element is connected to the Redux store.
 import { store } from '../store.js';
 
-// These are the actions needed by this element.
-import { checkout } from '../actions/shop.js';
-
-// We are lazy loading its reducer.
-import shop, { cartQuantitySelector } from '../reducers/shop.js';
-store.addReducers({
-  shop
-});
-
-// These are the elements needed by this element.
-import './shop-products.js';
-import './shop-cart.js';
 
 // These are the shared styles needed by this element.
 import { SharedStyles } from './shared-styles.js';
@@ -64,7 +52,6 @@ class MyView3 extends connect(store)(PageViewElement) {
       </section>
       <section>
         <h3>Products</h3>
-        <shop-products></shop-products>
 
         <br>
         <h3>Your Cart</h3>
@@ -73,8 +60,7 @@ class MyView3 extends connect(store)(PageViewElement) {
         <div>${_error}</div>
         <br>
         <p>
-          <button class="checkout" hidden="${_quantity == 0}"
-              on-click="${() => store.dispatch(checkout())}">
+          <button class="checkout" hidden="${_quantity < 0}">
             Checkout
           </button>
         </p>
@@ -88,11 +74,10 @@ class MyView3 extends connect(store)(PageViewElement) {
     _error: String
   }}
 
-  // This is called every time something is updated in the store.
   _stateChanged(state) {
-    this._quantity = cartQuantitySelector(state);
-    this._error = state.shop.error;
+
   }
+
 }
 
 window.customElements.define('my-view3', MyView3);

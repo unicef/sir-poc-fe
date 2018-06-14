@@ -13,7 +13,7 @@ import { PageViewElement } from '../common/page-view-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 // This element is connected to the Redux store.
-import { store } from '../../store.js';
+import { store } from '../store.js';
 
 
 // These are the shared styles needed by this element.

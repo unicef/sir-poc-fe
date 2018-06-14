@@ -22,8 +22,5 @@ module.exports = {
       urlPattern: /^https:\/\/fonts.gstatic.com\//,
       handler: 'fastest'
     }
-  ],
-  importScripts: [
-    'service-worker-scripts.js'
   ]
 };

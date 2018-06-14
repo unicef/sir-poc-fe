@@ -60,11 +60,7 @@ export const addToCart = (productId) => (dispatch, getState) =>{
   // Just because the UI thinks you can add this to the cart
   // doesn't mean it's in the inventory (user could've fixed it);
   if (state.shop.products[productId].inventory > 0) {
-    // dispatch(addToCartUnsafe(productId));
-    navigator.serviceWorker.ready.then(function(swRegistration) {
-      console.log('registering myFirstSync');
-      return swRegistration.sync.register('myFirstSync');
-    });
+    dispatch(addToCartUnsafe(productId));
   }
 };
 

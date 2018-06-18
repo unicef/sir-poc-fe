@@ -2,7 +2,8 @@
 @license
 */
 
-import { html } from '@polymer/lit-element';
+import { html } from 'lit-html/lib/lit-extended.js';
+import { repeat } from 'lit-html/lib/repeat.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { PageViewElement } from '../common/page-view-element.js';
 import { store } from '../store.js';
@@ -35,10 +36,9 @@ class NewEventView extends connect(store)(PageViewElement) {
       </section>
       <section>
         <h5>Incidents</h5>
-
-        <template is="dom-repeat" items="{{incidents}}">
-          <incident-form incident="{{item}}"></incident-form>
-        </template>
+        ${repeat(this.incidents, (item) => item.id, (item, index) => html`
+          <incident-form incident="${item}"></incident-form>
+        `)}
         <p><button on-click="openIncidentForm">+ Add new incident </button></p>
       </section>
     `;

@@ -13,7 +13,7 @@ import { store } from '../store.js';
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
 
-class NewEventView extends PolymerElement {
+class AddEvent extends PolymerElement {
  static get template() {
     return html`
       <style include="shared-styles">
@@ -84,4 +84,4 @@ class NewEventView extends PolymerElement {
   }
 }
 
-window.customElements.define('new-event', NewEventView);
+window.customElements.define('add-event', AddEvent);

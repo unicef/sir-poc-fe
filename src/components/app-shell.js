@@ -105,7 +105,7 @@ class MyApp extends connect(store)(PolymerElement) {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="new-event" href="[[rootPath]]new-event">New Event</a>
+            <a name="add-event" href="[[rootPath]]add-event">New Event</a>
             <a name="view2" href="[[rootPath]]view2">View Two</a>
           </iron-selector>
         </app-drawer>
@@ -121,7 +121,7 @@ class MyApp extends connect(store)(PolymerElement) {
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <new-event name="new-event"></new-event>
+            <add-event name="add-event"></add-event>
             <my-view2 name="view2"></my-view2>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
@@ -164,8 +164,8 @@ class MyApp extends connect(store)(PolymerElement) {
      // If no page was found in the route data, page will be an empty string.
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      this.page = 'new-event';
-    } else if (['new-event', 'view2'].indexOf(page) !== -1) {
+      this.page = 'add-event';
+    } else if (['add-event', 'view2'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -191,8 +191,8 @@ class MyApp extends connect(store)(PolymerElement) {
     // Note: `polymer build` doesn't like string concatenation in the import
     // statement, so break it up.
     switch (page) {
-      case 'new-event':
-        import('./events-module/new-event.js');
+      case 'add-event':
+        import('./events-module/add-event.js');
         break;
       case 'view2':
         import('./incidents-module/my-view2.js');

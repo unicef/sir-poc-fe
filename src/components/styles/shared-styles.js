@@ -40,6 +40,9 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
         color: #212121;
         font-size: 22px;
       }
+      *[hidden] {
+        display: none;
+      }
     </style>
   </template>
 </dom-module>`;

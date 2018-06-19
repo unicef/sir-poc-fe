@@ -1,15 +1,30 @@
 /**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
+ * @license
+ * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+ */
 
-import { LitElement, html } from '@polymer/lit-element';
-import { setPassiveTouchGestures } from '@polymer/polymer/lib/utils/settings.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
+import '@polymer/app-layout/app-drawer/app-drawer.js';
+import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
+import '@polymer/app-layout/app-header/app-header.js';
+import '@polymer/app-layout/app-header-layout/app-header-layout.js';
+import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js';
+import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@polymer/app-route/app-location.js';
+import '@polymer/app-route/app-route.js';
+import '@polymer/iron-pages/iron-pages.js';
+import '@polymer/iron-selector/iron-selector.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import './common/my-icons.js';
+
+// basic stuff abole, PWA stuff below
+
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
@@ -26,34 +41,25 @@ import {
   updateDrawerState,
   updateLayout
 } from '../actions/app.js';
-
-// These are the elements needed by this element.
-import '@polymer/app-layout/app-drawer/app-drawer.js';
-import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
-import '@polymer/app-layout/app-header-layout/app-header-layout.js';
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import '@polymer/app-layout/app-header/app-header.js';
-import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import { menuIcon } from './styles/my-icons.js';
 import './snack-bar/snack-bar.js';
 
-class MyApp extends connect(store)(LitElement) {
-  _render({appTitle, _page, _narrowDrawer, _snackbarOpened, _offline}) {
-    // Anything that's related to rendering should be done in here.
+
+// Gesture events like tap and track generated from touch will not be
+// preventable, allowing for better scrolling performance.
+setPassiveTouchGestures(true);
+
+// Set Polymer's root path to the same value we passed to our service worker
+// in `index.html`.
+setRootPath(MyAppGlobals.rootPath);
+
+class MyApp extends connect(store)(PolymerElement) {
+  static get template() {
     return html`
-    <style>
+      <style>
         :host {
           --app-primary-color: #4285f4;
           --app-secondary-color: black;
 
-          display: block;
-        }
-        .page {
-          display: none;
-        }
-
-        .page[active] {
           display: block;
         }
 
@@ -82,21 +88,25 @@ class MyApp extends connect(store)(LitElement) {
           line-height: 40px;
         }
 
-        .drawer-list > a[selected] {
-          color: var(--app-drawer-selected-color);
+        .drawer-list a.iron-selected {
+          color: black;
           font-weight: bold;
         }
-
       </style>
 
-      <app-drawer-layout fullbleed="" narrow="${_narrowDrawer}">
+      <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
+      </app-location>
+
+      <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
+      </app-route>
+
+      <app-drawer-layout fullbleed="" narrow="{{narrow}}">
         <!-- Drawer content -->
-        <app-drawer id="drawer" slot="drawer" swipe-open="${_narrowDrawer}">
+        <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
-          <iron-selector class="drawer-list">
-            <a selected?="${_page === 'addEvent'}" href="/addEvent">View One</a>
-            <a selected?="${_page === 'view2'}" href="/view2">View Two</a>
-            <a selected?="${_page === 'view3'}" href="/view3">View Three</a>
+          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a name="new-event" href="[[rootPath]]new-event">New Event</a>
+            <a name="view2" href="[[rootPath]]view2">View Two</a>
           </iron-selector>
         </app-drawer>
 
@@ -106,64 +116,91 @@ class MyApp extends connect(store)(LitElement) {
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title>${appTitle}</div>
+              <div main-title="">My App</div>
             </app-toolbar>
           </app-header>
 
-        <main class="main-content">
-          <new-event class="page" active?="${_page === 'addEvent'}"></new-event>
-          <my-view2 class="page" active?="${_page === 'view2'}"></my-view2>
-          <my-view3 class="page" active?="${_page === 'view3'}"></my-view3>
-          <my-view404 class="page" active?="${_page === 'view404'}"></my-view404>
-        </main>
+          <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+            <new-event name="new-event"></new-event>
+            <my-view2 name="view2"></my-view2>
+            <my-view404 name="view404"></my-view404>
+          </iron-pages>
         </app-header-layout>
       </app-drawer-layout>
-
-      <snack-bar active?="${_snackbarOpened}">
-          You are now ${_offline ? 'offline' : 'online'}.</snack-bar>
     `;
   }
 
   static get properties() {
     return {
-      appTitle: String,
-      _page: String,
-      _narrowDrawer: Boolean,
-      _snackbarOpened: Boolean,
-      _offline: Boolean
-    }
+      page: {
+        type: String,
+        reflectToAttribute: true,
+        observer: '_pageChanged'
+      },
+      routeData: Object,
+      subroute: Object,
+      snackbarOpened: Boolean,
+      offline: Boolean
+    };
   }
 
-  constructor() {
-    super();
-    // To force all event listeners for gestures to be passive.
-    // See https://www.polymer-project.org/2.0/docs/devguide/gesture-events#use-passive-gesture-listeners
-    setPassiveTouchGestures(true);
+  static get observers() {
+    return [
+      '_routePageChanged(routeData.page)'
+    ];
   }
 
-  _firstRendered() {
-    installRouter((location) => store.dispatch(navigate(window.decodeURIComponent(location.pathname))));
+  connectedCallback() {
+    super.connectedCallback();
+    // installRouter((location) => store.dispatch(navigate(window.decodeURIComponent(location.pathname))));
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
     installMediaQueryWatcher(`(min-width: 460px)`,
         (matches) => store.dispatch(updateLayout(matches)));
   }
 
-  _didRender(properties, changeList) {
-    if ('_page' in changeList) {
-      const pageTitle = properties.appTitle + ' - ' + changeList._page;
-      updateMetadata({
-          title: pageTitle,
-          description: pageTitle
-          // This object also takes an image property, that points to an img src.
-      });
+  _routePageChanged(page) {
+     // Show the corresponding page according to the route.
+     //
+     // If no page was found in the route data, page will be an empty string.
+     // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
+    if (!page) {
+      this.page = 'new-event';
+    } else if (['new-event', 'view2'].indexOf(page) !== -1) {
+      this.page = page;
+    } else {
+      this.page = 'view404';
+    }
+
+    // Close a non-persistent drawer when the page & route are changed.
+    if (!this.$.drawer.persistent) {
+      this.$.drawer.close();
     }
   }
 
   _stateChanged(state) {
-    this._page = state.app.page;
-    this._offline = state.app.offline;
-    this._snackbarOpened = state.app.snackbarOpened;
-    this._narrowDrawer = state.app.narrowDrawer;
+    // this.page = state.app.page;
+    this.offline = state.app.offline;
+    this.snackbarOpened = state.app.snackbarOpened;
+    // this._narrowDrawer = state.app.narrowDrawer;
+    console.log('state changed:', state.app);
+  }
+
+  _pageChanged(page) {
+    // Import the page component on demand.
+    //
+    // Note: `polymer build` doesn't like string concatenation in the import
+    // statement, so break it up.
+    switch (page) {
+      case 'new-event':
+        import('./events-module/new-event.js');
+        break;
+      case 'view2':
+        import('./incidents-module/my-view2.js');
+        break;
+      case 'view404':
+        import('./non-found-module/404.js');
+        break;
+    }
   }
 }
 

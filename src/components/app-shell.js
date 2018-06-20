@@ -149,7 +149,6 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    // installRouter((location) => store.dispatch(navigate(window.decodeURIComponent(location.pathname))));
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
     installMediaQueryWatcher(`(min-width: 460px)`,
         (matches) => store.dispatch(updateLayout(matches)));
@@ -179,7 +178,6 @@ class MyApp extends connect(store)(PolymerElement) {
     this.offline = state.app.offline;
     this.snackbarOpened = state.app.snackbarOpened;
     // this._narrowDrawer = state.app.narrowDrawer;
-    console.log('state changed:', state.app);
   }
 
   _pageChanged(page) {

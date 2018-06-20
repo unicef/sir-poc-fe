@@ -65,9 +65,11 @@ class EventsController extends PolymerElement {
   pageIs(actualPage, expectedPage) {
     return actualPage === expectedPage;
   }
+
   navigateToList() {
     updatePath(this.route.prefix + '/list');
   }
+
   navigateToNew() {
     updatePath(this.route.prefix + '/new');
   }

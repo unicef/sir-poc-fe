@@ -17,13 +17,6 @@ export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
 //TODO: break this up into smaller files
 //TODO: add a sync data action when app is back online
 
-const updatePage = (page) => {
-  return {
-    type: UPDATE_PAGE,
-    page
-  };
-}
-
 let snackbarTimer;
 
 export const showSnackbar = () => (dispatch) => {

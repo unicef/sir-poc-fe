@@ -3,7 +3,7 @@
 */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { DomRepeat } from '@polymer/polymer/lib/elements/dom-repeat.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import { paperTextarea } from '@polymer/paper-input/paper-textarea.js';
 import { paperInput } from '@polymer/paper-input/paper-input.js';
@@ -13,7 +13,7 @@ import { store } from '../store.js';
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
 
-class AddEvent extends PolymerElement {
+class AddEvent extends connect(store)(PolymerElement) {
  static get template() {
     return html`
       <style include="shared-styles">
@@ -28,17 +28,17 @@ class AddEvent extends PolymerElement {
           <h2>Add new event</h2>
         </section>
         <section>
-          <paper-input label="Start date" type="date" on-value-changed="updateEventStartDate"></paper-input>
-          <paper-input label="End date" type="date" on-value-changed="updateEventEndDate"></paper-input>
+          <paper-input label="Start date" type="date" value="{{event.startDate}}"></paper-input>
+          <paper-input label="End date" type="date" value="{{event.endDate}}"></paper-input>
 
-          <paper-input label="Description" type="text" on-value-changed="updateEventDescription"></paper-input>
-          <paper-textarea label="Note" on-value-changed="updateEventNote"></paper-textarea>
-          <paper-input label="Location" type="text" on-value-changed="updateEventLocation"></paper-input>
+          <paper-input label="Description" type="text" value="{{event.description}}"></paper-input>
+          <paper-textarea label="Note" value="{{event.note}}"></paper-textarea>
+          <paper-input label="Location" type="text" value="{{event.location}}"></paper-input>
 
         </section>
         <section>
           <h5>Incidents</h5>
-          <p><button on-click="openIncidentForm">+ Add new incident </button></p>
+          <p><paper-button on-click="save"> Save </paper-button></p>
         </section>
       </div>
     `;
@@ -46,41 +46,16 @@ class AddEvent extends PolymerElement {
 
   static get properties() {
     return {
-      _incidentFormOpen: {
-        type: Boolean,
-        value: false
-      },
-      incidents: {
-        type: Array,
-        value: [
-          {expanded: true},
-          {expanded: true},
-          {expanded: true}
-        ]
-      }
+      event: Object,
+      value: {}
     };
   }
 
   _stateChanged(state) {
   }
 
-  updateEventStartDate(e) {
-    // console.log(e.detail.value);
-  }
-  updateEventEndDate(e) {
-    // console.log(e.detail.value);
-  }
-  updateEventDescription(e) {
-    // console.log(e.detail.value);
-  }
-  updateEventNote(e) {
-    // console.log(e.detail.value);
-  }
-  updateEventLocation(e) {
-    // console.log(e.detail.value);
-  }
-  openIncidentForm() {
-    this.push('incidents', {expanded: true});
+  save() {
+    console.log('save me to redux');
   }
 }
 

@@ -28,15 +28,12 @@ import './common/my-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-import { installRouter } from 'pwa-helpers/router.js';
 import { updateMetadata } from 'pwa-helpers/metadata.js';
-
 // This element is connected to the Redux store.
 import { store } from './store.js';
 
 // These are the actions needed by this element.
 import {
-  navigate,
   updateOffline,
   updateDrawerState,
   updateLayout
@@ -190,6 +187,7 @@ class MyApp extends connect(store)(PolymerElement) {
     //
     // Note: `polymer build` doesn't like string concatenation in the import
     // statement, so break it up.
+
     switch (page) {
       case 'events':
         import('./events-module/events-controller.js');
@@ -201,6 +199,7 @@ class MyApp extends connect(store)(PolymerElement) {
         import('./non-found-module/404.js');
         break;
     }
+    // dispatch(updateDrawerState(false));
   }
 }
 

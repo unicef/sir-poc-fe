@@ -9,6 +9,7 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { updatePath } from '../common/navigation-helper.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
 import '../styles/shared-styles.js';
@@ -22,8 +23,8 @@ class EventsController extends PolymerElement {
       </style>
 
       <div class="card">
-        <paper-button on-click="naviateToList" hidden="[[pageIs(page, 'list')]]">to list</paper-button>
-        <paper-button on-click="naviateToNew" hidden="[[pageIs(page, 'new')]]">to new</paper-button>
+        <paper-button on-click="navigateToList" hidden="[[pageIs(page, 'list')]]">to list</paper-button>
+        <paper-button on-click="navigateToNew" hidden="[[pageIs(page, 'new')]]">to new</paper-button>
       </div>
 
       <app-route
@@ -58,18 +59,17 @@ class EventsController extends PolymerElement {
   }
 
   routeChanged(section) {
-    console.log('section', section);
     this.set('page', section ? section : 'list');
   }
 
   pageIs(actualPage, expectedPage) {
     return actualPage === expectedPage;
   }
-  naviateToList() {
-    this.set('routeData.section', 'list');
+  navigateToList() {
+    updatePath(this.route.prefix + '/list');
   }
-  naviateToNew() {
-    this.set('routeData.section', 'new');
+  navigateToNew() {
+    updatePath(this.route.prefix + '/new');
   }
 
   pageChanged(page) {

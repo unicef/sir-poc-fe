@@ -18,11 +18,6 @@ import {
 
 const app = (state = {narrowDrawer: false}, action) => {
   switch (action.type) {
-    case UPDATE_PAGE:
-      return {
-        ...state,
-        page: action.page
-      };
     case UPDATE_OFFLINE:
       return {
         ...state,

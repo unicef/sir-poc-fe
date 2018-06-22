@@ -9,8 +9,8 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { ironList } from '@polymer/iron-list/iron-list.js';
 import 'etools-data-table/etools-data-table.js'
+import { makeRequest } from '../common/request-helper.js';
 import '../styles/shared-styles.js';
 
 class EventsList extends PolymerElement {
@@ -91,20 +91,27 @@ class EventsList extends PolymerElement {
 
   static get properties() {
     return {
+      getEventsEndpointName: {
+        type: String,
+        value: 'eventsList'
+      },
       events: {
         type: Object,
-        value: [{"startDate":"2018-06-02","endDate":"2018-06-15","description":"Event 1","location":"location 1","note":"event 1 note"},{"startDate":"2018-06-01","endDate":"2018-06-23","description":"desc2","note":"ev2","location":"loc2"}]
+        value: []
       }
     };
   }
 
-  getClassForItem() {
-    return '';
+  connectedCallback() {
+    super.connectedCallback();
+    makeRequest(this.getEventsEndpointName).then((result) => {
+      // console.log(result);
+      this.set('events', JSON.parse(result));
+    }).catch((e) => {
+      console.log('Huși, avem o problemă', e);
+    });
   }
 
-  iconForItem() {
-    return '';
-  }
 }
 
 window.customElements.define('events-list', EventsList);

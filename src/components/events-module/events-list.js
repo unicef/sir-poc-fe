@@ -105,10 +105,7 @@ class EventsList extends PolymerElement {
   connectedCallback() {
     super.connectedCallback();
     makeRequest(this.getEventsEndpointName).then((result) => {
-      // console.log(result);
       this.set('events', JSON.parse(result));
-    }).catch((e) => {
-      console.log('Huși, avem o problemă', e);
     });
   }
 

@@ -40,7 +40,6 @@ export const makeRequest = function(endpointName, data = {}) {
   let requestElem = getRequestElement();
 
   requestElem.send(reqConfig);
-  console.log('req config', reqConfig);
   return requestElem.completes.then(result => {
     return result.response;
   }).catch((error) => {

@@ -67,11 +67,11 @@ class EventsController extends PolymerElement {
   }
 
   navigateToList() {
-    updatePath(this.route.prefix + '/list');
+    updatePath('/events/list');
   }
 
   navigateToNew() {
-    updatePath(this.route.prefix + '/new');
+    updatePath('/events/new');
   }
 
   pageChanged(page) {

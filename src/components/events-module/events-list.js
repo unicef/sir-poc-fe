@@ -9,6 +9,8 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { ironList } from '@polymer/iron-list/iron-list.js';
+import 'etools-data-table/etools-data-table.js'
 import '../styles/shared-styles.js';
 
 class EventsList extends PolymerElement {
@@ -20,12 +22,88 @@ class EventsList extends PolymerElement {
 
           padding: 10px;
         }
+
+        .shortText, .longText {
+          font-size: 14px;
+        }
+
+        .longText {
+          color: gray;
+          display: none;
+        }
+
+        .col-4 {
+          flex: 0 0 33.333333%;
+          max-width: 33.333333%;
+        }
+
+        .col-6 {
+          flex: 0 0 50%;
+          max-width: 50%;
+        }
+
       </style>
 
       <div class="card">
-        <h1>Events list</h1>
+        <etools-data-table-header id="listHeader"
+                                  label="Some results to show">
+          <etools-data-table-column class="col-4" field="startDate" sortable="">
+            Start Date
+          </etools-data-table-column>
+          <etools-data-table-column class="col-4" field="endDate" sortable="">
+            End Date
+          </etools-data-table-column>
+          <etools-data-table-column class="col-4" field="location">
+            Location
+          </etools-data-table-column>
+        </etools-data-table-header>
+
+        <template id="rows" is="dom-repeat" items="[[events]]">
+          <etools-data-table-row>
+            <div slot="row-data" style="display:flex; flex-direction: row;">
+                <span class="col-4 ">
+                    [[item.startDate]]
+                </span>
+                <span class="col-4" title="[[item.endDate]]">
+                  <span class="truncate"> [[item.location]] </span>
+                </span>
+            </div>
+            <div slot="row-data-details">
+              <div class="col-6">
+                <span>description</span>
+                <span>[[item.description]]</span>
+              </div>
+              <div class="col-6">
+                <span>note</span>
+                <span>[[item.note]]</span>
+              </div>
+
+            </div>
+          </etools-data-table-row>
+        </template>
+
+        <etools-data-table-footer id="footer" page-size="[[pageSize]]" page-number="[[pageNumber]]"
+                                  total-results="[[totalResults]]" visible-range="{{visibleRange}}">
+        </etools-data-table-footer>
       </div>
     `;
+  }
+
+  static get properties() {
+    return {
+      events: {
+        type: Object,
+        value: [{"startDate":"2018-06-02","endDate":"2018-06-15","description":"Event 1","location":"location 1","note":"event 1 note"},{"startDate":"2018-06-01","endDate":"2018-06-23","description":"desc2","note":"ev2","location":"loc2"}]
+      }
+    };
+  }
+
+  getClassForItem() {
+    return '';
+  }
+
+  iconForItem() {
+    return '';
   }
 }
 

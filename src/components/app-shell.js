@@ -102,8 +102,8 @@ class MyApp extends connect(store)(PolymerElement) {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="events" href="[[rootPath]]events">New Event</a>
-            <a name="view2" href="[[rootPath]]view2">View Two</a>
+            <a name="events" href="[[rootPath]]events">Events</a>
+            <a name="incidents" href="[[rootPath]]incidents">Incidents</a>
           </iron-selector>
         </app-drawer>
 
@@ -119,7 +119,7 @@ class MyApp extends connect(store)(PolymerElement) {
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
             <events-controller name="events" route="{{subroute}}"></events-controller>
-            <my-view2 name="view2"></my-view2>
+            <incidents-controller name="incidents" route="{{subroute}}"></incidents-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>
@@ -161,7 +161,7 @@ class MyApp extends connect(store)(PolymerElement) {
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
       this.page = 'events';
-    } else if (['events', 'view2'].indexOf(page) !== -1) {
+    } else if (['events', 'incidents'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -190,8 +190,8 @@ class MyApp extends connect(store)(PolymerElement) {
       case 'events':
         import('./events-module/events-controller.js');
         break;
-      case 'view2':
-        import('./incidents-module/my-view2.js');
+      case 'incidents':
+        import('./incidents-module/incidents-controller.js');
         break;
       case 'view404':
         import('./non-found-module/404.js');

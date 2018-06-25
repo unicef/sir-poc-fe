@@ -91,7 +91,7 @@ class IncidentsList extends PolymerElement {
 
   static get properties() {
     return {
-      getIncidentsEndpointName: {
+      incidentsListEndpointName: {
         type: String,
         value: 'incidentsList'
       },
@@ -104,7 +104,7 @@ class IncidentsList extends PolymerElement {
 
   connectedCallback() {
     super.connectedCallback();
-    makeRequest(this.getIncidentsEndpointName).then((result) => {
+    makeRequest(this.incidentsListEndpointName).then((result) => {
       this.set('incidents', JSON.parse(result));
     });
   }

@@ -1,9 +1,30 @@
 import {
   ADD_NEW_EVENT
 } from '../actions/events.js';
-let mockEvents = [{"startDate":"2018-06-02","endDate":"2018-06-15","description":"Event 1","location":"location 1","note":"event 1 note"},{"startDate":"2018-06-01","endDate":"2018-06-23","description":"desc2","note":"ev2","location":"loc2"}];
+let testData = [
+              {
+                  "id": 1,
+                  "version": 1529926221198351,
+                  "last_modify_date": "2018-06-25T11:46:07.883205Z",
+                  "start_date": "2018-06-25",
+                  "end_date": "2018-06-25",
+                  "description": "Test desc 1",
+                  "note": "test note 1",
+                  "location": "test loc 1"
+              },
+              {
+                  "id": 2,
+                  "version": 1529926239395301,
+                  "last_modify_date": "2018-06-25T11:46:26.080126Z",
+                  "start_date": "2018-06-25",
+                  "end_date": "2018-06-25",
+                  "description": "test desc 2",
+                  "note": "test desc 2",
+                  "location": "test loc 2"
+              }
+        ];
 
-const events = (state = {events: [...mockEvents]}, action) => {
+const events = (state = {events: [...testData]}, action) => {
   switch (action.type) {
     case ADD_NEW_EVENT:
       return {

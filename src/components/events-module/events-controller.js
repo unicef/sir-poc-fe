@@ -10,11 +10,15 @@
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { makeRequest } from '../common/request-helper.js';
+import { loadEvents } from '../../actions/events.js';
+import { store } from '../store.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
 import '../styles/shared-styles.js';
 
-class EventsController extends PolymerElement {
+class EventsController extends connect(store)(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -47,7 +51,11 @@ class EventsController extends PolymerElement {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object
+      routeData: Object,
+      eventsListEndpointName: {
+        type: String,
+        value: 'eventsList'
+      },
     };
   }
 
@@ -56,6 +64,16 @@ class EventsController extends PolymerElement {
       'routeChanged(routeData.section)',
       'pageChanged(page)'
     ];
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    makeRequest(this.eventsListEndpointName).then((result) => {
+      store.dispatch(loadEvents(JSON.parse(result)));
+    });
+  }
+
+  _stateChanged(state) {
   }
 
   routeChanged(section) {

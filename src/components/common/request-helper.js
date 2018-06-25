@@ -2,24 +2,20 @@
 import '@polymer/iron-ajax/iron-request.js';
 import { Endpoints } from '../../config/endpoints.js';
 
-// import { makeRequest } from '../common/request-helper.js';
-
-
-let ironRequestElem;
+// let ironRequestElem;
 
 const createIronRequestElement = function() {
-  ironRequestElem = document.createElement('iron-request');
-  document.querySelector('body').appendChild(ironRequestElem);
+  let ironRequestElem = document.createElement('iron-request');
+  // document.querySelector('body').appendChild(ironRequestElem);
   return ironRequestElem;
 };
 
 const getRequestElement = function() {
-  return ironRequestElem || createIronRequestElement();
+  return createIronRequestElement();
 };
 
 const getRequestHeaders = function(withAuth) {
-  // jwt logic goes here
-  return null;
+  return {'content-type': 'application/json'};
 }
 
 const generateRequestConfigOptions = function(endpoint, data) {
@@ -28,9 +24,9 @@ const generateRequestConfigOptions = function(endpoint, data) {
       method: endpoint.method,
       async: false,
       handleAs: 'json',
-      headers: getRequestHeaders(endpoint.auth),
+      headers: getRequestHeaders(endpoint),
       body: data,
-      withCredentials: true
+      withCredentials: endpoint.auth
   };
   return config;
 };

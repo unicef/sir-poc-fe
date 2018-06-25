@@ -1,1 +1,40 @@
-[]
+[
+  {
+      "event": "1",
+
+      "incident_type": "2",
+      "incident_date": "2018-06-25",
+      "incident_time": "11:46:38",
+      "country": "3",
+      "region": "Region 1",
+      "city": "city 1",
+      "street": "street 1 ",
+      "on_duty": "on",
+      "injuries": "Injury 1 ",
+      "description": "decription 1 ",
+      "weapons_used": "4",
+      "reported": "on",
+      "reported_to": "police officer 1",
+      "responsible": "responsible party 1 ",
+      "note": "note 1 ",
+      "criticality": "1",
+      "vehicle_type": "1",
+      "crash_type": "5",
+      "impact": "3",
+      "contributing_factor": "3",
+
+      "eod_review_by": "1",
+      "eod_review_date": "2018-06-25",
+      "dhr_review_by": "1",
+      "dhr_review_date": "2018-06-25",
+      "dfam_review_by": "1",
+      "dfam_review_date": "2018-06-25",
+      "legal_review_by": "1",
+      "legal_review_date": "2018-06-25",
+
+      "last_modify_user": "1",
+      "primary_person": "1",
+      "submitted_by": "1",
+      "status": "submitted"
+    }
+]

@@ -8,6 +8,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { paperTextarea } from '@polymer/paper-input/paper-textarea.js';
 import { paperInput } from '@polymer/paper-input/paper-input.js';
 
+import { makeRequest } from '../common/request-helper.js';
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
 
@@ -27,8 +28,8 @@ class AddEvent extends connect(store)(PolymerElement) {
       <div class="card">
           <h2>Add new event</h2>
 
-          <paper-input label="Start date" type="date" value="{{event.startDate}}"></paper-input>
-          <paper-input label="End date" type="date" value="{{event.endDate}}"></paper-input>
+          <paper-input label="Start date" type="date" value="{{event.start_date}}"></paper-input>
+          <paper-input label="End date" type="date" value="{{event.end_date}}"></paper-input>
 
           <paper-input label="Description" type="text" value="{{event.description}}"></paper-input>
           <paper-textarea label="Note" value="{{event.note}}"></paper-textarea>
@@ -44,6 +45,10 @@ class AddEvent extends connect(store)(PolymerElement) {
       event: {
         type: Object,
         value: {}
+      },
+      addEventEndpointName: {
+        type: String,
+        value: 'newEvent'
       }
     };
   }
@@ -53,9 +58,10 @@ class AddEvent extends connect(store)(PolymerElement) {
   }
 
   save() {
-    // should this.event not be passed by reference?
-    store.dispatch(addEvent(this.event));
-    this.set('event', {});
+    makeRequest(this.addEventEndpointName, this.event).then((result) => {
+      store.dispatch(addEvent(this.event));
+      this.set('event', {});
+    });
   }
 }
 

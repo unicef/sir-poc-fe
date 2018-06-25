@@ -9,11 +9,13 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../store.js';
+
 import 'etools-data-table/etools-data-table.js'
-import { makeRequest } from '../common/request-helper.js';
 import '../styles/shared-styles.js';
 
-class EventsList extends PolymerElement {
+class EventsList extends connect(store)(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -45,13 +47,12 @@ class EventsList extends PolymerElement {
       </style>
 
       <div class="card">
-        <etools-data-table-header id="listHeader"
-                                  label="Some results to show">
-          <etools-data-table-column class="col-4" field="startDate" sortable="">
-            Start Date
+        <etools-data-table-header id="listHeader" label="Results">
+          <etools-data-table-column class="col-4" field="description" sortable="">
+            Description
           </etools-data-table-column>
-          <etools-data-table-column class="col-4" field="endDate" sortable="">
-            End Date
+          <etools-data-table-column class="col-4" field="start_date" sortable="">
+            Start date
           </etools-data-table-column>
           <etools-data-table-column class="col-4" field="location">
             Location
@@ -62,19 +63,22 @@ class EventsList extends PolymerElement {
           <etools-data-table-row>
             <div slot="row-data" style="display:flex; flex-direction: row;">
                 <span class="col-4 ">
-                    [[item.startDate]]
+                    [[item.description]]
                 </span>
-                <span class="col-4" title="[[item.endDate]]">
-                  <span class="truncate"> [[item.location]] </span>
+                <span class="col-4" title="[[item.start_date]]">
+                    [[item.start_date]]
+                </span>
+                <span class="col-4" title="[[item.location]]">
+                    [[item.location]]
                 </span>
             </div>
             <div slot="row-data-details">
               <div class="col-6">
-                <span>description</span>
+                <strong>Description: </strong>
                 <span>[[item.description]]</span>
               </div>
               <div class="col-6">
-                <span>note</span>
+                <strong>Note: </strong>
                 <span>[[item.note]]</span>
               </div>
 
@@ -91,10 +95,6 @@ class EventsList extends PolymerElement {
 
   static get properties() {
     return {
-      eventsListEndpointName: {
-        type: String,
-        value: 'eventsList'
-      },
       events: {
         type: Object,
         value: []
@@ -102,14 +102,9 @@ class EventsList extends PolymerElement {
     };
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    makeRequest(this.eventsListEndpointName).then((result) => {
-
-      this.set('events', JSON.parse(result));
-    });
+  _stateChanged(state) {
+    this.events = state.events.events;
   }
-
 }
 
 window.customElements.define('events-list', EventsList);

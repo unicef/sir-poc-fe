@@ -1,27 +1,31 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors');
+const http = require('http');
+const httpProxy = require('http-proxy');
 
 const app = express()
+const proxy = httpProxy.createProxyServer({});
 
-app.use(cors({
-    origin: 'https://test1.dantab.demo2.nordlogic.com',
-    credentials: false
-  }));
-
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
-app.post('/', (req, res) => {
-    console.log(req.body);
-    res.send({
-        status: 'ok',
-        body: req.body
-    });
+var server = http.createServer(function(req, res) {
+    if(req.url.match(new RegExp('^\/api\/'))) {
+      console.log('routing request to api');
+      proxy.web(req, res, { target: 'http://127.0.0.1:8000' });
+      return;
+    }
+    if(req.url.match(new RegExp('^\/admin\/'))) {
+      console.log('routing request to api');
+      proxy.web(req, res, { target: 'http://127.0.0.1:8000' });
+      return;
+    }
+    if(req.url.match(new RegExp('^\/static\/'))) {
+      console.log('routing request to api');
+      proxy.web(req, res, { target: 'http://127.0.0.1:8000' });
+      return;
+    }
+    console.log('routing request to FE');
+    proxy.web(req, res, { target: 'http://127.0.0.1:8081' });
 });
 
+console.log("listening on port 8082")
+server.listen(8082);
 
-app.listen(8082, (req, res) => {
-    console.log('Example app listening on port 8082!');
-});
+

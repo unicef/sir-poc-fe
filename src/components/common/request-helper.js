@@ -29,7 +29,8 @@ const generateRequestConfigOptions = function(endpoint, data) {
       async: false,
       handleAs: 'json',
       headers: getRequestHeaders(endpoint.auth),
-      body: data
+      body: data,
+      withCredentials: true
   };
   return config;
 };

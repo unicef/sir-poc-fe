@@ -1,82 +1,81 @@
 export const Endpoints = {
   eventsList: {
-    url: "http://127.0.0.1:8000/api/events/",
+    url: "http://localhost:8082/api/events/",
     method: 'GET',
     auth: true
   },
   newEvent: {
-    url: "http://127.0.0.1:8000/api/events/",
+    url: "http://localhost:8082/api/events/",
     method: 'POST',
     auth: true
   },
   incidentsList: {
-    url: "http://127.0.0.1:8000/api/incidents/",
+    url: "http://localhost:8082/api/incidents/",
     method: 'GET',
     auth: true
   },
   newIncident: {
-    url: "http://127.0.0.1:8000/api/incidents/",
-    method: 'GET',
+    url: "http://localhost:8082/api/incidents/",
+    method: 'POST',
     auth: true
   },
-
   regions: {
-    url: "http://127.0.0.1:8000/api/regions/",
+    url: "http://localhost:8082/api/regions/",
     method: 'GET',
     auth: true
   },
   countries: {
-    url: "http://127.0.0.1:8000/api/countries/",
+    url: "http://localhost:8082/api/countries/",
     method: 'GET',
     auth: true
   },
   teams: {
-    url: "http://127.0.0.1:8000/api/teams/",
+    url: "http://localhost:8082/api/teams/",
     method: 'GET',
     auth: true
   },
   users: {
-    url: "http://127.0.0.1:8000/api/users/",
+    url: "http://localhost:8082/api/users/",
     method: 'GET',
     auth: true
   },
   weapons: {
-    url: "http://127.0.0.1:8000/api/weapons/",
+    url: "http://localhost:8082/api/weapons/",
     method: 'GET',
     auth: true
   },
   criticalities: {
-    url: "http://127.0.0.1:8000/api/criticalities/",
+    url: "http://localhost:8082/api/criticalities/",
     method: 'GET',
     auth: true
   },
   vehicle_types: {
-    url: "http://127.0.0.1:8000/api/vehicle_types/",
+    url: "http://localhost:8082/api/vehicle_types/",
     method: 'GET',
     auth: true
   },
   crash_types: {
-    url: "http://127.0.0.1:8000/api/crash_types/",
+    url: "http://localhost:8082/api/crash_types/",
     method: 'GET',
     auth: true
   },
   impacts: {
-    url: "http://127.0.0.1:8000/api/impacts/",
+    url: "http://localhost:8082/api/impacts/",
     method: 'GET',
     auth: true
   },
   factors: {
-    url: "http://127.0.0.1:8000/api/factors/",
+    url: "http://localhost:8082/api/factors/",
     method: 'GET',
     auth: true
   },
   property_categories: {
-    url: "http://127.0.0.1:8000/api/property_categories/",
+    url: "http://localhost:8082/api/property_categories/",
     method: 'GET',
     auth: true
   },
   incident_types: {
-    url: "http://127.0.0.1:8000/api/incident_types/",
+    url: "http://localhost:8082/api/incident_types/",
     method: 'GET',
     auth: true
   }

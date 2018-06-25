@@ -1,27 +1,13 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors');
+var express = require('express');
+var proxy = require('http-proxy-middleware');
+var cors = require('cors');
 
-const app = express()
+var app = express();
 
-app.use(cors({
-    origin: 'https://test1.dantab.demo2.nordlogic.com',
-    credentials: false
-  }));
+// app.use(cors());
+app.use('/api', proxy({target: 'http://localhost:8000'}), cors());
+app.use('/admin', proxy({target: 'http://localhost:8000'}), cors());
+app.use('/static', proxy({target: 'http://localhost:8000'}), cors());
+app.use('/', proxy({target: 'http://localhost:8081'}), cors());
 
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
-app.post('/', (req, res) => {
-    console.log(req.body);
-    res.send({
-        status: 'ok',
-        body: req.body
-    });
-});
-
-
-app.listen(8082, (req, res) => {
-    console.log('Example app listening on port 8082!');
-});
+app.listen(8082);

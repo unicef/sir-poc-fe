@@ -8,10 +8,10 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { LitElement, html } from '@polymer/lit-element';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 
-class SnackBar extends LitElement {
-  _render(props) {
+class SnackBar extends PolymerElement {
+  static get template() {
     return html`
       <style>
       :host {

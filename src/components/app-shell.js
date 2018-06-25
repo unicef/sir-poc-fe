@@ -123,6 +123,10 @@ class MyApp extends connect(store)(PolymerElement) {
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>
+        <snack-bar active$="[[snackbarOpened]]">
+          <span hidden$="[[offline]]">You are now offline</span>
+          <span hidden$="[[!offline]]">You are now online</span>
+        </snack-bar>
       </app-drawer-layout>
     `;
   }
@@ -175,8 +179,8 @@ class MyApp extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     // this.page = state.app.page;
-    this.offline = state.app.offline;
-    this.snackbarOpened = state.app.snackbarOpened;
+    this.set('offline', state.app.offline);
+    this.set('snackbarOpened', state.app.snackbarOpened);
     // this._narrowDrawer = state.app.narrowDrawer;
   }
 

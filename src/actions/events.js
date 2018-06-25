@@ -17,4 +17,4 @@ export const loadEvents = (events) => (dispatch, getState) => {
     type: LOAD_EVENTS,
     events
   })
-}
+};

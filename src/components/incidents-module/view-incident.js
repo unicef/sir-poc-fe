@@ -29,7 +29,7 @@ class ViewIncident extends connect(store)(PolymerElement) {
         }
       </style>
       <div class="card">
-          <h2> View inciden t</h2>
+          <h2> View incident</h2>
           <h3> Primary Person data </h3>
 
           <paper-input readonly label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>

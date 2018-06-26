@@ -11,7 +11,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
 
-import 'etools-data-table/etools-data-table.js'
+import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
 
 class IncidentsList extends connect(store)(PolymerElement) {
@@ -20,17 +20,11 @@ class IncidentsList extends connect(store)(PolymerElement) {
       <style include="shared-styles">
         :host {
           display: block;
-
           padding: 10px;
         }
 
-        .shortText, .longText {
-          font-size: 14px;
-        }
-
-        .longText {
-          color: gray;
-          display: none;
+        a {
+          text-decoration: none;
         }
 
         .col-4 {

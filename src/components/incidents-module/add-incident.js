@@ -9,8 +9,6 @@ import '../common/simple-dropdown.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 
-import 'web-animations-js/web-animations-next-lite.min.js';
-
 import { addIncident } from '../../actions/incidents.js';
 import { makeRequest } from '../common/request-helper.js';
 import { store } from '../store.js';
@@ -135,7 +133,6 @@ class AddIncident extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.staticData = state.staticData;
-    console.log(state.events);
     this.events = state.events.events.map(elem => {
       elem.name = elem.description;
       return elem;

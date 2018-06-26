@@ -5,8 +5,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import { paperTextarea } from '@polymer/paper-input/paper-textarea.js';
-import { paperInput } from '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-input/paper-input.js';
 
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
@@ -40,21 +40,27 @@ class ViewEvent extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      state: Object,
       event: {
         type: Object,
         value: {}
       },
-      eventId: Number,
+      eventId: {
+        type: Number,
+        observer: '_idChanged'
+      },
       addEventEndpointName: {
         type: String,
         value: 'newEvent'
       }
     };
   }
-
-  _stateChanged(state) {
+  _idChanged(newId) {
     // TODO: fix ==
-    this.set('event', state.events.events.find(ev => ev.id == this.eventId ));
+     this.set('event', this.state.events.events.find(ev => ev.id == this.eventId ));
+  }
+  _stateChanged(state) {
+    this.state = state;
   }
 
 }

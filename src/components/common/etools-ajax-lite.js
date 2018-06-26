@@ -31,8 +31,7 @@ function _prepareResponse(response) {
  * @appliesMixin EtoolsLogsMixin
  * @demo demo/index.html
  */
-const EtoolsAjaxRequestMixin = dedupingMixin(
-    baseClass => class extends EtoolsLogsMixin(EtoolsAjaxDataMixin(EtoolsAjaxCacheMixin(baseClass))) {
+const EtoolsAjaxRequestMixin = dedupingMixin(baseClass => class extends baseClass {
       /* eslint-enable no-unused-vars */
 
       static get properties() {
@@ -74,27 +73,14 @@ const EtoolsAjaxRequestMixin = dedupingMixin(
         // prepare request config options
         let preparedConfigOptions = this._prepareConfigOptions(reqConfig);
         let reqConfigOptions = preparedConfigOptions.ironRequestOptions;
-        let cachingInfo = preparedConfigOptions.cachingInfo;
 
-        let self = this;
-        if (this._isViableForCaching(cachingInfo)) {
-          // we might have data cached; if cached data is available and not expired
-          // return it without making the request
-          return this.getEndpointDataFromCache(cachingInfo).then(function (response) {
-            if (!response) {
-              return self._doRequest(reqConfigOptions, cachingInfo, reqConfig.checkProgress, activeReqKey);
-            }
-            return response;
-          });
-        }
-        // make request
-        return this._doRequest(reqConfigOptions, cachingInfo, reqConfig.checkProgress, activeReqKey);
+        return this._doRequest(reqConfigOptions, reqConfig.checkProgress, activeReqKey);
       }
 
       /**
        * Fire new request
        */
-      _doRequest(reqConfigOptions, cachingInfo, checkProgress, activeReqKey) {
+      _doRequest(reqConfigOptions, checkProgress, activeReqKey) {
         let request = /** @type {!IronRequestElement} */ (document.createElement('iron-request'));
         this._checkRequestProgress(request, checkProgress);
         let self = this;
@@ -108,12 +94,6 @@ const EtoolsAjaxRequestMixin = dedupingMixin(
           if (reqConfigOptions.handleAs === 'json' && typeof responseData === 'string') {
             responseData = _prepareResponse(responseData);
           }
-
-          if (self._isViableForCaching(cachingInfo)) {
-            // add/cache response data into dexie db
-            return self.cacheEndpointData(responseData, cachingInfo);
-          }
-
           self._removeActiveRequestFromList(activeReqKey);
 
           return responseData;
@@ -181,14 +161,6 @@ const EtoolsAjaxRequestMixin = dedupingMixin(
         }
       }
 
-      _isViableForCaching(cachingInfo) {
-        if (window.EtoolsRequestCacheDisabled) {
-          return false;
-        }
-        return cachingInfo && cachingInfo.requestIsViableForCaching &&
-            this.cachingCanBeMade(cachingInfo.cacheTableName);
-      }
-
       _prepareConfigOptions(reqConfig) {
         return {
           ironRequestOptions: {
@@ -201,8 +173,7 @@ const EtoolsAjaxRequestMixin = dedupingMixin(
             jsonPrefix: reqConfig.jsonPrefix || '',
             withCredentials: !!reqConfig.withCredentials,
             timeout: reqConfig.timeout || 0
-          },
-          cachingInfo: this.getCachingInfo(reqConfig)
+          }
         };
       }
 
@@ -360,3 +331,5 @@ const EtoolsAjaxRequestMixin = dedupingMixin(
       }
 
     });
+
+export default EtoolsAjaxRequestMixin;

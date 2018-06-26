@@ -5,7 +5,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import '@polymer/paper-input/paper-textarea.js';
+// import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 
 import { updatePath } from '../common/navigation-helper.js';
@@ -33,7 +33,7 @@ class AddEvent extends connect(store)(PolymerElement) {
           <paper-input label="End date" type="date" value="{{event.end_date}}"></paper-input>
 
           <paper-input label="Description" type="text" value="{{event.description}}"></paper-input>
-          <paper-textarea label="Note" value="{{event.note}}"></paper-textarea>
+          <paper-input label="Note" type="text" value="{{event.note}}"></paper-input>
           <paper-input label="Location" type="text" value="{{event.location}}"></paper-input>
 
           <paper-button on-click="save"> Save </paper-button>

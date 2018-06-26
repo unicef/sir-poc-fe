@@ -5,10 +5,9 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import '@polymer/paper-input/paper-textarea.js';
+// import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 
-import { makeRequest } from '../common/request-helper.js';
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
 
@@ -32,7 +31,7 @@ class ViewEvent extends connect(store)(PolymerElement) {
           <paper-input label="End date" type="date" readonly value="{{event.end_date}}"></paper-input>
 
           <paper-input label="Description" type="text" readonly value="{{event.description}}"></paper-input>
-          <paper-textarea label="Note" readonly value="{{event.note}}"></paper-textarea>
+          <paper-input label="Note" readonly type="text" value="{{event.note}}"></paper-input>
           <paper-input label="Location" type="text" readonly value="{{event.location}}"></paper-input>
 
       </div>

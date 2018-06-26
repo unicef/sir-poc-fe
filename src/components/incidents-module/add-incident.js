@@ -9,8 +9,6 @@ import '../common/simple-dropdown.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 
-
-
 import 'web-animations-js/web-animations-next-lite.min.js';
 
 import { addIncident } from '../../actions/incidents.js';

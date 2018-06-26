@@ -33,7 +33,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
       <app-route
         route="{{route}}"
-        pattern="/:section"
+        pattern="/:section/:id"
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
@@ -41,7 +41,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <!-- <view-incident name="view" route="{{subroute}}"></view-incident> -->
+        <view-incident name="view" incident-id="[[routeData.id]]"></view-incident>
       </iron-pages>
     `;
   }
@@ -85,11 +85,11 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   navigateToList() {
-    updatePath('/incidents/list');
+    updatePath('/incidents/list/');
   }
 
   navigateToNew() {
-    updatePath('/incidents/new');
+    updatePath('/incidents/new/');
   }
 
   pageChanged(page) {
@@ -100,9 +100,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
       case 'new':
         import('./add-incident.js');
         break;
-      // case 'view':
-      //   import('view-incident.js');
-      //   break;
+      case 'view':
+        import('view-incident.js');
+        break;
       default:
         import('./incidents-list.js');
         break;

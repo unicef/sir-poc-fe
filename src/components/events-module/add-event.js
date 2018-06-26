@@ -5,8 +5,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import { paperTextarea } from '@polymer/paper-input/paper-textarea.js';
-import { paperInput } from '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-input/paper-input.js';
 
 import { makeRequest } from '../common/request-helper.js';
 import { addEvent } from '../../actions/events.js';

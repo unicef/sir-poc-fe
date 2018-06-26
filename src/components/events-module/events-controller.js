@@ -64,6 +64,7 @@ class EventsController extends connect(store)(PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
     makeRequest(this.eventsListEndpointName).then((result) => {
+      console.log(result);
       store.dispatch(loadEvents(JSON.parse(result)));
     });
   }

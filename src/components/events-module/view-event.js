@@ -8,7 +8,6 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { paperTextarea } from '@polymer/paper-input/paper-textarea.js';
 import { paperInput } from '@polymer/paper-input/paper-input.js';
 
-import { makeRequest } from '../common/request-helper.js';
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
 

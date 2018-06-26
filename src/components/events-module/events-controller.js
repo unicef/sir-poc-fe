@@ -11,7 +11,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { makeRequest } from '../common/request-helper.js';
 import { loadEvents } from '../../actions/events.js';
 import { store } from '../store.js';
 import '@polymer/paper-button/paper-button.js';
@@ -46,11 +45,7 @@ class EventsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object,
-      eventsListEndpointName: {
-        type: String,
-        value: 'eventsList'
-      },
+      routeData: Object
     };
   }
 
@@ -63,10 +58,7 @@ class EventsController extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    makeRequest(this.eventsListEndpointName).then((result) => {
-      console.log(result);
-      store.dispatch(loadEvents(JSON.parse(result)));
-    });
+    // list data loaded in static-data-loader.js
   }
 
   _stateChanged(state) {

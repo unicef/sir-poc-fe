@@ -49,12 +49,12 @@ export const Endpoints = {
     method: 'GET',
     auth: true
   },
-  vehicle_types: {
+  vehicleTypes: {
     url: "http://localhost:8082/api/vehicle_types/",
     method: 'GET',
     auth: true
   },
-  crash_types: {
+  crashTypes: {
     url: "http://localhost:8082/api/crash_types/",
     method: 'GET',
     auth: true
@@ -69,12 +69,12 @@ export const Endpoints = {
     method: 'GET',
     auth: true
   },
-  property_categories: {
+  propertyCategories: {
     url: "http://localhost:8082/api/property_categories/",
     method: 'GET',
     auth: true
   },
-  incident_types: {
+  incidentTypes: {
     url: "http://localhost:8082/api/incident_types/",
     method: 'GET',
     auth: true

@@ -5,7 +5,6 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/neon-animation/neon-animations.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import 'web-animations-js/web-animations-next-lite.min.js';
 
 class SimpleDropdown extends PolymerElement {
   static get template() {

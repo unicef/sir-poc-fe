@@ -12,7 +12,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
 
-import 'etools-data-table/etools-data-table.js'
+import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
 
 class EventsList extends connect(store)(PolymerElement) {

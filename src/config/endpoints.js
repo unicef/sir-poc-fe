@@ -1,4 +1,4 @@
-const baseUrl = "http://" + window.location.host
+const baseUrl = "http://" + window.location.host;
 export const Endpoints = {
   eventsList: {
     url: baseUrl + "/api/events/",
@@ -50,12 +50,12 @@ export const Endpoints = {
     method: 'GET',
     auth: true
   },
-  vehicle_types: {
+  vehicleTypes: {
     url: baseUrl + "/api/vehicle_types/",
     method: 'GET',
     auth: true
   },
-  crash_types: {
+  crashTypes: {
     url: baseUrl + "/api/crash_types/",
     method: 'GET',
     auth: true
@@ -70,12 +70,12 @@ export const Endpoints = {
     method: 'GET',
     auth: true
   },
-  property_categories: {
+  propertyCategories: {
     url: baseUrl + "/api/property_categories/",
     method: 'GET',
     auth: true
   },
-  incident_types: {
+  incidentTypes: {
     url: baseUrl + "/api/incident_types/",
     method: 'GET',
     auth: true

@@ -29,30 +29,10 @@ class CollapsibleMenu extends PolymerElement {
 
   static get properties() {
     return {
-      items: Array,
       label: String,
       opened: {
         type: Boolean,
-        value: true
-      },
-      readonly: {
-        type: Boolean,
-        value: false
-      },
-      selected: {
-        type: Number,
-        notify: true
-      },
-      selectedItem: Object
-    };
-  }
-
-  static get properties() {
-    return {
-      label: String,
-      opened: {
-        type: Boolean,
-        value: false,
+        value: true,
         notify: true
       }
     };

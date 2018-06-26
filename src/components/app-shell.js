@@ -31,15 +31,16 @@ import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
 import { updateMetadata } from 'pwa-helpers/metadata.js';
 // This element is connected to the Redux store.
+import './snack-bar/snack-bar.js';
 import { store } from './store.js';
 
+import { loadAllStaticData } from './data/static-data-loader.js';
 // These are the actions needed by this element.
 import {
   updateOffline,
   updateDrawerState,
   updateLayout
 } from '../actions/app.js';
-import './snack-bar/snack-bar.js';
 
 
 // Gesture events like tap and track generated from touch will not be
@@ -172,6 +173,8 @@ class MyApp extends connect(store)(PolymerElement) {
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
     installMediaQueryWatcher(`(min-width: 460px)`,
         (matches) => store.dispatch(updateLayout(matches)));
+
+    loadAllStaticData(store);
   }
 
   _routePageChanged(page) {

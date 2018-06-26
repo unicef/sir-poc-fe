@@ -26,11 +26,6 @@ class IncidentsController extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <div class="card">
-        <paper-button on-click="navigateToList" hidden="[[pageIs(page, 'list')]]">to list</paper-button>
-        <paper-button on-click="navigateToNew" hidden="[[pageIs(page, 'new')]]">to new</paper-button>
-      </div>
-
       <app-route
         route="{{route}}"
         pattern="/:section/:id"
@@ -82,14 +77,6 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   pageIs(actualPage, expectedPage) {
     return actualPage === expectedPage;
-  }
-
-  navigateToList() {
-    updatePath('/incidents/list/');
-  }
-
-  navigateToNew() {
-    updatePath('/incidents/new/');
   }
 
   pageChanged(page) {

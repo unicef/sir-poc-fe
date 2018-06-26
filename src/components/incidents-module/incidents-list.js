@@ -63,7 +63,7 @@ class IncidentsList extends connect(store)(PolymerElement) {
           <etools-data-table-row>
             <div slot="row-data" style="display:flex; flex-direction: row;">
                 <span class="col-4 ">
-                  [[item.primary_person.first_name]] [[item.primary_person.last_name]]
+                  <a href="/incidents/view/[[item.id]]"> [[item.primary_person.first_name]] [[item.primary_person.last_name]] </a>
                 </span>
                 <span class="col-4">
                   <span class="truncate"> [[item.city]] </span>

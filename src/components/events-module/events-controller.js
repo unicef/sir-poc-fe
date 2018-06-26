@@ -88,7 +88,7 @@ class EventsController extends connect(store)(PolymerElement) {
         import('./add-event.js');
         break;
       case 'view':
-        import('view-event.js');
+        import('./view-event.js');
         break;
       default:
         import('./events-list.js');

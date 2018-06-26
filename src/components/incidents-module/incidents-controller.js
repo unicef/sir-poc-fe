@@ -88,7 +88,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
         import('./add-incident.js');
         break;
       case 'view':
-        import('view-incident.js');
+        import('./view-incident.js');
         break;
       default:
         import('./incidents-list.js');

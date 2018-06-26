@@ -120,18 +120,25 @@ class ViewIncident extends connect(store)(PolymerElement) {
         type: Array,
         value: []
       },
-      incidentId: Number,
+      incidentId: {
+        type: Number,
+        observer: '_idChanged'
+      },
+      state: Object
     };
   }
 
   _stateChanged(state) {
+    this.state = state;
     this.staticData = state.staticData;
     this.events = state.events.events.map(elem => {
       elem.name = elem.description;
       return elem;
     });
+  }
+  _idChanged(newId) {
     // TODO: fix ==
-    this.set('incident', state.incidents.incidents.find(elem => elem.id == this.incidentId ));
+    this.set('incident', this.state.incidents.incidents.find(elem => elem.id == this.incidentId ));
   }
 
 }

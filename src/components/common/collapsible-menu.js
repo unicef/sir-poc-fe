@@ -31,6 +31,10 @@ class CollapsibleMenu extends PolymerElement {
     return {
       items: Array,
       label: String,
+      opened: {
+        type: Boolean,
+        value: true
+      },
       readonly: {
         type: Boolean,
         value: false

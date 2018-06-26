@@ -12,7 +12,6 @@ import '@polymer/paper-input/paper-textarea.js';
 import 'web-animations-js/web-animations-next-lite.min.js';
 
 import { addIncident } from '../../actions/incidents.js';
-import { makeRequest } from '../common/request-helper.js';
 import { store } from '../store.js';
 
 // These are the shared styles needed by this element.

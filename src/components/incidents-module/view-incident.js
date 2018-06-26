@@ -7,7 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/simple-dropdown.js';
 
 import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-input/paper-textarea.js';
+// import '@polymer/paper-input/paper-textarea.js';
 
 import { addIncident } from '../../actions/incidents.js';
 import { store } from '../store.js';
@@ -37,7 +37,7 @@ class ViewIncident extends connect(store)(PolymerElement) {
           <paper-input readonly label="UN Employer" type="text" value="{{incident.primary_person.un_employer}}"></paper-input>
           <paper-input readonly label="Job Title" type="text" value="{{incident.primary_person.job_title}}"></paper-input>
           <paper-input readonly label="Type of Contract" type="text" value="{{incident.primary_person.type_of_contract}}"></paper-input>
-          <paper-textarea readonly label="Contact info" value="{{incident.primary_person.contact}}"></paper-textarea>
+          <paper-input type="text" readonly label="Contact info" value="{{incident.primary_person.contact}}"></paper-input>
           <paper-input readonly label="Index number" type="number" value="{{incident.primary_person.index}}"></paper-input>
 
 
@@ -53,8 +53,8 @@ class ViewIncident extends connect(store)(PolymerElement) {
           <paper-input readonly label="Incident date" type="date" value="{{incident.incident_date}}"></paper-input>
           <paper-input readonly label="Incident time" type="time" value="{{incident.incident_time}}"></paper-input>
 
-          <paper-textarea readonly label="Injuries" value="{{incident.injuries}}"></paper-textarea>
-          <paper-textarea readonly label="Incident Description" value="{{incident.description}}"></paper-textarea>
+          <paper-input type="text" readonly label="Injuries" value="{{incident.injuries}}"></paper-input>
+          <paper-input type="text" readonly label="Incident Description" value="{{incident.description}}"></paper-input>
 
           <simple-dropdown readonly label="On Duty" items="[[onDuty]]" selected="{{incident.on_duty}}"></simple-dropdown>
           <simple-dropdown readonly label="Weapons used" items="[[staticData.weapons]]" selected="{{incident.weapons_used}}"></simple-dropdown>
@@ -63,7 +63,7 @@ class ViewIncident extends connect(store)(PolymerElement) {
           <paper-input readonly label="Reported to" type="text" value="{{incident.reported_to}}"></paper-input>
           <paper-input readonly label="Responsible party" type="text" value="{{incident.responsible}}"></paper-input>
 
-          <paper-textarea readonly label="Incident Note" value="{{incident.note}}"></paper-textarea>
+          <paper-input type="text" readonly label="Incident Note" value="{{incident.note}}"></paper-input>
 
           <simple-dropdown readonly label="Criticality" items="[[staticData.criticalities]]" selected="{{incident.criticality}}"></simple-dropdown>
           <simple-dropdown readonly label="Vehicle Type" items="[[staticData.vehicleTypes]]" selected="{{incident.vehicle_type}}"></simple-dropdown>

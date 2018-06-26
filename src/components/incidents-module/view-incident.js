@@ -91,19 +91,18 @@ class ViewIncident extends connect(store)(PolymerElement) {
           status: 'submitted'
         }
       },
-      staticData: Object,
       onDuty: {
         type: Array,
         value: [
-          {id: 'on', name: 'On Duty'},
-          {id: 'off', name: 'Off Duty'},
+          {id: true, name: 'On Duty'},
+          {id: false, name: 'Off Duty'},
         ]
       },
       reported: {
         type: Array,
         value: [
-          {id: 'on', name: 'Reported'},
-          {id: 'off', name: 'Not Reported'},
+          {id: true, name: 'Reported'},
+          {id: false, name: 'Not Reported'},
         ]
       },
       genders: {
@@ -121,6 +120,7 @@ class ViewIncident extends connect(store)(PolymerElement) {
         type: Number,
         observer: '_idChanged'
       },
+      staticData: Object,
       state: Object
     };
   }

@@ -38,7 +38,7 @@ class SimpleDropdown extends PolymerElement {
         value: false
       },
       selected: {
-        type: Number,
+        type: String,
         notify: true
       },
       selectedItem: Object
@@ -46,7 +46,7 @@ class SimpleDropdown extends PolymerElement {
   }
 
   static get observers() {
-    return ['findSelectedItem(readonly)'];
+    return ['findSelectedItem(readonly, items, items.length, selected)'];
   }
 
   findSelectedItem(readonly) {

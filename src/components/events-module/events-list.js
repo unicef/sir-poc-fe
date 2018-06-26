@@ -21,17 +21,11 @@ class EventsList extends connect(store)(PolymerElement) {
       <style include="shared-styles">
         :host {
           display: block;
-
           padding: 10px;
         }
 
-        .shortText, .longText {
-          font-size: 14px;
-        }
-
-        .longText {
-          color: gray;
-          display: none;
+        a {
+          text-decoration: none;
         }
 
         .col-4 {
@@ -63,7 +57,7 @@ class EventsList extends connect(store)(PolymerElement) {
           <etools-data-table-row>
             <div slot="row-data" style="display:flex; flex-direction: row;">
                 <span class="col-4 ">
-                    [[item.description]]
+                  <a href="/events/view/[[item.id]]"> [[item.description]] </a>
                 </span>
                 <span class="col-4" title="[[item.start_date]]">
                     [[item.start_date]]

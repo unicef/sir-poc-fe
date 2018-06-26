@@ -7,13 +7,14 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../store.js';
+
 import 'etools-data-table/etools-data-table.js'
-import { makeRequest } from '../common/request-helper.js';
 import '../styles/shared-styles.js';
 
-class IncidentsList extends PolymerElement {
+class IncidentsList extends connect(store)(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -47,14 +48,14 @@ class IncidentsList extends PolymerElement {
       <div class="card">
         <etools-data-table-header id="listHeader"
                                   label="Some results to show">
-          <etools-data-table-column class="col-4" field="startDate" sortable="">
-            Start Date
+          <etools-data-table-column class="col-4" field="">
+            Person involved
           </etools-data-table-column>
-          <etools-data-table-column class="col-4" field="endDate" sortable="">
-            End Date
+          <etools-data-table-column class="col-4" field="endDate">
+            City
           </etools-data-table-column>
           <etools-data-table-column class="col-4" field="location">
-            Location
+            Incident Type
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -62,19 +63,22 @@ class IncidentsList extends PolymerElement {
           <etools-data-table-row>
             <div slot="row-data" style="display:flex; flex-direction: row;">
                 <span class="col-4 ">
-                    [[item.startDate]]
+                  [[item.primary_person.first_name]] [[item.primary_person.last_name]]
                 </span>
-                <span class="col-4" title="[[item.endDate]]">
-                  <span class="truncate"> [[item.location]] </span>
+                <span class="col-4">
+                  <span class="truncate"> [[item.city]] </span>
+                </span>
+                <span class="col-4">
+                  <span class="truncate"> [[_getIncidentName(item.incident_type)]] </span>
                 </span>
             </div>
             <div slot="row-data-details">
               <div class="col-6">
-                <span>description</span>
+                <strong>Description:</strong>
                 <span>[[item.description]]</span>
               </div>
               <div class="col-6">
-                <span>note</span>
+                <strong>Note: </strong>
                 <span>[[item.note]]</span>
               </div>
 
@@ -91,24 +95,23 @@ class IncidentsList extends PolymerElement {
 
   static get properties() {
     return {
-      incidentsListEndpointName: {
-        type: String,
-        value: 'incidentsList'
-      },
       incidents: {
         type: Object,
         value: []
-      }
+      },
+      incidentTypes: Array
     };
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    makeRequest(this.incidentsListEndpointName).then((result) => {
-      this.set('incidents', JSON.parse(result));
-    });
+  _stateChanged(state) {
+    this.incidents = state.incidents.incidents;
+    this.incidentTypes = state.staticData.incidentTypes;
   }
 
+  _getIncidentName(incidentType) {
+    let incident = this.incidentTypes.find(e => e.id === incidentType) || {};
+    return incident.name || 'Not Specified';
+  }
 }
 
 window.customElements.define('incidents-list', IncidentsList);

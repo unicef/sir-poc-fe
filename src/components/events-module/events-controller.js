@@ -33,7 +33,7 @@ class EventsController extends connect(store)(PolymerElement) {
 
       <app-route
         route="{{route}}"
-        pattern="/:section"
+        pattern="/:section/:id"
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
@@ -41,7 +41,7 @@ class EventsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <events-list name="list"></events-list>
         <add-event name="new"></add-event>
-        <!-- <view-event name="view" route="{{subroute}}"></view-event> -->
+        <view-event name="view" event-id="[[routeData.id]]"></view-event>
       </iron-pages>
     `;
   }
@@ -85,11 +85,11 @@ class EventsController extends connect(store)(PolymerElement) {
   }
 
   navigateToList() {
-    updatePath('/events/list');
+    updatePath('/events/list/');
   }
 
   navigateToNew() {
-    updatePath('/events/new');
+    updatePath('/events/new/');
   }
 
   pageChanged(page) {
@@ -100,9 +100,9 @@ class EventsController extends connect(store)(PolymerElement) {
       case 'new':
         import('./add-event.js');
         break;
-      // case 'view':
-      //   import('view-event.js');
-      //   break;
+      case 'view':
+        import('view-event.js');
+        break;
       default:
         import('./events-list.js');
         break;

@@ -10,11 +10,15 @@
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { makeRequest } from '../common/request-helper.js';
+import { loadIncidents } from '../../actions/incidents.js';
+import { store } from '../store.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
 import '../styles/shared-styles.js';
 
-class IncidentsController extends PolymerElement {
+class IncidentsController extends connect(store)(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -29,7 +33,7 @@ class IncidentsController extends PolymerElement {
 
       <app-route
         route="{{route}}"
-        pattern="/:section"
+        pattern="/:section/:id"
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
@@ -37,7 +41,7 @@ class IncidentsController extends PolymerElement {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <!-- <view-incident name="view" route="{{subroute}}"></view-incident> -->
+        <view-incident name="view" incident-id="[[routeData.id]]"></view-incident>
       </iron-pages>
     `;
   }
@@ -47,7 +51,11 @@ class IncidentsController extends PolymerElement {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object
+      routeData: Object,
+      incidentsListEndpointName: {
+        type: String,
+        value: 'incidentsList'
+      }
     };
   }
 
@@ -56,6 +64,16 @@ class IncidentsController extends PolymerElement {
       'routeChanged(routeData.section)',
       'pageChanged(page)'
     ];
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    makeRequest(this.incidentsListEndpointName).then((result) => {
+      store.dispatch(loadIncidents(JSON.parse(result)));
+    });
+  }
+
+  _stateChanged(state) {
   }
 
   routeChanged(section) {
@@ -67,11 +85,11 @@ class IncidentsController extends PolymerElement {
   }
 
   navigateToList() {
-    updatePath('/incidents/list');
+    updatePath('/incidents/list/');
   }
 
   navigateToNew() {
-    updatePath('/incidents/new');
+    updatePath('/incidents/new/');
   }
 
   pageChanged(page) {
@@ -82,9 +100,9 @@ class IncidentsController extends PolymerElement {
       case 'new':
         import('./add-incident.js');
         break;
-      // case 'view':
-      //   import('view-incident.js');
-      //   break;
+      case 'view':
+        import('view-incident.js');
+        break;
       default:
         import('./incidents-list.js');
         break;

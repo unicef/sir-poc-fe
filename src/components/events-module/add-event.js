@@ -54,7 +54,6 @@ class AddEvent extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    // console.log('new state', state);
   }
 
   save() {

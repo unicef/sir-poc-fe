@@ -8,6 +8,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 
+import { updatePath } from '../common/navigation-helper.js';
 import { makeRequest } from '../common/request-helper.js';
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
@@ -57,9 +58,11 @@ class AddEvent extends connect(store)(PolymerElement) {
   }
 
   save() {
+
     makeRequest(this.addEventEndpointName, this.event).then((result) => {
-      store.dispatch(addEvent(this.event));
+      store.dispatch(addEvent(JSON.parse(result)));
       this.set('event', {});
+      updatePath('/events/list/');
     });
   }
 }

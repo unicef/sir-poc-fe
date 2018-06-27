@@ -19,10 +19,8 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/app-route/app-location.js';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
-import './common/collapsible-menu.js';
 
 // basic stuff above, PWA stuff below
 
@@ -78,13 +76,15 @@ class MyApp extends connect(store)(PolymerElement) {
         .drawer-list a {
           font-weight: normal;
           display: block;
-          padding: 0 16px;
+          padding: 0 32px;
           text-decoration: none;
           color: var(--app-secondary-color);
           line-height: 40px;
         }
-
-        collapsible-menu.iron-selected, a.iron-selected {
+        .drawer-list a.menu-heading {
+          padding: 0 24px;
+        }
+        a[selected] {
           color: black;
           font-weight: bold;
         }
@@ -101,23 +101,15 @@ class MyApp extends connect(store)(PolymerElement) {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
 
-          <iron-selector selected="[[page]] attr-for-selected="name" role="navigation">
+          <div class="drawer-list">
+            <a class="menu-heading" selected$="[[pathsMatch(page, 'events')]]" href="[[rootPath]]events/list/">Events</a>
+              <a selected$="[[pathsMatch(pagePath, 'events/list')]]" href="[[rootPath]]events/list/">Events List</a>
+              <a selected$="[[pathsMatch(pagePath, 'events/new')]]" href="[[rootPath]]events/new/">New Event</a>
 
-            <collapsible-menu label="Events" name="events">
-              <iron-selector selected="[[pagePath]]" attr-for-selected="path" class="drawer-list" role="navigation">
-                <a path="events/list" href="[[rootPath]]events/list/">Events List</a>
-                <a path="events/new" href="[[rootPath]]events/new/">New Event</a>
-              </iron-selector>
-            </collapsible-menu>
-
-            <collapsible-menu label="Incidents" name="incidents">
-              <iron-selector selected="[[pagePath]]" attr-for-selected="path" class="drawer-list" role="navigation">
-                <a path="incidents/list" href="[[rootPath]]incidents/list/">Incidents List</a>
-                <a path="incidents/new" href="[[rootPath]]incidents/new/">New Incident</a>
-              </iron-selector>
-
-            </collapsible-menu>
-          </iron-selector>
+            <a class="menu-heading" selected$="[[pathsMatch(page, 'incidents')]]" href="[[rootPath]]incidents/list/">Incidents</a>
+              <a selected$="[[pathsMatch(pagePath, 'incidents/list')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
+              <a selected$="[[pathsMatch(pagePath, 'incidents/new')]]" href="[[rootPath]]incidents/new/">New Incident</a>
+          </div>
 
         </app-drawer>
 
@@ -164,7 +156,7 @@ class MyApp extends connect(store)(PolymerElement) {
   static get observers() {
     return [
       '_routePageChanged(routeData.page)',
-      '_subrouteChanged(subroute.path)'
+      '_updateSubroutePath(subroute.path)'
     ];
   }
 
@@ -175,6 +167,10 @@ class MyApp extends connect(store)(PolymerElement) {
         (matches) => store.dispatch(updateLayout(matches)));
 
     loadAllStaticData(store);
+  }
+
+  pathsMatch(path1, path2) {
+    return path1 === path2;
   }
 
   _routePageChanged(page) {
@@ -190,13 +186,15 @@ class MyApp extends connect(store)(PolymerElement) {
       this.page = 'view404';
     }
 
+    this._updateSubroutePath(this.subroute.path)
+
     // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {
       this.$.drawer.close();
     }
   }
 
-  _subrouteChanged(section) {
+  _updateSubroutePath(section) {
     section = section.substring(1, section.length - 1);
     this.pagePath = this.page + '/' + section;
   }

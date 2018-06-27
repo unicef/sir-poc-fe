@@ -23,7 +23,6 @@
     "@polymer/iron-iconset-svg": "^3.0.0-pre.21",
     "@polymer/iron-media-query": "^3.0.0-pre.21",
     "@polymer/iron-pages": "^3.0.0-pre.21",
-    "@polymer/iron-selector": "^3.0.0-pre.21",
     "@polymer/neon-animation": "^3.0.0-pre.21",
     "@polymer/paper-button": "^3.0.0-pre.21",
     "@polymer/paper-dropdown-menu": "^3.0.0-pre.21",

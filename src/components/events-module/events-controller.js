@@ -84,11 +84,10 @@ class EventsController extends connect(store)(PolymerElement) {
         import('./view-event.js');
         break;
       default:
-        import('./events-list.js');
+        updatePath('/404/');
         break;
     }
   }
-
 }
 
 window.customElements.define('events-controller', EventsController);

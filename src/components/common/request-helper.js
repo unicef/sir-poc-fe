@@ -1,6 +1,5 @@
-
 import '@polymer/iron-ajax/iron-request.js';
-import { Endpoints } from '../../config/endpoints.js';
+import {Endpoints} from '../../config/endpoints.js';
 
 // let ironRequestElem;
 
@@ -15,14 +14,14 @@ const getRequestElement = function() {
 };
 
 const generateRequestConfigOptions = function(endpoint, data) {
-  let config =  {
-      url: endpoint.url,
-      method: endpoint.method,
-      async: false,
-      handleAs: 'json',
-      headers: _getRequestHeaders({}),
-      body: data,
-      withCredentials: endpoint.auth
+  let config = {
+    url: endpoint.url,
+    method: endpoint.method,
+    async: false,
+    handleAs: 'json',
+    headers: _getRequestHeaders({}),
+    body: data,
+    withCredentials: endpoint.auth
   };
   return config;
 };

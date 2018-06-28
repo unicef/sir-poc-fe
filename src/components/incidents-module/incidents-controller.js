@@ -92,7 +92,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
         import('./view-incident.js');
         break;
       default:
-        import('./incidents-list.js');
+        updatePath('/404/');
         break;
     }
   }

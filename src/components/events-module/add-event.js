@@ -14,6 +14,7 @@ import {addEvent} from '../../actions/events.js';
 import {store} from '../store.js';
 
 import '../common/errors-box.js';
+import { SirContentScrollMixin } from '../common/content-container-helper.js';
 
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
@@ -70,6 +71,7 @@ class AddEvent extends connect(store)(PolymerElement) {
       updatePath('/events/list/');
     }).catch((error) => {
       this.set('serverReceivedErrors', error.response);
+      this.scrollToTop();
     });
   }
 }

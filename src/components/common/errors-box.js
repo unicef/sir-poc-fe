@@ -1,7 +1,6 @@
 'use strict';
 
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -84,7 +83,7 @@ class ErrorsBox extends PolymerElement {
       preparedErrors: {
         type: Array,
         computed: '_prepareErrors(serverErrors, errors)',
-        observer: 'preparedErrorsChanged'
+        observer: '_preparedErrorsChanged'
       },
       serverErrors: {
         type: Object,
@@ -123,7 +122,7 @@ class ErrorsBox extends PolymerElement {
     });
   }
 
-  preparedErrorsChanged(errors) {
+  _preparedErrorsChanged(errors) {
     if (errors && errors instanceof Array && errors.length > 0) {
       this.classList.remove('hidden');
     } else {

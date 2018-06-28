@@ -11,7 +11,7 @@ import {
     LOAD_WEAPONS,
     LOAD_USERS,
     LOAD_TEAMS
-} from '../actions/static-data.js';
+} from '../actions/staticData.js';
 
 
 const defaultStaticData = {

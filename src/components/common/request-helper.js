@@ -27,6 +27,21 @@ const generateRequestConfigOptions = function(endpoint, data) {
   return config;
 };
 
+const _prepareResponse = function(response) {
+  try {
+    return JSON.parse(response);
+  } catch (e) {
+    return response;
+  }
+};
+
+const SirRequestError = function(error, statusCode, statusText, response) {
+  this.error = error;
+  this.status = statusCode;
+  this.statusText = statusText;
+  this.response = _prepareResponse(response);
+};
+
 export const makeRequest = function(endpointName, data = {}) {
   let endpoint = Endpoints[endpointName];
   let reqConfig = generateRequestConfigOptions(endpoint, data);
@@ -37,7 +52,7 @@ export const makeRequest = function(endpointName, data = {}) {
     return result.response;
   }).catch((error) => {
     // TODO: better error handling
-    console.log('request failed with error', error);
+    throw new SirRequestError(error, requestElem.xhr.status, requestElem.xhr.statusText, requestElem.xhr.response);
   });
 };
 
@@ -57,7 +72,7 @@ const _getCSRFCookie = () => {
     }
   }
   return csrfToken;
-}
+};
 
 const _getCsrfHeader = (csrfCheck) => {
   let csrfHeaders = {};
@@ -69,7 +84,7 @@ const _getCsrfHeader = (csrfCheck) => {
     }
   }
   return csrfHeaders;
-}
+};
 
 
 const _getRequestHeaders = (reqConfig) => {
@@ -95,7 +110,7 @@ const _getRequestHeaders = (reqConfig) => {
   }
 
   return headers;
-}
+};
 
 const _getClientConfiguredHeaders = (additionalHeaders) => {
   let header;
@@ -108,10 +123,10 @@ const _getClientConfiguredHeaders = (additionalHeaders) => {
     /* eslint-enable guard-for-in */
   }
   return clientHeaders;
-}
+};
 
 
 const _csrfSafeMethod = (method) => {
   // these HTTP methods do not require CSRF protection
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
+};

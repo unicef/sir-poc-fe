@@ -14,7 +14,7 @@ import {
   loadUsers,
   loadTeams
 } from '../../actions/static-data.js';
-import { Endpoints, ENDPOINTS_URL } from "../../config/endpoints.js";
+import { ENDPOINTS_URL } from "../../config/endpoints.js";
 
 const dataMapping = [
   {

@@ -13,7 +13,7 @@ import {
   loadWeapons,
   loadUsers,
   loadTeams
-} from '../../actions/staticData.js';
+} from '../../actions/static-data.js';
 
 const eventsListEndpointName =  'eventsList';
 const propertyCategoriesEndpointName = 'propertyCategories';

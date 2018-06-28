@@ -38,18 +38,3 @@ export const updateOffline = (offline) => (dispatch, getState) => {
     offline
   });
 };
-
-export const updateLayout = (wide) => (dispatch, getState) => {
-  if (getState().app.narrowDrawer) {
-    dispatch(updateDrawerState(false));
-  }
-}
-
-export const updateDrawerState = (opened) => (dispatch, getState) => {
-  if (getState().app.narrowDrawer !== opened) {
-    dispatch({
-      type: UPDATE_DRAWER_STATE,
-      opened
-    });
-  }
-}

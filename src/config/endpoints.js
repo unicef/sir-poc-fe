@@ -1,84 +1,69 @@
 const baseUrl = "http://" + window.location.host;
+
 export const Endpoints = {
   eventsList: {
     url: baseUrl + "/api/events/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   newEvent: {
     url: baseUrl + "/api/events/",
-    method: 'POST',
-    auth: true
+    method: 'POST'
   },
   incidentsList: {
     url: baseUrl + "/api/incidents/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   newIncident: {
     url: baseUrl + "/api/incidents/",
-    method: 'POST',
-    auth: true
+    method: 'POST'
   },
   regions: {
     url: baseUrl + "/api/regions/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   countries: {
     url: baseUrl + "/api/countries/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   teams: {
     url: baseUrl + "/api/teams/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   users: {
     url: baseUrl + "/api/users/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   weapons: {
     url: baseUrl + "/api/weapons/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   criticalities: {
     url: baseUrl + "/api/criticalities/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   vehicleTypes: {
     url: baseUrl + "/api/vehicle_types/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   crashTypes: {
     url: baseUrl + "/api/crash_types/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   impacts: {
     url: baseUrl + "/api/impacts/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   factors: {
     url: baseUrl + "/api/factors/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   propertyCategories: {
     url: baseUrl + "/api/property_categories/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   },
   incidentTypes: {
     url: baseUrl + "/api/incident_types/",
-    method: 'GET',
-    auth: true
+    method: 'GET'
   }
 
 };

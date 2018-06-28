@@ -1,17 +1,4 @@
-import {
-    LOAD_PROPERTY_CATEGORIES,
-    LOAD_INCIDENT_TYPES,
-    LOAD_CRITICALITIES,
-    LOAD_VEHICLE_TYPES,
-    LOAD_CRASH_TYPES,
-    LOAD_COUNTRIES,
-    LOAD_REGIONS,
-    LOAD_IMPACTS,
-    LOAD_FACTORS,
-    LOAD_WEAPONS,
-    LOAD_USERS,
-    LOAD_TEAMS
-} from '../actions/staticData.js';
+import * as ACTION_TYPES from '../actions/static-data.js';
 
 
 const defaultStaticData = {
@@ -30,62 +17,62 @@ const defaultStaticData = {
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
-    case LOAD_PROPERTY_CATEGORIES:
+    case ACTION_TYPES.LOAD_PROPERTY_CATEGORIES:
       return {
         ...state,
         propertyCategories: action.propertyCategories
       };
-    case LOAD_INCIDENT_TYPES:
+    case ACTION_TYPES.LOAD_INCIDENT_TYPES:
       return {
         ...state,
         incidentTypes: action.incidentTypes
       };
-    case LOAD_CRITICALITIES:
+    case ACTION_TYPES.LOAD_CRITICALITIES:
       return {
         ...state,
         criticalities: action.criticalities
       };
-    case LOAD_VEHICLE_TYPES:
+    case ACTION_TYPES.LOAD_VEHICLE_TYPES:
       return {
         ...state,
         vehicleTypes: action.vehicleTypes
       };
-    case LOAD_CRASH_TYPES:
+    case ACTION_TYPES.LOAD_CRASH_TYPES:
       return {
         ...state,
         crashTypes: action.crashTypes
       };
-    case LOAD_COUNTRIES:
+    case ACTION_TYPES.LOAD_COUNTRIES:
       return {
         ...state,
         countries: action.countries
       };
-    case LOAD_REGIONS:
+    case ACTION_TYPES.LOAD_REGIONS:
       return {
         ...state,
         regions: action.regions
       };
-    case LOAD_IMPACTS:
+    case ACTION_TYPES.LOAD_IMPACTS:
       return {
         ...state,
         impacts: action.impacts
       };
-    case LOAD_FACTORS:
+    case ACTION_TYPES.LOAD_FACTORS:
       return {
         ...state,
         factors: action.factors
       };
-    case LOAD_WEAPONS:
+    case ACTION_TYPES.LOAD_WEAPONS:
       return {
         ...state,
         weapons: action.weapons
       };
-    case LOAD_USERS:
+    case ACTION_TYPES.LOAD_USERS:
       return {
         ...state,
         users: action.users
       };
-    case LOAD_TEAMS:
+    case ACTION_TYPES.LOAD_TEAMS:
       return {
         ...state,
         teams: action.teams

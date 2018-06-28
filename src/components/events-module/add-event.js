@@ -1,24 +1,23 @@
 /**
- @license
- */
+@license
+*/
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 // import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 
-import {updatePath} from '../common/navigation-helper.js';
-import {EtoolsAjaxLite} from '../common/etools-ajax-lite';
-import {addEvent} from '../../actions/events.js';
-import {store} from '../store.js';
+import { updatePath } from '../common/navigation-helper.js';
+import { makeRequest } from '../common/request-helper.js';
+import { addEvent } from '../../actions/events.js';
+import { store } from '../store.js';
 
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
-import {ENDPOINTS_URL} from "../../config/endpoints";
 
 class AddEvent extends connect(store)(PolymerElement) {
-  static get template() {
+ static get template() {
     return html`
       <style include="shared-styles">
         :host {
@@ -47,6 +46,10 @@ class AddEvent extends connect(store)(PolymerElement) {
       event: {
         type: Object,
         value: {}
+      },
+      addEventEndpointName: {
+        type: String,
+        value: 'newEvent'
       }
     };
   }
@@ -55,12 +58,9 @@ class AddEvent extends connect(store)(PolymerElement) {
   }
 
   save() {
-    EtoolsAjaxLite.request({
-      url: ENDPOINTS_URL.EVENTS,
-      method: 'POST',
-      body: this.event
-    }).then((result) => {
-      store.dispatch(addEvent(result));
+
+    makeRequest(this.addEventEndpointName, this.event).then((result) => {
+      store.dispatch(addEvent(JSON.parse(result)));
       this.set('event', {});
       updatePath('/events/list/');
     });

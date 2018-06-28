@@ -11,12 +11,11 @@ import '@polymer/paper-input/paper-input.js';
 
 import { updatePath } from '../common/navigation-helper.js';
 import { addIncident } from '../../actions/incidents.js';
-import { EtoolsAjaxLite } from "../common/etools-ajax-lite";
+import { makeRequest } from '../common/request-helper.js';
 import { store } from '../store.js';
 
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
-import {ENDPOINTS_URL} from "../../config/endpoints";
 
 class AddIncident extends connect(store)(PolymerElement) {
   static get template() {
@@ -80,6 +79,10 @@ class AddIncident extends connect(store)(PolymerElement) {
           <paper-button on-click="save"> Save </paper-button>
       </div>
     `;
+    `
+          <paper-input label="Location" type="text" value="{{incident.location}}"></paper-input>
+          <paper-input type="text" label="Note" value="{{incident.note}}"></paper-input>
+    `;
   }
 /*
 
@@ -121,6 +124,10 @@ class AddIncident extends connect(store)(PolymerElement) {
       events: {
         type: Array,
         value: []
+      },
+      addIncidentEndpointName: {
+        type: String,
+        value: 'newIncident'
       }
     };
   }
@@ -134,12 +141,8 @@ class AddIncident extends connect(store)(PolymerElement) {
   }
 
   save() {
-    EtoolsAjaxLite.request({
-      url: ENDPOINTS_URL.INCIDENTS,
-      method: 'POST',
-      body: this.incident
-    }).then((result) => {
-      store.dispatch(addIncident(result));
+    makeRequest(this.addIncidentEndpointName, this.incident).then((result) => {
+      store.dispatch(addIncident(JSON.parse(result)));
       this.set('incident', {});
       updatePath('/incidents/list/');
     });

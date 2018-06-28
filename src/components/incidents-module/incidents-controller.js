@@ -11,14 +11,12 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import {EtoolsAjaxLite} from '../common/etools-ajax-lite';
+import { makeRequest } from '../common/request-helper.js';
 import { loadIncidents } from '../../actions/incidents.js';
 import { store } from '../store.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
 import '../styles/shared-styles.js';
-import {ENDPOINTS_URL} from "../../config/endpoints";
-import {addEvent} from "../../actions/events";
 
 class IncidentsController extends connect(store)(PolymerElement) {
   static get template() {
@@ -48,7 +46,11 @@ class IncidentsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object
+      routeData: Object,
+      incidentsListEndpointName: {
+        type: String,
+        value: 'incidentsList'
+      }
     };
   }
 
@@ -61,11 +63,8 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    EtoolsAjaxLite.request({
-      url: ENDPOINTS_URL.INCIDENTS,
-      method: 'GET'
-    }).then((result) => {
-      store.dispatch(loadIncidents(result));
+    makeRequest(this.incidentsListEndpointName).then((result) => {
+      store.dispatch(loadIncidents(JSON.parse(result)));
     });
   }
 

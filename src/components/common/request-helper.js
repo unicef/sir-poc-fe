@@ -1,6 +1,5 @@
 
 import '@polymer/iron-ajax/iron-request.js';
-import { Endpoints } from '../../config/endpoints.js';
 
 // let ironRequestElem;
 
@@ -27,8 +26,7 @@ const generateRequestConfigOptions = function(endpoint, data) {
   return config;
 };
 
-export const makeRequest = function(endpointName, data = {}) {
-  let endpoint = Endpoints[endpointName];
+export const makeRequest = function(endpoint, data = {}) {
   let reqConfig = generateRequestConfigOptions(endpoint, data);
   let requestElem = getRequestElement();
 

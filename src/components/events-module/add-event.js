@@ -12,6 +12,7 @@ import { updatePath } from '../common/navigation-helper.js';
 import { makeRequest } from '../common/request-helper.js';
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
+import { Endpoints } from '../../config/endpoints.js';
 
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
@@ -46,10 +47,6 @@ class AddEvent extends connect(store)(PolymerElement) {
       event: {
         type: Object,
         value: {}
-      },
-      addEventEndpointName: {
-        type: String,
-        value: 'newEvent'
       }
     };
   }
@@ -59,7 +56,7 @@ class AddEvent extends connect(store)(PolymerElement) {
 
   save() {
 
-    makeRequest(this.addEventEndpointName, this.event).then((result) => {
+    makeRequest(Endpoints.newEvent, this.event).then((result) => {
       store.dispatch(addEvent(JSON.parse(result)));
       this.set('event', {});
       updatePath('/events/list/');

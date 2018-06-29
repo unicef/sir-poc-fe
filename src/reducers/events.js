@@ -1,5 +1,5 @@
 import {
-  ADD_NEW_EVENT,
+  ADD_EVENT_SUCCESS,
   RECEIVE_EVENTS
 } from '../actions/events.js';
 
@@ -10,7 +10,7 @@ const events = (state = {events: []}, action) => {
         ...state,
         events: action.events
       };
-    case ADD_NEW_EVENT:
+    case ADD_EVENT_SUCCESS:
       return {
         ...state,
         events: [...state.events, action.newEvent]

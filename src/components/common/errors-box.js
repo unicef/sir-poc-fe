@@ -5,11 +5,14 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {store} from '../../components/store.js';
+
 /**
  * @customElement
  * @polymer
  */
-class ErrorsBox extends PolymerElement {
+class ErrorsBox extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
@@ -50,7 +53,7 @@ class ErrorsBox extends PolymerElement {
           color: #fff;
         }
       </style>
-      
+
       <div class="errors-box-header">
         [[errorsBoxTitle]]
       </div>
@@ -91,7 +94,7 @@ class ErrorsBox extends PolymerElement {
       }
     };
   }
-
+//TODO - why 2 errors?
   _prepareErrors(serverErrors, errors) {
     let errs = [];
     if (errors instanceof Array && errors.length > 0) {
@@ -128,6 +131,11 @@ class ErrorsBox extends PolymerElement {
     } else {
       this.classList.add('hidden');
     }
+  }
+
+  _stateChanged(state) {
+    if (!state) { return; }
+    this.serverErrors = state.errors.serverError;
   }
 
 }

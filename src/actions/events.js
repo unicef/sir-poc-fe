@@ -1,7 +1,10 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
+import {updatePath} from '../components/common/navigation-helper.js';
+import { serverError } from './errors';
+import { scrollToTop } from '../components/common/content-container-helper.js';
 
-export const ADD_NEW_EVENT = 'ADD_NEW_EVENT';
+export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
 
 
@@ -15,17 +18,26 @@ const receiveEvents = (events) => {
   return {
     type: RECEIVE_EVENTS,
     events
-  }
+  };
 }
 
 export const addEvent = (newEvent) => (dispatch, getState) => {
   if (getState().app.offline === false) {
     // try and send the data straight to the server maybe?
   }
-
-  dispatch({
-    type: ADD_NEW_EVENT,
-    newEvent
+  makeRequest(Endpoints.newEvent, newEvent).then((result) => {
+    dispatch(addEventSuccess(JSON.parse(result)));
+    updatePath('/events/list/');
+  }).catch((error) => {
+    dispatch(serverError(error))
+    scrollToTop();
   });
-};
+}
+
+const addEventSuccess = (newEvent) => {
+  return {
+    type: ADD_EVENT_SUCCESS,
+    newEvent
+  };
+}
 

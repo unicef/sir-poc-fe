@@ -209,7 +209,7 @@ class MyApp extends connect(store)(PolymerElement) {
     //
     // Note: `polymer build` doesn't like string concatenation in the import
     // statement, so break it up.
-
+    store.dispatch({type: 'CLEAR_ERRORS'});
     switch (page) {
       case 'events':
         import('./events-module/events-controller.js');

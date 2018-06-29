@@ -15,7 +15,7 @@ import { makeRequest } from '../common/request-helper.js';
 import { store } from '../store.js';
 
 import '../common/errors-box.js';
-import { SirContentScrollMixin } from '../common/content-container-helper.js';
+import { scrollToTop } from '../common/content-container-helper.js';
 
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
@@ -153,7 +153,7 @@ class AddIncident extends connect(store)(SirContentScrollMixin(PolymerElement)) 
       updatePath('/incidents/list/');
     }).catch((error) => {
       this.set('serverReceivedErrors', error.response);
-      this.scrollToTop();
+      scrollToTop();
     });
   }
 }

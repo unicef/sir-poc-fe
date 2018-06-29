@@ -13,6 +13,7 @@ import { updatePath } from '../common/navigation-helper.js';
 import { addIncident } from '../../actions/incidents.js';
 import { makeRequest } from '../common/request-helper.js';
 import { store } from '../store.js';
+import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/errors-box.js';
 import { scrollToTop } from '../common/content-container-helper.js';
@@ -130,10 +131,6 @@ class AddIncident extends connect(store)(PolymerElement) {
       events: {
         type: Array,
         value: []
-      },
-      addIncidentEndpointName: {
-        type: String,
-        value: 'newIncident'
       }
     };
   }
@@ -147,7 +144,7 @@ class AddIncident extends connect(store)(PolymerElement) {
   }
 
   save() {
-    makeRequest(this.addIncidentEndpointName, this.incident).then((result) => {
+    makeRequest(Endpoints.newIncident, this.incident).then((result) => {
       store.dispatch(addIncident(JSON.parse(result)));
       this.set('incident', {});
       updatePath('/incidents/list/');

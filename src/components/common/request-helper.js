@@ -1,6 +1,5 @@
 
 import '@polymer/iron-ajax/iron-request.js';
-import { Endpoints } from '../../config/endpoints.js';
 
 // let ironRequestElem;
 
@@ -27,6 +26,7 @@ const generateRequestConfigOptions = function(endpoint, data) {
   return config;
 };
 
+
 const _prepareResponse = function(response) {
   try {
     return JSON.parse(response);
@@ -42,8 +42,7 @@ const SirRequestError = function(error, statusCode, statusText, response) {
   this.response = _prepareResponse(response);
 };
 
-export const makeRequest = function(endpointName, data = {}) {
-  let endpoint = Endpoints[endpointName];
+export const makeRequest = function(endpoint, data = {}) {
   let reqConfig = generateRequestConfigOptions(endpoint, data);
   let requestElem = getRequestElement();
 

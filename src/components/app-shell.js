@@ -35,9 +35,7 @@ import { store } from './store.js';
 import { loadAllStaticData } from './data/static-data-loader.js';
 // These are the actions needed by this element.
 import {
-  updateOffline,
-  updateDrawerState,
-  updateLayout
+  updateOffline
 } from '../actions/app.js';
 
 
@@ -163,8 +161,6 @@ class MyApp extends connect(store)(PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
-    installMediaQueryWatcher(`(min-width: 460px)`,
-        (matches) => store.dispatch(updateLayout(matches)));
 
     loadAllStaticData(store);
   }
@@ -203,7 +199,6 @@ class MyApp extends connect(store)(PolymerElement) {
     // this.page = state.app.page;
     this.set('offline', state.app.offline);
     this.set('snackbarOpened', state.app.snackbarOpened);
-    // this._narrowDrawer = state.app.narrowDrawer;
   }
 
   _pageChanged(page) {
@@ -223,7 +218,6 @@ class MyApp extends connect(store)(PolymerElement) {
         import('./non-found-module/404.js');
         break;
     }
-    // dispatch(updateDrawerState(false));
   }
 }
 

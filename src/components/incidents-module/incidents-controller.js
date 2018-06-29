@@ -14,6 +14,8 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { makeRequest } from '../common/request-helper.js';
 import { loadIncidents } from '../../actions/incidents.js';
 import { store } from '../store.js';
+import { Endpoints } from '../../config/endpoints.js';
+
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
 import '../styles/shared-styles.js';
@@ -63,7 +65,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    makeRequest(this.incidentsListEndpointName).then((result) => {
+    makeRequest(Endpoints.incidentsList).then((result) => {
       store.dispatch(loadIncidents(JSON.parse(result)));
     });
   }

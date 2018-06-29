@@ -43,6 +43,14 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       *[hidden] {
         display: none;
       }
+      
+      .list {
+        padding-bottom: 36px;
+      }
+      
+      .search-input {
+        width: 400px;
+      }
     </style>
   </template>
 </dom-module>`;

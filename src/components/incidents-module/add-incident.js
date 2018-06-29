@@ -15,9 +15,16 @@ import { makeRequest } from '../common/request-helper.js';
 import { store } from '../store.js';
 import { Endpoints } from '../../config/endpoints.js';
 
+import '../common/errors-box.js';
+import { scrollToTop } from '../common/content-container-helper.js';
+
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
 
+/**
+ * @polymer
+ * @customElement
+ */
 class AddIncident extends connect(store)(PolymerElement) {
   static get template() {
     return html`
@@ -30,6 +37,9 @@ class AddIncident extends connect(store)(PolymerElement) {
       </style>
       <div class="card">
           <h2>Add new incident</h2>
+          
+          <errors-box server-errors="{{serverReceivedErrors}}"></errors-box>
+          
           <h3> Primary Person data </h3>
 
           <paper-input label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
@@ -79,10 +89,6 @@ class AddIncident extends connect(store)(PolymerElement) {
           <br><br>
           <paper-button on-click="save"> Save </paper-button>
       </div>
-    `;
-    `
-          <paper-input label="Location" type="text" value="{{incident.location}}"></paper-input>
-          <paper-input type="text" label="Note" value="{{incident.note}}"></paper-input>
     `;
   }
 /*
@@ -142,6 +148,9 @@ class AddIncident extends connect(store)(PolymerElement) {
       store.dispatch(addIncident(JSON.parse(result)));
       this.set('incident', {});
       updatePath('/incidents/list/');
+    }).catch((error) => {
+      this.set('serverReceivedErrors', error.response);
+      scrollToTop();
     });
   }
 }

@@ -17,8 +17,9 @@ import '../styles/shared-styles.js';
 
 class EventsList extends connect(store)(PolymerElement) {
   static get template() {
+    // language=HTML
     return html`
-      <style include="shared-styles">
+      <style include="shared-styles data-table-styles">
         :host {
           display: block;
           padding: 10px;
@@ -39,30 +40,38 @@ class EventsList extends connect(store)(PolymerElement) {
         }
 
       </style>
+      
+      <div class="card filters">
+        <paper-input class="search-input" 
+                     no-label-float placeholder="Search by Description or Location" 
+                     value="{{q}}">
+          <iron-icon icon="search" slot="prefix"></iron-icon>
+        </paper-input>
+      </div>
 
-      <div class="card">
-        <etools-data-table-header id="listHeader" label="Results">
-          <etools-data-table-column class="col-4" field="description" sortable="">
+      <div class="card list">
+        <etools-data-table-header id="listHeader" label="Events">
+          <etools-data-table-column class="col-4">
             Description
           </etools-data-table-column>
-          <etools-data-table-column class="col-4" field="start_date" sortable="">
+          <etools-data-table-column class="col-4">
             Start date
           </etools-data-table-column>
-          <etools-data-table-column class="col-4" field="location">
+          <etools-data-table-column class="col-4">
             Location
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[events]]">
+        <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
           <etools-data-table-row>
-            <div slot="row-data" style="display:flex; flex-direction: row;">
-                <span class="col-4 ">
+            <div slot="row-data">
+                <span class="col-data col-4">
                   <a href="/events/view/[[item.id]]"> [[item.description]] </a>
                 </span>
-                <span class="col-4" title="[[item.start_date]]">
+                <span class="col-data col-4" title="[[item.start_date]]">
                     [[item.start_date]]
                 </span>
-                <span class="col-4" title="[[item.location]]">
+                <span class="col-data col-4" title="[[item.location]]">
                     [[item.location]]
                 </span>
             </div>
@@ -81,7 +90,7 @@ class EventsList extends connect(store)(PolymerElement) {
         </template>
 
         <etools-data-table-footer id="footer" page-size="[[pageSize]]" page-number="[[pageNumber]]"
-                                  total-results="[[totalResults]]" visible-range="{{visibleRange}}">
+                                  total-results="[[events.length]]" visible-range="{{visibleRange}}">
         </etools-data-table-footer>
       </div>
     `;
@@ -92,12 +101,29 @@ class EventsList extends connect(store)(PolymerElement) {
       events: {
         type: Object,
         value: []
+      },
+      q: String,
+      filteredEvents: {
+        type: Array,
+        computed: '_filterData(events, q)'
       }
     };
   }
 
   _stateChanged(state) {
     this.events = state.events.events;
+  }
+
+  _filterData(events, q) {
+    let filteredEvents = events ? JSON.parse(JSON.stringify(events)) : [];
+    if (events instanceof Array && events.length > 0 && typeof q === 'string' && q !== '') {
+      filteredEvents = filteredEvents.filter(e => this._applyQFilter(e, q));
+    }
+    return filteredEvents;
+  }
+
+  _applyQFilter(e, q) {
+    return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
   }
 }
 

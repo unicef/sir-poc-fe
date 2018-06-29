@@ -16,62 +16,62 @@ const defaultStaticData = {
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
-    case ACTIONS.LOAD_PROPERTY_CATEGORIES:
+    case ACTIONS.RECEIVE_PROPERTY_CATEGORIES:
       return {
         ...state,
         propertyCategories: action.propertyCategories
       };
-    case ACTIONS.LOAD_INCIDENT_TYPES:
+    case ACTIONS.RECEIVE_INCIDENT_TYPES:
       return {
         ...state,
         incidentTypes: action.incidentTypes
       };
-    case ACTIONS.LOAD_CRITICALITIES:
+    case ACTIONS.RECEIVE_CRITICALITIES:
       return {
         ...state,
         criticalities: action.criticalities
       };
-    case ACTIONS.LOAD_VEHICLE_TYPES:
+    case ACTIONS.RECEIVE_VEHICLE_TYPES:
       return {
         ...state,
         vehicleTypes: action.vehicleTypes
       };
-    case ACTIONS.LOAD_CRASH_TYPES:
+    case ACTIONS.RECEIVE_CRASH_TYPES:
       return {
         ...state,
         crashTypes: action.crashTypes
       };
-    case ACTIONS.LOAD_COUNTRIES:
+    case ACTIONS.RECEIVE_COUNTRIES:
       return {
         ...state,
         countries: action.countries
       };
-    case ACTIONS.LOAD_REGIONS:
+    case ACTIONS.RECEIVE_REGIONS:
       return {
         ...state,
         regions: action.regions
       };
-    case ACTIONS.LOAD_IMPACTS:
+    case ACTIONS.RECEIVE_IMPACTS:
       return {
         ...state,
         impacts: action.impacts
       };
-    case ACTIONS.LOAD_FACTORS:
+    case ACTIONS.RECEIVE_FACTORS:
       return {
         ...state,
         factors: action.factors
       };
-    case ACTIONS.LOAD_WEAPONS:
+    case ACTIONS.RECEIVE_WEAPONS:
       return {
         ...state,
         weapons: action.weapons
       };
-    case ACTIONS.LOAD_USERS:
+    case ACTIONS.RECEIVE_USERS:
       return {
         ...state,
         users: action.users
       };
-    case ACTIONS.LOAD_TEAMS:
+    case ACTIONS.RECEIVE_TEAMS:
       return {
         ...state,
         teams: action.teams

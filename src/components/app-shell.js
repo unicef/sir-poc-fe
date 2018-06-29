@@ -196,6 +196,9 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
+    if (!state) {
+      return;
+    }
     // this.page = state.app.page;
     this.set('offline', state.app.offline);
     this.set('snackbarOpened', state.app.snackbarOpened);

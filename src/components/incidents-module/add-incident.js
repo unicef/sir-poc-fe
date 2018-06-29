@@ -24,7 +24,7 @@ import '../styles/shared-styles.js';
  * @polymer
  * @customElement
  */
-class AddIncident extends connect(store)(SirContentScrollMixin(PolymerElement)) {
+class AddIncident extends connect(store)(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles">

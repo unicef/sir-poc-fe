@@ -29,7 +29,7 @@ export const addEvent = (newEvent) => (dispatch, getState) => {
     dispatch(addEventSuccess(JSON.parse(result)));
     updatePath('/events/list/');
   }).catch((error) => {
-    dispatch(serverError(error))
+    dispatch(serverError(error.response));
     scrollToTop();
   });
 }

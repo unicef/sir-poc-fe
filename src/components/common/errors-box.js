@@ -7,6 +7,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store} from '../../components/store.js';
+import { clearErrors } from '../../actions/errors';
 
 /**
  * @customElement
@@ -123,6 +124,7 @@ class ErrorsBox extends connect(store)(PolymerElement) {
       errors: [],
       serverErrors: {}
     });
+    store.dispatch(clearErrors());
   }
 
   _preparedErrorsChanged(errors) {

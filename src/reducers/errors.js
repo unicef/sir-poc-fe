@@ -9,6 +9,8 @@ const errors = (state = {serverError: ''}, action) => {
     case CLEAR_ERRORS:
       return noErrors;
     case SERVER_ERROR:
+    case 'ADD_EVENT_FAIL':
+    case 'ADD_INCIDENT_FAIL':
       return {
         ...state,
         serverError: action.serverError

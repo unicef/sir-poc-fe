@@ -11,10 +11,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { makeRequest } from '../common/request-helper.js';
-import { loadIncidents } from '../../actions/incidents.js';
+import { fetchIncidents } from '../../actions/incidents.js';
 import { store } from '../store.js';
-import { Endpoints } from '../../config/endpoints.js';
 
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
@@ -48,11 +46,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object,
-      incidentsListEndpointName: {
-        type: String,
-        value: 'incidentsList'
-      }
+      routeData: Object
     };
   }
 
@@ -65,9 +59,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    makeRequest(Endpoints.incidentsList).then((result) => {
-      store.dispatch(loadIncidents(JSON.parse(result)));
-    });
+    store.dispatch(fetchIncidents());
   }
 
   _stateChanged(state) {

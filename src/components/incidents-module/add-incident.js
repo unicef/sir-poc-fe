@@ -9,14 +9,10 @@ import '../common/simple-dropdown.js';
 import '@polymer/paper-input/paper-input.js';
 // import '@polymer/paper-input/paper-textarea.js';
 
-import { updatePath } from '../common/navigation-helper.js';
 import { addIncident } from '../../actions/incidents.js';
-import { makeRequest } from '../common/request-helper.js';
 import { store } from '../store.js';
-import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/errors-box.js';
-import { scrollToTop } from '../common/content-container-helper.js';
 
 // These are the shared styles needed by this element.
 import '../styles/shared-styles.js';
@@ -37,9 +33,9 @@ class AddIncident extends connect(store)(PolymerElement) {
       </style>
       <div class="card">
           <h2>Add new incident</h2>
-          
+
           <errors-box server-errors="{{serverReceivedErrors}}"></errors-box>
-          
+
           <h3> Primary Person data </h3>
 
           <paper-input label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
@@ -144,14 +140,7 @@ class AddIncident extends connect(store)(PolymerElement) {
   }
 
   save() {
-    makeRequest(Endpoints.newIncident, this.incident).then((result) => {
-      store.dispatch(addIncident(JSON.parse(result)));
-      this.set('incident', {});
-      updatePath('/incidents/list/');
-    }).catch((error) => {
-      this.set('serverReceivedErrors', error.response);
-      scrollToTop();
-    });
+    store.dispatch(addIncident(this.incident));
   }
 }
 

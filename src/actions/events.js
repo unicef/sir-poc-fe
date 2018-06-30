@@ -5,6 +5,7 @@ import { serverError } from './errors';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 
 export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
+export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
 
 
@@ -29,7 +30,7 @@ export const addEvent = (newEvent) => (dispatch, getState) => {
     dispatch(addEventSuccess(JSON.parse(result)));
     updatePath('/events/list/');
   }).catch((error) => {
-    dispatch(serverError(error.response));
+    dispatch(addEventFail(error.response));
     scrollToTop();
   });
 }
@@ -38,6 +39,13 @@ const addEventSuccess = (newEvent) => {
   return {
     type: ADD_EVENT_SUCCESS,
     newEvent
+  };
+}
+
+const addEventFail = (serverError) => {
+  return {
+    type: ADD_EVENT_FAIL,
+    serverError
   };
 }
 

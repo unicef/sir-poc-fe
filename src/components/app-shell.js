@@ -30,7 +30,7 @@ import { installOfflineWatcher } from 'pwa-helpers/network.js';
 import { updateMetadata } from 'pwa-helpers/metadata.js';
 // This element is connected to the Redux store.
 import './snack-bar/snack-bar.js';
-import { store, persistor } from './store.js';
+import { store } from './store.js';
 
 import { loadAllStaticData } from './data/static-data-loader.js';
 // These are the actions needed by this element.
@@ -162,7 +162,7 @@ class MyApp extends connect(store)(PolymerElement) {
     super.connectedCallback();
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
 
-    setTimeout(loadAllStaticData.bind(null, store), 100);
+    loadAllStaticData(store);
   }
 
   pathsMatch(path1, path2) {
@@ -199,8 +199,7 @@ class MyApp extends connect(store)(PolymerElement) {
     if (!state) {
       return;
     }
-    console.log(state);
-    // this.page = state.app.page;
+
     this.set('offline', state.app.offline);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }

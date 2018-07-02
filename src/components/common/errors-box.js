@@ -95,7 +95,6 @@ class ErrorsBox extends connect(store)(PolymerElement) {
       }
     };
   }
-//TODO - why 2 errors?
   _prepareErrors(serverErrors, errors) {
     let errs = [];
     if (errors instanceof Array && errors.length > 0) {

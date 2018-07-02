@@ -42,8 +42,8 @@ class IncidentsList extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card filters">
-        <paper-input class="search-input" 
-                     no-label-float placeholder="Search by Person Involved, City or Description" 
+        <paper-input class="search-input"
+                     no-label-float placeholder="Search by Person Involved, City or Description"
                      value="{{q}}">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
@@ -115,6 +115,9 @@ class IncidentsList extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
+    if (!state) {
+      return;
+    }
     this.incidents = state.incidents.incidents;
     this.incidentTypes = state.staticData.incidentTypes;
   }

@@ -37,9 +37,9 @@ class AddIncident extends connect(store)(PolymerElement) {
       </style>
       <div class="card">
           <h2>Add new incident</h2>
-          
+
           <errors-box server-errors="{{serverReceivedErrors}}"></errors-box>
-          
+
           <h3> Primary Person data </h3>
 
           <paper-input label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
@@ -136,6 +136,9 @@ class AddIncident extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
+    if (!state) {
+      return;
+    }
     this.staticData = state.staticData;
     this.events = state.events.events.map(elem => {
       elem.name = elem.description;

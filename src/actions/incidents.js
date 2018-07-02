@@ -1,21 +1,49 @@
-export const ADD_NEW_INCIDENT = 'ADD_NEW_INCIDENT';
-export const LOAD_INCIDENTS = 'LOAD_INCIDENTS';
+import { makeRequest } from '../components/common/request-helper.js';
+import { Endpoints } from '../config/endpoints.js';
+import { scrollToTop } from '../components/common/content-container-helper.js';
+import {updatePath} from '../components/common/navigation-helper.js';
+
+export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
+export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
+export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
 
 export const addIncident = (newIncident) => (dispatch, getState) => {
   if (getState().app.offline === false) {
     // try and send the data straight to the server maybe?
   }
-
-  dispatch({
-    type: ADD_NEW_INCIDENT,
-    newIncident
+  makeRequest(Endpoints.newIncident, newIncident).then((result) => {
+    dispatch(addIncidentSuccess(JSON.parse(result)));
+    updatePath('/incidents/list/');
+  }).catch((error) => {
+    dispatch(addIncidentFail(error.response));
+    scrollToTop();
   });
+}
 
-};
+const addIncidentSuccess = (newIncident) => {
+  return {
+    type: ADD_INCIDENT_SUCCESS,
+    newIncident
+  };
+}
 
-export const loadIncidents = (incidents) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_INCIDENTS,
+const addIncidentFail = (serverError) => {
+  return {
+    type: ADD_INCIDENT_FAIL,
+    serverError
+  };
+}
+
+
+export const fetchIncidents = () => (dispatch, getState) => {
+  makeRequest(Endpoints.incidentsList).then((result) => {
+    dispatch(receiveIncidents(JSON.parse(result)));
+  });
+}
+
+const receiveIncidents = (incidents) => {
+  return {
+    type: RECEIVE_INCIDENTS,
     incidents
-  })
+  };
 }

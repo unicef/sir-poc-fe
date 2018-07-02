@@ -40,10 +40,10 @@ class EventsList extends connect(store)(PolymerElement) {
         }
 
       </style>
-      
+
       <div class="card filters">
-        <paper-input class="search-input" 
-                     no-label-float placeholder="Search by Description or Location" 
+        <paper-input class="search-input"
+                     no-label-float placeholder="Search by Description or Location"
                      value="{{q}}">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
@@ -111,6 +111,7 @@ class EventsList extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
+    if (!state) { return; }
     this.events = state.events.events;
   }
 

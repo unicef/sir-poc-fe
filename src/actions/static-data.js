@@ -1,97 +1,175 @@
-export const LOAD_PROPERTY_CATEGORIES = 'LOAD_PROPERTY_CATEGORIES';
-export const LOAD_INCIDENT_TYPES = 'LOAD_INCIDENT_TYPES';
-export const LOAD_CRITICALITIES = 'LOAD_CRITICALITIES';
-export const LOAD_VEHICLE_TYPES = 'LOAD_VEHICLE_TYPES';
-export const LOAD_CRASH_TYPES = 'LOAD_CRASH_TYPES';
-export const LOAD_COUNTRIES = 'LOAD_COUNTRIES';
-export const LOAD_REGIONS = 'LOAD_REGIONS';
-export const LOAD_IMPACTS = 'LOAD_IMPACTS';
-export const LOAD_FACTORS = 'LOAD_FACTORS';
-export const LOAD_WEAPONS = 'LOAD_WEAPONS';
-export const LOAD_USERS = 'LOAD_USERS';
-export const LOAD_TEAMS = 'LOAD_TEAMS';
+import { makeRequest } from '../components/common/request-helper.js';
+import { Endpoints } from '../config/endpoints.js';
 
-export const loadPropertyCategories = (propertyCategories) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_PROPERTY_CATEGORIES,
+export const RECEIVE_PROPERTY_CATEGORIES = 'RECEIVE_PROPERTY_CATEGORIES';
+export const RECEIVE_INCIDENT_TYPES = 'RECEIVE_INCIDENT_TYPES';
+export const RECEIVE_CRITICALITIES = 'RECEIVE_CRITICALITIES';
+export const RECEIVE_VEHICLE_TYPES = 'RECEIVE_VEHICLE_TYPES';
+export const RECEIVE_CRASH_TYPES = 'RECEIVE_CRASH_TYPES';
+export const RECEIVE_COUNTRIES = 'RECEIVE_COUNTRIES';
+export const RECEIVE_REGIONS = 'RECEIVE_REGIONS';
+export const RECEIVE_IMPACTS = 'RECEIVE_IMPACTS';
+export const RECEIVE_FACTORS = 'RECEIVE_FACTORS';
+export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';
+export const RECEIVE_USERS = 'RECEIVE_USERS';
+export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
+
+
+export const fetchAndStorePropertyCategories = () => (dispatch, getState) => {
+  makeRequest(Endpoints.propertyCategories).then(result => {
+    dispatch(receivePropertyCategories(JSON.parse(result)));
+  });
+};
+
+const receivePropertyCategories = (propertyCategories) => {
+  return {
+    type: RECEIVE_PROPERTY_CATEGORIES,
     propertyCategories
+  };
+};
+
+export const fetchAndStoreIncidentTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.incidentTypes).then(result => {
+    dispatch(receiveIncidentTypes(JSON.parse(result)));
   });
 };
 
-export const loadIncidentTypes = (incidentTypes) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_INCIDENT_TYPES,
+const receiveIncidentTypes = (incidentTypes) => {
+  return {
+    type: RECEIVE_INCIDENT_TYPES,
     incidentTypes
+  };
+};
+
+export const fetchAndStoreCriticalities = () => (dispatch, getState) => {
+  makeRequest(Endpoints.criticalities).then(result => {
+    dispatch(receiveCriticalities(JSON.parse(result)));
   });
 };
 
-export const loadCriticalities = (criticalities) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_CRITICALITIES,
+const receiveCriticalities = (criticalities) => {
+  return {
+    type: RECEIVE_CRITICALITIES,
     criticalities
+  };
+};
+
+export const fetchAndStoreVehicleTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.vehicleTypes).then(result => {
+    dispatch(receiveVehicleTypes(JSON.parse(result)));
   });
 };
 
-export const loadVehicleTypes = (vehicleTypes) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_VEHICLE_TYPES,
+const receiveVehicleTypes = (vehicleTypes) => {
+  return {
+    type: RECEIVE_VEHICLE_TYPES,
     vehicleTypes
+  };
+};
+
+export const fetchAndStoreCountries = () => (dispatch, getState) => {
+  makeRequest(Endpoints.countries).then(result => {
+    dispatch(receiveCountries(JSON.parse(result)));
   });
 };
 
-export const loadCrashTypes = (crashTypes) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_CRASH_TYPES,
-    crashTypes
-  });
-};
-
-export const loadCountries = (countries) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_COUNTRIES,
+const receiveCountries = (countries) => {
+  return {
+    type: RECEIVE_COUNTRIES,
     countries
+  };
+};
+
+export const fetchAndStoreRegions = () => (dispatch, getState) => {
+  makeRequest(Endpoints.regions).then(result => {
+    dispatch(receiveRegions(JSON.parse(result)));
   });
 };
 
-export const loadRegions = (regions) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_REGIONS,
+const receiveRegions = (regions) => {
+  return {
+    type: RECEIVE_REGIONS,
     regions
+  };
+};
+
+export const fetchAndStoreImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.impacts).then(result => {
+    dispatch(receiveImpacts(JSON.parse(result)));
   });
 };
 
-export const loadImpacts = (impacts) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_IMPACTS,
+const receiveImpacts = (impacts) => {
+  return {
+    type: RECEIVE_IMPACTS,
     impacts
+  };
+};
+
+export const fetchAndStoreFactors = () => (dispatch, getState) => {
+  makeRequest(Endpoints.factors).then(result => {
+    dispatch(receiveFactors(JSON.parse(result)));
   });
 };
 
-export const loadFactors = (factors) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_FACTORS,
+const receiveFactors = (factors) => {
+  return {
+    type: RECEIVE_FACTORS,
     factors
+  };
+};
+
+export const fetchAndStoreWeapons = () => (dispatch, getState) => {
+  makeRequest(Endpoints.weapons).then(result => {
+    dispatch(receiveWeapons(JSON.parse(result)));
   });
 };
 
-export const loadWeapons = (weapons) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_WEAPONS,
+const receiveWeapons = (weapons) => {
+  return {
+    type: RECEIVE_WEAPONS,
     weapons
+  };
+};
+
+export const fetchAndStoreUsers = () => (dispatch, getState) => {
+  makeRequest(Endpoints.users).then(result => {
+    dispatch(receiveUsers(JSON.parse(result)));
   });
 };
 
-export const loadUsers = (users) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_USERS,
+const receiveUsers = (users) => {
+  return {
+    type: RECEIVE_USERS,
     users
+  };
+};
+
+export const fetchAndStoreTeams = () => (dispatch, getState) => {
+  makeRequest(Endpoints.teams).then(result => {
+    dispatch(receiveTeams(JSON.parse(result)));
   });
 };
 
-export const loadTeams = (teams) => (dispatch, getState) => {
-  dispatch({
-    type: LOAD_TEAMS,
+const receiveTeams = (teams) => {
+  return {
+    type: RECEIVE_TEAMS,
     teams
+  };
+};
+
+export const fetchAndStoreCrashTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.crashTypes).then(result => {
+    dispatch(receiveCrashTypes(JSON.parse(result)));
   });
 };
+
+const receiveCrashTypes = (crashTypes) => {
+  return {
+    type: RECEIVE_CRASH_TYPES,
+    crashTypes
+  };
+};
+
+
 

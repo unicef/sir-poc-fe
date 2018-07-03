@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
 import '../common/errors-box.js';
 import { store } from '../store.js';
 import '../styles/shared-styles.js';
@@ -73,7 +74,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
           <template is="dom-if" if="[[!readonly]]">
             <br><br>
-            <paper-button on-click="save"> Save </paper-button>
+            <paper-button raised on-click="save"> Save </paper-button>
           </template>
       </div>
     `;

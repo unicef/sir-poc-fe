@@ -34,7 +34,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
           <paper-input label="Location" type="text" readonly="[[readonly]]" value="{{event.location}}"></paper-input>
 
           <template is="dom-if" if="[[!readonly]]">
-            <paper-button on-click="save"> Save </paper-button>
+            <paper-button raised on-click="save"> Save </paper-button>
           </template>
       </div>
     `;

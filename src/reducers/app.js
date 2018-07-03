@@ -13,10 +13,12 @@ import {
   UPDATE_OFFLINE,
   OPEN_SNACKBAR,
   CLOSE_SNACKBAR,
-  UPDATE_DRAWER_STATE
+  UPDATE_DRAWER_STATE,
+  UPDATE_MODULE,
+  UPDATE_SELECTED_ITEM_ID
 } from '../actions/app.js';
 
-const app = (state = {narrowDrawer: false}, action) => {
+const app = (state = {narrowDrawer: false, selectedModule: '', page: '', selectedItemId:''}, action) => {
   switch (action.type) {
     case UPDATE_OFFLINE:
       return {
@@ -37,6 +39,21 @@ const app = (state = {narrowDrawer: false}, action) => {
       return {
         ...state,
         snackbarOpened: false
+      };
+    case UPDATE_PAGE:
+      return {
+        ...state,
+        page: action.page
+      };
+    case UPDATE_MODULE:
+      return {
+        ...state,
+        selectedModule: action.selectedModule
+      };
+    case UPDATE_SELECTED_ITEM_ID:
+      return {
+        ...state,
+        selectedItemId: action.selectedItemId
       };
     default:
       return state;

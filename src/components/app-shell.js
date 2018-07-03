@@ -35,7 +35,8 @@ import { store } from './store.js';
 import { loadAllStaticData } from './data/static-data-loader.js';
 // These are the actions needed by this element.
 import {
-  updateOffline
+  updateOffline,
+  lazyLoadModules
 } from '../actions/app.js';
 
 
@@ -205,22 +206,8 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _pageChanged(page) {
-    // Import the page component on demand.
-    //
-    // Note: `polymer build` doesn't like string concatenation in the import
-    // statement, so break it up.
     store.dispatch({type: 'CLEAR_ERRORS'});
-    switch (page) {
-      case 'events':
-        import('./events-module/events-controller.js');
-        break;
-      case 'incidents':
-        import('./incidents-module/incidents-controller.js');
-        break;
-      case 'view404':
-        import('./non-found-module/404.js');
-        break;
-    }
+    store.dispatch(lazyLoadModules(page));
   }
 }
 

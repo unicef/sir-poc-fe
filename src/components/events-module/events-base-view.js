@@ -12,30 +12,57 @@ import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
 import '../common/errors-box.js';
 import '../styles/shared-styles.js';
+import '../styles/grid-layout-styles.js';
 
 export class EventsBaseView extends connect(store)(PolymerElement) {
  static get template() {
     return html`
-      <style include="shared-styles">
+      <style include="shared-styles grid-layout-styles">
         :host {
-          display: block;
-
+          @apply --layout-vertical;
+          width: 100%;
           padding: 10px;
+        }
+        paper-button {
+          margin: 0 24px;
+          padding: 8px;
         }
       </style>
       <div class="card">
+        <div class="row-h">
           <h2> [[title]] </h2>
+        </div>
+
+        <div class="row-h">
           <errors-box></errors-box>
-          <paper-input label="Start date" type="date" readonly="[[readonly]]" value="{{event.start_date}}"></paper-input>
-          <paper-input label="End date" type="date" readonly="[[readonly]]" value="{{event.end_date}}"></paper-input>
+        </div>
 
-          <paper-input label="Description" type="text" readonly="[[readonly]]" value="{{event.description}}"></paper-input>
-          <paper-input label="Note" readonly="[[readonly]]" type="text" value="{{event.note}}"></paper-input>
-          <paper-input label="Location" type="text" readonly="[[readonly]]" value="{{event.location}}"></paper-input>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <paper-input label="Start date" type="date" readonly="[[readonly]]" value="{{event.start_date}}"></paper-input>
+          </div>
+          <div class="col col-6">
+            <paper-input label="End date" type="date" readonly="[[readonly]]" value="{{event.end_date}}"></paper-input>
+          </div>
+        </div>
 
-          <template is="dom-if" if="[[!readonly]]">
-            <paper-button raised on-click="save"> Save </paper-button>
-          </template>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <paper-input label="Location" type="text" readonly="[[readonly]]" value="{{event.location}}"></paper-input>
+          </div>
+          <div class="col col-6">
+            <paper-input label="Note" readonly="[[readonly]]" type="text" value="{{event.note}}"></paper-input>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-input label="Description" type="text" readonly="[[readonly]]" value="{{event.description}}"></paper-input>
+          </div>
+        </div>
+
+        <template is="dom-if" if="[[!readonly]]">
+          <paper-button raised on-click="save"> Save </paper-button>
+        </template>
       </div>
     `;
   }

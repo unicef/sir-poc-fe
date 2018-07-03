@@ -4,7 +4,8 @@
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import '../common/simple-dropdown.js';
+import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
+import '../common/etools-dropdown/etools-dropdown-lite.js';
 
 import '@polymer/paper-input/paper-input.js';
 // import '@polymer/paper-input/paper-textarea.js';
@@ -32,7 +33,7 @@ class ViewIncident extends connect(store)(PolymerElement) {
           <paper-input readonly label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
           <paper-input readonly label="Last name" type="text" value="{{incident.primary_person.last_name}}"></paper-input>
           <paper-input readonly label="Date of birth" type="date" value="{{incident.primary_person.date_of_birth}}"></paper-input>
-          <simple-dropdown readonly label="Gender" items="[[genders]]" selected="{{incident.primary_person.gender}}"></simple-dropdown>
+          <etools-dropdown-lite readonly label="Gender" options="[[genders]]" selected="{{incident.primary_person.gender}}"></etools-dropdown-lite>
           <paper-input readonly label="Nationality" type="text" value="{{incident.primary_person.nationality}}"></paper-input>
           <paper-input readonly label="UN Employer" type="text" value="{{incident.primary_person.un_employer}}"></paper-input>
           <paper-input readonly label="Job Title" type="text" value="{{incident.primary_person.job_title}}"></paper-input>
@@ -42,9 +43,9 @@ class ViewIncident extends connect(store)(PolymerElement) {
 
 
           <h3> Incident details </h3>
-          <simple-dropdown readonly label="Event" items="[[events]]" selected="{{incident.event}}"></simple-dropdown>
-          <simple-dropdown readonly label="Incident Type" items="[[staticData.incidentTypes]]" selected="{{incident.incident_type}}"></simple-dropdown>
-          <simple-dropdown readonly label="Country" items="[[staticData.countries]]" selected="{{incident.country}}"></simple-dropdown>
+          <etools-dropdown-lite readonly label="Event" options="[[events]]" selected="{{incident.event}}"></etools-dropdown-lite>
+          <etools-dropdown-lite readonly label="Incident Type" options="[[staticData.incidentTypes]]" selected="{{incident.incident_type}}"></etools-dropdown-lite>
+          <etools-dropdown-lite readonly label="Country" options="[[staticData.countries]]" selected="{{incident.country}}"></etools-dropdown-lite>
 
           <paper-input readonly label="Region" type="text" value="{{incident.region}}"></paper-input>
           <paper-input readonly label="City" type="text" value="{{incident.city}}"></paper-input>
@@ -56,22 +57,22 @@ class ViewIncident extends connect(store)(PolymerElement) {
           <paper-input type="text" readonly label="Injuries" value="{{incident.injuries}}"></paper-input>
           <paper-input type="text" readonly label="Incident Description" value="{{incident.description}}"></paper-input>
 
-          <simple-dropdown readonly label="On Duty" items="[[onDuty]]" selected="{{incident.on_duty}}"></simple-dropdown>
-          <simple-dropdown readonly label="Weapons used" items="[[staticData.weapons]]" selected="{{incident.weapons_used}}"></simple-dropdown>
-          <simple-dropdown readonly label="Reported to police" items="[[reported]]" selected="{{incident.reported}}"></simple-dropdown>
+          <etools-dropdown-lite readonly label="On Duty" options="[[onDuty]]" selected="{{incident.on_duty}}"></etools-dropdown-lite>
+          <etools-dropdown-multi-lite readonly label="Weapons used" options="[[staticData.weapons]]" selected-values="{{incident.weapons_used}}"></etools-dropdown-multi-lite>
+          <etools-dropdown-lite readonly label="Reported to police" options="[[reported]]" selected="{{incident.reported}}"></etools-dropdown-lite>
 
           <paper-input readonly label="Reported to" type="text" value="{{incident.reported_to}}"></paper-input>
           <paper-input readonly label="Responsible party" type="text" value="{{incident.responsible}}"></paper-input>
 
           <paper-input type="text" readonly label="Incident Note" value="{{incident.note}}"></paper-input>
 
-          <simple-dropdown readonly label="Criticality" items="[[staticData.criticalities]]" selected="{{incident.criticality}}"></simple-dropdown>
-          <simple-dropdown readonly label="Vehicle Type" items="[[staticData.vehicleTypes]]" selected="{{incident.vehicle_type}}"></simple-dropdown>
-          <simple-dropdown readonly label="Crash Type" items="[[staticData.crashTypes]]" selected="{{incident.crash_type}}"></simple-dropdown>
+          <etools-dropdown-lite readonly label="Criticality" options="[[staticData.criticalities]]" selected="{{incident.criticality}}"></etools-dropdown-lite>
+          <etools-dropdown-lite readonly label="Vehicle Type" options="[[staticData.vehicleTypes]]" selected="{{incident.vehicle_type}}"></etools-dropdown-lite>
+          <etools-dropdown-lite readonly label="Crash Type" options="[[staticData.crashTypes]]" selected="{{incident.crash_type}}"></etools-dropdown-lite>
 
           <br>
-          <simple-dropdown readonly label="Impact" items="[[staticData.impacts]]" selected="{{incident.impact}}"></simple-dropdown>
-          <simple-dropdown readonly label="Contributing factor" items="[[staticData.factors]]" selected="{{incident.contributing_factor}}"></simple-dropdown>
+          <etools-dropdown-lite readonly label="Impact" options="[[staticData.impacts]]" selected="{{incident.impact}}"></etools-dropdown-lite>
+          <etools-dropdown-lite readonly label="Contributing factor" options="[[staticData.factors]]" selected="{{incident.contributing_factor}}"></etools-dropdown-lite>
 
       </div>
     `;

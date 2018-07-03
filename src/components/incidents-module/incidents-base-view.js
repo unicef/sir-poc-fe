@@ -25,7 +25,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           width: 100%;
         }
         paper-button {
-          margin: 0 24px;
+          margin: 8px 24px;
           padding: 8px;
         }
       </style>

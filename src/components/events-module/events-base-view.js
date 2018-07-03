@@ -24,7 +24,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
           padding: 10px;
         }
         paper-button {
-          margin: 0 24px;
+          margin: 8px 24px;
           padding: 8px;
         }
       </style>

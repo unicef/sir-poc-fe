@@ -48,7 +48,7 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       paper-button {
         background-color: var(--app-primary-color, #4285f4);
         --paper-button: {
-           color: var(--light-primary-text-color, #fff);
+          color: var(--light-primary-text-color, #fff);
           font-weight: bold;
           padding: 5px 10px;
         };

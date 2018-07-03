@@ -69,7 +69,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
-      state: Object,
       event: {
         type: Object,
         value: {}
@@ -90,8 +89,5 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
-  }
-
-  save() {
   }
 }

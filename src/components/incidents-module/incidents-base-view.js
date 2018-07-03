@@ -205,7 +205,4 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return elem;
     });
   }
-
-  save() {
-  }
 }

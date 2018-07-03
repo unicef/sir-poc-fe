@@ -42,8 +42,8 @@ class IncidentsList extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card filters">
-        <paper-input class="search-input" 
-                     no-label-float placeholder="Search by Person Involved, City or Description" 
+        <paper-input class="search-input"
+                     no-label-float placeholder="Search by Person Involved, City or Description"
                      value="{{q}}">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
@@ -92,8 +92,10 @@ class IncidentsList extends connect(store)(PolymerElement) {
           </etools-data-table-row>
         </template>
 
-        <etools-data-table-footer id="footer" page-size="[[pageSize]]" page-number="[[pageNumber]]"
-                                  total-results="[[incidents.length]]" visible-range="{{visibleRange}}">
+        <etools-data-table-footer id="footer" page-size="{{pagination.pageSize}}"
+                                  page-number="{{pagination.pageNumber}}"
+                                  total-results="[[pagination.totalResults]]"
+                                  visible-range="{{visibleRange}}">
         </etools-data-table-footer>
       </div>
     `;
@@ -105,11 +107,19 @@ class IncidentsList extends connect(store)(PolymerElement) {
         type: Object,
         value: []
       },
+      pagination: {
+        type: Object,
+        value: {
+          pageNumber: 1,
+          pageSize: 10,
+          totalResults: 0
+        }
+      },
       incidentTypes: Array,
       q: String,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, q)'
+        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber)'
       }
     };
   }
@@ -124,12 +134,26 @@ class IncidentsList extends connect(store)(PolymerElement) {
     return incident.name || 'Not Specified';
   }
 
-  _filterData(incidents, q) {
+  _filterData(incidents, q, pageSize, pageNumber) {
     let filteredIncidents = incidents ? JSON.parse(JSON.stringify(incidents)) : [];
     if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string' && q !== '') {
       filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
     }
-    return filteredIncidents;
+
+    return this._applyPagination(filteredIncidents);
+  }
+
+  _applyPagination(filteredIncidents) {
+    if (!filteredIncidents || ! filteredIncidents.length) {
+      this.set('pagination.totalResults', 0);
+      return [];
+    }
+    this.set('pagination.totalResults', filteredIncidents.length);
+
+    let pageNumber = Number(this.pagination.pageNumber);
+    let pageSize = Number(this.pagination.pageSize);
+    let startingIndex = (pageNumber - 1) * pageSize;
+    return filteredIncidents.slice(startingIndex, startingIndex + pageSize);
   }
 
   _applyQFilter(e, q) {

@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-button/paper-button.js';
 import '../common/errors-box.js';
 import { store } from '../store.js';
@@ -23,6 +24,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         }
         etools-dropdown-lite, etools-dropdown-multi-lite {
           width: 100%;
+        }
+        paper-checkbox {
+          --paper-checkbox-unchecked-color: var(--secondary-text-color);
+          --paper-checkbox-label-color: var(--secondary-text-color);
+
+          /* TODO: figure out a better way of doing vertical alignment */
+          padding-top: 29px;
+          padding-bottom: 12px;
         }
         paper-button {
           margin: 8px 24px;
@@ -47,17 +56,18 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-6">
             <paper-input readonly="[[readonly]]" label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
             <paper-input readonly="[[readonly]]" label="Last name" type="text" value="{{incident.primary_person.last_name}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Index number" type="number" value="{{incident.primary_person.index}}"></paper-input>
+            <!-- <paper-input readonly="[[readonly]]" label="Index number" type="number" value="{{incident.primary_person.index}}"></paper-input> -->
             <paper-input readonly="[[readonly]]" label="Date of birth" type="date" value="{{incident.primary_person.date_of_birth}}"></paper-input>
+            <paper-input readonly="[[readonly]]" label="Nationality" type="text" value="{{incident.primary_person.nationality}}"></paper-input>
             <etools-dropdown-lite readonly="[[readonly]]" label="Gender" options="[[genders]]" selected="{{incident.primary_person.gender}}"></etools-dropdown-lite>
           </div>
 
           <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="Nationality" type="text" value="{{incident.primary_person.nationality}}"></paper-input>
             <paper-input readonly="[[readonly]]" label="UN Employer" type="text" value="{{incident.primary_person.un_employer}}"></paper-input>
             <paper-input readonly="[[readonly]]" label="Job Title" type="text" value="{{incident.primary_person.job_title}}"></paper-input>
             <paper-input readonly="[[readonly]]" label="Type of Contract" type="text" value="{{incident.primary_person.type_of_contract}}"></paper-input>
             <paper-input type="text" readonly="[[readonly]]" label="Contact info" value="{{incident.primary_person.contact}}"></paper-input>
+            <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
           </div>
         </div>
 
@@ -92,17 +102,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-12">
             <paper-input type="text" readonly="[[readonly]]" label="Injuries" value="{{incident.injuries}}"></paper-input>
             <paper-input type="text" readonly="[[readonly]]" label="Incident Description" value="{{incident.description}}"></paper-input>
-            <etools-dropdown-multi-lite readonly="[[readonly]]" label="Weapons used" options="[[staticData.weapons]]" selected-values="{{incident.weapons_used}}"></etools-dropdown-multi-lite>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="On Duty" options="[[onDuty]]" selected="{{incident.on_duty}}"></etools-dropdown-lite>
+            <etools-dropdown-multi-lite readonly="[[readonly]]" label="Weapons used" options="[[staticData.weapons]]" selected-values="{{incident.weapons_used}}"></etools-dropdown-multi-lite>
             <paper-input readonly="[[readonly]]" label="Reported to" type="text" value="{{incident.reported_to}}"></paper-input>
           </div>
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="Reported to police" options="[[reported]]" selected="{{incident.reported}}"></etools-dropdown-lite>
+            <paper-checkbox checked="{{incident.reported}}" disabled="[[readonly]]">Reported to police</paper-checkbox>
             <paper-input readonly="[[readonly]]" label="Responsible party" type="text" value="{{incident.responsible}}"></paper-input>
           </div>
         </div>

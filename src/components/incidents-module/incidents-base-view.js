@@ -44,7 +44,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="row-h">
           <h2> [[title]] </h2>
         </div>
-        <paper-time-picker></paper-time-picker>
 
         <div class="row-h">
           <errors-box></errors-box>
@@ -52,7 +51,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="Primary person" options="[[staticData.users]]" selected="{{incident.user}}"></etools-dropdown-lite>
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Primary person"
+                                  options="[[staticData.users]]"
+                                  selected="{{incident.user}}">
+            </etools-dropdown-lite>
           </div>
 
           <div class="col col-6">
@@ -66,31 +69,55 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="Event" options="[[events]]" selected="{{incident.event}}"></etools-dropdown-lite>
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Event"
+                                  options="[[events]]"
+                                  selected="{{incident.event}}">
+            </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="Incident Type" options="[[staticData.incidentTypes]]" selected="{{incident.incident_type}}"></etools-dropdown-lite>
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Incident Type"
+                                  options="[[staticData.incidentTypes]]"
+                                  selected="{{incident.incident_type}}">
+            </etools-dropdown-lite>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-input type="text" hidden$="[[typeNotOther(incident.incident_type)]]" readonly="[[readonly]]" label="Other Incident Type" value="{{incident.other}}"></paper-input>
+            <paper-input type="text" hidden$="[[typeNotOther(incident.incident_type)]]"
+                                     readonly="[[readonly]]"
+                                     label="Other Incident Type"
+                                     value="{{incident.other}}">
+            </paper-input>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="Incident date" type="date" value="{{incident.incident_date}}"></paper-input>
+            <paper-input readonly="[[readonly]]"
+                         label="Incident date"
+                         type="date"
+                         value="{{incident.incident_date}}">
+            </paper-input>
           </div>
           <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="Incident time" type="time" value="{{incident.incident_time}}"></paper-input>
+            <paper-input readonly="[[readonly]]"
+                         label="Incident time"
+                         type="time"
+                         value="{{incident.incident_time}}">
+            </paper-input>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="Country" options="[[staticData.countries]]" selected="{{incident.country}}"></etools-dropdown-lite>
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Country"
+                                  options="[[staticData.countries]]"
+                                  selected="{{incident.country}}">
+            </etools-dropdown-lite>
             <paper-input readonly="[[readonly]]" label="Region" type="text" value="{{incident.region}}"></paper-input>
           </div>
 
@@ -113,10 +140,18 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="Criticality" options="[[staticData.criticalities]]" selected="{{incident.criticality}}"></etools-dropdown-lite>
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Criticality"
+                                  options="[[staticData.criticalities]]"
+                                  selected="{{incident.criticality}}">
+            </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]" label="Impact" options="[[staticData.impacts]]" selected="{{incident.impact}}"></etools-dropdown-lite>
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Impact"
+                                  options="[[staticData.impacts]]"
+                                  selected="{{incident.impact}}">
+            </etools-dropdown-lite>
           </div>
         </div>
 
@@ -133,11 +168,26 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]" readonly="[[readonly]]" label="Vehicle Type" options="[[staticData.vehicleTypes]]" selected="{{incident.vehicle_type}}"></etools-dropdown-lite>
-            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]" readonly="[[readonly]]" label="Contributing factor" options="[[staticData.factors]]" selected="{{incident.contributing_factor}}"></etools-dropdown-lite>
+            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]"
+                                  readonly="[[readonly]]"
+                                  label="Vehicle Type"
+                                  options="[[staticData.vehicleTypes]]"
+                                  selected="{{incident.vehicle_type}}">
+            </etools-dropdown-lite>
+            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]"
+                                  readonly="[[readonly]]"
+                                  label="Contributing factor"
+                                  options="[[staticData.factors]]"
+                                  selected="{{incident.contributing_factor}}">
+            </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]" readonly="[[readonly]]" label="Crash Type" options="[[staticData.crashTypes]]" selected="{{incident.crash_type}}"></etools-dropdown-lite>
+            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]"
+                                  readonly="[[readonly]]"
+                                  label="Crash Type"
+                                  options="[[staticData.crashTypes]]"
+                                  selected="{{incident.crash_type}}">
+            </etools-dropdown-lite>
           </div>
         </div>
 

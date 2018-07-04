@@ -11,11 +11,12 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store} from '../store.js';
+import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
 
-class IncidentsList extends connect(store)(PolymerElement) {
+class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -107,14 +108,6 @@ class IncidentsList extends connect(store)(PolymerElement) {
         type: Object,
         value: []
       },
-      pagination: {
-        type: Object,
-        value: {
-          pageNumber: 1,
-          pageSize: 10,
-          totalResults: 0
-        }
-      },
       incidentTypes: Array,
       q: String,
       filteredIncidents: {
@@ -140,21 +133,9 @@ class IncidentsList extends connect(store)(PolymerElement) {
       filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
     }
 
-    return this._applyPagination(filteredIncidents);
+    return this.applyPagination(filteredIncidents);
   }
 
-  _applyPagination(filteredIncidents) {
-    if (!filteredIncidents || ! filteredIncidents.length) {
-      this.set('pagination.totalResults', 0);
-      return [];
-    }
-    this.set('pagination.totalResults', filteredIncidents.length);
-
-    let pageNumber = Number(this.pagination.pageNumber);
-    let pageSize = Number(this.pagination.pageSize);
-    let startingIndex = (pageNumber - 1) * pageSize;
-    return filteredIncidents.slice(startingIndex, startingIndex + pageSize);
-  }
 
   _applyQFilter(e, q) {
     let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();

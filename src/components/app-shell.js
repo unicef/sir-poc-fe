@@ -21,6 +21,7 @@ import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
+import './styles/app-theme.js';
 
 // basic stuff above, PWA stuff below
 
@@ -53,9 +54,6 @@ class MyApp extends connect(store)(PolymerElement) {
     return html`
       <style>
         :host {
-          --app-primary-color: #4285f4;
-          --app-secondary-color: black;
-
           display: block;
         }
 

@@ -40,14 +40,24 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
         color: #212121;
         font-size: 22px;
       }
+
       *[hidden] {
         display: none;
       }
-      
+
+      paper-button {
+        background-color: var(--app-primary-color, #4285f4);
+        --paper-button: {
+          color: var(--light-primary-text-color, #fff);
+          font-weight: bold;
+          padding: 5px 10px;
+        };
+      }
+
       .list {
         padding-bottom: 36px;
       }
-      
+
       .search-input {
         width: 400px;
       }

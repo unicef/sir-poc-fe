@@ -1,11 +1,11 @@
 /**
 @license
 */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
+import '../common/datepicker-lite.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
@@ -44,7 +44,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="row-h">
           <h2> [[title]] </h2>
         </div>
-
         <div class="row-h">
           <errors-box></errors-box>
         </div>
@@ -96,11 +95,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <paper-input readonly="[[readonly]]"
-                         label="Incident date"
-                         type="date"
-                         value="{{incident.incident_date}}">
-            </paper-input>
+            <datepicker-lite value="{{incident.incident_date}}" readonly="[[readonly]]" label="Incident date"></datepicker-lite>
           </div>
           <div class="col col-6">
             <paper-input readonly="[[readonly]]"

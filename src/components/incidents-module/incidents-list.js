@@ -11,11 +11,12 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store} from '../store.js';
+import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
 
-class IncidentsList extends connect(store)(PolymerElement) {
+class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -42,8 +43,8 @@ class IncidentsList extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card filters">
-        <paper-input class="search-input" 
-                     no-label-float placeholder="Search by Person Involved, City or Description" 
+        <paper-input class="search-input"
+                     no-label-float placeholder="Search by Person Involved, City or Description"
                      value="{{q}}">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
@@ -92,8 +93,10 @@ class IncidentsList extends connect(store)(PolymerElement) {
           </etools-data-table-row>
         </template>
 
-        <etools-data-table-footer id="footer" page-size="[[pageSize]]" page-number="[[pageNumber]]"
-                                  total-results="[[incidents.length]]" visible-range="{{visibleRange}}">
+        <etools-data-table-footer id="footer" page-size="{{pagination.pageSize}}"
+                                  page-number="{{pagination.pageNumber}}"
+                                  total-results="[[pagination.totalResults]]"
+                                  visible-range="{{visibleRange}}">
         </etools-data-table-footer>
       </div>
     `;
@@ -109,7 +112,7 @@ class IncidentsList extends connect(store)(PolymerElement) {
       q: String,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, q)'
+        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber)'
       }
     };
   }
@@ -124,13 +127,15 @@ class IncidentsList extends connect(store)(PolymerElement) {
     return incident.name || 'Not Specified';
   }
 
-  _filterData(incidents, q) {
+  _filterData(incidents, q, pageSize, pageNumber) {
     let filteredIncidents = incidents ? JSON.parse(JSON.stringify(incidents)) : [];
     if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string' && q !== '') {
       filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
     }
-    return filteredIncidents;
+
+    return this.applyPagination(filteredIncidents);
   }
+
 
   _applyQFilter(e, q) {
     let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();

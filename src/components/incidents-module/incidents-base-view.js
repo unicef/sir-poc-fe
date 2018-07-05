@@ -47,7 +47,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="row-h">
           <errors-box></errors-box>
         </div>
-
+<!--
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
@@ -61,6 +61,29 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
           </div>
         </div>
+
+-->
+
+        <div class="row-h">
+          <h3> Primary Person data </h3>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <paper-input readonly="[[readonly]]" label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
+            <paper-input readonly="[[readonly]]" label="Last name" type="text" value="{{incident.primary_person.last_name}}"></paper-input>
+            <datepicker-lite readonly="[[readonly]]" label="Date of birth" value="{{incident.primary_person.date_of_birth}}"></datepicker-lite>
+            <paper-input readonly="[[readonly]]" label="Nationality" type="text" value="{{incident.primary_person.nationality}}"></paper-input>
+            <etools-dropdown-lite readonly="[[readonly]]" label="Gender" options="[[genders]]" selected="{{incident.primary_person.gender}}"></etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <paper-input readonly="[[readonly]]" label="UN Employer" type="text" value="{{incident.primary_person.un_employer}}"></paper-input>
+            <paper-input readonly="[[readonly]]" label="Job Title" type="text" value="{{incident.primary_person.job_title}}"></paper-input>
+            <paper-input readonly="[[readonly]]" label="Type of Contract" type="text" value="{{incident.primary_person.type_of_contract}}"></paper-input>
+            <paper-input type="text" readonly="[[readonly]]" label="Contact info" value="{{incident.primary_person.contact}}"></paper-input>
+            <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
+          </div>
+        </div>
+
 
         <div class="row-h">
           <h3> Incident details </h3>

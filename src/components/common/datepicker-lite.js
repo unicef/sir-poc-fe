@@ -12,6 +12,9 @@ class DatePickerLite extends PolymerElement {
   static get template() {
     return html`
       <style>
+        calendar-lite {
+          --my-elem-primary: var(--app-primary-color, #4285f4);
+        }
         paper-dropdown-menu {
           width: 100%;
         }

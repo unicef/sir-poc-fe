@@ -200,7 +200,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.state = state;
     this.staticData = state.staticData;
-    this.events = state.events.events.map(elem => {
+    this.events = state.events.list.map(elem => {
       elem.name = elem.description;
       return elem;
     });

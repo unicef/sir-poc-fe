@@ -12,7 +12,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { fetchIncidents } from '../../actions/incidents.js';
-import { lazyLoadIncidentPages, updateSelectedItemId } from '../../actions/app.js';
+import { lazyLoadIncidentPages } from '../../actions/app.js';
 import { store } from '../store.js';
 
 import '@polymer/paper-button/paper-button.js';
@@ -54,7 +54,6 @@ class IncidentsController extends connect(store)(PolymerElement) {
   static get observers() {
     return [
       'routeChanged(routeData.section)',
-      'selectedItemChanged(routeData.id)',
       'pageChanged(page)'
     ];
   }
@@ -65,10 +64,6 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-  }
-
-  selectedItemChanged(id) {
-    store.dispatch(updateSelectedItemId(id));
   }
 
   routeChanged(section) {

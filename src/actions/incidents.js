@@ -11,7 +11,6 @@ export const addIncident = (newIncident) => (dispatch, getState) => {
   if (getState().app.offline === false) {
     // try and send the data straight to the server maybe?
   }
-  console.log(newIncident);
   makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(addIncidentSuccess(JSON.parse(result)));
     updatePath('/incidents/list/');

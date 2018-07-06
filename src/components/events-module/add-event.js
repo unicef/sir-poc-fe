@@ -23,7 +23,6 @@ class AddEvent extends EventsBaseView {
     if (this.isVisible()  && onNewEvent(this.state)) {
       this.event = JSON.parse(JSON.stringify(EventModel));
     }
-    console.log('local state changed ');
   }
 
   save() {

@@ -88,7 +88,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    console.log('state changed', state.app);
     this.state = state;
   }
 

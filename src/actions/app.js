@@ -121,5 +121,5 @@ export const updateSelectedItemId = (selectedItemId) => {
   return {
     type: UPDATE_SELECTED_ITEM_ID,
     selectedItemId
-  }
+  };
 }

@@ -47,11 +47,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="row-h">
           <errors-box></errors-box>
         </div>
-<!--
+
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Primary person"
+                                  trigger-value-change-event
+                                  on-etools-selected-item-changed="_userSelected"
                                   options="[[staticData.users]]"
                                   selected="{{incident.user}}">
             </etools-dropdown-lite>
@@ -62,11 +64,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </div>
 
--->
-
         <div class="row-h">
           <h3> Primary Person data </h3>
         </div>
+
+      <!--
         <div class="row-h flex-c">
           <div class="col col-6">
             <paper-input readonly="[[readonly]]" label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
@@ -83,7 +85,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
           </div>
         </div>
-
+      -->
 
         <div class="row-h">
           <h3> Incident details </h3>
@@ -242,7 +244,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: {
           // TODO: Move this to a proper model
           last_modify_user: 1,
-          primary_person: {},
+          primary_person: {
+            date_of_birth: '1970-01-01',
+            nationality: '-',
+            gender: 'male',
+            un_employer: '-',
+            job_title: '-',
+            type_of_contract: '-',
+            contact: '-'
+          },
           submitted_by: 1,
           status: 'submitted',
           reported: false
@@ -279,6 +289,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       state: Object,
       store: Object
     };
+  }
+  _userSelected(event) {
+    this.incident.primary_person.first_name = event.detail.selectedItem.first_name;
+    this.incident.primary_person.last_name = event.detail.selectedItem.last_name;
   }
 
   _stateChanged(state) {

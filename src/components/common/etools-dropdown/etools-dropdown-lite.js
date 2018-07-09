@@ -1,6 +1,7 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {CommonFunctionality} from './mixins/common-mixin.js';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { CommonFunctionality } from './mixins/common-mixin.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-dropdown/iron-dropdown.js';
 import '@polymer/neon-animation/neon-animations.js';
@@ -50,7 +51,7 @@ class EtoolsDropdown extends DropdownRequiredMixins {
       <paper-input id="main" label="[[label]]" placeholder="[[placeholder]]" always-float-label="[[alwaysFloatLabel]]"
                    no-label-float="[[noLabelFloat]]" value="[[getLabel(selectedItem)]]" disabled="[[disabled]]"
                    invalid="[[invalid]]" error-message="[[_getErrorMessage(errorMessage, invalid)]]" readonly=""
-                   on-focus="onInputFocus" on-click="_openMenu">
+                   on-focus="onInputFocus" on-click="_openMenu" on-change="_onChange">
         <iron-icon icon="arrow-drop-down" slot="suffix" hidden\$="[[readonly]]"></iron-icon>
       </paper-input>
 

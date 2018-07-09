@@ -138,7 +138,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   options="[[staticData.countries]]"
                                   selected="{{incident.country}}">
             </etools-dropdown-lite>
-            <paper-input readonly="[[readonly]]" label="Region" type="text" value="{{incident.region}}"></paper-input>
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Region"
+                                  options="[[staticData.regions]]"
+                                  selected="{{incident.region}}">
+            </etools-dropdown-lite>
           </div>
 
           <div class="col col-6">

@@ -102,12 +102,12 @@ class MyApp extends connect(store)(PolymerElement) {
 
           <div class="drawer-list">
             <a class="menu-heading" selected$="[[pathsMatch(page, 'events')]]" href="[[rootPath]]events/list/">Events</a>
-              <a selected$="[[pathsMatch(route.path, 'events/list')]]" href="[[rootPath]]events/list/">Events List</a>
-              <a selected$="[[pathsMatch(route.path, 'events/new')]]" href="[[rootPath]]events/new/">New Event</a>
+              <a selected$="[[pathsMatch(route.path, '/events/list/')]]" href="[[rootPath]]events/list/">Events List</a>
+              <a selected$="[[pathsMatch(route.path, '/events/new/')]]" href="[[rootPath]]events/new/">New Event</a>
 
             <a class="menu-heading" selected$="[[pathsMatch(page, 'incidents')]]" href="[[rootPath]]incidents/list/">Incidents</a>
-              <a selected$="[[pathsMatch(route.path, 'incidents/list')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
-              <a selected$="[[pathsMatch(route.path, 'incidents/new')]]" href="[[rootPath]]incidents/new/">New Incident</a>
+              <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
+              <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]" href="[[rootPath]]incidents/new/">New Incident</a>
           </div>
 
         </app-drawer>
@@ -180,7 +180,7 @@ class MyApp extends connect(store)(PolymerElement) {
      // If no page was found in the route data, page will be an empty string.
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      updatePath('events/list');
+      updatePath('events/list/');
     } else if (['events', 'incidents'].indexOf(page) !== -1) {
       this.page = page;
     } else {

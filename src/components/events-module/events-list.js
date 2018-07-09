@@ -115,7 +115,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   _stateChanged(state) {
     if (!state) { return; }
-    this.events = state.events.events;
+    this.events = state.events.list;
   }
 
   _filterData(events, q) {

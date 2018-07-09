@@ -25,7 +25,7 @@ class ViewEvent extends EventsBaseView {
 
   _idChanged(newId) {
     // TODO: fix ==
-     this.set('event', this.state.events.events.find(ev => ev.id == this.eventId ));
+     this.set('event', this.state.events.list.find(ev => ev.id == this.eventId ));
   }
 }
 

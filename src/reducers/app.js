@@ -7,6 +7,7 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
+import { createSelector } from 'reselect';
 
 import {
   UPDATE_OFFLINE,
@@ -49,3 +50,15 @@ const app = (state = {narrowDrawer: false, locationInfo: {selectedModule: '', pa
 }
 
 export default app;
+
+const appSelector = state => state.app;
+export const onNewEvent = createSelector(
+  appSelector,
+  (app) => (app.page === 'new' && app.selectedModule === 'events')
+);
+
+export const onNewIncident = createSelector(
+  appSelector,
+  (app) => (app.page === 'new' && app.selectedModule === 'incidents')
+);
+

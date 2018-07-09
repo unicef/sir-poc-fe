@@ -24,7 +24,7 @@ class ViewIncident extends IncidentsBaseView {
   }
 
   _idChanged(newId) {
-    this.set('incident', this.state.incidents.incidents.find(elem => elem.id == this.incidentId ));
+    this.set('incident', this.state.incidents.list.find(elem => elem.id == this.incidentId ));
   }
 
 }

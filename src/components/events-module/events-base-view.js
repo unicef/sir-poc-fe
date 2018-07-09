@@ -90,4 +90,8 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.state = state;
   }
+
+  isVisible() {
+    return this.classList.contains('iron-selected');
+  }
 }

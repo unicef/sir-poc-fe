@@ -10,17 +10,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import { createSelector } from 'reselect';
 
 import {
-  UPDATE_PAGE,
   UPDATE_OFFLINE,
   OPEN_SNACKBAR,
   CLOSE_SNACKBAR,
   UPDATE_DRAWER_STATE,
-  UPDATE_MODULE,
-  UPDATE_SELECTED_ITEM_ID
+  UPDATE_LOCATION_INFO,
 } from '../actions/app.js';
 
-
-const app = (state = {narrowDrawer: false, selectedModule: '', page: '', selectedItemId:''}, action) => {
+const app = (state = {narrowDrawer: false, locationInfo: {selectedModule: '', page: '', selectedItemId: ''}}, action) => {
   switch (action.type) {
     case UPDATE_OFFLINE:
       return {
@@ -42,20 +39,10 @@ const app = (state = {narrowDrawer: false, selectedModule: '', page: '', selecte
         ...state,
         snackbarOpened: false
       };
-    case UPDATE_PAGE:
+    case UPDATE_LOCATION_INFO:
       return {
         ...state,
-        page: action.page
-      };
-    case UPDATE_MODULE:
-      return {
-        ...state,
-        selectedModule: action.selectedModule
-      };
-    case UPDATE_SELECTED_ITEM_ID:
-      return {
-        ...state,
-        selectedItemId: action.selectedItemId
+        locationInfo: action.locationInfo
       };
     default:
       return state;

@@ -34,10 +34,12 @@ import './snack-bar/snack-bar.js';
 import { store } from './store.js';
 
 import { loadAllStaticData } from './data/static-data-loader.js';
+import { updatePath } from '/src/components/common/navigation-helper.js';
 // These are the actions needed by this element.
 import {
   updateOffline,
-  lazyLoadModules
+  lazyLoadModules,
+  updateLocationInfo
 } from '../actions/app.js';
 
 
@@ -100,12 +102,12 @@ class MyApp extends connect(store)(PolymerElement) {
 
           <div class="drawer-list">
             <a class="menu-heading" selected$="[[pathsMatch(page, 'events')]]" href="[[rootPath]]events/list/">Events</a>
-              <a selected$="[[pathsMatch(pagePath, 'events/list')]]" href="[[rootPath]]events/list/">Events List</a>
-              <a selected$="[[pathsMatch(pagePath, 'events/new')]]" href="[[rootPath]]events/new/">New Event</a>
+              <a selected$="[[pathsMatch(route.path, 'events/list')]]" href="[[rootPath]]events/list/">Events List</a>
+              <a selected$="[[pathsMatch(route.path, 'events/new')]]" href="[[rootPath]]events/new/">New Event</a>
 
             <a class="menu-heading" selected$="[[pathsMatch(page, 'incidents')]]" href="[[rootPath]]incidents/list/">Incidents</a>
-              <a selected$="[[pathsMatch(pagePath, 'incidents/list')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
-              <a selected$="[[pathsMatch(pagePath, 'incidents/new')]]" href="[[rootPath]]incidents/new/">New Incident</a>
+              <a selected$="[[pathsMatch(route.path, 'incidents/list')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
+              <a selected$="[[pathsMatch(route.path, 'incidents/new')]]" href="[[rootPath]]incidents/new/">New Incident</a>
           </div>
 
         </app-drawer>
@@ -143,9 +145,9 @@ class MyApp extends connect(store)(PolymerElement) {
         observer: '_pageChanged'
       },
       snackbarOpened: Boolean,
+      route: Object,
       routeData: Object,
       subroute: Object,
-      pagePath: String,
       offline: Boolean
     };
   }
@@ -153,7 +155,7 @@ class MyApp extends connect(store)(PolymerElement) {
   static get observers() {
     return [
       '_routePageChanged(routeData.page)',
-      '_updateSubroutePath(subroute.path)'
+      '_locationChanged(route.path)'
     ];
   }
 
@@ -162,6 +164,10 @@ class MyApp extends connect(store)(PolymerElement) {
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
 
     loadAllStaticData(store);
+  }
+
+  _locationChanged(path) {
+    store.dispatch(updateLocationInfo(path));
   }
 
   pathsMatch(path1, path2) {
@@ -174,24 +180,18 @@ class MyApp extends connect(store)(PolymerElement) {
      // If no page was found in the route data, page will be an empty string.
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      this.page = 'events';
+      updatePath('events/list');
     } else if (['events', 'incidents'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
     }
 
-    this._updateSubroutePath(this.subroute.path)
 
     // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {
       this.$.drawer.close();
     }
-  }
-
-  _updateSubroutePath(section) {
-    section = section.substring(1, section.length - 1);
-    this.pagePath = this.page + '/' + section;
   }
 
   _stateChanged(state) {

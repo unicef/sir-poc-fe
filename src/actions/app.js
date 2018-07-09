@@ -10,13 +10,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 
-export const UPDATE_PAGE = 'UPDATE_PAGE';
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 export const OPEN_SNACKBAR = 'OPEN_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
-export const UPDATE_MODULE = 'UPDATE_MODULE';
-export const UPDATE_SELECTED_ITEM_ID = 'UPDATE_SELECTED_ITEM_ID';
+export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
 
 //TODO: break this up into smaller files
 //TODO: add a sync data action when app is back online
@@ -59,8 +57,6 @@ export const lazyLoadEventPages = (page) => (dispatch, getState) => {
       updatePath('/404/');
       break;
   }
-
-  dispatch(updatePage(page));
 }
 
 export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
@@ -78,8 +74,6 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
       updatePath('/404/');
       break;
   }
-
-  dispatch(updatePage(page));
 }
 
 export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
@@ -99,27 +93,28 @@ export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
       import('../components/non-found-module/404.js');
       break;
   }
-
-  dispatch(updateModule(selectedModule));
 }
 
-export const updateModule = (selectedModule) => {
+export const updateLocationInfo = (path) => {
+
+  let [selectedModule, page, selectedItemId] = extractInfoFromPath(path);
+
   return {
-    type: UPDATE_MODULE,
-    selectedModule
+    type: UPDATE_LOCATION_INFO,
+    locationInfo: {
+      selectedModule,
+      page,
+      selectedItemId
+    }
   };
 }
 
-export const updatePage = (page) => {
-  return {
-    type: UPDATE_PAGE,
-    page
-  };
+function extractInfoFromPath(path) {
+  const splitPath = (path || '').slice(1).split('/');
+  let selectedModule = splitPath[0];
+  let page = splitPath[1] || '';
+  let selectedItemId = splitPath[2] || '';
+  return [selectedModule, page, selectedItemId];
 }
 
-export const updateSelectedItemId = (selectedItemId) => {
-  return {
-    type: UPDATE_SELECTED_ITEM_ID,
-    selectedItemId
-  };
-}
+

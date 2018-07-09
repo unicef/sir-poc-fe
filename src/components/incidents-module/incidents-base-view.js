@@ -332,4 +332,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return typeId !== otherElem.id;
   }
 
+  isVisible() {
+    return this.classList.contains('iron-selected');
+  }
 }

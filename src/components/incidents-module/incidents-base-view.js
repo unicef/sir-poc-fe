@@ -11,6 +11,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '../common/errors-box.js';
 import { store } from '../store.js';
+import { IncidentModel } from './models/incident-model.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 
@@ -48,6 +49,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <errors-box></errors-box>
         </div>
 
+        <div class="row-h">
+          <h3> Primary Person data </h3>
+        </div>
+
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
@@ -62,10 +67,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-6">
             <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
           </div>
-        </div>
-
-        <div class="row-h">
-          <h3> Primary Person data </h3>
         </div>
 
       <!--
@@ -245,22 +246,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return {
       incident: {
         type: Object,
-        value: {
-          // TODO: Move this to a proper model
-          last_modify_user: 1,
-          primary_person: {
-            date_of_birth: '1970-01-01',
-            nationality: '-',
-            gender: 'male',
-            un_employer: '-',
-            job_title: '-',
-            type_of_contract: '-',
-            contact: '-'
-          },
-          submitted_by: 1,
-          status: 'submitted',
-          reported: false
-        }
+        value: () => JSON.parse(JSON.stringify(IncidentModel))
       },
       onDuty: {
         type: Array,

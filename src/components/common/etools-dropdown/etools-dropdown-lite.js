@@ -51,7 +51,7 @@ class EtoolsDropdown extends DropdownRequiredMixins {
       <paper-input id="main" label="[[label]]" placeholder="[[placeholder]]" always-float-label="[[alwaysFloatLabel]]"
                    no-label-float="[[noLabelFloat]]" value="[[getLabel(selectedItem)]]" disabled="[[disabled]]"
                    invalid="[[invalid]]" error-message="[[_getErrorMessage(errorMessage, invalid)]]" readonly=""
-                   on-focus="onInputFocus" on-click="_openMenu" on-change="_onChange">
+                   on-focus="onInputFocus" on-click="_openMenu">
         <iron-icon icon="arrow-drop-down" slot="suffix" hidden\$="[[readonly]]"></iron-icon>
       </paper-input>
 

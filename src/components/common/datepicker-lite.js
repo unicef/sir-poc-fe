@@ -67,6 +67,9 @@ class DatePickerLite extends PolymerElement {
   }
 
   dateChanged() {
+    if (!this.date) {
+      return;
+    }
     this.$.ddMenu.opened = false;
     this.readableDate = this.date.toDateString();
 
@@ -75,6 +78,10 @@ class DatePickerLite extends PolymerElement {
   }
 
   valueChanged() {
+    if (!this.value) {
+      return;
+    }
+
     if (this.dateJustChanged) {
       this.dateJustChanged = false;
       return;

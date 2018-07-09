@@ -205,4 +205,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return elem;
     });
   }
+
+  isVisible() {
+    return this.classList.contains('iron-selected');
+  }
 }

@@ -4,7 +4,7 @@
 import { addIncident } from '../../actions/incidents.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { IncidentModel } from './models/incident-model.js';
-
+import { onNewIncident } from '../../reducers/app.js';
 /**
  * @polymer
  * @customElement

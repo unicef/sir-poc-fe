@@ -30,6 +30,16 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           text-decoration: none;
         }
 
+        .col-1 {
+          flex: 0 0 8.333333%;
+          max-width: 8.333333%;
+        }
+
+        .col-3 {
+          flex: 0 0 25%;
+          max-width: 25%;
+        }
+
         .col-4 {
           flex: 0 0 33.333333%;
           max-width: 33.333333%;
@@ -72,8 +82,11 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 <span class="col-data col-4" title="[[item.start_date]]">
                     [[item.start_date]]
                 </span>
-                <span class="col-data col-4" title="[[item.location]]">
+                <span class="col-data col-3" title="[[item.location]]">
                     [[item.location]]
+                </span>
+                <span class="col-data col-1">
+                  <a href="/events/edit/[[item.id]]"> Edit </a>
                 </span>
             </div>
             <div slot="row-data-details">

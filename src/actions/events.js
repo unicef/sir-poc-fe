@@ -1,6 +1,6 @@
-import { makeRequest } from '../components/common/request-helper.js';
+import { makeRequest, prepareEndpoint } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
-import {updatePath} from '../components/common/navigation-helper.js';
+import { updatePath } from '../components/common/navigation-helper.js';
 import { serverError } from './errors';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 
@@ -28,6 +28,23 @@ export const addEvent = (newEvent) => (dispatch, getState) => {
   }
   makeRequest(Endpoints.newEvent, newEvent).then((result) => {
     dispatch(addEventSuccess(JSON.parse(result)));
+    updatePath('/events/list/');
+  }).catch((error) => {
+    dispatch(addEventFail(error.response));
+    scrollToTop();
+  });
+}
+
+export const editEvent = (event) => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    console.log('Can\'t edit offline yet');
+    return;
+  }
+
+  let endpoint = prepareEndpoint(Endpoints.editEvent, {id: event.id});
+
+  makeRequest(endpoint, event).then((result) => {
+    dispatch(fetchAndStoreEvents());
     updatePath('/events/list/');
   }).catch((error) => {
     dispatch(addEventFail(error.response));

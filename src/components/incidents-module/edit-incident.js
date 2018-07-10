@@ -32,9 +32,7 @@ class EditIncident extends IncidentsBaseView {
   }
 
   _idChanged(newId) {
-    console.log(newId);
     this.set('incident', this.state.incidents.list.find(elem => elem.id == this.incidentId));
-    console.log(this.incident);
   }
 }
 

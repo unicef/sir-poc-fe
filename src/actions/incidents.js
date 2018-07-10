@@ -21,12 +21,12 @@ export const addIncident = (newIncident) => (dispatch, getState) => {
 }
 
 export const editIncident = (incident) => (dispatch, getState) => {
-  if (getState().app.offline === false) {
-    // try and send the data straight to the server maybe?
+  if (getState().app.offline === true) {
+    console.log('Can\'t edit offline yet');
+    return;
   }
-  let endpoint = prepareEndpoint(Endpoints.editIncident, {id: incident.id});
 
-  // return;
+  let endpoint = prepareEndpoint(Endpoints.editIncident, {id: incident.id});
 
   makeRequest(endpoint, incident).then((result) => {
     dispatch(fetchIncidents());

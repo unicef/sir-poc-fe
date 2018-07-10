@@ -30,6 +30,16 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           text-decoration: none;
         }
 
+        .col-1 {
+          flex: 0 0 8.333333%;
+          max-width: 8.333333%;
+        }
+
+        .col-3 {
+          flex: 0 0 25%;
+          max-width: 25%;
+        }
+
         .col-4 {
           flex: 0 0 33.333333%;
           max-width: 33.333333%;
@@ -67,17 +77,20 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row>
             <div slot="row-data" style="display:flex; flex-direction: row;">
-                <span class="col-4 ">
-                  <a href="/incidents/view/[[item.id]]">
-                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                  </a>
-                </span>
+              <span class="col-4">
+                <a href="/incidents/view/[[item.id]]">
+                  [[item.primary_person.first_name]] [[item.primary_person.last_name]]
+                </a>
+              </span>
               <span class="col-4">
                   <span class="truncate">[[item.city]]</span>
                 </span>
-              <span class="col-4">
-                  <span class="truncate">[[_getIncidentName(item.incident_type)]]</span>
-                </span>
+              <span class="col-3">
+                <span class="truncate">[[_getIncidentName(item.incident_type)]]</span>
+              </span>
+              <span class="col-1">
+                <a href="/incidents/edit/[[item.id]]"> Edit </a>
+              </span>
             </div>
             <div slot="row-data-details">
               <div class="col-6">

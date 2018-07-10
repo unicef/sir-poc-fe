@@ -17,6 +17,10 @@ function getSourcesPath(request) {
     return basedir + 'es5-bundled/';
   }
 }
+
+// FOR TESTING ONLY
+// routes /api/ requests to the test server so we can test with
+// the same back-end used for development 
 app.use('/api', proxy({target: 'http://localhost:8080'}));
 
 app.get(/.*service-worker\.js/, function(req, res) {

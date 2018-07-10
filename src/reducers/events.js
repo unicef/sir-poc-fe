@@ -1,19 +1,19 @@
 import {
-  ADD_NEW_EVENT,
-  LOAD_EVENTS
+  ADD_EVENT_SUCCESS,
+  RECEIVE_EVENTS
 } from '../actions/events.js';
 
-const events = (state = {events: []}, action) => {
+const events = (state = {list: []}, action) => {
   switch (action.type) {
-    case LOAD_EVENTS:
+    case RECEIVE_EVENTS:
       return {
         ...state,
-        events: action.events
+        list: action.events
       };
-    case ADD_NEW_EVENT:
+    case ADD_EVENT_SUCCESS:
       return {
         ...state,
-        events: [...state.events, action.newEvent]
+        list: [...state.list, action.newEvent]
       };
     default:
       return state;

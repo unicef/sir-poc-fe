@@ -1,19 +1,19 @@
 import {
-  ADD_NEW_INCIDENT,
-  LOAD_INCIDENTS
+  ADD_INCIDENT_SUCCESS,
+  RECEIVE_INCIDENTS
 } from '../actions/incidents.js';
 
-const incidents = (state = {incidents: []}, action) => {
+const incidents = (state = {list: []}, action) => {
   switch (action.type) {
-    case LOAD_INCIDENTS:
+    case RECEIVE_INCIDENTS:
       return {
         ...state,
-        incidents: action.incidents
+        list: action.incidents
       };
-    case ADD_NEW_INCIDENT:
+    case ADD_INCIDENT_SUCCESS:
       return {
         ...state,
-        incidents: [...state.incidents, action.newIncident]
+        list: [...state.list, action.newIncident]
       };
     default:
       return state;

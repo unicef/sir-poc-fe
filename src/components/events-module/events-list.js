@@ -11,11 +11,12 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
+import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
 
-class EventsList extends connect(store)(PolymerElement) {
+class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -89,8 +90,10 @@ class EventsList extends connect(store)(PolymerElement) {
           </etools-data-table-row>
         </template>
 
-        <etools-data-table-footer id="footer" page-size="[[pageSize]]" page-number="[[pageNumber]]"
-                                  total-results="[[events.length]]" visible-range="{{visibleRange}}">
+        <etools-data-table-footer id="footer" page-size="{{pagination.pageSize}}"
+                                  page-number="{{pagination.pageNumber}}"
+                                  total-results="[[pagination.totalResults]]"
+                                  visible-range="{{visibleRange}}">
         </etools-data-table-footer>
       </div>
     `;
@@ -105,7 +108,7 @@ class EventsList extends connect(store)(PolymerElement) {
       q: String,
       filteredEvents: {
         type: Array,
-        computed: '_filterData(events, q)'
+        computed: '_filterData(events, q, pagination.pageSize, pagination.pageNumber)'
       }
     };
   }
@@ -114,7 +117,7 @@ class EventsList extends connect(store)(PolymerElement) {
     if (!state) {
       return;
     }
-    this.events = state.events.events;
+    this.events = state.events.list;
   }
 
   _filterData(events, q) {
@@ -122,7 +125,7 @@ class EventsList extends connect(store)(PolymerElement) {
     if (events instanceof Array && events.length > 0 && typeof q === 'string' && q !== '') {
       filteredEvents = filteredEvents.filter(e => this._applyQFilter(e, q));
     }
-    return filteredEvents;
+    return this.applyPagination(filteredEvents);
   }
 
   _applyQFilter(e, q) {

@@ -21,6 +21,7 @@ import app from '../reducers/app.js';
 import events from '../reducers/events.js';
 import incidents from '../reducers/incidents.js';
 import staticData from '../reducers/static-data.js';
+import errors from '../reducers/errors.js';
 
 import { persistStore, persistCombineReducers } from 'redux-persist';
 
@@ -46,7 +47,8 @@ const persistedReducer = persistCombineReducers(persistConfig, {
   app,
   events,
   incidents,
-  staticData
+  staticData,
+  errors
 });
 
 // lazy reducers are not being used with redux-persist

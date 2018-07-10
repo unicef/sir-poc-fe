@@ -21,6 +21,7 @@ import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
+import './styles/app-theme.js';
 
 // basic stuff above, PWA stuff below
 
@@ -33,9 +34,12 @@ import './snack-bar/snack-bar.js';
 import { store } from './store.js';
 
 import { loadAllStaticData } from './data/static-data-loader.js';
+import { updatePath } from '/src/components/common/navigation-helper.js';
 // These are the actions needed by this element.
 import {
-  updateOffline
+  updateOffline,
+  lazyLoadModules,
+  updateLocationInfo
 } from '../actions/app.js';
 
 
@@ -52,9 +56,6 @@ class MyApp extends connect(store)(PolymerElement) {
     return html`
       <style>
         :host {
-          --app-primary-color: #4285f4;
-          --app-secondary-color: black;
-
           display: block;
         }
 
@@ -101,12 +102,12 @@ class MyApp extends connect(store)(PolymerElement) {
 
           <div class="drawer-list">
             <a class="menu-heading" selected$="[[pathsMatch(page, 'events')]]" href="[[rootPath]]events/list/">Events</a>
-              <a selected$="[[pathsMatch(pagePath, 'events/list')]]" href="[[rootPath]]events/list/">Events List</a>
-              <a selected$="[[pathsMatch(pagePath, 'events/new')]]" href="[[rootPath]]events/new/">New Event</a>
+              <a selected$="[[pathsMatch(route.path, '/events/list/')]]" href="[[rootPath]]events/list/">Events List</a>
+              <a selected$="[[pathsMatch(route.path, '/events/new/')]]" href="[[rootPath]]events/new/">New Event</a>
 
             <a class="menu-heading" selected$="[[pathsMatch(page, 'incidents')]]" href="[[rootPath]]incidents/list/">Incidents</a>
-              <a selected$="[[pathsMatch(pagePath, 'incidents/list')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
-              <a selected$="[[pathsMatch(pagePath, 'incidents/new')]]" href="[[rootPath]]incidents/new/">New Incident</a>
+              <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
+              <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]" href="[[rootPath]]incidents/new/">New Incident</a>
           </div>
 
         </app-drawer>
@@ -144,9 +145,9 @@ class MyApp extends connect(store)(PolymerElement) {
         observer: '_pageChanged'
       },
       snackbarOpened: Boolean,
+      route: Object,
       routeData: Object,
       subroute: Object,
-      pagePath: String,
       offline: Boolean
     };
   }
@@ -154,7 +155,7 @@ class MyApp extends connect(store)(PolymerElement) {
   static get observers() {
     return [
       '_routePageChanged(routeData.page)',
-      '_updateSubroutePath(subroute.path)'
+      '_locationChanged(route.path)'
     ];
   }
 
@@ -163,6 +164,10 @@ class MyApp extends connect(store)(PolymerElement) {
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
 
     loadAllStaticData(store);
+  }
+
+  _locationChanged(path) {
+    store.dispatch(updateLocationInfo(path));
   }
 
   pathsMatch(path1, path2) {
@@ -175,14 +180,13 @@ class MyApp extends connect(store)(PolymerElement) {
      // If no page was found in the route data, page will be an empty string.
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      this.page = 'events';
+      updatePath('events/list/');
     } else if (['events', 'incidents'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
     }
 
-    this._updateSubroutePath(this.subroute.path)
 
     // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {
@@ -190,37 +194,18 @@ class MyApp extends connect(store)(PolymerElement) {
     }
   }
 
-  _updateSubroutePath(section) {
-    section = section.substring(1, section.length - 1);
-    this.pagePath = this.page + '/' + section;
-  }
-
   _stateChanged(state) {
     if (!state) {
       return;
     }
-
+    // this.page = state.app.page;
     this.set('offline', state.app.offline);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
 
   _pageChanged(page) {
-    // Import the page component on demand.
-    //
-    // Note: `polymer build` doesn't like string concatenation in the import
-    // statement, so break it up.
-
-    switch (page) {
-      case 'events':
-        import('./events-module/events-controller.js');
-        break;
-      case 'incidents':
-        import('./incidents-module/incidents-controller.js');
-        break;
-      case 'view404':
-        import('./non-found-module/404.js');
-        break;
-    }
+    store.dispatch({type: 'CLEAR_ERRORS'});
+    store.dispatch(lazyLoadModules(page));
   }
 }
 

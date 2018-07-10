@@ -1,5 +1,6 @@
 
 import '@polymer/iron-ajax/iron-request.js';
+import { updatePath, redirectToLogin } from './navigation-helper.js';
 
 // let ironRequestElem;
 
@@ -50,7 +51,10 @@ export const makeRequest = function(endpoint, data = {}) {
   return requestElem.completes.then(result => {
     return result.response;
   }).catch((error) => {
-    // TODO: better error handling
+    console.log('error caught,', requestElem.xhr.status);
+    if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
+      redirectToLogin();
+    }
     throw new SirRequestError(error, requestElem.xhr.status, requestElem.xhr.statusText, requestElem.xhr.response);
   });
 };

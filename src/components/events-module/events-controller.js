@@ -11,8 +11,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { loadEvents } from '../../actions/events.js';
 import { store } from '../store.js';
+import { lazyLoadEventPages } from '../../actions/app.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
 import '../styles/shared-styles.js';
@@ -73,20 +73,7 @@ class EventsController extends connect(store)(PolymerElement) {
   }
 
   pageChanged(page) {
-    switch(page) {
-      case 'list':
-        import('./events-list.js');
-        break;
-      case 'new':
-        import('./add-event.js');
-        break;
-      case 'view':
-        import('./view-event.js');
-        break;
-      default:
-        updatePath('/404/');
-        break;
-    }
+    store.dispatch(lazyLoadEventPages(page));
   }
 }
 

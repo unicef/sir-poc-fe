@@ -7,16 +7,17 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
+import { createSelector } from 'reselect';
 
 import {
-  UPDATE_PAGE,
   UPDATE_OFFLINE,
   OPEN_SNACKBAR,
   CLOSE_SNACKBAR,
-  UPDATE_DRAWER_STATE
+  UPDATE_DRAWER_STATE,
+  UPDATE_LOCATION_INFO,
 } from '../actions/app.js';
 
-const app = (state = {narrowDrawer: false}, action) => {
+const app = (state = {narrowDrawer: false, locationInfo: {selectedModule: '', page: '', selectedItemId: ''}}, action) => {
   switch (action.type) {
     case UPDATE_OFFLINE:
       return {
@@ -38,9 +39,26 @@ const app = (state = {narrowDrawer: false}, action) => {
         ...state,
         snackbarOpened: false
       };
+    case UPDATE_LOCATION_INFO:
+      return {
+        ...state,
+        locationInfo: action.locationInfo
+      };
     default:
       return state;
   }
 }
 
 export default app;
+
+const appSelector = state => state.app;
+export const onNewEvent = createSelector(
+  appSelector,
+  (app) => (app.page === 'new' && app.selectedModule === 'events')
+);
+
+export const onNewIncident = createSelector(
+  appSelector,
+  (app) => (app.page === 'new' && app.selectedModule === 'incidents')
+);
+

@@ -17,6 +17,10 @@ export const Endpoints = {
     url: baseUrl + "/api/incidents/",
     method: 'POST'
   },
+  editIncident: {
+    url: baseUrl + "/api/incidents/<%=id%>/",
+    method: 'PUT'
+  },
   regions: {
     url: baseUrl + "/api/regions/",
     method: 'GET'

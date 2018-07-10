@@ -70,6 +70,9 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
     case 'view':
       import('../components/incidents-module/view-incident.js');
       break;
+    case 'edit':
+      import('../components/incidents-module/edit-incident.js');
+      break;
     default:
       updatePath('/404/');
       break;

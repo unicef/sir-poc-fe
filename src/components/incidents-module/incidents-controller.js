@@ -37,6 +37,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
+        <edit-incident name="edit" incident-id="[[routeData.id]]"></edit-incident>
         <view-incident name="view" incident-id="[[routeData.id]]"></view-incident>
       </iron-pages>
     `;

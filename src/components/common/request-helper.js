@@ -133,3 +133,11 @@ const _csrfSafeMethod = (method) => {
   // these HTTP methods do not require CSRF protection
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 };
+
+export const prepareEndpoint = (endpoint, data) => {
+  let endpointCpy = JSON.parse(JSON.stringify(endpoint));
+  for (let key in data) {
+    endpointCpy.url = endpointCpy.url.replace('<%='+ key + '%>', data[key]);
+  }
+  return endpointCpy;
+}

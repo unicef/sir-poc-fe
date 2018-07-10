@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
+import '../common/paper-time-input.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
@@ -51,6 +52,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h">
           <h3> Primary Person data </h3>
+          <paper-time-input value="12:21"></paper-time-input>
         </div>
 
         <div class="row-h flex-c">

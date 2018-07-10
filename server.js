@@ -19,7 +19,7 @@ function getSourcesPath(request) {
 }
 
 // FOR TESTING ONLY
-// routes /api/ requests to the test server so we can test with
+// routes /api/ requests to the test server so we can test the build with
 // the same back-end used for development 
 app.use('/api', proxy({target: 'http://localhost:8080'}));
 

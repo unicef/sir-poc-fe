@@ -21,8 +21,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       <style include="shared-styles grid-layout-styles">
         :host {
           @apply --layout-vertical;
-          width: 100%;
-          padding: 10px;
         }
         etools-dropdown-lite, etools-dropdown-multi-lite {
           width: 100%;

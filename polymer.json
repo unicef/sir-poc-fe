@@ -7,6 +7,7 @@
   "extraDependencies": [
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/*.js",
+    "node_modules/web-animations-js/web-animations-next-lite.min.js",
     "!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",
     "node_modules/@webcomponents/webcomponentsjs/bundles/*.js"
   ],

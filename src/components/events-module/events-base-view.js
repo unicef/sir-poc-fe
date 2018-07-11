@@ -20,8 +20,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       <style include="shared-styles grid-layout-styles">
         :host {
           @apply --layout-vertical;
-          width: 100%;
-          padding: 10px;
         }
         paper-button {
           margin: 8px 24px;

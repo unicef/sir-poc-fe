@@ -50,6 +50,10 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           max-width: 50%;
         }
 
+        etools-data-table-row[unsynced] {
+          --list-bg-color: pink;
+        }
+
       </style>
 
       <div class="card filters">
@@ -74,7 +78,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
-          <etools-data-table-row>
+          <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
                 <span class="col-data col-4">
                   <a href="/events/view/[[item.id]]"> [[item.description]] </a>

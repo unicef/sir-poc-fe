@@ -50,6 +50,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           max-width: 50%;
         }
 
+        etools-data-table-row[unsynced] {
+          --list-bg-color: pink;
+        }
       </style>
 
       <div class="card filters">
@@ -75,7 +78,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
-          <etools-data-table-row>
+          <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data" style="display:flex; flex-direction: row;">
               <span class="col-4">
                 <a href="/incidents/view/[[item.id]]">

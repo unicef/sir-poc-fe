@@ -3,7 +3,7 @@ import { Endpoints } from '../config/endpoints.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { serverError } from './errors';
 import { scrollToTop } from '../components/common/content-container-helper.js';
-
+import { generateRandomHash } from './action-helpers.js';
 export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
 export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
@@ -15,6 +15,20 @@ export const fetchAndStoreEvents = () => (dispatch, getState) => {
   });
 };
 
+const addEventSuccess = (newEvent) => {
+  return {
+    type: ADD_EVENT_SUCCESS,
+    newEvent
+  };
+}
+
+const addEventFail = (serverError) => {
+  return {
+    type: ADD_EVENT_FAIL,
+    serverError
+  };
+}
+
 const receiveEvents = (events) => {
   return {
     type: RECEIVE_EVENTS,
@@ -22,10 +36,7 @@ const receiveEvents = (events) => {
   };
 }
 
-export const addEvent = (newEvent) => (dispatch, getState) => {
-  if (getState().app.offline === false) {
-    // try and send the data straight to the server maybe?
-  }
+const addEventOnline = (newEvent, dispatch) => {
   makeRequest(Endpoints.newEvent, newEvent).then((result) => {
     dispatch(addEventSuccess(JSON.parse(result)));
     updatePath('/events/list/');
@@ -33,6 +44,22 @@ export const addEvent = (newEvent) => (dispatch, getState) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
   });
+}
+
+const addEventOffline = (newEvent, dispatch) => {
+  newEvent.id = generateRandomHash();
+  newEvent.unsynced = true;
+  dispatch(addEventSuccess(newEvent));
+  updatePath('/events/list/');
+}
+
+
+export const addEvent = (newEvent) => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    addEventOffline(newEvent, dispatch);
+  } else {
+    addEventOnline(newEvent, dispatch);
+  }
 }
 
 export const editEvent = (event) => (dispatch, getState) => {
@@ -51,18 +78,3 @@ export const editEvent = (event) => (dispatch, getState) => {
     scrollToTop();
   });
 }
-
-const addEventSuccess = (newEvent) => {
-  return {
-    type: ADD_EVENT_SUCCESS,
-    newEvent
-  };
-}
-
-const addEventFail = (serverError) => {
-  return {
-    type: ADD_EVENT_FAIL,
-    serverError
-  };
-}
-

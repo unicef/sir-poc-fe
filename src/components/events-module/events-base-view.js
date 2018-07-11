@@ -52,6 +52,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <paper-input label="Note" readonly="[[readonly]]" type="text" value="{{event.note}}"></paper-input>
           </div>
         </div>
+
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-input label="Description" type="text" readonly="[[readonly]]" value="{{event.description}}"></paper-input>
@@ -60,6 +61,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <template is="dom-if" if="[[!readonly]]">
           <paper-button raised on-click="save"> Save </paper-button>
+          <paper-button raised on-click="sync" hidden$="[[!showSyncButton]]"> Sync </paper-button>
         </template>
       </div>
     `;
@@ -75,11 +77,16 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         type: Boolean,
         value: false
       },
+      showSyncButton: {
+        type: Boolean,
+        value: false
+      },
       title: String,
       state: Object,
       store: Object
     };
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.store = store;
@@ -87,6 +94,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+    this.showSyncButton = this.event && !this.state.app.offline && this.event.unsynced;
   }
 
   isVisible() {

@@ -2,7 +2,7 @@
 @license
 */
 import { EventsBaseView } from './events-base-view.js';
-import { editEvent } from '../../actions/events.js';
+import { editEvent, syncEvent } from '../../actions/events.js';
 
 /**
  * @polymer
@@ -28,6 +28,10 @@ class EditEvent extends EventsBaseView {
 
   save() {
     this.store.dispatch(editEvent(this.event));
+  }
+
+  sync() {
+    this.store.dispatch(syncEvent(this.event));
   }
 
   _idChanged(newId) {

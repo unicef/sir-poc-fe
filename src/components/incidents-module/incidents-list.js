@@ -118,6 +118,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   }
 
   _stateChanged(state) {
+    if (!state) {
+      return;
+    }
     this.incidents = state.incidents.list;
     this.incidentTypes = state.staticData.incidentTypes;
   }

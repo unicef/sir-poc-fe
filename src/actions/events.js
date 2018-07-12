@@ -58,7 +58,6 @@ const addEventOnline = (newEvent, dispatch) => {
 const addEventOffline = (newEvent, dispatch) => {
   newEvent.id = generateRandomHash();
   newEvent.unsynced = true;
-  newEvent.isNew = true;
   dispatch(addEventSuccess(newEvent));
   updatePath('/events/list/');
 }
@@ -82,17 +81,6 @@ const editEventOffline = (event, dispatch) => {
   updatePath('/events/list/');
 }
 
-const syncNewEvent = (newEvent, dispatch) => {
-  makeRequest(Endpoints.newEvent, newEvent).then((result) => {
-    let response = JSON.parse(result);
-    dispatch(editEventSuccess(response, newEvent.id));
-    updatePath('/events/list/');
-  }).catch((error) => {
-    dispatch(addEventFail(error.response));
-    scrollToTop();
-  });
-}
-
 export const addEvent = (newEvent) => (dispatch, getState) => {
   if (getState().app.offline === true) {
     addEventOffline(newEvent, dispatch);
@@ -111,11 +99,13 @@ export const editEvent = (event) => (dispatch, getState) => {
   editEventOnline(event, dispatch);
 }
 
-export const syncEvent = (event) => (dispatch, getState) => {
-  if (event.isNew) {
-    syncNewEvent(event, dispatch);
-    return;
-  }
-
-  editEventOnline(event, dispatch);
+export const syncEvent = (newEvent) => (dispatch, getState) => {
+  makeRequest(Endpoints.newEvent, newEvent).then((result) => {
+    let response = JSON.parse(result);
+    dispatch(editEventSuccess(response, newEvent.id));
+    updatePath('/events/list/');
+  }).catch((error) => {
+    dispatch(addEventFail(error.response));
+    scrollToTop();
+  });
 }

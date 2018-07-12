@@ -39,6 +39,5 @@ const getEditedList = (list, action) => {
 
 const getRefreshedEvents = (oldEvents, newEvents) => {
   let unsynced = oldEvents.filter(elem => elem.unsynced);
-  // todo: remove duplicates
-  return [...unsynced, ...newEvents];
+  return [...newEvents, ...unsynced];
 }

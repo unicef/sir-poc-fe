@@ -60,8 +60,8 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <paper-button raised on-click="save"> Save </paper-button>
-          <paper-button raised on-click="sync" hidden$="[[!showSyncButton]]"> Sync </paper-button>
+            <paper-button raised on-click="save"> Save </paper-button>
+            <paper-button raised on-click="sync" hidden$="[[!showSyncButton]]"> Sync </paper-button>
         </template>
       </div>
     `;

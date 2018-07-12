@@ -3,7 +3,7 @@ import { Endpoints } from '../config/endpoints.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { generateRandomHash } from './action-helpers.js';
-
+import { updateEventIdsInIncidents } from './incidents.js';
 export const EDIT_EVENT_SUCCESS = 'EDIT_EVENT_SUCCESS';
 export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
 export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
@@ -96,7 +96,7 @@ export const syncEvent = (event) => (dispatch, getState) => {
   makeRequest(Endpoints.newEvent, event).then((result) => {
     let response = JSON.parse(result);
     dispatch(editEventSuccess(response, event.id));
-    dispatch(updateIncidentIds(event.id, response.id))
+    dispatch(updateEventIdsInIncidents(event.id, response.id))
     updatePath('/events/list/');
   }).catch((error) => {
     dispatch(addEventFail(error.response));

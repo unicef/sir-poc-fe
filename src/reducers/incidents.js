@@ -1,7 +1,8 @@
 import {
   EDIT_INCIDENT_SUCCESS,
   ADD_INCIDENT_SUCCESS,
-  RECEIVE_INCIDENTS
+  RECEIVE_INCIDENTS,
+  UPDATE_EVENT_IDS
 } from '../actions/incidents.js';
 
 const incidents = (state = {list: []}, action) => {
@@ -20,6 +21,11 @@ const incidents = (state = {list: []}, action) => {
       return {
         ...state,
         list: getEditedList(state.list, action)
+      };
+    case UPDATE_EVENT_IDS:
+      return {
+        ...state,
+        list: updateEventIds(state.list, action.oldId, action.newId)
       };
     default:
       return state;
@@ -40,4 +46,14 @@ const getEditedList = (list, action) => {
 const getRefreshedIncidents = (oldIncidents, newIncidents) => {
   let unsynced = oldIncidents.filter(elem => elem.unsynced);
   return [...newIncidents, ...unsynced];
+}
+
+const updateEventIds = (list, oldId, newId) => {
+  return list.map((incident) => {
+    if (incident.event === oldId) {
+      incident.event = newId;
+    }
+
+    return incident;
+  });
 }

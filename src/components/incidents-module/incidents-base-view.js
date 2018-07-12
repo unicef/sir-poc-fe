@@ -287,6 +287,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     this.store = store;
   }
   _userSelected(event) {
+    if (!event.detail.selectedItem) {
+      return;
+    }
     this.incident.primary_person.index_number = event.detail.selectedItem.index_number;
     this.incident.primary_person.first_name = event.detail.selectedItem.first_name;
     this.incident.primary_person.last_name = event.detail.selectedItem.last_name;

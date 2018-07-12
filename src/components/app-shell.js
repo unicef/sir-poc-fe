@@ -161,9 +161,9 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
-
     loadAllStaticData(store);
+
+    installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
   }
 
   _locationChanged(path) {

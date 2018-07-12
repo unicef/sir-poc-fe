@@ -2,7 +2,7 @@
 @license
 */
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { editIncident } from '../../actions/incidents.js';
+import { editIncident, syncIncident } from '../../actions/incidents.js';
 
 /**
  * @polymer
@@ -29,6 +29,10 @@ class EditIncident extends IncidentsBaseView {
 
   save() {
     this.store.dispatch(editIncident(this.incident));
+  }
+
+  sync() {
+    this.store.dispatch(syncIncident(this.incident));
   }
 
   _idChanged(newId) {

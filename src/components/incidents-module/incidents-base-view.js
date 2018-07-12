@@ -34,8 +34,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           padding-bottom: 12px;
         }
         paper-button {
-          margin: 8px 24px;
+          margin: 8px 0 8px 24px;
           padding: 8px;
+        }
+        paper-button + paper-button {
+          margin-left: 0;
         }
       </style>
 
@@ -230,14 +233,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <paper-button raised on-click="save"> Save </paper-button>
+          <template is="dom-if" if="[[showSyncButton]]">
+            <paper-button raised on-click="save"> Edit </paper-button>
+            <paper-button raised on-click="sync"> Sync </paper-button>
+          </template>
+
+          <paper-button raised on-click="save" hidden$="[[showSyncButton]]"> Save </paper-button>
         </template>
       </div>
     `;
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    this.store = store;
   }
 
   static get properties() {
@@ -278,7 +282,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       store: Object
     };
   }
+  connectedCallback() {
+    super.connectedCallback();
+    this.store = store;
+  }
   _userSelected(event) {
+    this.incident.primary_person.index_number = event.detail.selectedItem.index_number;
     this.incident.primary_person.first_name = event.detail.selectedItem.first_name;
     this.incident.primary_person.last_name = event.detail.selectedItem.last_name;
   }
@@ -286,6 +295,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.state = state;
     this.staticData = state.staticData;
+    this.showSyncButton = this.incident && !this.state.app.offline && this.incident.unsynced;
 
     this.events = state.events.list.map(elem => {
       elem.name = elem.description;
@@ -295,6 +305,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     // TODO: this is TEMPORARY! user data should be more properly displayed
     this.staticData.users = state.staticData.users.map((elem, index) => {
       elem.name = elem.first_name + ' ' + elem.last_name;
+      elem.index_number = index;
       elem.id = index;
       return elem;
     });

@@ -1,7 +1,7 @@
 import {
+  EDIT_EVENT_SUCCESS,
   ADD_EVENT_SUCCESS,
-  RECEIVE_EVENTS,
-  EDIT_EVENT_SUCCESS
+  RECEIVE_EVENTS
 } from '../actions/events.js';
 
 const events = (state = {list: []}, action) => {

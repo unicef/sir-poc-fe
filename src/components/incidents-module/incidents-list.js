@@ -7,10 +7,11 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store} from '../store.js';
+import '@polymer/iron-icons/editor-icons.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
@@ -26,6 +27,10 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           padding: 10px;
         }
 
+        iron-icon {
+          height: 16px;
+        }
+
         a {
           text-decoration: none;
         }
@@ -33,6 +38,11 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         .col-1 {
           flex: 0 0 8.333333%;
           max-width: 8.333333%;
+        }
+
+        .col-2 {
+          flex: 0 0 16.666666%;
+          max-width: 16.666666%;
         }
 
         .col-3 {
@@ -66,33 +76,43 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       <div class="card list">
         <etools-data-table-header id="listHeader"
                                   label="Incidents">
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Person involved
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             City
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Incident Type
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Status
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
+            Actions
           </etools-data-table-column>
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data" style="display:flex; flex-direction: row;">
-              <span class="col-4">
+              <span class="col-3">
                 <a href="/incidents/view/[[item.id]]">
                   [[item.primary_person.first_name]] [[item.primary_person.last_name]]
                 </a>
               </span>
-              <span class="col-4">
+              <span class="col-3">
                   <span class="truncate">[[item.city]]</span>
                 </span>
               <span class="col-3">
                 <span class="truncate">[[_getIncidentName(item.incident_type)]]</span>
               </span>
+              <span class="col-2">
+                [[getStatus(item)]]
+              </span>
               <span class="col-1">
-                <a href="/incidents/edit/[[item.id]]"> Edit </a>
+                <a href="/incidents/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>
+                <a href="/incidents/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]"> <iron-icon icon="editor:mode-edit"></iron-icon> </a>
               </span>
             </div>
             <div slot="row-data-details">
@@ -126,6 +146,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       },
       incidentTypes: Array,
       q: String,
+      offline: Boolean,
       filteredIncidents: {
         type: Array,
         computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber)'
@@ -137,6 +158,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     if (!state) {
       return;
     }
+    this.offline = state.app.offline;
     this.incidents = state.incidents.list;
     this.incidentTypes = state.staticData.incidentTypes;
   }
@@ -155,12 +177,19 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return this.applyPagination(filteredIncidents);
   }
 
-
   _applyQFilter(e, q) {
     let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();
     return person.toLowerCase().search(q) > -1 ||
         String(e.city).toLowerCase().search(q) > -1 ||
         String(e.description).toLowerCase().search(q) > -1;
+  }
+
+  notEditable(incident, offline) {
+    return offline && !incident.unsynced;
+  }
+
+  getStatus(incident) {
+    return incident.unsynced? 'Not Synced': incident.status;
   }
 
 }

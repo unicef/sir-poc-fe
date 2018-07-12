@@ -12,10 +12,6 @@ class EditEvent extends EventsBaseView {
   static get is() {
     return 'edit-event';
   }
-  connectedCallback() {
-    super.connectedCallback();
-    this.title = 'Edit event';
-  }
 
   static get properties() {
     return {
@@ -24,6 +20,11 @@ class EditEvent extends EventsBaseView {
         observer: '_idChanged'
       }
     };
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.title = 'Edit event';
   }
 
   save() {

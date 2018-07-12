@@ -4,16 +4,7 @@ export const IncidentModel = {
   incident_time: '',
   injuries: '',
   note: '',
-  primary_person: {
-  contact: '',
-  date_of_birth: '',
-  first_name: '',
-  job_title: '',
-  last_name: '',
-  nationality: '',
-  type_of_contract: '',
-  un_employer: ''
-  },
+  on_duty: false,
   region: '',
   reported_to: '',
   responsible: '',

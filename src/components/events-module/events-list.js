@@ -9,6 +9,7 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
@@ -165,12 +166,12 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return this.applyPagination(filteredEvents);
   }
 
-  notEditable(event, offline) {
-    return offline && !event.unsynced;
-  }
-
   _applyQFilter(e, q) {
     return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
+  }
+
+  notEditable(event, offline) {
+    return offline && !event.unsynced;
   }
 
   getStatus(event) {

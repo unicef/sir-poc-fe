@@ -1,20 +1,13 @@
 import { makeRequest, prepareEndpoint } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
 import { updatePath } from '../components/common/navigation-helper.js';
-import { serverError } from './errors';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { generateRandomHash } from './action-helpers.js';
+
 export const EDIT_EVENT_SUCCESS = 'EDIT_EVENT_SUCCESS';
 export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
 export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
-
-
-export const fetchAndStoreEvents = () => (dispatch, getState) => {
-  makeRequest(Endpoints.eventsList).then(result => {
-    dispatch(receiveEvents(JSON.parse(result)));
-  });
-};
 
 const editEventSuccess = (event, id) => {
   return {
@@ -58,6 +51,7 @@ const addEventOnline = (newEvent, dispatch) => {
 const addEventOffline = (newEvent, dispatch) => {
   newEvent.id = generateRandomHash();
   newEvent.unsynced = true;
+
   dispatch(addEventSuccess(newEvent));
   updatePath('/events/list/');
 }
@@ -89,9 +83,8 @@ export const addEvent = (newEvent) => (dispatch, getState) => {
   }
 }
 
-
 export const editEvent = (event) => (dispatch, getState) => {
-  if (getState().app.offline === true || event.unsynced) {
+  if (event.unsynced) {
     editEventOffline(event, dispatch);
     return;
   }
@@ -99,13 +92,20 @@ export const editEvent = (event) => (dispatch, getState) => {
   editEventOnline(event, dispatch);
 }
 
-export const syncEvent = (newEvent) => (dispatch, getState) => {
-  makeRequest(Endpoints.newEvent, newEvent).then((result) => {
+export const syncEvent = (event) => (dispatch, getState) => {
+  makeRequest(Endpoints.newEvent, event).then((result) => {
     let response = JSON.parse(result);
-    dispatch(editEventSuccess(response, newEvent.id));
+    dispatch(editEventSuccess(response, event.id));
+    dispatch(updateIncidentIds(event.id, response.id))
     updatePath('/events/list/');
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
   });
 }
+
+export const fetchAndStoreEvents = () => (dispatch, getState) => {
+  makeRequest(Endpoints.eventsList).then(result => {
+    dispatch(receiveEvents(JSON.parse(result)));
+  });
+};

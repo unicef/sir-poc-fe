@@ -22,8 +22,11 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
           @apply --layout-vertical;
         }
         paper-button {
-          margin: 8px 24px;
+          margin: 8px 0 8px 24px;
           padding: 8px;
+        }
+        paper-button + paper-button {
+          margin-left: 0;
         }
       </style>
       <div class="card">
@@ -60,8 +63,12 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-            <paper-button raised on-click="save"> Save </paper-button>
-            <paper-button raised on-click="sync" hidden$="[[!showSyncButton]]"> Sync </paper-button>
+          <template is="dom-if" if="[[showSyncButton]]">
+            <paper-button raised on-click="save"> Edit </paper-button>
+            <paper-button raised on-click="sync"> Sync </paper-button>
+          </template>
+
+          <paper-button raised on-click="save" hidden$="[[showSyncButton]]"> Save </paper-button>
         </template>
       </div>
     `;

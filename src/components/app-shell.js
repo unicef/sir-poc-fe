@@ -130,8 +130,8 @@ class MyApp extends connect(store)(PolymerElement) {
 
         </app-header-layout>
         <snack-bar active$="[[snackbarOpened]]">
-          <span hidden$="[[offline]]">You are now offline</span>
-          <span hidden$="[[!offline]]">You are now online</span>
+          <span hidden$="[[!offline]]">You are now offline</span>
+          <span hidden$="[[offline]]">You are now online</span>
         </snack-bar>
       </app-drawer-layout>
     `;

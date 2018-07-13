@@ -7,6 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 
 // import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
+import '../common/datepicker-lite.js';
 
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
@@ -40,10 +41,10 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <paper-input label="Start date" type="date" readonly="[[readonly]]" value="{{event.start_date}}"></paper-input>
+            <datepicker-lite label="Start date" readonly="[[readonly]]" value="{{event.start_date}}"></datepicker-lite>
           </div>
           <div class="col col-6">
-            <paper-input label="End date" type="date" readonly="[[readonly]]" value="{{event.end_date}}"></paper-input>
+            <datepicker-lite label="End date" readonly="[[readonly]]" value="{{event.end_date}}"></datepicker-lite>
           </div>
         </div>
 
@@ -63,12 +64,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <template is="dom-if" if="[[showSyncButton]]">
-            <paper-button raised on-click="save"> Edit </paper-button>
-            <paper-button raised on-click="sync"> Sync </paper-button>
-          </template>
-
-          <paper-button raised on-click="save" hidden$="[[showSyncButton]]"> Save </paper-button>
+          <paper-button raised on-click="save"> Save </paper-button>
         </template>
       </div>
     `;
@@ -81,10 +77,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         value: {}
       },
       readonly: {
-        type: Boolean,
-        value: false
-      },
-      showSyncButton: {
         type: Boolean,
         value: false
       },
@@ -101,7 +93,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
-    this.showSyncButton = this.event && !this.state.app.offline && this.event.unsynced;
   }
 
   isVisible() {

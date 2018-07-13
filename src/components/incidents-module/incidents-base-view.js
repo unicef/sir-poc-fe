@@ -34,11 +34,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           padding-bottom: 12px;
         }
         paper-button {
-          margin: 8px 0 8px 24px;
           padding: 8px;
-        }
-        paper-button + paper-button {
-          margin-left: 0;
         }
       </style>
 
@@ -233,12 +229,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <template is="dom-if" if="[[showSyncButton]]">
-            <paper-button raised on-click="save"> Edit </paper-button>
-            <paper-button raised on-click="sync"> Sync </paper-button>
-          </template>
-
-          <paper-button raised on-click="save" hidden$="[[showSyncButton]]"> Save </paper-button>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <p hidden$="[[!eventNotOk(incident.event, state.app.offline)]]"> Can't save, selected event must be synced first </p>
+              <paper-button raised
+                            on-click="save"
+                            disabled$="[[eventNotOk(incident.event, state.app.offline)]]">
+                Save
+              </paper-button>
+            </div>
+          </div>
         </template>
       </div>
     `;
@@ -298,7 +298,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.state = state;
     this.staticData = state.staticData;
-    this.showSyncButton = this.incident && !this.state.app.offline && this.incident.unsynced;
 
     this.events = state.events.list.map(elem => {
       elem.name = elem.description;
@@ -336,5 +335,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   isVisible() {
     return this.classList.contains('iron-selected');
+  }
+
+  eventNotOk(eventId, offline) {
+    if (!eventId || !this.events) {
+      return false;
+    }
+    let selectedEvent = this.events.find(event => event.id === eventId);
+    return !!selectedEvent.unsynced && !offline;
   }
 }

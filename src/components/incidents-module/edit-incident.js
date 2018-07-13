@@ -28,11 +28,11 @@ class EditIncident extends IncidentsBaseView {
   }
 
   save() {
-    this.store.dispatch(editIncident(this.incident));
-  }
-
-  sync() {
-    this.store.dispatch(syncIncident(this.incident));
+    if (this.incident.unsynced && !this.state.app.offline) {
+      this.store.dispatch(syncIncident(this.incident));
+    } else {
+      this.store.dispatch(editIncident(this.incident));
+    }
   }
 
   _idChanged(newId) {

@@ -28,11 +28,11 @@ class EditEvent extends EventsBaseView {
   }
 
   save() {
-    this.store.dispatch(editEvent(this.event));
-  }
-
-  sync() {
-    this.store.dispatch(syncEvent(this.event));
+    if (this.event.unsynced && !this.state.app.offline) {
+      this.store.dispatch(syncEvent(this.event));
+    } else {
+      this.store.dispatch(editEvent(this.event));
+    }
   }
 
   _idChanged(newId) {

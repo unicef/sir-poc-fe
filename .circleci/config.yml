@@ -18,7 +18,8 @@ jobs:
             npm install polymer-cli
             npm install
             export PATH=$PWD/node_modules/.bin:$PATH
-
+            LAUNCHPAD_FIREFOX=/usr/local/bin/firefox
+            LAUNCHPAD_CHROME=/usr/bin/chromium-browser
             xvfb-run polymer test --skip-selenium-install
 
 #            xvfb-run npm run test

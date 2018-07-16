@@ -3,29 +3,32 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: node:8-alpine
+#      - image: node:8-alpine
+#      - image: node:8
+      - image: circleci/node:8
+
     steps:
       - restore_cache:
           keys:
             - source-{{ .Branch }}-{{ .Revision }}
-      - checkout
+#      - checkout
       - run:
           name: setup
           command: |
+            npm install bower polymer
             npm install
-            npm install bower
+            bower
             export PATH=$PWD/node_modules/.bin:$PATH
-            polymer lint
-            polymer build
-      - run:
-          name: test
-          command: |
-            polymer lint
 
-      - run:
-          name: build
-          command: |
-            polymer build
+            xvfb-run polymer test --skip-selenium-install
+
+#            xvfb-run npm run test
+#            xvfb-run npm run test:integration
+
+#      - run:
+#          name: build
+#          command: |
+#            polymer build
 
       - save_cache:
           key: source-{{ .Branch }}-{{ .Revision }}
@@ -45,7 +48,7 @@ jobs:
               fi
   tag:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/node:8
         environment:
           API_URL: https://api.github.com/repos/unicef/sir-poc-fe
     steps:

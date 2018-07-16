@@ -15,7 +15,7 @@ jobs:
       - run:
           name: setup
           command: |
-            npm install polymer
+            npm install polymer-cli
             npm install
             export PATH=$PWD/node_modules/.bin:$PATH
 

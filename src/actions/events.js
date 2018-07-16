@@ -84,7 +84,7 @@ export const addEvent = (newEvent) => (dispatch, getState) => {
 }
 
 export const editEvent = (event) => (dispatch, getState) => {
-  if (event.unsynced) {
+  if (getState().app.offline === true) {
     editEventOffline(event, dispatch);
   } else {
     editEventOnline(event, dispatch);

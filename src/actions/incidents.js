@@ -94,10 +94,9 @@ export const addIncident = (newIncident) => (dispatch, getState) => {
 export const editIncident = (incident) => (dispatch, getState) => {
   if (incident.unsynced) {
     editIncidentOffline(incident, dispatch);
-    return;
+  } else {
+    editIncidentOnline(incident, dispatch);
   }
-
-  editIncidentOnline(incident, dispatch);
 }
 
 export const syncIncident = (newIncident) => (dispatch, getState) => {

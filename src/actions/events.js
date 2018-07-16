@@ -86,10 +86,9 @@ export const addEvent = (newEvent) => (dispatch, getState) => {
 export const editEvent = (event) => (dispatch, getState) => {
   if (event.unsynced) {
     editEventOffline(event, dispatch);
-    return;
+  } else {
+    editEventOnline(event, dispatch);
   }
-
-  editEventOnline(event, dispatch);
 }
 
 export const syncEvent = (event) => (dispatch, getState) => {

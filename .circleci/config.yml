@@ -19,7 +19,7 @@ jobs:
             npm install
             export PATH=$PWD/node_modules/.bin:$PATH
 
-            xvfb-run polymer test --skip-selenium-install
+            xvfb-run -a polymer test --skip-selenium-install
 
 #            xvfb-run npm run test
 #            xvfb-run npm run test:integration

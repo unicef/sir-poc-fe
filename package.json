@@ -1,10 +1,7 @@
 {
-  "name": "polymer-starter-kit",
-  "version": "4.0.0",
-  "description": "A starting point for Polymer apps",
-  "author": "The Polymer Authors",
-  "license": "BSD-3-Clause",
-  "repository": "Polymer/polymer-starter-kit",
+  "name": "sir-poc",
+  "version": "1.0.0",
+  "repository": "unicef/sir-poc-fe",
   "scripts": {
     "start": "polymer serve",
     "build": "polymer build",

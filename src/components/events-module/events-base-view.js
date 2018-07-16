@@ -22,13 +22,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         :host {
           @apply --layout-vertical;
         }
-        paper-button {
-          margin: 8px 0 8px 24px;
-          padding: 8px;
-        }
-        paper-button + paper-button {
-          margin-left: 0;
-        }
       </style>
       <div class="card">
         <div class="row-h">
@@ -64,7 +57,11 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <paper-button raised on-click="save"> Save </paper-button>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-button raised on-click="save"> Save </paper-button>
+            </div>
+          </div>
         </template>
       </div>
     `;

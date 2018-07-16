@@ -22,20 +22,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         :host {
           @apply --layout-vertical;
         }
-        etools-dropdown-lite, etools-dropdown-multi-lite {
-          width: 100%;
-        }
-        paper-checkbox {
-          --paper-checkbox-unchecked-color: var(--secondary-text-color);
-          --paper-checkbox-label-color: var(--secondary-text-color);
-
-          /* TODO: figure out a better way of doing vertical alignment */
-          padding-top: 29px;
-          padding-bottom: 12px;
-        }
-        paper-button {
-          padding: 8px;
-        }
       </style>
 
       <div class="card">

@@ -15,9 +15,8 @@ jobs:
       - run:
           name: setup
           command: |
-            npm install bower polymer
+            npm install polymer
             npm install
-            bower
             export PATH=$PWD/node_modules/.bin:$PATH
 
             xvfb-run polymer test --skip-selenium-install

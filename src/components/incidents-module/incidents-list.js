@@ -16,12 +16,13 @@ import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
+import '../styles/grid-layout-styles.js';
 
 class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles data-table-styles">
+      <style include="shared-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
           padding: 10px;
@@ -30,36 +31,6 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         iron-icon {
           height: 16px;
         }
-
-        a {
-          text-decoration: none;
-        }
-
-        .col-1 {
-          flex: 0 0 8.333333%;
-          max-width: 8.333333%;
-        }
-
-        .col-2 {
-          flex: 0 0 16.666666%;
-          max-width: 16.666666%;
-        }
-
-        .col-3 {
-          flex: 0 0 25%;
-          max-width: 25%;
-        }
-
-        .col-4 {
-          flex: 0 0 33.333333%;
-          max-width: 33.333333%;
-        }
-
-        .col-6 {
-          flex: 0 0 50%;
-          max-width: 50%;
-        }
-
         etools-data-table-row[unsynced] {
           --list-bg-color: pink;
         }

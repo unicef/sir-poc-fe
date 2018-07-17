@@ -63,6 +63,14 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
         width: 400px;
       }
 
+      iron-icon {
+        height: 16px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
       etools-dropdown-lite, etools-dropdown-multi-lite {
         width: 100%;
       }

@@ -69,29 +69,33 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "36:e1:ae:c3:f2:0f:27:67:85:44:78:5d:ec:2f:b2:0d"
+            - "ab:c9:0f:60:bb:e1:6e:73:ec:af:82:2c:3c:13:9e:d2"
       - run:
           name: package and release
           command: |
             export PATH=/home/circleci/.local/bin:$PATH
             export TAG=${TAG:=${CIRCLE_BRANCH#*/}}
             git status
-            git reset --hard
+            git show-branch $TAG
+            if [ $? -gt 0 ];then
+              git reset --hard
 
-            git config user.email "ci@unicef.org"
-            git config user.name "CI"
+              git config user.email "ci@unicef.org"
+              git config user.name "CI"
 
-            git checkout master
-            git merge --no-ff release/$TAG -m "merge release/$TAG"
-            git tag -a -m "v$TAG" $TAG
-            git checkout develop
-            git merge --no-ff release/$TAG -m "merge release/$TAG"
-            git push --verbose --tags
-            git push origin --verbose --delete release/$TAG
+              git checkout master
+              git merge --no-ff release/$TAG -m "merge release/$TAG"
+              git tag -a -m "v$TAG" $TAG
+              git checkout develop
+              git merge --no-ff release/$TAG -m "merge release/$TAG"
+              git push --verbose --tags
+              git push origin --verbose --delete release/$TAG
+            fi
       - run:
           name: release
           command: |
             export TAG=${TAG:=${CIRCLE_BRANCH#*/}}
+            echo
             export TODAY=`date '+%d %B %Y at %H:%M'`
             function is_pre()
             {
@@ -108,6 +112,9 @@ jobs:
             EOF
             }
             data=$(data)
+
+            echo "posting $data"
+
             curl -X POST -s \
               --fail --verbose \
               -H "Accept: application/json" \

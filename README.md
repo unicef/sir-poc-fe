@@ -1,8 +1,7 @@
 Security Incident Reporting Frontend
 ====================================
 
-[![CircleCI](https://circleci.com/gh/unicef/sir-poc-fe.svg?style=svg)](https://circleci.com/gh/unicef/sir-poc-fe)
-
+[![CircleCI](https://circleci.com/gh/unicef/sir-poc-fe.svg?style=svg&circle-token=dafbd6ad652fa25e8b4d84f4a3557d437d289dea)](https://circleci.com/gh/unicef/sir-poc-fe)
 
 
 ### Project Links

@@ -3,8 +3,9 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-       - image: circleci/node:8-browsers
-
+      - image: circleci/node:8-browsers
+        environment:
+          RELEASE_MATCH: "release/*"
     steps:
       - restore_cache:
           keys:
@@ -99,7 +100,6 @@ jobs:
             function data() {
             cat <<EOF
             { "tag_name": "$TAG",
-              "target_commitish": "${CIRCLE_BRANCH}",
               "name": "v$TAG",
               "body": "version $TAG - Built on $TODAY",
               "draft": false,

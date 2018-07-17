@@ -3,37 +3,51 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-#      - image: node:8-alpine
-#      - image: node:8
-      - image: circleci/node:8
-
+      - image: circleci/node:8-browsers
+        environment:
+          RELEASE_MATCH: "release/*"
     steps:
       - restore_cache:
           keys:
             - source-{{ .Branch }}-{{ .Revision }}
-#      - checkout
+      - restore_cache:
+          keys:
+            - deps-v1-{{ checksum "package-lock.json" }}
+
+      - checkout
       - run:
           name: setup
           command: |
-            npm install bower polymer
+            npm install polymer-cli
             npm install
-            bower
+
+      - run:
+          name: build
+          command: |
+            npm run build
+
+      - run:
+          name: test
+          command: |
             export PATH=$PWD/node_modules/.bin:$PATH
 
-            xvfb-run polymer test --skip-selenium-install
+            sudo apt-get remove firefox-mozilla-build binutils
+            sudo sh -c "echo 'deb http://ftp.hr.debian.org/debian sid main' >> /etc/apt/sources.list"
+            sudo apt-get update
+            sudo apt-get install -t sid firefox
+            firefox --version
 
-#            xvfb-run npm run test
-#            xvfb-run npm run test:integration
-
-#      - run:
-#          name: build
-#          command: |
-#            polymer build
+            xvfb-run -a polymer test --skip-selenium-install
 
       - save_cache:
           key: source-{{ .Branch }}-{{ .Revision }}
           paths:
             - ".git"
+
+      - save_cache:
+          key: deps-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - "./node_modules"
 
       - deploy:
           name: tag and release if release candidate
@@ -86,7 +100,6 @@ jobs:
             function data() {
             cat <<EOF
             { "tag_name": "$TAG",
-              "target_commitish": "${CIRCLE_BRANCH}",
               "name": "v$TAG",
               "body": "version $TAG - Built on $TODAY",
               "draft": false,

@@ -1,18 +1,33 @@
 #!/usr/bin/env bash
 
+BASE=`dirname $0`
+
 [[ -f ../.env ]]  && . ../.env
 [[ -f .env ]]  && . .env
-[[ -f .config.yml ]]  && CONFIG=./config.yml
-[[ -f .circleci/config.yml ]]  && CONFIG=.circleci/config.yml
 
-
-BRANCH=develop
+USERNAME="unicef"
+PROJECT="sir-poc-fe"
+CONFIG=$BASE/config.yml
+BRANCH=`git st | grep 'On branch' | sed 's/On branch //'`
+TAG=${BRANCH/release\//}
 JOB=build
-TAG=
 VERBOSE=0
+MODE="local"
 
 help (){
-    echo "./test-config.sh [-b/--branch BRANCH] [-j/--job JOB] [-t/--tag TAG] [-v/--verbose 1/2/3]"
+    echo "./test-config.sh"
+    echo "  -u,--username TOKEN. Default '$USERNAME'"
+    echo "  -p,--project TOKEN. Default '$PROJECT'"
+    echo "  -b,--branch BRANCH. Default '$BRANCH'"
+    echo "  -j,--job JOB. Default '$JOB'"
+    echo "  -t,--tag TAG. Default '$TAG'"
+    echo "  -c,-config CONFIG. Default '$CONFIG'"
+    echo "  --token TOKEN. Default '$GITHUB_TOKEN'"
+
+    echo "  -r,--remote"
+    echo "  -v,--verbose"
+    echo "  -q,--quiet"
+    echo "  --dry-run"
     exit 1
 }
 
@@ -50,13 +65,46 @@ case $1 in
         shift # past argument
         shift # past value
         ;;
+    -q|--quiet)
+        VERBOSE="0"
+        shift # past argument
+        shift # past value
+        ;;
     -v|--verbose)
         VERBOSE="$2"
         shift # past argument
         shift # past value
         ;;
-    --token)
+    --dry-run|--dryrun)
+        DRYRUN="1"
+        shift # past argument
+        ;;
+    -r|--remote)
+        MODE="remote"
+        shift # past argument
+        ;;
+    --circle-token)
+        CIRCLE_TOKEN="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    --github-token)
         GITHUB_TOKEN="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    -c|--config)
+        CONFIG="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    -u|--username)
+        USERNAME="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    -p|--project)
+        PROJECT="$2"
         shift # past argument
         shift # past value
         ;;
@@ -69,31 +117,75 @@ case $1 in
 esac
 done
 
-BRANCH="${BRANCH/\//%2F}"
-
 if [ "$VERBOSE" -gt "0" ]; then
-    echo "branch:  $BRANCH"
-    echo "tag:     $TAG"
-    echo "job:     $JOB"
-    echo "verbose: $VERBOSE"
+    echo "Configuration:"
+    echo "   username:    $USERNAME"
+    echo "   project:     $PROJECT"
+    echo "   branch:      $BRANCH"
+    echo "   tag:         $TAG"
+    echo "   job:         $JOB"
+    echo "   mode:        $MODE"
+    echo "   config:      $CONFIG"
+    echo "   verbose:     $VERBOSE"
+    echo "   dry-run:     $DRYRUN"
+    if [ "$VERBOSE" -gt "2" ];then
+        echo "   Tokens:"
+        echo "      GitHub:   $GITHUB_TOKEN"
+        echo "      CircleCI: $CIRCLE_TOKEN"
+    fi
 fi
+
+#if [ "$DRYRUN" == "1" ];then
+#    exit 0
+#fi
 
 if [ -z "$GITHUB_TOKEN" ]; then
     read -p 'CircleCI token: ' GITHUB_TOKEN
 fi
 
-if [ -z "$TAG" ]; then
+if [ "$TAG" == "latest" ]; then
     TAG=`curl \
       -s \
       -H "Authorization: token ${GITHUB_TOKEN}" \
-      "https://api.github.com/repos/unicef/sir-poc-fe/releases/latest" | jq -r '.tag_name'`
-
+      "https://api.github.com/repos/$USERNAME/$PROJECT/releases/latest" | jq -r '.tag_name'`
 fi
 
-circleci build  -c $CONFIG \
-    --job $JOB \
-    -e CIRCLE_BUILD_NUM=$RANDOM \
-    -e TAG=$TAG \
-    -e GITHUB_TOKEN=$GITHUB_TOKEN \
-    -v "$PWD:/home/circleci/code" \
-    --branch=$BRANCH
+if [ ${MODE} == "remote" ];then
+CMD=$(cat<<EOF
+curl --user '${CIRCLE_TOKEN}:'
+        --request POST
+        -q
+        --form build_parameters[TAG]=$TAG
+        --form build_parameters[CIRCLE_JOB]=$JOB
+        --form config=@$CONFIG
+        --form notify=false
+            https://circleci.com/api/v1.1/project/github/$USERNAME/$PROJECT/tree/$BRANCH
+EOF
+)
+else
+CMD=$(cat<<EOF
+circleci build  -c $CONFIG
+        --job $JOB
+        -e CIRCLE_BUILD_NUM=$RANDOM
+        -e TAG=$TAG
+        -e GITHUB_TOKEN=$GITHUB_TOKEN
+        -e CIRCLE_TOKEN=$CIRCLE_TOKEN
+        --branch=$BRANCH
+EOF
+)
+fi
+
+if [ "$VERBOSE" -gt "1" ]; then
+    # remove tokens if used in scripts to prevent logging of sensitive data
+    echo
+    echo "Command: "
+    if [ "$VERBOSE" -gt "2" ]; then
+        echo "$CMD" | sed -e "s/${CIRCLE_TOKEN}/<token>/g" | sed -e "s/${GITHUB_TOKEN}/<token>/g"
+    else
+        echo "$CMD"
+    fi
+fi
+
+if [ "$DRYRUN" == "0" ]; then
+    $CMD
+fi

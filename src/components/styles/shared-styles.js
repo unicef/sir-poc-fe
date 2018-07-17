@@ -60,7 +60,7 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       }
 
       .search-input {
-        width: 400px;
+        max-width: 400px;
       }
 
       iron-icon {

@@ -33,6 +33,10 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           --list-bg-color: pink;
         }
 
+        .col-data > span {
+          max-width: 100%;
+        }
+
       </style>
 
       <div class="card filters">
@@ -66,16 +70,18 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
                 <span class="col-data col-3">
-                  <a href="/events/view/[[item.id]]"> [[item.description]] </a>
+                  <span class="truncate">
+                    <a href="/events/view/[[item.id]]"> [[item.description]] </a>
+                  </span>
                 </span>
                 <span class="col-data col-3" title="[[item.start_date]]">
                     [[item.start_date]]
                 </span>
                 <span class="col-data col-3" title="[[item.location]]">
-                    [[item.location]]
+                  <span class="truncate">[[item.location]]</span>
                 </span>
                 <span class="col-data col-2">
-                  [[getStatus(item)]]
+                  <span class="truncate">[[getStatus(item)]]</span>
                 </span>
                 <span class="col-data col-1">
                   <a href="/events/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>

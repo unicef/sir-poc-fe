@@ -28,11 +28,12 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           padding: 10px;
         }
 
-        iron-icon {
-          height: 16px;
-        }
         etools-data-table-row[unsynced] {
           --list-bg-color: pink;
+        }
+
+        .col-data > span {
+          max-width: 100%;
         }
       </style>
 
@@ -67,21 +68,23 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data" style="display:flex; flex-direction: row;">
-              <span class="col-3">
-                <a href="/incidents/view/[[item.id]]">
-                  [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                </a>
-              </span>
-              <span class="col-3">
-                  <span class="truncate">[[item.city]]</span>
+              <span class="col-data col-3">
+                <span class="truncate">
+                  <a href="/incidents/view/[[item.id]]">
+                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
+                  </a>
                 </span>
-              <span class="col-3">
-                <span class="truncate">[[_getIncidentName(item.incident_type)]]</span>
               </span>
-              <span class="col-2">
-                [[getStatus(item)]]
+              <span class="col-data col-3" title="[[item.city]]">
+                  <span>[[item.city]]</span>
+                </span>
+              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]">
+                <span>[[_getIncidentName(item.incident_type)]]</span>
               </span>
-              <span class="col-1">
+              <span class="col-data col-2" title="[[getStatus(item)]]">
+                <span class="truncate">[[getStatus(item)]]</span>
+              </span>
+              <span class="col-data col-1">
                 <a href="/incidents/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>
                 <a href="/incidents/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]"> <iron-icon icon="editor:mode-edit"></iron-icon> </a>
               </span>

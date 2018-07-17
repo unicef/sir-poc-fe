@@ -112,9 +112,6 @@ jobs:
             EOF
             }
             data=$(data)
-
-            echo "posting $data"
-
             curl -X POST -s \
               --fail --verbose \
               -H "Accept: application/json" \

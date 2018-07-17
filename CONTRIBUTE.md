@@ -32,6 +32,8 @@ Continuos integration flow on CircleCi does the rest of the job, it:
 - close the branch and merge it back to `develop` and `master`
 - push everything on GitHub
 - uses GitHub API to create a releases availiable under https://github.com/unicef/sir-poc-fe/releases
+- trigger new CircleCI flow to build Frontend Docker image (see https://github.com/unicef/sir-releases)
+
 
 **Note:** Tagging should follow Semantic Versioning convention. Any tag suffixed with letters (usually `a`,`b`,`c`, `rc`) is marked as `pre-release` 
 

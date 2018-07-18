@@ -9,6 +9,8 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/iron-icons/editor-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
@@ -25,9 +27,26 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           display: block;
           padding: 10px;
         }
-
+        iron-icon {
+          height: 16px;
+        }
         a {
           text-decoration: none;
+        }
+
+        .col-1 {
+          flex: 0 0 8.333333%;
+          max-width: 8.333333%;
+        }
+
+        .col-2 {
+          flex: 0 0 16.666666%;
+          max-width: 16.666666%;
+        }
+
+        .col-3 {
+          flex: 0 0 25%;
+          max-width: 25%;
         }
 
         .col-4 {
@@ -38,6 +57,10 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         .col-6 {
           flex: 0 0 50%;
           max-width: 50%;
+        }
+
+        etools-data-table-row[unsynced] {
+          --list-bg-color: pink;
         }
 
       </style>
@@ -52,28 +75,41 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
       <div class="card list">
         <etools-data-table-header id="listHeader" label="Events">
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Description
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Start date
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Location
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Status
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
+            Actions
           </etools-data-table-column>
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
-          <etools-data-table-row>
+          <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
-                <span class="col-data col-4">
+                <span class="col-data col-3">
                   <a href="/events/view/[[item.id]]"> [[item.description]] </a>
                 </span>
-                <span class="col-data col-4" title="[[item.start_date]]">
+                <span class="col-data col-3" title="[[item.start_date]]">
                     [[item.start_date]]
                 </span>
-                <span class="col-data col-4" title="[[item.location]]">
+                <span class="col-data col-3" title="[[item.location]]">
                     [[item.location]]
+                </span>
+                <span class="col-data col-2">
+                  [[getStatus(item)]]
+                </span>
+                <span class="col-data col-1">
+                  <a href="/events/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>
+                  <a href="/events/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]"> <iron-icon icon="editor:mode-edit"></iron-icon> </a>
                 </span>
             </div>
             <div slot="row-data-details">
@@ -106,6 +142,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         value: []
       },
       q: String,
+      offline: Boolean,
       filteredEvents: {
         type: Array,
         computed: '_filterData(events, q, pagination.pageSize, pagination.pageNumber)'
@@ -118,6 +155,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       return;
     }
     this.events = state.events.list;
+    this.offline = state.app.offline;
   }
 
   _filterData(events, q) {
@@ -130,6 +168,14 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   _applyQFilter(e, q) {
     return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
+  }
+
+  notEditable(event, offline) {
+    return offline && !event.unsynced;
+  }
+
+  getStatus(event) {
+    return event.unsynced? 'Not Synced': 'Synced';
   }
 }
 

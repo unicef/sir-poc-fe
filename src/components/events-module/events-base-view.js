@@ -7,6 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 
 // import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
+import '../common/datepicker-lite.js';
 
 import { addEvent } from '../../actions/events.js';
 import { store } from '../store.js';
@@ -21,10 +22,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         :host {
           @apply --layout-vertical;
         }
-        paper-button {
-          margin: 8px 24px;
-          padding: 8px;
-        }
       </style>
       <div class="card">
         <div class="row-h">
@@ -37,10 +34,10 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <paper-input label="Start date" type="date" readonly="[[readonly]]" value="{{event.start_date}}"></paper-input>
+            <datepicker-lite label="Start date" readonly="[[readonly]]" value="{{event.start_date}}"></datepicker-lite>
           </div>
           <div class="col col-6">
-            <paper-input label="End date" type="date" readonly="[[readonly]]" value="{{event.end_date}}"></paper-input>
+            <datepicker-lite label="End date" readonly="[[readonly]]" value="{{event.end_date}}"></datepicker-lite>
           </div>
         </div>
 
@@ -52,6 +49,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <paper-input label="Note" readonly="[[readonly]]" type="text" value="{{event.note}}"></paper-input>
           </div>
         </div>
+
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-input label="Description" type="text" readonly="[[readonly]]" value="{{event.description}}"></paper-input>
@@ -59,7 +57,11 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <paper-button raised on-click="save"> Save </paper-button>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-button raised on-click="save"> Save </paper-button>
+            </div>
+          </div>
         </template>
       </div>
     `;
@@ -80,6 +82,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       store: Object
     };
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.store = store;

@@ -22,21 +22,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         :host {
           @apply --layout-vertical;
         }
-        etools-dropdown-lite, etools-dropdown-multi-lite {
-          width: 100%;
-        }
-        paper-checkbox {
-          --paper-checkbox-unchecked-color: var(--secondary-text-color);
-          --paper-checkbox-label-color: var(--secondary-text-color);
-
-          /* TODO: figure out a better way of doing vertical alignment */
-          padding-top: 29px;
-          padding-bottom: 12px;
-        }
-        paper-button {
-          margin: 8px 24px;
-          padding: 8px;
-        }
       </style>
 
       <div class="card">
@@ -230,14 +215,19 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <paper-button raised on-click="save"> Save </paper-button>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <p hidden$="[[!eventNotOk(incident.event, state.app.offline)]]"> Can't save, selected event must be synced first </p>
+              <paper-button raised
+                            on-click="save"
+                            disabled$="[[eventNotOk(incident.event, state.app.offline)]]">
+                Save
+              </paper-button>
+            </div>
+          </div>
         </template>
       </div>
     `;
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    this.store = store;
   }
 
   static get properties() {
@@ -278,7 +268,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       store: Object
     };
   }
+  connectedCallback() {
+    super.connectedCallback();
+    this.store = store;
+  }
   _userSelected(event) {
+    if (!event.detail.selectedItem) {
+      return;
+    }
+    this.incident.primary_person.index_number = event.detail.selectedItem.index_number;
     this.incident.primary_person.first_name = event.detail.selectedItem.first_name;
     this.incident.primary_person.last_name = event.detail.selectedItem.last_name;
   }
@@ -295,6 +293,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     // TODO: this is TEMPORARY! user data should be more properly displayed
     this.staticData.users = state.staticData.users.map((elem, index) => {
       elem.name = elem.first_name + ' ' + elem.last_name;
+      elem.index_number = index;
       elem.id = index;
       return elem;
     });
@@ -322,5 +321,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   isVisible() {
     return this.classList.contains('iron-selected');
+  }
+
+  eventNotOk(eventId, offline) {
+    if (!eventId || !this.events) {
+      return false;
+    }
+    let selectedEvent = this.events.find(event => event.id === eventId);
+    return !!selectedEvent.unsynced && !offline;
   }
 }

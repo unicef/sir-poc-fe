@@ -53,6 +53,9 @@ export const lazyLoadEventPages = (page) => (dispatch, getState) => {
     case 'view':
       import('../components/events-module/view-event.js');
       break;
+    case 'edit':
+      import('../components/events-module/edit-event.js');
+      break;
     default:
       updatePath('/404/');
       break;
@@ -69,6 +72,9 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
       break;
     case 'view':
       import('../components/incidents-module/view-incident.js');
+      break;
+    case 'edit':
+      import('../components/incidents-module/edit-incident.js');
       break;
     default:
       updatePath('/404/');

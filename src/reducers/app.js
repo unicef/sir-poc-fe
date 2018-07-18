@@ -17,7 +17,7 @@ import {
   UPDATE_LOCATION_INFO,
 } from '../actions/app.js';
 
-const app = (state = {narrowDrawer: false, locationInfo: {selectedModule: '', page: '', selectedItemId: ''}}, action) => {
+const app = (state = {narrowDrawer: false, offline: false, locationInfo: {selectedModule: '', page: '', selectedItemId: ''}}, action) => {
   switch (action.type) {
     case UPDATE_OFFLINE:
       return {

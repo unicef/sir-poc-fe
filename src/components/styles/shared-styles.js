@@ -9,11 +9,12 @@
  */
 
 import '@polymer/polymer/polymer-element.js';
+import './button-styles.js'
 
 const $_documentContainer = document.createElement('template');
 $_documentContainer.innerHTML = `<dom-module id="shared-styles">
   <template>
-    <style>
+    <style include="button-styles">
       .card {
         margin: 24px;
         padding: 16px;
@@ -60,6 +61,10 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
 
       .search-input {
         width: 400px;
+      }
+
+      etools-dropdown-lite, etools-dropdown-multi-lite {
+        width: 100%;
       }
     </style>
   </template>

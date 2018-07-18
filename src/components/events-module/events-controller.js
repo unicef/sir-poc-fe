@@ -36,6 +36,7 @@ class EventsController extends connect(store)(PolymerElement) {
         <events-list name="list"></events-list>
         <add-event name="new"></add-event>
         <view-event name="view" event-id="[[routeData.id]]"></view-event>
+        <edit-event name="edit" event-id="[[routeData.id]]"></edit-event>
       </iron-pages>
     `;
   }

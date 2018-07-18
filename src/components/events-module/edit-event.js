@@ -37,7 +37,10 @@ class EditEvent extends EventsBaseView {
 
   _idChanged(newId) {
     // TODO: fix ==
-     this.set('event', this.state.events.list.find(ev => ev.id == this.eventId ));
+    let event = this.state.events.list.find(ev => ev.id == this.eventId);
+    if (event) {
+      this.set('event', JSON.parse(JSON.stringify(event)));
+    }
   }
 }
 

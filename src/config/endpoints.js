@@ -11,7 +11,7 @@ export const Endpoints = {
   },
   editEvent: {
     url: baseUrl + "/api/events/<%=id%>/",
-    method: 'PUT'
+    method: 'PATCH'
   },
   incidentsList: {
     url: baseUrl + "/api/incidents/",
@@ -23,7 +23,7 @@ export const Endpoints = {
   },
   editIncident: {
     url: baseUrl + "/api/incidents/<%=id%>/",
-    method: 'PUT'
+    method: 'PATCH'
   },
   regions: {
     url: baseUrl + "/api/regions/",

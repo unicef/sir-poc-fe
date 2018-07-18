@@ -8,6 +8,7 @@ export const EDIT_EVENT_SUCCESS = 'EDIT_EVENT_SUCCESS';
 export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
 export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
+export const RECEIVE_EVENT = 'RECEIVE_EVENT';
 
 const editEventSuccess = (event, id) => {
   return {
@@ -108,3 +109,17 @@ export const fetchAndStoreEvents = () => (dispatch, getState) => {
     dispatch(receiveEvents(JSON.parse(result)));
   });
 };
+
+export const fetchEvent = (id) => (dispatch, getState) => {
+  let endpoint = prepareEndpoint(Endpoints.getEvent,  {id: id});
+  makeRequest(endpoint).then((response) => {
+    dispatch(receiveEvent(JSON.parse(response)));
+  });
+};
+
+const receiveEvent = (event) => {
+  return {
+    type: RECEIVE_EVENT,
+    event
+  };
+}

@@ -9,6 +9,10 @@ export const Endpoints = {
     url: baseUrl + "/api/events/",
     method: 'POST'
   },
+  getEvent: {
+    url: baseUrl + "/api/events/<%=id%>",
+    method: 'GET'
+  },
   editEvent: {
     url: baseUrl + "/api/events/<%=id%>/",
     method: 'PUT'

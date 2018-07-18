@@ -1,8 +1,11 @@
 import {
   EDIT_EVENT_SUCCESS,
   ADD_EVENT_SUCCESS,
-  RECEIVE_EVENTS
+  RECEIVE_EVENTS,
+  RECEIVE_EVENT
 } from '../actions/events.js';
+
+import { createSelector } from 'reselect';
 
 const events = (state = {list: []}, action) => {
   switch (action.type) {
@@ -10,6 +13,11 @@ const events = (state = {list: []}, action) => {
       return {
         ...state,
         list: getRefreshedEvents(state.list, action.events)
+      };
+    case RECEIVE_EVENT:
+      return {
+        ...state,
+        list: getEditedList(state.list, action)
       };
     case ADD_EVENT_SUCCESS:
       return {
@@ -41,3 +49,11 @@ const getRefreshedEvents = (oldEvents, newEvents) => {
   let unsynced = oldEvents.filter(elem => elem.unsynced);
   return [...newEvents, ...unsynced];
 }
+
+const eventsSelector = state => state.events.list;
+const selectedEventId = state => state.app.locationInfo.selectedItemId;
+export const selectEvent = createSelector(
+  eventsSelector,
+  selectedEventId,
+  (events, eventId) => {console.log('in selector: '+ eventId); return events.find(ev => String(ev.id) === String(eventId));}
+)

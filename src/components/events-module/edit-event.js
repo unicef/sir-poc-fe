@@ -2,7 +2,8 @@
 @license
 */
 import { EventsBaseView } from './events-base-view.js';
-import { editEvent, syncEvent } from '../../actions/events.js';
+import { editEvent, syncEvent, fetchEvent } from '../../actions/events.js';
+import { selectEvent } from '../../reducers/events.js';
 
 /**
  * @polymer
@@ -22,9 +23,22 @@ class EditEvent extends EventsBaseView {
     };
   }
 
+  static get observers() {
+    return [
+      'stateChanged(state)'
+    ];
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.title = 'Edit event';
+  }
+
+  stateChanged() {
+    if (!this.isVisible()) {
+      return;
+    }
+    this.set('event', selectEvent(this.state));
   }
 
   save() {
@@ -36,8 +50,11 @@ class EditEvent extends EventsBaseView {
   }
 
   _idChanged(newId) {
+    if (!newId || !this.isVisible()) {
+      return;
+    }
     // TODO: fix ==
-     this.set('event', this.state.events.list.find(ev => ev.id == this.eventId ));
+    this.store.dispatch(fetchEvent(this.eventId));
   }
 }
 

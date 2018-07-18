@@ -20,12 +20,13 @@ import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
 import app from '../reducers/app.js';
 import events from '../reducers/events.js';
 import incidents from '../reducers/incidents.js';
-import staticData from '../reducers/static-data.js';
-import errors from '../reducers/errors.js';
 
 import { persistStore, persistCombineReducers } from 'redux-persist';
 
 import storage from 'redux-persist/es/storage';
+import staticData from '../reducers/static-data.js';
+import errors from '../reducers/errors.js';
+
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.

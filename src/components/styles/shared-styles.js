@@ -74,6 +74,10 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       etools-dropdown-lite, etools-dropdown-multi-lite {
         width: 100%;
       }
+
+      etools-dropdown-lite, etools-dropdown-multi-lite {
+        width: 100%;
+      }
     </style>
   </template>
 </dom-module>`;

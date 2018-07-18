@@ -10,6 +10,8 @@ export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
 export const RECEIVE_EVENT = 'RECEIVE_EVENT';
 
+
+// ----- BASIC ACTION CREATORS -----------
 const editEventSuccess = (event, id) => {
   return {
     type: EDIT_EVENT_SUCCESS,
@@ -38,6 +40,14 @@ const receiveEvents = (events) => {
     events
   };
 }
+
+const receiveEvent = (event) => {
+  return {
+    type: RECEIVE_EVENT,
+    event
+  };
+}
+// ------------------------------
 
 const addEventOnline = (newEvent, dispatch) => {
   makeRequest(Endpoints.newEvent, newEvent).then((result) => {
@@ -117,9 +127,4 @@ export const fetchEvent = (id) => (dispatch, getState) => {
   });
 };
 
-const receiveEvent = (event) => {
-  return {
-    type: RECEIVE_EVENT,
-    event
-  };
-}
+

@@ -2,7 +2,8 @@
 @license
 */
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { editIncident, syncIncident } from '../../actions/incidents.js';
+import { editIncident, syncIncident, fetchIncident } from '../../actions/incidents.js';
+import { selectIncident } from '../../reducers/incidents.js';
 
 /**
  * @polymer
@@ -22,9 +23,22 @@ class EditIncident extends IncidentsBaseView {
     };
   }
 
+  static get observers() {
+    return [
+      'stateChanged(state)'
+    ];
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.title = 'Edit incident';
+  }
+
+  stateChanged() {
+    if (!this.isVisible()) {
+      return;
+    }
+    this.set('incident', selectIncident(this.state));
   }
 
   save() {
@@ -36,7 +50,12 @@ class EditIncident extends IncidentsBaseView {
   }
 
   _idChanged(newId) {
-    this.set('incident', this.state.incidents.list.find(elem => elem.id == this.incidentId));
+    if (!newId || !this.isVisible()) {
+      return;
+    }
+    if (!this.state.app.offline) {
+      this.store.dispatch(fetchIncident(this.incidentId));
+    }
   }
 }
 

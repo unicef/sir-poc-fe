@@ -268,9 +268,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       store: Object
     };
   }
+
   connectedCallback() {
-    super.connectedCallback();
     this.store = store;
+    super.connectedCallback();
   }
   _userSelected(event) {
     if (!event.detail.selectedItem) {

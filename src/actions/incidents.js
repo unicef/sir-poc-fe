@@ -8,6 +8,7 @@ export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
 export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
 export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
 export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
+export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
 export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
 
 const editIncidentSuccess = (incident, id) => {
@@ -39,6 +40,12 @@ const receiveIncidents = (incidents) => {
   };
 }
 
+const receiveIncident = (incident) => {
+  return {
+    type: RECEIVE_INCIDENT,
+    incident
+  };
+}
 
 const updateEventIds = (newId, oldId) => {
   return {
@@ -119,3 +126,10 @@ export const fetchIncidents = () => (dispatch, getState) => {
 export const updateEventIdsInIncidents = (oldId, newId) => (dispatch) => {
   dispatch(updateEventIds(newId, oldId));
 }
+
+export const fetchIncident = (id) => (dispatch, getState) => {
+  let endpoint = prepareEndpoint(Endpoints.getIncident,  {id: id});
+  makeRequest(endpoint).then((response) => {
+    dispatch(receiveIncident(JSON.parse(response)));
+  });
+};

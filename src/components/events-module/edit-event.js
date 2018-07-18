@@ -53,8 +53,9 @@ class EditEvent extends EventsBaseView {
     if (!newId || !this.isVisible()) {
       return;
     }
-    // TODO: fix ==
-    this.store.dispatch(fetchEvent(this.eventId));
+    if (!this.state.app.offline) {
+      this.store.dispatch(fetchEvent(this.eventId));
+    }
   }
 }
 

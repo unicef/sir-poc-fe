@@ -20,13 +20,11 @@ $_documentContainer.innerHTML = `
          @apply --layout-vertical;
       }
 
-      .row-v {
-        @apply --layout-vertical;
-      }
       .flex-c {
         /* flex container */
         @apply --layout-flex;
       }
+
       .row-h, .row-v {
         padding: 4px 24px;
       }
@@ -85,18 +83,18 @@ $_documentContainer.innerHTML = `
         flex: 0 0 100%;
         max-width: 100%;
       }
+
       @media only screen and (min-width: 900px) {
         .row-h {
           @apply --layout-horizontal;
         }
+
         .col:not(:first-of-type) {
           padding-left: 24px;
         }
       }
+
       @media only screen and (max-width: 900px) {
-        .row-h {
-          /* @apply --layout-horizontal; */
-        }
         .col {
           flex: 0 0 100%;
           max-width: 100%;

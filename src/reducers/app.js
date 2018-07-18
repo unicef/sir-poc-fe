@@ -51,14 +51,20 @@ const app = (state = {narrowDrawer: false, offline: false, locationInfo: {select
 
 export default app;
 
-const appSelector = state => state.app;
+const locationInfoSelector = state => state.app.locationInfo;
 export const onNewEvent = createSelector(
-  appSelector,
-  (app) => (app.page === 'new' && app.selectedModule === 'events')
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'events')
+);
+
+export const onEditEvent = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'edit' && locInfo.selectedModule === 'events'
+    && locInfo.selectedItemId)
 );
 
 export const onNewIncident = createSelector(
-  appSelector,
-  (app) => (app.page === 'new' && app.selectedModule === 'incidents')
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'incidents')
 );
 

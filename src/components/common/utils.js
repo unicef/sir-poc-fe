@@ -10,25 +10,18 @@ export const objDiff = (object1, object2) => {
     if (isObject(elem1) && isObject(elem2)) {
       let elemsDiff = objDiff(elem1, elem2);
 
-      if (!isEmptyObject(elemsDiff)) {
-        return {
-          ...diff,
-          [key]: elemsDiff
-        };
-      }
-
-      return diff;
-    }
-
-    if (isArray(elem1) && isArray(elem2)) {
-      if (elem1.length !== elem2.length) {
-        return {
-          ...diff,
-          [key]: elem2
-        };
-      } else if (arraysAreSame(elem1, elem2)) {
+      if (isEmptyObject(elemsDiff)) {
         return diff;
       }
+
+      return {
+        ...diff,
+        [key]: elemsDiff
+      };
+    }
+
+    if (isArray(elem1) && isArray(elem2) && arraysAreSame(elem1, elem2)) {
+      return diff;
     }
 
     if (elem1 === elem2) {
@@ -44,9 +37,9 @@ export const objDiff = (object1, object2) => {
 
 const arraysAreSame = (array1, array2) => {
   return array1.length === array1.length &&
-         array1.length == array1.filter((elem, index) => {
-           return array1[index] == array2[index];
-         });
+         array1.length === array1.filter((elem, index) => {
+           return array1[index] === array2[index];
+         }).length;
 };
 
 const isObject = (a) => {

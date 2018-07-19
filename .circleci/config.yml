@@ -76,7 +76,7 @@ jobs:
             export PATH=/home/circleci/.local/bin:$PATH
             export TAG=${TAG:=${CIRCLE_BRANCH#*/}}
             git status
-            git show-branch $TAG
+            git show-branch release/$TAG
             if [ $? -gt 0 ];then
               git reset --hard
 
@@ -88,6 +88,7 @@ jobs:
               git tag -a -m "v$TAG" $TAG
               git checkout develop
               git merge --no-ff release/$TAG -m "merge release/$TAG"
+              git push --verbose --all
               git push --verbose --tags
               git push origin --verbose --delete release/$TAG
             fi

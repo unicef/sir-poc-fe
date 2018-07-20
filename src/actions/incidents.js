@@ -1,5 +1,6 @@
 import { makeRequest, prepareEndpoint } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
+import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
@@ -72,10 +73,12 @@ const addIncidentOffline = (newIncident, dispatch) => {
   updatePath('/incidents/list/');
 }
 
-const editIncidentOnline = (incident, dispatch) => {
+const editIncidentOnline = (incident, dispatch, state) => {
+  let origIncident = state.incidents.list.find(elem => elem.id === incident.id);
+  let modifiedFields = objDiff(origIncident, incident);
   let endpoint = prepareEndpoint(Endpoints.editIncident, {id: incident.id});
 
-  makeRequest(endpoint, incident).then((result) => {
+  makeRequest(endpoint, modifiedFields).then((result) => {
     dispatch(fetchIncidents());
     updatePath('/incidents/list/');
   }).catch((error) => {
@@ -102,7 +105,7 @@ export const editIncident = (incident) => (dispatch, getState) => {
   if (getState().app.offline === true) {
     editIncidentOffline(incident, dispatch);
   } else {
-    editIncidentOnline(incident, dispatch);
+    editIncidentOnline(incident, dispatch, getState());
   }
 }
 

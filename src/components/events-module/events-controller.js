@@ -35,8 +35,8 @@ class EventsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <events-list name="list"></events-list>
         <add-event name="new"></add-event>
-        <view-event name="view" event-id="[[routeData.id]]"></view-event>
-        <edit-event name="edit" event-id="[[routeData.id]]"></edit-event>
+        <view-event name="view" event-id="[[selectedEventId]]"></view-event>
+        <edit-event name="edit" event-id="[[selectedEventId]]"></edit-event>
       </iron-pages>
     `;
   }
@@ -46,13 +46,14 @@ class EventsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object
+      routeData: Object,
+      selectedEventId: String
     };
   }
 
   static get observers() {
     return [
-      'routeChanged(routeData.section)',
+      'routeChanged(routeData.section, routeData.id)',
       'pageChanged(page)'
     ];
   }
@@ -65,8 +66,12 @@ class EventsController extends connect(store)(PolymerElement) {
   _stateChanged(state) {
   }
 
-  routeChanged(section) {
+  routeChanged(section, id) {
+    if (this.route.prefix !== '/events') {
+      return;
+    }
     this.set('page', section ? section : 'list');
+    this.set('selectedEventId', id);
   }
 
   pageIs(actualPage, expectedPage) {

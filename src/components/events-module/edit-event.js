@@ -4,7 +4,7 @@
 import { EventsBaseView } from './events-base-view.js';
 import { editEvent, syncEvent, fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
-import { onEditEvent } from '../../reducers/app.js';
+import { isOnEditEvent } from '../../reducers/app.js';
 
 /**
  * @polymer
@@ -36,7 +36,7 @@ class EditEvent extends EventsBaseView {
   }
 
   stateChanged() {
-    if (!this.isVisible()) {
+    if (!isOnEditEvent(this.state)) {
       return;
     }
     this.set('event', selectEvent(this.state));
@@ -51,8 +51,7 @@ class EditEvent extends EventsBaseView {
   }
 
   _idChanged(newId) {
-    // *TODO Don't know which is better onEditEvent or this.isVisible
-    if (!newId || !onEditEvent(this.state)) {
+    if (!newId || !isOnEditEvent(this.state)) {
       return;
     }
     if (!this.state.app.offline) {

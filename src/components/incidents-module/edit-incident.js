@@ -4,6 +4,7 @@
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident, syncIncident, fetchIncident } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
+import { isOnEditIncident } from '../../reducers/app.js';
 
 /**
  * @polymer
@@ -35,7 +36,7 @@ class EditIncident extends IncidentsBaseView {
   }
 
   stateChanged() {
-    if (!this.isVisible()) {
+    if (!isOnEditIncident(this.state)) {
       return;
     }
     this.set('incident', selectIncident(this.state));
@@ -50,7 +51,7 @@ class EditIncident extends IncidentsBaseView {
   }
 
   _idChanged(newId) {
-    if (!newId || !this.isVisible()) {
+    if (!newId || !isOnEditIncident(this.state)) {
       return;
     }
     if (!this.state.app.offline) {

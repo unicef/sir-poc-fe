@@ -37,8 +37,8 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <edit-incident name="edit" incident-id="[[routeData.id]]"></edit-incident>
-        <view-incident name="view" incident-id="[[routeData.id]]"></view-incident>
+        <edit-incident name="edit" incident-id="[[selectedIncidentId]]"></edit-incident>
+        <view-incident name="view" incident-id="[[selectedIncidentId]]"></view-incident>
       </iron-pages>
     `;
   }
@@ -48,13 +48,14 @@ class IncidentsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object
+      routeData: Object,
+      selectedIncidentId: String
     };
   }
 
   static get observers() {
     return [
-      'routeChanged(routeData.section)',
+      'routeChanged(routeData.section, routeData.id)',
       'pageChanged(page)'
     ];
   }
@@ -67,8 +68,12 @@ class IncidentsController extends connect(store)(PolymerElement) {
   _stateChanged(state) {
   }
 
-  routeChanged(section) {
+  routeChanged(section, id) {
+    if (this.route.prefix !== '/incidents') {
+      return;
+    }
     this.set('page', section ? section : 'list');
+    this.set('selectedIncidentId', id);
   }
 
   pageIs(actualPage, expectedPage) {

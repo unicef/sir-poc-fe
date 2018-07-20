@@ -52,19 +52,25 @@ const app = (state = {narrowDrawer: false, offline: false, locationInfo: {select
 export default app;
 
 const locationInfoSelector = state => state.app.locationInfo;
-export const onNewEvent = createSelector(
+export const isOnNewEvent = createSelector(
   locationInfoSelector,
   (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'events')
 );
 
-export const onEditEvent = createSelector(
+export const isOnEditEvent = createSelector(
   locationInfoSelector,
   (locInfo) => (locInfo.page === 'edit' && locInfo.selectedModule === 'events'
     && locInfo.selectedItemId)
 );
 
-export const onNewIncident = createSelector(
+export const isOnNewIncident = createSelector(
   locationInfoSelector,
   (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'incidents')
+);
+
+export const isOnEditIncident = createSelector(
+  locationInfoSelector,
+  (locInfo) => { console.log(locInfo); return (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
+    && locInfo.selectedItemId)}
 );
 

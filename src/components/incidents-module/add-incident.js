@@ -4,7 +4,7 @@
 import { addIncident } from '../../actions/incidents.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { IncidentModel } from './models/incident-model.js';
-import { onNewIncident } from '../../reducers/app.js';
+import { isOnNewIncident } from '../../reducers/app.js';
 /**
  * @polymer
  * @customElement
@@ -23,7 +23,7 @@ class AddIncident extends IncidentsBaseView {
   }
 
   stateChanged() {
-    if (this.isVisible()  && onNewIncident(this.state)) {
+    if (isOnNewIncident(this.state)) {
       this.incident = JSON.parse(JSON.stringify(IncidentModel));
     }
   }

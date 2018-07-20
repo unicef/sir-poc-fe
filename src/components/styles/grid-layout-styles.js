@@ -28,7 +28,9 @@ $_documentContainer.innerHTML = `
       .row-h, .row-v {
         padding: 4px 24px;
       }
-
+      .col {
+        box-sizing: border-box;
+      }
       .col-1 {
         flex: 0 0 8.333333333%;
         max-width: 8.333333333%;

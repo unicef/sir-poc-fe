@@ -254,10 +254,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Array,
         value: []
       },
-      incidentId: {
-        type: Number,
-        observer: '_idChanged'
-      },
       readonly: {
         type: Boolean,
         value: false

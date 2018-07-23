@@ -16,52 +16,24 @@ import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
+import '../styles/grid-layout-styles.js';
 
 class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles data-table-styles">
+      <style include="shared-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
           padding: 10px;
         }
 
-        iron-icon {
-          height: 16px;
-        }
-
-        a {
-          text-decoration: none;
-        }
-
-        .col-1 {
-          flex: 0 0 8.333333%;
-          max-width: 8.333333%;
-        }
-
-        .col-2 {
-          flex: 0 0 16.666666%;
-          max-width: 16.666666%;
-        }
-
-        .col-3 {
-          flex: 0 0 25%;
-          max-width: 25%;
-        }
-
-        .col-4 {
-          flex: 0 0 33.333333%;
-          max-width: 33.333333%;
-        }
-
-        .col-6 {
-          flex: 0 0 50%;
-          max-width: 50%;
-        }
-
         etools-data-table-row[unsynced] {
           --list-bg-color: pink;
+        }
+
+        .col-data > span {
+          max-width: 100%;
         }
       </style>
 
@@ -96,21 +68,23 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data" style="display:flex; flex-direction: row;">
-              <span class="col-3">
-                <a href="/incidents/view/[[item.id]]">
-                  [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                </a>
-              </span>
-              <span class="col-3">
-                  <span class="truncate">[[item.city]]</span>
+              <span class="col-data col-3">
+                <span class="truncate">
+                  <a href="/incidents/view/[[item.id]]">
+                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
+                  </a>
                 </span>
-              <span class="col-3">
-                <span class="truncate">[[_getIncidentName(item.incident_type)]]</span>
               </span>
-              <span class="col-2">
-                [[getStatus(item)]]
+              <span class="col-data col-3" title="[[item.city]]">
+                  <span>[[item.city]]</span>
+                </span>
+              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]">
+                <span>[[_getIncidentName(item.incident_type)]]</span>
               </span>
-              <span class="col-1">
+              <span class="col-data col-2" title="[[getStatus(item)]]">
+                <span class="truncate">[[getStatus(item)]]</span>
+              </span>
+              <span class="col-data col-1">
                 <a href="/incidents/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>
                 <a href="/incidents/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]"> <iron-icon icon="editor:mode-edit"></iron-icon> </a>
               </span>

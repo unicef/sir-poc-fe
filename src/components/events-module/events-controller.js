@@ -27,7 +27,7 @@ class EventsController extends connect(store)(PolymerElement) {
 
       <app-route
         route="{{route}}"
-        pattern="/:section/:id"
+        pattern="/events/:section/:id"
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
@@ -35,8 +35,8 @@ class EventsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <events-list name="list"></events-list>
         <add-event name="new"></add-event>
-        <view-event name="view" event-id="[[selectedEventId]]"></view-event>
-        <edit-event name="edit" event-id="[[selectedEventId]]"></edit-event>
+        <view-event name="view"></view-event>
+        <edit-event name="edit"></edit-event>
       </iron-pages>
     `;
   }
@@ -46,8 +46,7 @@ class EventsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object,
-      selectedEventId: String
+      routeData: Object
     };
   }
 
@@ -67,11 +66,7 @@ class EventsController extends connect(store)(PolymerElement) {
   }
 
   routeChanged(section, id) {
-    if (this.route.prefix !== '/events') {
-      return;
-    }
     this.set('page', section ? section : 'list');
-    this.set('selectedEventId', id);
   }
 
   pageIs(actualPage, expectedPage) {

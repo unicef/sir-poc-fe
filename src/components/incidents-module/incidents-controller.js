@@ -29,7 +29,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
       <app-route
         route="{{route}}"
-        pattern="/:section/:id"
+        pattern="/incidents/:section/:id"
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
@@ -37,8 +37,8 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <edit-incident name="edit" incident-id="[[selectedIncidentId]]"></edit-incident>
-        <view-incident name="view" incident-id="[[selectedIncidentId]]"></view-incident>
+        <edit-incident name="edit"></edit-incident>
+        <view-incident name="view"></view-incident>
       </iron-pages>
     `;
   }
@@ -49,7 +49,6 @@ class IncidentsController extends connect(store)(PolymerElement) {
       route: Object,
       subroute: Object,
       routeData: Object,
-      selectedIncidentId: String
     };
   }
 
@@ -69,11 +68,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   routeChanged(section, id) {
-    if (this.route.prefix !== '/incidents') {
-      return;
-    }
     this.set('page', section ? section : 'list');
-    this.set('selectedIncidentId', id);
   }
 
   pageIs(actualPage, expectedPage) {

@@ -17,7 +17,7 @@ import {
   UPDATE_LOCATION_INFO,
 } from '../actions/app.js';
 
-const app = (state = {narrowDrawer: false, offline: false, locationInfo: {selectedModule: '', page: '', selectedItemId: ''}}, action) => {
+const app = (state = {narrowDrawer: false, offline: false, locationInfo: {selectedModule: '', page: '', eventId: '', incidentId: ''}}, action) => {
   switch (action.type) {
     case UPDATE_OFFLINE:
       return {
@@ -40,6 +40,7 @@ const app = (state = {narrowDrawer: false, offline: false, locationInfo: {select
         snackbarOpened: false
       };
     case UPDATE_LOCATION_INFO:
+      console.log('LOC INFO');
       return {
         ...state,
         locationInfo: action.locationInfo
@@ -65,7 +66,7 @@ export const isOnViewEvent = createSelector(
 export const isOnEditEvent = createSelector(
   locationInfoSelector,
   (locInfo) => (locInfo.page === 'edit' && locInfo.selectedModule === 'events'
-    && locInfo.selectedItemId)
+    && locInfo.eventId)
 );
 
 export const isOnNewIncident = createSelector(
@@ -81,6 +82,6 @@ export const isOnViewIncident = createSelector(
 export const isOnEditIncident = createSelector(
   locationInfoSelector,
   (locInfo) => { console.log(locInfo); return (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
-    && locInfo.selectedItemId)}
+    && locInfo.incidentId)}
 );
 

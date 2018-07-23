@@ -53,7 +53,7 @@ const getRefreshedEvents = (oldEvents, newEvents) => {
 
 // ---------- SELECTORS ---------
 const eventsSelector = state => state.events.list;
-const selectedEventId = state => state.app.locationInfo.selectedItemId;
+const selectedEventId = state => state.app.locationInfo.eventId;
 export const selectEvent = createSelector(
   eventsSelector,
   selectedEventId,

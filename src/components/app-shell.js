@@ -123,8 +123,8 @@ class MyApp extends connect(store)(PolymerElement) {
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <events-controller name="events" route="{{subroute}}"></events-controller>
-            <incidents-controller name="incidents" route="{{subroute}}"></incidents-controller>
+            <events-controller name="events" route="[[route]]"></events-controller>
+            <incidents-controller name="incidents" route="[[route]]"></incidents-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 
@@ -154,7 +154,7 @@ class MyApp extends connect(store)(PolymerElement) {
 
   static get observers() {
     return [
-      '_locationChanged(route.path)',
+      '_locationChanged(route)',
       '_routePageChanged(routeData.page)'
     ];
   }
@@ -166,9 +166,9 @@ class MyApp extends connect(store)(PolymerElement) {
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
   }
 
-  _locationChanged(path) {
+  _locationChanged(route) {
     console.log('loc changed');
-    store.dispatch(updateLocationInfo(path));
+    store.dispatch(updateLocationInfo(route.path));
   }
 
   pathsMatch(path1, path2) {

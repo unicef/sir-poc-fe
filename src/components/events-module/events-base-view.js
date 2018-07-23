@@ -83,6 +83,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       store: Object,
       eventId: {
         type: Number,
+        computed: '_setEventId(state.app.locationInfo.eventId)',
         observer: '_idChanged'
       }
     };
@@ -93,8 +94,11 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     this.store = store;
     super.connectedCallback();
   }
-
+  _setEventId(id) {
+    return id;
+  }
   _idChanged(newId) {
+    console.log('idChanged', this, this.state.app.locationInfo);
     if (!newId || !this.isOnExpectedPage(this.state)) {
       return;
     }

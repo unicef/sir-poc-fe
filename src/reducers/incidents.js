@@ -68,7 +68,7 @@ const updateEventIds = (list, oldId, newId) => {
 
 // ---------- SELECTORS -------
 const incidentsSelector = state => state.incidents.list;
-const selectedIncidentId = state => state.app.locationInfo.selectedItemId;
+const selectedIncidentId = state => state.app.locationInfo.incidentId;
 export const selectIncident = createSelector(
   incidentsSelector,
   selectedIncidentId,

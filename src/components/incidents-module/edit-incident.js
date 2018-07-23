@@ -14,22 +14,9 @@ class EditIncident extends IncidentsBaseView {
     return 'edit-incident';
   }
 
-  static get observers() {
-    return [
-      'stateChanged(state)'
-    ];
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.title = 'Edit incident';
-  }
-
-  stateChanged() {
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
-    this.set('incident', selectIncident(this.state));
   }
 
   save() {

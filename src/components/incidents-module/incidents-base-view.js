@@ -13,7 +13,7 @@ import '../common/errors-box.js';
 import { store } from '../store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
-import { fetchIncident } from '../../reducers/incidents.js';
+import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 
@@ -240,6 +240,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       },
       incidentId: {
         type: Number,
+        computed: '_setIncidentId(state.app.locationInfo.incidentId)',
         observer: '_idChanged'
       },
       onDuty: {
@@ -275,7 +276,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     this.store = store;
     super.connectedCallback();
   }
-
+  _setIncidentId(id) {
+    return id;
+  }
   _idChanged(newId) {
     if (!newId || !this.isOnExpectedPage(this.state)) {
       return;

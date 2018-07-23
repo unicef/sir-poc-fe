@@ -16,6 +16,9 @@ import { store } from '../store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
+import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
+import '../common/etools-dropdown/etools-dropdown-lite.js';
+
 import '../styles/shared-styles.js';
 
 class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
@@ -71,6 +74,15 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
                      value="{{q}}">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
+      </div>
+      
+      <div class="card">
+          <etools-dropdown-multi-lite label="Event filter"
+                                options="[[eventStatus]]"
+                                selected-values="{{statusFilter}}"
+                                hide-search>
+              
+          </etools-dropdown-multi-lite>
       </div>
 
       <div class="card list">
@@ -145,7 +157,17 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       offline: Boolean,
       filteredEvents: {
         type: Array,
-        computed: '_filterData(events, q, pagination.pageSize, pagination.pageNumber)'
+        computed: '_filterData(events, q, pagination.pageSize, pagination.pageNumber, statusFilter.length)'
+      },
+      eventStatus: {
+          type: Array,
+          value: [
+              {id: 'synced', name: 'Synced'},
+              {id: 'unsynced', name: 'Not Synced'},
+          ]
+      },
+      statusFilter: {
+        type: Array
       }
     };
   }
@@ -160,14 +182,34 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   _filterData(events, q) {
     let filteredEvents = events ? JSON.parse(JSON.stringify(events)) : [];
-    if (events instanceof Array && events.length > 0 && typeof q === 'string' && q !== '') {
+    if (events instanceof Array && events.length > 0 && typeof q === 'string') {
       filteredEvents = filteredEvents.filter(e => this._applyQFilter(e, q));
+      filteredEvents = filteredEvents.filter(e => this._applyStatusFilter(e, this.statusFilter));
     }
     return this.applyPagination(filteredEvents);
   }
 
   _applyQFilter(e, q) {
     return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
+  }
+
+  _applyStatusFilter(e, statusFilter){
+
+    console.log("status filter", statusFilter);
+
+    if(statusFilter.length === 0 || statusFilter.length === 2) {
+      return true;
+    }
+
+    let status = statusFilter[0];
+
+    if (status === 'synced' && !e.unsynced){
+      return true;
+    } else if (status === 'unsynced' && e.unsynced){
+      return true;
+    }
+
+    return false;
   }
 
   notEditable(event, offline) {

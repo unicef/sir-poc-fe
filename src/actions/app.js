@@ -101,7 +101,7 @@ export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
   }
 }
 
-export const updateLocationInfo = (path) => {
+export const updateLocationInfo = (path, queryParams) => {
 
   let [selectedModule, page, selectedItemId] = extractInfoFromPath(path);
 
@@ -110,7 +110,8 @@ export const updateLocationInfo = (path) => {
     locationInfo: {
       selectedModule,
       page,
-      selectedItemId
+      selectedItemId,
+      queryParams
     }
   };
 }

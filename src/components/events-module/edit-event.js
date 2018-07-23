@@ -2,8 +2,7 @@
 @license
 */
 import { EventsBaseView } from './events-base-view.js';
-import { editEvent, syncEvent, fetchEvent } from '../../actions/events.js';
-import { selectEvent } from '../../reducers/events.js';
+import { editEvent, syncEvent } from '../../actions/events.js';
 import { isOnEditEvent } from '../../reducers/app.js';
 
 /**
@@ -15,31 +14,9 @@ class EditEvent extends EventsBaseView {
     return 'edit-event';
   }
 
-  static get properties() {
-    return {
-      eventId: {
-        type: Number,
-        observer: '_idChanged'
-      }
-    };
-  }
-
-  static get observers() {
-    return [
-      'stateChanged(state)'
-    ];
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.title = 'Edit event';
-  }
-
-  stateChanged() {
-    if (!isOnEditEvent(this.state)) {
-      return;
-    }
-    this.set('event', selectEvent(this.state));
   }
 
   save() {
@@ -50,14 +27,10 @@ class EditEvent extends EventsBaseView {
     }
   }
 
-  _idChanged(newId) {
-    if (!newId || !isOnEditEvent(this.state)) {
-      return;
-    }
-    if (!this.state.app.offline) {
-      this.store.dispatch(fetchEvent(this.eventId));
-    }
+  isOnExpectedPage() {
+    return isOnEditEvent(this.state);
   }
+
 }
 
 window.customElements.define(EditEvent.is, EditEvent);

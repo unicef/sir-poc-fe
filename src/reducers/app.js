@@ -57,6 +57,11 @@ export const isOnNewEvent = createSelector(
   (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'events')
 );
 
+export const isOnViewEvent = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'view' && locInfo.selectedModule === 'events')
+);
+
 export const isOnEditEvent = createSelector(
   locationInfoSelector,
   (locInfo) => (locInfo.page === 'edit' && locInfo.selectedModule === 'events'
@@ -66,6 +71,11 @@ export const isOnEditEvent = createSelector(
 export const isOnNewIncident = createSelector(
   locationInfoSelector,
   (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'incidents')
+);
+
+export const isOnViewIncident = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'view' && locInfo.selectedModule === 'incidents')
 );
 
 export const isOnEditIncident = createSelector(

@@ -28,6 +28,10 @@ class AddEvent extends EventsBaseView {
   save() {
     this.store.dispatch(addEvent(this.event));
   }
+
+  isOnExpectedPage() {
+    return isOnNewEvent(this.state);
+  }
 }
 
 window.customElements.define('add-event', AddEvent);

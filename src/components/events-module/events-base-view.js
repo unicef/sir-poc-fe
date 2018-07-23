@@ -9,8 +9,9 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '../common/datepicker-lite.js';
 
-import { addEvent } from '../../actions/events.js';
+import { fetchEvent } from '../../actions/events.js';
 import { store } from '../store.js';
+import { selectEvent } from '../../reducers/events.js';
 import '../common/errors-box.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -79,7 +80,11 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       },
       title: String,
       state: Object,
-      store: Object
+      store: Object,
+      eventId: {
+        type: Number,
+        observer: '_idChanged'
+      }
     };
   }
 
@@ -89,8 +94,22 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     super.connectedCallback();
   }
 
+  _idChanged(newId) {
+    if (!newId || !this.isOnExpectedPage(this.state)) {
+      return;
+    }
+    if (!this.state.app.offline) {
+      this.store.dispatch(fetchEvent(this.eventId));
+    }
+  }
+
   _stateChanged(state) {
     this.state = state;
+
+    if (!this.isOnExpectedPage(this.state)) {
+      return;
+    }
+    this.set('event', selectEvent(this.state));
   }
 
   isVisible() {

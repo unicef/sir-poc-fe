@@ -12,6 +12,8 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '../common/errors-box.js';
 import { store } from '../store.js';
 import { IncidentModel } from './models/incident-model.js';
+import { selectIncident } from '../../reducers/incidents.js';
+import { fetchIncident } from '../../reducers/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 
@@ -236,6 +238,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Object,
         value: () => JSON.parse(JSON.stringify(IncidentModel))
       },
+      incidentId: {
+        type: Number,
+        observer: '_idChanged'
+      },
       onDuty: {
         type: Array,
         value: [
@@ -269,6 +275,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     this.store = store;
     super.connectedCallback();
   }
+
+  _idChanged(newId) {
+    if (!newId || !this.isOnExpectedPage(this.state)) {
+      return;
+    }
+    if (!this.state.app.offline) {
+      this.store.dispatch(fetchIncident(this.incidentId));
+    }
+  }
   _userSelected(event) {
     if (!event.detail.selectedItem) {
       return;
@@ -280,6 +295,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+    if (!this.isOnExpectedPage(this.state)) {
+      return;
+    }
+
     this.staticData = state.staticData;
 
     this.events = state.events.list.map(elem => {
@@ -294,6 +313,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       elem.id = index;
       return elem;
     });
+
+    this.set('incident', selectIncident(this.state));
   }
 
   _getIncidentByName(type) {

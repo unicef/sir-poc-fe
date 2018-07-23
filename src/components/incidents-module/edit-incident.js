@@ -2,8 +2,7 @@
 @license
 */
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { editIncident, syncIncident, fetchIncident } from '../../actions/incidents.js';
-import { selectIncident } from '../../reducers/incidents.js';
+import { editIncident, syncIncident } from '../../actions/incidents.js';
 import { isOnEditIncident } from '../../reducers/app.js';
 
 /**
@@ -13,15 +12,6 @@ import { isOnEditIncident } from '../../reducers/app.js';
 class EditIncident extends IncidentsBaseView {
   static get is() {
     return 'edit-incident';
-  }
-
-  static get properties() {
-    return {
-      incidentId: {
-        type: Number,
-        observer: '_idChanged'
-      }
-    };
   }
 
   static get observers() {
@@ -36,7 +26,7 @@ class EditIncident extends IncidentsBaseView {
   }
 
   stateChanged() {
-    if (!isOnEditIncident(this.state)) {
+    if (!this.isOnExpectedPage(this.state)) {
       return;
     }
     this.set('incident', selectIncident(this.state));
@@ -50,13 +40,8 @@ class EditIncident extends IncidentsBaseView {
     }
   }
 
-  _idChanged(newId) {
-    if (!newId || !isOnEditIncident(this.state)) {
-      return;
-    }
-    if (!this.state.app.offline) {
-      this.store.dispatch(fetchIncident(this.incidentId));
-    }
+  isOnExpectedPage() {
+    return isOnEditIncident(this.state);
   }
 }
 

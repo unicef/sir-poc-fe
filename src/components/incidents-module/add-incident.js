@@ -32,6 +32,10 @@ class AddIncident extends IncidentsBaseView {
   save() {
     this.store.dispatch(addIncident(this.incident));
   }
+
+  isOnExpectedPage() {
+    return isOnNewIncident(this.state);
+  }
 }
 
 window.customElements.define('add-incident', AddIncident);

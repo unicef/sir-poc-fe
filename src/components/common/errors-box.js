@@ -6,7 +6,7 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../components/store.js';
+import { store } from '../../redux/store.js';
 import { clearErrors } from '../../actions/errors';
 
 /**

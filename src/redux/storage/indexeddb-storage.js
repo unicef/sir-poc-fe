@@ -1,10 +1,6 @@
 'use strict';
 
 const init = () => new Promise((resolve, reject) => {
-  //check for support
-  if (!('indexedDB' in window)) {
-    console.log('This browser doesn\'t support IndexedDB');
-  }
 
   let store;
   let idb = indexedDB.open('sir-poc', 1);
@@ -15,7 +11,7 @@ const init = () => new Promise((resolve, reject) => {
   };
 
   idb.onerror = () => {
-    console.log('IDB creation failed');
+    console.warn('IDB creation failed');
     reject();
   }
 
@@ -33,7 +29,7 @@ let getItem = (key) => new Promise((resolve, reject) => {
   init().then(store => {
     let getReq = store.get(key);
     getReq.onsuccess = () => resolve(getReq.result ? getReq.result.item : null);
-    getReq.onerror = () => reject(getReq.result.item);
+    getReq.onerror = () => reject(getReq.error);
   });
 });
 
@@ -52,8 +48,6 @@ let removeItem = (key) => new Promise((resolve, reject) => {
     getReq.onerror = () => reject();
   });
 });
-
-
 
 export const storage = {
   getItem,

@@ -31,7 +31,7 @@ import { installOfflineWatcher } from 'pwa-helpers/network.js';
 import { updateMetadata } from 'pwa-helpers/metadata.js';
 // This element is connected to the Redux store.
 import './snack-bar/snack-bar.js';
-import { store } from './store.js';
+import { store } from '../redux/store.js';
 
 import { loadAllStaticData } from './data/static-data-loader.js';
 import { updatePath } from '/src/components/common/navigation-helper.js';

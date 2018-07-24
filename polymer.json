@@ -4,6 +4,14 @@
   "sources": [
     "images/**/*"
   ],
+  "fragments": [
+    "src/components/events-module/events-list.js",
+    "src/components/events-module/add-event.js",
+    "src/components/events-module/view-event.js",
+    "src/components/incidents-module/incidents-list.js",
+    "src/components/incidents-module/add-incident.js",
+    "src/components/incidents-module/view-incident.js"
+  ],
   "extraDependencies": [
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/*.js",

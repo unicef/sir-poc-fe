@@ -154,7 +154,7 @@ class MyApp extends connect(store)(PolymerElement) {
 
   static get observers() {
     return [
-      '_locationChanged(route)',
+      '_locationChanged(route.path)',
       '_routePageChanged(routeData.page)'
     ];
   }
@@ -166,8 +166,8 @@ class MyApp extends connect(store)(PolymerElement) {
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
   }
 
-  _locationChanged(route) {
-    store.dispatch(updateLocationInfo(route.path));
+  _locationChanged(path) {
+    store.dispatch(updateLocationInfo(path));
   }
 
   pathsMatch(path1, path2) {

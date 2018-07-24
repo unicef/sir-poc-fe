@@ -15,6 +15,7 @@ import { store } from '../store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
+import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 
@@ -43,6 +44,15 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                      value="{{q}}">
           <iron-icon icon="search" slot="prefix"></iron-icon>
         </paper-input>
+      </div>
+
+      <div class="card">
+          <etools-dropdown-multi-lite label="Incidents filter"
+                                      options="[[incidentStatus]]"
+                                      selected-values="{{statusFilter}}"
+                                      hide-search>
+
+          </etools-dropdown-multi-lite>
       </div>
 
       <div class="card list">
@@ -123,7 +133,17 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber)'
+        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber, statusFilter.length)'
+      },
+      incidentStatus: {
+          type: Array,
+          value: [
+            {id: 'synced', name: 'Synced'},
+            {id: 'unsynced', name: 'Not Synced'},
+          ]
+      },
+      statusFilter: {
+          type: Array
       }
     };
   }
@@ -144,8 +164,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   _filterData(incidents, q, pageSize, pageNumber) {
     let filteredIncidents = incidents ? JSON.parse(JSON.stringify(incidents)) : [];
-    if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string' && q !== '') {
+    if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string') {
       filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
+      filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.statusFilter));
     }
 
     return this.applyPagination(filteredIncidents);
@@ -157,6 +178,24 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         String(e.city).toLowerCase().search(q) > -1 ||
         String(e.description).toLowerCase().search(q) > -1;
   }
+
+    _applyStatusFilter(e, statusFilter){
+
+      if(statusFilter.length === 0 || statusFilter.length === 2) {
+          return true;
+      }
+
+      let status = statusFilter[0];
+
+      if (status === 'synced' && !e.unsynced){
+          return true;
+      } else if (status === 'unsynced' && e.unsynced){
+          return true;
+      }
+
+      return false;
+
+    }
 
   notEditable(incident, offline) {
     return offline && !incident.unsynced;

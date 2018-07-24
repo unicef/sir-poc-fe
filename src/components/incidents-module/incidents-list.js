@@ -33,26 +33,46 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           --list-bg-color: pink;
         }
 
+        .filters .filter:not(:last-child) {
+          margin-right: 24px;
+        }
+        .sync-filter {
+          min-width: 250px;
+          width: auto;
+        }
+
         .col-data > span {
           max-width: 100%;
         }
+
+        .search-input {
+          flex: 0 0 25%;
+          max-width: 25%;
+        }
+        
+        .col-data iron-icon{
+          margin-right: 15px;
+        }
+          
+        
       </style>
 
       <div class="card filters">
-        <paper-input class="search-input"
-                     no-label-float placeholder="Search by Person Involved, City or Description"
-                     value="{{q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
-      </div>
-
-      <div class="card">
-          <etools-dropdown-multi-lite label="Incidents filter"
+        <div class="row-h flex-c">
+          <paper-input class="filter search-input"
+                       placeholder="Search by Person Involved, City or Description"
+                       value="{{q}}">
+            <iron-icon icon="search" slot="prefix"></iron-icon>
+          </paper-input>
+        
+          <etools-dropdown-multi-lite class="filter sync-filter"
+                                      label="Incidents filter"
                                       options="[[incidentStatus]]"
                                       selected-values="{{statusFilter}}"
                                       hide-search>
 
           </etools-dropdown-multi-lite>
+        </div>
       </div>
 
       <div class="card list">

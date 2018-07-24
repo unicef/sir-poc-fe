@@ -64,7 +64,7 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       }
 
       iron-icon {
-        height: 16px;
+        height: 24px;
       }
 
       a {

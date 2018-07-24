@@ -35,27 +35,46 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           --list-bg-color: pink;
         }
 
+        .filters .filter:not(:last-child) {
+          margin-right: 24px;
+        }
+        .sync-filter {
+          min-width: 250px;
+          width: auto;
+        }
+
         .col-data > span {
           max-width: 100%;
+        }
+
+        .search-input {
+          flex: 0 0 25%;
+          max-width: 25%;
+        }
+
+        .col-data iron-icon{
+          margin-right: 15px;
         }
 
       </style>
 
       <div class="card filters">
-        <paper-input class="search-input"
-                     no-label-float placeholder="Search by Description or Location"
-                     value="{{q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
-      </div>
-      
-      <div class="card">
-          <etools-dropdown-multi-lite label="Event filter"
-                                options="[[eventStatus]]"
-                                selected-values="{{statusFilter}}"
-                                hide-search>
-              
+        <div class="row-h row-flex">
+          <paper-input class="filter search-input"
+                       placeholder="Search by Description or Location"
+                       value="{{q}}">
+            <iron-icon icon="search" slot="prefix"></iron-icon>
+          </paper-input>
+
+          <etools-dropdown-multi-lite class="filter sync-filter" 
+                                      label="Event filter"
+                                      options="[[eventStatus]]"
+                                      selected-values="{{statusFilter}}"
+                                      hide-search>
+
           </etools-dropdown-multi-lite>
+        </div>
+        
       </div>
 
       <div class="card list">

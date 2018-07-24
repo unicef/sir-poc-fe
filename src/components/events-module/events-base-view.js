@@ -98,7 +98,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     return id;
   }
   _idChanged(newId) {
-    console.log('idChanged', this, this.state.app.locationInfo);
     if (!newId || !this.isOnExpectedPage(this.state)) {
       return;
     }

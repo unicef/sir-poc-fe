@@ -57,5 +57,5 @@ const selectedEventId = state => state.app.locationInfo.eventId;
 export const selectEvent = createSelector(
   eventsSelector,
   selectedEventId,
-  (events, eventId) => {console.log('in selector: '+ eventId); return events.find(ev => String(ev.id) === String(eventId));}
+  (events, eventId) => { return events.find(ev => String(ev.id) === String(eventId));}
 )

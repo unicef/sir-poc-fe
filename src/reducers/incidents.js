@@ -72,5 +72,5 @@ const selectedIncidentId = state => state.app.locationInfo.incidentId;
 export const selectIncident = createSelector(
   incidentsSelector,
   selectedIncidentId,
-  (incidents, incidentId) => {console.log('in selector: '+ incidentId); return incidents.find(i => String(i.id) === String(incidentId));}
+  (incidents, incidentId) => {return incidents.find(i => String(i.id) === String(incidentId));}
 )

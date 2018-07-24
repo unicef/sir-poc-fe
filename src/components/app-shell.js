@@ -167,7 +167,6 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _locationChanged(route) {
-    console.log('loc changed');
     store.dispatch(updateLocationInfo(route.path));
   }
 
@@ -176,7 +175,6 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _routePageChanged(page) {
-    console.log('routepagech');
      // Show the corresponding page according to the route.
      //
      // If no page was found in the route data, page will be an empty string.

@@ -40,7 +40,6 @@ const app = (state = {narrowDrawer: false, offline: false, locationInfo: {select
         snackbarOpened: false
       };
     case UPDATE_LOCATION_INFO:
-      console.log('LOC INFO');
       return {
         ...state,
         locationInfo: action.locationInfo
@@ -81,7 +80,7 @@ export const isOnViewIncident = createSelector(
 
 export const isOnEditIncident = createSelector(
   locationInfoSelector,
-  (locInfo) => { console.log(locInfo); return (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
+  (locInfo) => { return (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
     && locInfo.incidentId)}
 );
 

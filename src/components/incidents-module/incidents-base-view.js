@@ -317,6 +317,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return elem;
     });
 
+    // *The incident is loaded from Redux until the GET finishes and refreshes it
     this.set('incident', selectIncident(this.state));
   }
 

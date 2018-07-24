@@ -112,6 +112,8 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     if (!this.isOnExpectedPage(this.state)) {
       return;
     }
+
+    // *The event is loaded from Redux until the GET finishes and refreshes it
     this.set('event', selectEvent(this.state));
   }
 

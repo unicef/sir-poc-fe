@@ -46,12 +46,27 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         .search-input {
+          @apply --layout-horizontal;
           flex: 0 0 25%;
           max-width: 25%;
         }
         
         .col-data iron-icon{
-          margin-right: 15px;
+          margin-right: 16px;
+        }
+
+        @media screen and (max-width: 768px) {
+          .search-input {
+            display: block;
+            max-width: 100%;
+          }
+          .filters .filter:not(:last-child) {
+            margin-right: 0;
+          }
+          .sync-filter {
+            min-width: 0;
+            max-width: 100%;
+          }
         }
           
         

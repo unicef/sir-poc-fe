@@ -17,7 +17,6 @@ import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-import '../common/etools-dropdown/etools-dropdown-lite.js';
 
 import '../styles/shared-styles.js';
 
@@ -194,8 +193,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
   }
 
   _applyStatusFilter(e, statusFilter){
-
-    console.log("status filter", statusFilter);
 
     if(statusFilter.length === 0 || statusFilter.length === 2) {
       return true;

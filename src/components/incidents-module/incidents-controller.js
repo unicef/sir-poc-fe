@@ -48,13 +48,13 @@ class IncidentsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object,
+      routeData: Object
     };
   }
 
   static get observers() {
     return [
-      'routeChanged(routeData.section, routeData.id)',
+      'routeChanged(routeData.section)',
       'pageChanged(page)'
     ];
   }
@@ -67,7 +67,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
   _stateChanged(state) {
   }
 
-  routeChanged(section, id) {
+  routeChanged(section) {
     this.set('page', section ? section : 'list');
   }
 

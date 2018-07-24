@@ -34,7 +34,7 @@ import './snack-bar/snack-bar.js';
 import { store } from './store.js';
 
 import { loadAllStaticData } from './data/static-data-loader.js';
-import { updatePath } from '/src/components/common/navigation-helper.js';
+import { updatePath } from '../components/common/navigation-helper.js';
 // These are the actions needed by this element.
 import {
   updateOffline,

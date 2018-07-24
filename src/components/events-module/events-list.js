@@ -17,50 +17,24 @@ import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
 import '../styles/shared-styles.js';
+import '../styles/grid-layout-styles.js';
 
 class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles data-table-styles">
+      <style include="shared-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
           padding: 10px;
         }
-        iron-icon {
-          height: 16px;
-        }
-        a {
-          text-decoration: none;
-        }
-
-        .col-1 {
-          flex: 0 0 8.333333%;
-          max-width: 8.333333%;
-        }
-
-        .col-2 {
-          flex: 0 0 16.666666%;
-          max-width: 16.666666%;
-        }
-
-        .col-3 {
-          flex: 0 0 25%;
-          max-width: 25%;
-        }
-
-        .col-4 {
-          flex: 0 0 33.333333%;
-          max-width: 33.333333%;
-        }
-
-        .col-6 {
-          flex: 0 0 50%;
-          max-width: 50%;
-        }
 
         etools-data-table-row[unsynced] {
           --list-bg-color: pink;
+        }
+
+        .col-data > span {
+          max-width: 100%;
         }
 
       </style>
@@ -96,16 +70,18 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
                 <span class="col-data col-3">
-                  <a href="/events/view/[[item.id]]"> [[item.description]] </a>
+                  <span class="truncate">
+                    <a href="/events/view/[[item.id]]"> [[item.description]] </a>
+                  </span>
                 </span>
                 <span class="col-data col-3" title="[[item.start_date]]">
                     [[item.start_date]]
                 </span>
                 <span class="col-data col-3" title="[[item.location]]">
-                    [[item.location]]
+                  <span class="truncate">[[item.location]]</span>
                 </span>
                 <span class="col-data col-2">
-                  [[getStatus(item)]]
+                  <span class="truncate">[[getStatus(item)]]</span>
                 </span>
                 <span class="col-data col-1">
                   <a href="/events/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>

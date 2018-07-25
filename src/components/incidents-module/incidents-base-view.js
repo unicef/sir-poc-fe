@@ -43,10 +43,20 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   trigger-value-change-event
                                   on-etools-selected-item-changed="_userSelected"
                                   options="[[staticData.users]]"
-                                  selected="{{incident.user}}">
+                                  selected="{{incident.primary_person.index_number}}">
             </etools-dropdown-lite>
           </div>
 
+          <div class="col col-6">
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Agency"
+                                  options="[[staticData.agencies]]"
+                                  selected="{{incident.primary_person.agency}}">
+            </etools-dropdown-lite>
+          </div>
+        </div>
+
+        <div class="row-h flex-c">
           <div class="col col-6">
             <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
           </div>
@@ -88,6 +98,23 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   label="Incident Type"
                                   options="[[staticData.incidentCategories]]"
                                   selected="{{incident.incident_category}}">
+            </etools-dropdown-lite>
+          </div>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Threat category"
+                                  options="[[staticData.threatCategories]]"
+                                  selected="{{incident.threat_category}}">
+            </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Target"
+                                  options="[[staticData.targets]]"
+                                  selected="{{incident.target}}">
             </etools-dropdown-lite>
           </div>
         </div>
@@ -155,7 +182,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <etools-dropdown-multi-lite readonly="[[readonly]]"
+            <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category)]]"
+                                        readonly="[[readonly]]"
                                         label="Weapons used"
                                         options="[[staticData.weapons]]"
                                         selected-values="{{incident.weapons_used}}">
@@ -164,39 +192,23 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-12">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Threat category"
-                                  options="[[staticData.threatCategories]]"
-                                  selected="{{incident.threat_category}}">
-            </etools-dropdown-lite>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Target"
-                                  options="[[staticData.targets]]"
-                                  selected="{{incident.target}}">
-            </etools-dropdown-lite>
-          </div>
-        </div>
-
-        <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
+            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
+                                  readonly="[[readonly]]"
                                   label="Vehicle Type"
                                   options="[[staticData.vehicleTypes]]"
                                   selected="{{incident.vehicle_type}}">
             </etools-dropdown-lite>
-            <etools-dropdown-lite readonly="[[readonly]]"
+            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
+                                  readonly="[[readonly]]"
                                   label="Contributing factor"
                                   options="[[staticData.factors]]"
                                   selected="{{incident.contributing_factor}}">
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
+            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
+                                  readonly="[[readonly]]"
                                   label="Crash Type"
                                   options="[[staticData.crashTypes]]"
                                   selected="{{incident.crash_type}}">
@@ -304,14 +316,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
   }
 
-  _getIncidentByName(type) {
-    return this.staticData.incidentCategories.find(elem => {
-      return elem.name === type;
-    });
-  }
-
   isNotReported(reported) {
     return reported === false;
+  }
+
+  isAccident(incidentCategoryId) {
+    let incident = this.staticData.incidentCategories.find(elem => {
+      return elem.id === incidentCategoryId;
+    });
+
+    return incident && incident.name.startsWith('Accident');
   }
 
   isVisible() {

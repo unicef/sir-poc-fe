@@ -64,8 +64,8 @@ const addEventOffline = (newEvent, dispatch) => {
   newEvent.id = generateRandomHash();
   newEvent.unsynced = true;
 
-  dispatch(addEventSuccess(newEvent));
   updatePath('/events/list/');
+  dispatch(addEventSuccess(newEvent));
 }
 
 const editEventOnline = (event, dispatch, state) => {
@@ -75,8 +75,8 @@ const editEventOnline = (event, dispatch, state) => {
 
   makeRequest(endpoint, modifiedFields).then((result) => {
     let response = JSON.parse(result);
-    dispatch(editEventSuccess(response, response.id));
     updatePath('/events/list/');
+    dispatch(editEventSuccess(response, response.id));
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
@@ -85,8 +85,8 @@ const editEventOnline = (event, dispatch, state) => {
 
 const editEventOffline = (event, dispatch) => {
   event.unsynced = true;
-  dispatch(editEventSuccess(event, event.id));
   updatePath('/events/list/');
+  dispatch(editEventSuccess(event, event.id));
 }
 
 export const addEvent = (newEvent) => (dispatch, getState) => {
@@ -108,9 +108,9 @@ export const editEvent = (event) => (dispatch, getState) => {
 export const syncEvent = (event) => (dispatch, getState) => {
   makeRequest(Endpoints.newEvent, event).then((result) => {
     let response = JSON.parse(result);
+    updatePath('/events/list/');
     dispatch(editEventSuccess(response, event.id));
     dispatch(updateEventIdsInIncidents(event.id, response.id))
-    updatePath('/events/list/');
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();

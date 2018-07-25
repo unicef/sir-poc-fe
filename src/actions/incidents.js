@@ -68,9 +68,8 @@ const addIncidentOnline = (newIncident, dispatch) => {
 const addIncidentOffline = (newIncident, dispatch) => {
   newIncident.id = generateRandomHash();
   newIncident.unsynced = true;
-
-  dispatch(addIncidentSuccess(newIncident));
   updatePath('/incidents/list/');
+  dispatch(addIncidentSuccess(newIncident));
 }
 
 const editIncidentOnline = (incident, dispatch, state) => {
@@ -79,8 +78,8 @@ const editIncidentOnline = (incident, dispatch, state) => {
   let endpoint = prepareEndpoint(Endpoints.editIncident, {id: incident.id});
 
   makeRequest(endpoint, modifiedFields).then((result) => {
-    dispatch(fetchIncidents());
     updatePath('/incidents/list/');
+    dispatch(fetchIncidents());
   }).catch((error) => {
     dispatch(addIncidentFail(error.response));
     scrollToTop();
@@ -89,8 +88,8 @@ const editIncidentOnline = (incident, dispatch, state) => {
 
 const editIncidentOffline = (incident, dispatch) => {
   incident.unsynced = true;
-  dispatch(editIncidentSuccess(incident, incident.id));
   updatePath('/incidents/list/');
+  dispatch(editIncidentSuccess(incident, incident.id));
 }
 
 export const addIncident = (newIncident) => (dispatch, getState) => {

@@ -41,6 +41,7 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
 const persistConfig = {
   key: 'sir-app',
   storage,
+  blacklist: ['errors']
 };
 
 

@@ -24,8 +24,7 @@ import staticData from '../reducers/static-data.js';
 import errors from '../reducers/errors.js';
 
 import { persistStore, persistCombineReducers } from 'redux-persist';
-
-import storage from 'redux-persist/es/storage';
+import { getStorage } from './storage/storage-loader.js';
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
@@ -39,7 +38,7 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
 
 const persistConfig = {
   key: 'sir-app',
-  storage,
+  storage: getStorage(),
 };
 
 

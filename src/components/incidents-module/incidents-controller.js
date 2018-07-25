@@ -13,7 +13,7 @@ import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { fetchIncidents } from '../../actions/incidents.js';
 import { lazyLoadIncidentPages } from '../../actions/app.js';
-import { store } from '../store.js';
+import { store } from '../../redux/store.js';
 
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';

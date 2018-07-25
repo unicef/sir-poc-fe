@@ -86,19 +86,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Incident Type"
-                                  options="[[staticData.incidentTypes]]"
-                                  selected="{{incident.incident_type}}">
+                                  options="[[staticData.incidentCategories]]"
+                                  selected="{{incident.incident_category}}">
             </etools-dropdown-lite>
-          </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <paper-input type="text" hidden$="[[typeNotOther(incident.incident_type)]]"
-                                     readonly="[[readonly]]"
-                                     label="Other Incident Type"
-                                     value="{{incident.other}}">
-            </paper-input>
           </div>
         </div>
 
@@ -166,7 +156,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="row-h flex-c">
           <div class="col col-12">
             <etools-dropdown-multi-lite readonly="[[readonly]]"
-                                        hidden$="[[typeNotOther(incident.incident_type)]]"
                                         label="Weapons used"
                                         options="[[staticData.weapons]]"
                                         selected-values="{{incident.weapons_used}}">
@@ -175,23 +164,39 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
+          <div class="col col-12">
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Threat category"
+                                  options="[[staticData.threatCategories]]"
+                                  selected="{{incident.threat_category}}">
+            </etools-dropdown-lite>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <etools-dropdown-lite readonly="[[readonly]]"
+                                  label="Target"
+                                  options="[[staticData.targets]]"
+                                  selected="{{incident.target}}">
+            </etools-dropdown-lite>
+          </div>
+        </div>
+
+        <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]"
-                                  readonly="[[readonly]]"
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Vehicle Type"
                                   options="[[staticData.vehicleTypes]]"
                                   selected="{{incident.vehicle_type}}">
             </etools-dropdown-lite>
-            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]"
-                                  readonly="[[readonly]]"
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Contributing factor"
                                   options="[[staticData.factors]]"
                                   selected="{{incident.contributing_factor}}">
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[typeNotRTA(incident.incident_type)]]"
-                                  readonly="[[readonly]]"
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Crash Type"
                                   options="[[staticData.crashTypes]]"
                                   selected="{{incident.crash_type}}">
@@ -300,23 +305,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   _getIncidentByName(type) {
-    return this.staticData.incidentTypes.find(elem => {
+    return this.staticData.incidentCategories.find(elem => {
       return elem.name === type;
     });
   }
 
   isNotReported(reported) {
     return reported === false;
-  }
-
-  typeNotOther(typeId) {
-    let otherElem = this._getIncidentByName('Other');
-    return typeId !== otherElem.id;
-  }
-
-  typeNotRTA(typeId) {
-    let otherElem = this._getIncidentByName('Road Traffic Accidents');
-    return typeId !== otherElem.id;
   }
 
   isVisible() {

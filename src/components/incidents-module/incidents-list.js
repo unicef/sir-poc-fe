@@ -118,7 +118,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         type: Object,
         value: []
       },
-      incidentTypes: Array,
+      incidentCategories: Array,
       q: String,
       offline: Boolean,
       filteredIncidents: {
@@ -134,11 +134,11 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     }
     this.offline = state.app.offline;
     this.incidents = state.incidents.list;
-    this.incidentTypes = state.staticData.incidentTypes;
+    this.incidentCategories = state.staticData.incidentCategories;
   }
 
   _getIncidentName(incidentType) {
-    let incident = this.incidentTypes.find(e => e.id === incidentType) || {};
+    let incident = this.incidentCategories.find(e => e.id === incidentType) || {};
     return incident.name || 'Not Specified';
   }
 

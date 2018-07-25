@@ -2,14 +2,17 @@ import * as ACTIONS from '../actions/static-data.js';
 
 const defaultStaticData = {
     propertyCategories: [],
-    incidentTypes: [],
+    incidentCategories: [],
+    threatCategories: [],
     criticalities: [],
     vehicleTypes: [],
     crashTypes: [],
     countries: [],
+    agencies: [],
     regions: [],
     impacts: [],
     factors: [],
+    targets: [],
     weapons: [],
     users: [],
     teams: [],
@@ -21,10 +24,15 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         propertyCategories: action.propertyCategories
       };
-    case ACTIONS.RECEIVE_INCIDENT_TYPES:
+    case ACTIONS.RECEIVE_INCIDENT_CATEGORIES:
       return {
         ...state,
-        incidentTypes: action.incidentTypes
+        incidentCategories: action.incidentCategories
+      };
+    case ACTIONS.RECEIVE_THREAT_CATEGORIES:
+      return {
+        ...state,
+        threatCategories: action.threatCategories
       };
     case ACTIONS.RECEIVE_CRITICALITIES:
       return {
@@ -46,6 +54,11 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         countries: action.countries
       };
+    case ACTIONS.RECEIVE_AGENCIES:
+      return {
+        ...state,
+        agencies: action.agencies
+      };
     case ACTIONS.RECEIVE_REGIONS:
       return {
         ...state,
@@ -60,6 +73,11 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         factors: action.factors
+      };
+    case ACTIONS.RECEIVE_TARGETS:
+      return {
+        ...state,
+        targets: action.targets
       };
     case ACTIONS.RECEIVE_WEAPONS:
       return {

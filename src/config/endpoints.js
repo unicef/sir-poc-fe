@@ -61,16 +61,28 @@ export const Endpoints = {
     url: baseUrl + "/api/impacts/",
     method: 'GET'
   },
+  agencies: {
+    url: baseUrl + "/api/agencies/",
+    method: 'GET'
+  },
   factors: {
     url: baseUrl + "/api/factors/",
+    method: 'GET'
+  },
+  targets: {
+    url: baseUrl + "/api/target/",
     method: 'GET'
   },
   propertyCategories: {
     url: baseUrl + "/api/property_categories/",
     method: 'GET'
   },
-  incidentTypes: {
-    url: baseUrl + "/api/incident_types/",
+  incidentCategories: {
+    url: baseUrl + "/api/incident_categories/",
+    method: 'GET'
+  },
+  threatCategories: {
+    url: baseUrl + "/api/threat_categories/",
     method: 'GET'
   }
 

@@ -1,7 +1,7 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
 
-export const RECEIVE_PROPERTY_CATEGORIES = 'RECEIVE_PROPERTY_CATEGORIES';
+// export const RECEIVE_PROPERTY_CATEGORIES = 'RECEIVE_PROPERTY_CATEGORIES';
 export const RECEIVE_INCIDENT_CATEGORIES = 'RECEIVE_INCIDENT_CATEGORIES';
 export const RECEIVE_THREAT_CATEGORIES = 'RECEIVE_THREAT_CATEGORIES';
 export const RECEIVE_CRITICALITIES = 'RECEIVE_CRITICALITIES';
@@ -10,7 +10,7 @@ export const RECEIVE_CRASH_TYPES = 'RECEIVE_CRASH_TYPES';
 export const RECEIVE_COUNTRIES = 'RECEIVE_COUNTRIES';
 export const RECEIVE_AGENCIES = 'RECEIVE_AGENCIES';
 export const RECEIVE_REGIONS = 'RECEIVE_REGIONS';
-export const RECEIVE_IMPACTS = 'RECEIVE_IMPACTS';
+// export const RECEIVE_IMPACTS = 'RECEIVE_IMPACTS';
 export const RECEIVE_FACTORS = 'RECEIVE_FACTORS';
 export const RECEIVE_TARGETS = 'RECEIVE_TARGETS';
 export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';
@@ -18,18 +18,18 @@ export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 
 
-export const fetchAndStorePropertyCategories = () => (dispatch, getState) => {
-  makeRequest(Endpoints.propertyCategories).then(result => {
-    dispatch(receivePropertyCategories(JSON.parse(result)));
-  });
-};
+// export const fetchAndStorePropertyCategories = () => (dispatch, getState) => {
+//   makeRequest(Endpoints.propertyCategories).then(result => {
+//     dispatch(receivePropertyCategories(JSON.parse(result)));
+//   });
+// };
 
-const receivePropertyCategories = (propertyCategories) => {
-  return {
-    type: RECEIVE_PROPERTY_CATEGORIES,
-    propertyCategories
-  };
-};
+// const receivePropertyCategories = (propertyCategories) => {
+//   return {
+//     type: RECEIVE_PROPERTY_CATEGORIES,
+//     propertyCategories
+//   };
+// };
 
 export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.incidentCategories).then(result => {
@@ -122,18 +122,18 @@ const receiveRegions = (regions) => {
   };
 };
 
-export const fetchAndStoreImpacts = () => (dispatch, getState) => {
-  makeRequest(Endpoints.impacts).then(result => {
-    dispatch(receiveImpacts(JSON.parse(result)));
-  });
-};
+// export const fetchAndStoreImpacts = () => (dispatch, getState) => {
+//   makeRequest(Endpoints.impacts).then(result => {
+//     dispatch(receiveImpacts(JSON.parse(result)));
+//   });
+// };
 
-const receiveImpacts = (impacts) => {
-  return {
-    type: RECEIVE_IMPACTS,
-    impacts
-  };
-};
+// const receiveImpacts = (impacts) => {
+//   return {
+//     type: RECEIVE_IMPACTS,
+//     impacts
+//   };
+// };
 
 export const fetchAndStoreFactors = () => (dispatch, getState) => {
   makeRequest(Endpoints.factors).then(result => {

@@ -25,7 +25,6 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       <style include="shared-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
-          padding: 10px;
         }
 
         etools-data-table-row[unsynced] {
@@ -34,6 +33,10 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
         .col-data > span {
           max-width: 100%;
+        }
+        
+        @media screen and (max-width: 767px) {
+          /* mobile specific css, under tablet min 768px */
         }
       </style>
 
@@ -67,26 +70,31 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
-            <div slot="row-data" style="display:flex; flex-direction: row;">
-              <span class="col-data col-3">
+            <div slot="row-data">
+              <span class="col-data col-3" data-col-header-label="Person involved">
                 <span class="truncate">
                   <a href="/incidents/view/[[item.id]]">
                     [[item.primary_person.first_name]] [[item.primary_person.last_name]]
                   </a>
                 </span>
               </span>
-              <span class="col-data col-3" title="[[item.city]]">
+              <span class="col-data col-3" title="[[item.city]]" data-col-header-label="City">
                   <span>[[item.city]]</span>
                 </span>
-              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]">
+              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]" 
+                    data-col-header-label="Incident Type">
                 <span>[[_getIncidentName(item.incident_type)]]</span>
               </span>
-              <span class="col-data col-2" title="[[getStatus(item)]]">
+              <span class="col-data col-2" title="[[getStatus(item)]]" data-col-header-label="Status">
                 <span class="truncate">[[getStatus(item)]]</span>
               </span>
-              <span class="col-data col-1">
-                <a href="/incidents/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>
-                <a href="/incidents/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]"> <iron-icon icon="editor:mode-edit"></iron-icon> </a>
+              <span class="col-data col-1" data-col-header-label="Actions">
+                <a href="/incidents/view/[[item.id]]">
+                  <iron-icon icon="assignment"></iron-icon>
+                </a>
+                <a href="/incidents/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]">
+                  <iron-icon icon="editor:mode-edit"></iron-icon>
+                </a>
               </span>
             </div>
             <div slot="row-data-details">

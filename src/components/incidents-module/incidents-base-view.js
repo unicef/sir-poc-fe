@@ -171,13 +171,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   selected="{{incident.criticality}}">
             </etools-dropdown-lite>
           </div>
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Impact"
-                                  options="[[staticData.impacts]]"
-                                  selected="{{incident.impact}}">
-            </etools-dropdown-lite>
-          </div>
         </div>
 
         <div class="row-h flex-c">

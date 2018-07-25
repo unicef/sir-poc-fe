@@ -72,7 +72,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     return {
       event: {
         type: Object,
-        value: {}
       },
       readonly: {
         type: Boolean,

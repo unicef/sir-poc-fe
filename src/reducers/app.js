@@ -80,7 +80,7 @@ export const isOnViewIncident = createSelector(
 
 export const isOnEditIncident = createSelector(
   locationInfoSelector,
-  (locInfo) => { return (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
-    && locInfo.incidentId)}
+  (locInfo) => (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
+    && locInfo.incidentId)
 );
 

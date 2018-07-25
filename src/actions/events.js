@@ -52,8 +52,8 @@ const receiveEvent = (event) => {
 
 const addEventOnline = (newEvent, dispatch) => {
   makeRequest(Endpoints.newEvent, newEvent).then((result) => {
-    dispatch(addEventSuccess(JSON.parse(result)));
     updatePath('/events/list/');
+    dispatch(addEventSuccess(JSON.parse(result)));
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();

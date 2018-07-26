@@ -9,6 +9,10 @@ export const Endpoints = {
     url: baseUrl + "/api/events/",
     method: 'POST'
   },
+  getEvent: {
+    url: baseUrl + "/api/events/<%=id%>",
+    method: 'GET'
+  },
   editEvent: {
     url: baseUrl + "/api/events/<%=id%>/",
     method: 'PATCH'
@@ -20,6 +24,10 @@ export const Endpoints = {
   newIncident: {
     url: baseUrl + "/api/incidents/",
     method: 'POST'
+  },
+  getIncident: {
+    url: baseUrl + "/api/incidents/<%=id%>/",
+    method: 'GET'
   },
   editIncident: {
     url: baseUrl + "/api/incidents/<%=id%>/",

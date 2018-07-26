@@ -12,6 +12,8 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '../common/errors-box.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
+import { selectIncident } from '../../reducers/incidents.js';
+import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 
@@ -246,6 +248,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Object,
         value: () => JSON.parse(JSON.stringify(IncidentModel))
       },
+      incidentId: {
+        type: Number,
+        computed: '_setIncidentId(state.app.locationInfo.incidentId)',
+        observer: '_idChanged'
+      },
       onDuty: {
         type: Array,
         value: [
@@ -264,10 +271,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Array,
         value: []
       },
-      incidentId: {
-        type: Number,
-        observer: '_idChanged'
-      },
       readonly: {
         type: Boolean,
         value: false
@@ -278,9 +281,21 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       store: Object
     };
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.store = store;
+  }
+  _setIncidentId(id) {
+    return id;
+  }
+  _idChanged(newId) {
+    if (!newId || !this.isOnExpectedPage(this.state)) {
+      return;
+    }
+    if (!this.state.app.offline) {
+      this.store.dispatch(fetchIncident(this.incidentId));
+    }
   }
   _userSelected(event) {
     if (!event.detail.selectedItem) {
@@ -293,6 +308,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+    if (!this.isOnExpectedPage(this.state)) {
+      return;
+    }
+
     this.staticData = state.staticData;
 
     this.events = state.events.list.map(elem => {
@@ -307,6 +326,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       elem.id = index;
       return elem;
     });
+
+    // *The incident is loaded from Redux until the GET finishes and refreshes it
+    this.set('incident', selectIncident(this.state));
   }
 
   isNotReported(reported) {

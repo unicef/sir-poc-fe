@@ -2,8 +2,11 @@ import {
   EDIT_INCIDENT_SUCCESS,
   ADD_INCIDENT_SUCCESS,
   RECEIVE_INCIDENTS,
+  RECEIVE_INCIDENT,
   UPDATE_EVENT_IDS
 } from '../actions/incidents.js';
+
+import { createSelector } from 'reselect';
 
 const incidents = (state = {list: []}, action) => {
   switch (action.type) {
@@ -11,6 +14,11 @@ const incidents = (state = {list: []}, action) => {
       return {
         ...state,
         list: getRefreshedIncidents(state.list, action.incidents)
+      };
+    case RECEIVE_INCIDENT:
+      return {
+        ...state,
+        list: getEditedList(state.list, action)
       };
     case ADD_INCIDENT_SUCCESS:
       return {
@@ -57,3 +65,17 @@ const updateEventIds = (list, oldId, newId) => {
     return incident;
   });
 }
+
+// ---------- SELECTORS -------
+const incidentsSelector = state => state.incidents.list;
+const selectedIncidentId = state => state.app.locationInfo.incidentId;
+export const selectIncident = createSelector(
+  incidentsSelector,
+  selectedIncidentId,
+  (incidents, incidentId) => {
+    if (incidentId) {
+      return {};
+    }
+    return incidents.find(i => String(i.id) === String(incidentId));
+  }
+)

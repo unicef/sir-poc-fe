@@ -3,6 +3,7 @@
 */
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident, syncIncident } from '../../actions/incidents.js';
+import { isOnEditIncident } from '../../reducers/app.js';
 
 /**
  * @polymer
@@ -11,15 +12,6 @@ import { editIncident, syncIncident } from '../../actions/incidents.js';
 class EditIncident extends IncidentsBaseView {
   static get is() {
     return 'edit-incident';
-  }
-
-  static get properties() {
-    return {
-      incidentId: {
-        type: Number,
-        observer: '_idChanged'
-      }
-    };
   }
 
   connectedCallback() {
@@ -35,11 +27,8 @@ class EditIncident extends IncidentsBaseView {
     }
   }
 
-  _idChanged(newId) {
-    let incident = this.state.incidents.list.find(elem => elem.id == this.incidentId);
-    if (incident) {
-      this.set('incident', JSON.parse(JSON.stringify(incident)));
-    }
+  isOnExpectedPage() {
+    return isOnEditIncident(this.state);
   }
 }
 

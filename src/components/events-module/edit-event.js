@@ -3,6 +3,7 @@
 */
 import { EventsBaseView } from './events-base-view.js';
 import { editEvent, syncEvent } from '../../actions/events.js';
+import { isOnEditEvent } from '../../reducers/app.js';
 
 /**
  * @polymer
@@ -11,15 +12,6 @@ import { editEvent, syncEvent } from '../../actions/events.js';
 class EditEvent extends EventsBaseView {
   static get is() {
     return 'edit-event';
-  }
-
-  static get properties() {
-    return {
-      eventId: {
-        type: Number,
-        observer: '_idChanged'
-      }
-    };
   }
 
   connectedCallback() {
@@ -35,13 +27,10 @@ class EditEvent extends EventsBaseView {
     }
   }
 
-  _idChanged(newId) {
-    // TODO: fix ==
-    let event = this.state.events.list.find(ev => ev.id == this.eventId);
-    if (event) {
-      this.set('event', JSON.parse(JSON.stringify(event)));
-    }
+  isOnExpectedPage() {
+    return isOnEditEvent(this.state);
   }
+
 }
 
 window.customElements.define(EditEvent.is, EditEvent);

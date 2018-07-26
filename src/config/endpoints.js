@@ -65,10 +65,6 @@ export const Endpoints = {
     url: baseUrl + "/api/crash_types/",
     method: 'GET'
   },
-  // impacts: {
-  //   url: baseUrl + "/api/impacts/",
-  //   method: 'GET'
-  // },
   agencies: {
     url: baseUrl + "/api/agencies/",
     method: 'GET'
@@ -81,10 +77,6 @@ export const Endpoints = {
     url: baseUrl + "/api/target/",
     method: 'GET'
   },
-  // propertyCategories: {
-  //   url: baseUrl + "/api/property_categories/",
-  //   method: 'GET'
-  // },
   incidentCategories: {
     url: baseUrl + "/api/incident_categories/",
     method: 'GET'

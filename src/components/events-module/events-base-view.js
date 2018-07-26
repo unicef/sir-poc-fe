@@ -10,8 +10,8 @@ import '@polymer/paper-input/paper-input.js';
 import '../common/datepicker-lite.js';
 
 import { fetchEvent } from '../../actions/events.js';
-import { store } from '../store.js';
 import { selectEvent } from '../../reducers/events.js';
+import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';

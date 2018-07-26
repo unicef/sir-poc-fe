@@ -10,7 +10,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '../common/errors-box.js';
-import { store } from '../store.js';
+import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { fetchIncident } from '../../actions/incidents.js';

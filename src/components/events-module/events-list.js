@@ -12,7 +12,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../store.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';

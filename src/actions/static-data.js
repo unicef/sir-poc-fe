@@ -15,10 +15,7 @@ export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 
-import { fetchAndStoreEvents } from './events.js';
-
 export const loadAllStaticData = () => (dispatch) => {
-  dispatch(fetchAndStoreEvents());
   dispatch(fetchAndStoreIncidentCategories());
   dispatch(fetchAndStoreThreatCategories());
   dispatch(fetchAndStoreCriticalities());

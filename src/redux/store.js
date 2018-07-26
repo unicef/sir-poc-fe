@@ -51,6 +51,4 @@ export const store = createStore(
   compose(lazyReducerEnhancer(combineReducers), applyMiddleware(thunk))
 );
 
-export const persistor = persistStore(store, null, () => {
-  store.dispatch(storeReady());
-});
+export const persistor = persistStore(store, null, () => store.dispatch(storeReady()));

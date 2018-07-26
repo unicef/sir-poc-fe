@@ -1,43 +1,43 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
 
-export const RECEIVE_PROPERTY_CATEGORIES = 'RECEIVE_PROPERTY_CATEGORIES';
-export const RECEIVE_INCIDENT_TYPES = 'RECEIVE_INCIDENT_TYPES';
+export const RECEIVE_INCIDENT_CATEGORIES = 'RECEIVE_INCIDENT_CATEGORIES';
+export const RECEIVE_THREAT_CATEGORIES = 'RECEIVE_THREAT_CATEGORIES';
 export const RECEIVE_CRITICALITIES = 'RECEIVE_CRITICALITIES';
 export const RECEIVE_VEHICLE_TYPES = 'RECEIVE_VEHICLE_TYPES';
 export const RECEIVE_CRASH_TYPES = 'RECEIVE_CRASH_TYPES';
 export const RECEIVE_COUNTRIES = 'RECEIVE_COUNTRIES';
+export const RECEIVE_AGENCIES = 'RECEIVE_AGENCIES';
 export const RECEIVE_REGIONS = 'RECEIVE_REGIONS';
-export const RECEIVE_IMPACTS = 'RECEIVE_IMPACTS';
 export const RECEIVE_FACTORS = 'RECEIVE_FACTORS';
+export const RECEIVE_TARGETS = 'RECEIVE_TARGETS';
 export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 
-
-export const fetchAndStorePropertyCategories = () => (dispatch, getState) => {
-  makeRequest(Endpoints.propertyCategories).then(result => {
-    dispatch(receivePropertyCategories(JSON.parse(result)));
+export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
+  makeRequest(Endpoints.incidentCategories).then(result => {
+    dispatch(receiveIncidentCategories(JSON.parse(result)));
   });
 };
 
-const receivePropertyCategories = (propertyCategories) => {
+const receiveIncidentCategories = (incidentCategories) => {
   return {
-    type: RECEIVE_PROPERTY_CATEGORIES,
-    propertyCategories
+    type: RECEIVE_INCIDENT_CATEGORIES,
+    incidentCategories
   };
 };
 
-export const fetchAndStoreIncidentTypes = () => (dispatch, getState) => {
-  makeRequest(Endpoints.incidentTypes).then(result => {
-    dispatch(receiveIncidentTypes(JSON.parse(result)));
+export const fetchAndStoreThreatCategories = () => (dispatch, getState) => {
+  makeRequest(Endpoints.threatCategories).then(result => {
+    dispatch(receiveThreatCategories(JSON.parse(result)));
   });
 };
 
-const receiveIncidentTypes = (incidentTypes) => {
+const receiveThreatCategories = (threatCategories) => {
   return {
-    type: RECEIVE_INCIDENT_TYPES,
-    incidentTypes
+    type: RECEIVE_THREAT_CATEGORIES,
+    threatCategories
   };
 };
 
@@ -80,6 +80,19 @@ const receiveCountries = (countries) => {
   };
 };
 
+export const fetchAndStoreAgencies = () => (dispatch, getState) => {
+  makeRequest(Endpoints.agencies).then(result => {
+    dispatch(receiveAgencies(JSON.parse(result)));
+  });
+};
+
+const receiveAgencies = (agencies) => {
+  return {
+    type: RECEIVE_AGENCIES,
+    agencies
+  };
+};
+
 export const fetchAndStoreRegions = () => (dispatch, getState) => {
   makeRequest(Endpoints.regions).then(result => {
     dispatch(receiveRegions(JSON.parse(result)));
@@ -93,19 +106,6 @@ const receiveRegions = (regions) => {
   };
 };
 
-export const fetchAndStoreImpacts = () => (dispatch, getState) => {
-  makeRequest(Endpoints.impacts).then(result => {
-    dispatch(receiveImpacts(JSON.parse(result)));
-  });
-};
-
-const receiveImpacts = (impacts) => {
-  return {
-    type: RECEIVE_IMPACTS,
-    impacts
-  };
-};
-
 export const fetchAndStoreFactors = () => (dispatch, getState) => {
   makeRequest(Endpoints.factors).then(result => {
     dispatch(receiveFactors(JSON.parse(result)));
@@ -116,6 +116,19 @@ const receiveFactors = (factors) => {
   return {
     type: RECEIVE_FACTORS,
     factors
+  };
+};
+
+export const fetchAndStoreTargets = () => (dispatch, getState) => {
+  makeRequest(Endpoints.targets).then(result => {
+    dispatch(receiveTargets(JSON.parse(result)));
+  });
+};
+
+const receiveTargets = (targets) => {
+  return {
+    type: RECEIVE_TARGETS,
+    targets
   };
 };
 

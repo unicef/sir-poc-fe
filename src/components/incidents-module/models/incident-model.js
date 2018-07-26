@@ -17,7 +17,6 @@ export const IncidentModel = {
     date_of_birth: '1970-01-01',
     nationality: '-',
     gender: 'male',
-    un_employer: '-',
     job_title: '-',
     type_of_contract: '-',
     contact: '-'

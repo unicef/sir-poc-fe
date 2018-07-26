@@ -13,6 +13,7 @@ import '../common/errors-box.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
+import { isOnNewIncident } from '../../reducers/app.js';
 import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -326,9 +327,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       elem.id = index;
       return elem;
     });
-
-    // *The incident is loaded from Redux until the GET finishes and refreshes it
-    this.set('incident', selectIncident(this.state));
+    if (!isOnNewIncident(this.state)) {
+      // *The incident is loaded from Redux until the GET finishes and refreshes it
+      this.set('incident', selectIncident(this.state));
+    }
   }
 
   isNotReported(reported) {

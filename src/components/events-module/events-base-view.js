@@ -11,7 +11,7 @@ import '../common/datepicker-lite.js';
 
 import { fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
-import { isOnViewEvent } from '../../reducers/app.js';
+import { isOnNewEvent } from '../../reducers/app.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../styles/shared-styles.js';
@@ -114,7 +114,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       return;
     }
 
-    if (!isOnViewEvent(this.state)) {
+    if (!isOnNewEvent(this.state)) {
       // *The event is loaded from Redux until the GET finishes and refreshes it
       this.set('event', selectEvent(this.state));
     }

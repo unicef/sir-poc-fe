@@ -89,8 +89,8 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   }
 
   connectedCallback() {
-    super.connectedCallback();
     this.store = store;
+    super.connectedCallback();
   }
 
   _setEventId(id) {

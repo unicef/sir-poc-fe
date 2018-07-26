@@ -18,6 +18,7 @@ import thunk from 'redux-thunk';
 import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 
+import { storeReady } from '../actions/app.js';
 import app from '../reducers/app.js';
 import errors from '../reducers/errors.js';
 import events from '../reducers/events.js';
@@ -50,4 +51,6 @@ export const store = createStore(
   compose(lazyReducerEnhancer(combineReducers), applyMiddleware(thunk))
 );
 
-export const persistor = persistStore(store);
+export const persistor = persistStore(store, null, () => {
+  store.dispatch(storeReady());
+});

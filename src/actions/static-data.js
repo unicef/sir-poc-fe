@@ -1,7 +1,6 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
 
-// export const RECEIVE_PROPERTY_CATEGORIES = 'RECEIVE_PROPERTY_CATEGORIES';
 export const RECEIVE_INCIDENT_CATEGORIES = 'RECEIVE_INCIDENT_CATEGORIES';
 export const RECEIVE_THREAT_CATEGORIES = 'RECEIVE_THREAT_CATEGORIES';
 export const RECEIVE_CRITICALITIES = 'RECEIVE_CRITICALITIES';
@@ -10,7 +9,6 @@ export const RECEIVE_CRASH_TYPES = 'RECEIVE_CRASH_TYPES';
 export const RECEIVE_COUNTRIES = 'RECEIVE_COUNTRIES';
 export const RECEIVE_AGENCIES = 'RECEIVE_AGENCIES';
 export const RECEIVE_REGIONS = 'RECEIVE_REGIONS';
-// export const RECEIVE_IMPACTS = 'RECEIVE_IMPACTS';
 export const RECEIVE_FACTORS = 'RECEIVE_FACTORS';
 export const RECEIVE_TARGETS = 'RECEIVE_TARGETS';
 export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';

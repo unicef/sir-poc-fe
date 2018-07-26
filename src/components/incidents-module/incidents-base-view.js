@@ -283,8 +283,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   connectedCallback() {
-    this.store = store;
     super.connectedCallback();
+    this.store = store;
   }
   _setIncidentId(id) {
     return id;

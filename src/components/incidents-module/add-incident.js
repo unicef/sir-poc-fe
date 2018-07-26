@@ -10,20 +10,15 @@ import { isOnNewIncident } from '../../reducers/app.js';
  * @customElement
  */
 class AddIncident extends IncidentsBaseView {
-  static get observers() {
-    return [
-      'stateChanged(state)'
-    ];
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new incident';
   }
 
-  stateChanged() {
-    if (isOnNewIncident(this.state)) {
+  _stateChanged(state) {
+    super._stateChanged(state);
+    if (isOnNewIncident(state)) {
       this.incident = JSON.parse(JSON.stringify(IncidentModel));
     }
   }

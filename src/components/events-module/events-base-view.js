@@ -89,13 +89,14 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   }
 
   connectedCallback() {
-
-    this.store = store;
     super.connectedCallback();
+    this.store = store;
   }
+
   _setEventId(id) {
     return id;
   }
+
   _idChanged(newId) {
     if (!newId || !this.isOnExpectedPage(this.state)) {
       return;

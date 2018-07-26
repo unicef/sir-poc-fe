@@ -8,19 +8,15 @@ import { EventModel } from './models/event-model.js';
 
 
 class AddEvent extends EventsBaseView {
-  static get observers() {
-    return [
-      'stateChanged(state)'
-    ];
-  }
   connectedCallback() {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new event';
   }
 
-  stateChanged() {
-    if (isOnNewEvent(this.state)) {
+  _stateChanged(state) {
+    super._stateChanged(state);
+    if (isOnNewEvent(state)) {
       this.event = JSON.parse(JSON.stringify(EventModel));
     }
   }

@@ -17,20 +17,6 @@ export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 
-
-// export const fetchAndStorePropertyCategories = () => (dispatch, getState) => {
-//   makeRequest(Endpoints.propertyCategories).then(result => {
-//     dispatch(receivePropertyCategories(JSON.parse(result)));
-//   });
-// };
-
-// const receivePropertyCategories = (propertyCategories) => {
-//   return {
-//     type: RECEIVE_PROPERTY_CATEGORIES,
-//     propertyCategories
-//   };
-// };
-
 export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.incidentCategories).then(result => {
     dispatch(receiveIncidentCategories(JSON.parse(result)));
@@ -121,19 +107,6 @@ const receiveRegions = (regions) => {
     regions
   };
 };
-
-// export const fetchAndStoreImpacts = () => (dispatch, getState) => {
-//   makeRequest(Endpoints.impacts).then(result => {
-//     dispatch(receiveImpacts(JSON.parse(result)));
-//   });
-// };
-
-// const receiveImpacts = (impacts) => {
-//   return {
-//     type: RECEIVE_IMPACTS,
-//     impacts
-//   };
-// };
 
 export const fetchAndStoreFactors = () => (dispatch, getState) => {
   makeRequest(Endpoints.factors).then(result => {

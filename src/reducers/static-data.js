@@ -19,11 +19,6 @@ const defaultStaticData = {
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
-    // case ACTIONS.RECEIVE_PROPERTY_CATEGORIES:
-    //   return {
-    //     ...state,
-    //     propertyCategories: action.propertyCategories
-    //   };
     case ACTIONS.RECEIVE_INCIDENT_CATEGORIES:
       return {
         ...state,
@@ -64,11 +59,6 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         regions: action.regions
       };
-    // case ACTIONS.RECEIVE_IMPACTS:
-    //   return {
-    //     ...state,
-    //     impacts: action.impacts
-    //   };
     case ACTIONS.RECEIVE_FACTORS:
       return {
         ...state,

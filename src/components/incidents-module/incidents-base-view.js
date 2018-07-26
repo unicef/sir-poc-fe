@@ -64,25 +64,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </div>
 
-      <!--
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Last name" type="text" value="{{incident.primary_person.last_name}}"></paper-input>
-            <datepicker-lite readonly="[[readonly]]" label="Date of birth" value="{{incident.primary_person.date_of_birth}}"></datepicker-lite>
-            <paper-input readonly="[[readonly]]" label="Nationality" type="text" value="{{incident.primary_person.nationality}}"></paper-input>
-            <etools-dropdown-lite readonly="[[readonly]]" label="Gender" options="[[genders]]" selected="{{incident.primary_person.gender}}"></etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="UN Employer" type="text" value="{{incident.primary_person.un_employer}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Job Title" type="text" value="{{incident.primary_person.job_title}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Type of Contract" type="text" value="{{incident.primary_person.type_of_contract}}"></paper-input>
-            <paper-input type="text" readonly="[[readonly]]" label="Contact info" value="{{incident.primary_person.contact}}"></paper-input>
-            <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
-          </div>
-        </div>
-      -->
-
         <div class="row-h">
           <h3> Incident details </h3>
         </div>
@@ -92,15 +73,26 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Event"
                                   options="[[events]]"
-                                  selected="{{incident.event}}">
+                                  selected="{{incident.event}}"
+                                  selected-item="{{selectedEvent}}">
             </etools-dropdown-lite>
           </div>
+          <div class="col col-6">
+            <p> [[selectedEvent.note]] </p>
+          </div>
+        </div>
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Incident Type"
                                   options="[[staticData.incidentCategories]]"
-                                  selected="{{incident.incident_category}}">
+                                  selected="{{incident.incident_category}}"
+                                  selected-item="{{selectedIncidentCategory}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <p> [[selectedIncidentCategory.description]] </p>
+            <p> [[selectedIncidentCategory.comment]] </p>
           </div>
         </div>
 
@@ -109,15 +101,25 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Threat category"
                                   options="[[staticData.threatCategories]]"
-                                  selected="{{incident.threat_category}}">
+                                  selected="{{incident.threat_category}}"
+                                  selected-item="{{selectedThreatCategory}}">
             </etools-dropdown-lite>
           </div>
+          <div class="col col-6">
+            <p> [[selectedThreatCategory.description]] </p>
+          </div>
+        </div>
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Target"
                                   options="[[staticData.targets]]"
-                                  selected="{{incident.target}}">
+                                  selected="{{incident.target}}"
+                                  selected-item="{{selectedTarget}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <p> [[selectedTarget.description]] </p>
           </div>
         </div>
 
@@ -170,8 +172,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Criticality"
                                   options="[[staticData.criticalities]]"
-                                  selected="{{incident.criticality}}">
+                                  selected="{{incident.criticality}}"
+                                  selected-item="{{selectedCriticality}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <p> [[selectedCriticality.description]] </p>
           </div>
         </div>
 

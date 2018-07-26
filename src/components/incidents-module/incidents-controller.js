@@ -13,7 +13,7 @@ import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { fetchIncidents } from '../../actions/incidents.js';
 import { lazyLoadIncidentPages } from '../../actions/app.js';
-import { store } from '../store.js';
+import { store } from '../../redux/store.js';
 
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
@@ -29,7 +29,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
       <app-route
         route="{{route}}"
-        pattern="/:section/:id"
+        pattern="/incidents/:section/:id"
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
@@ -37,8 +37,8 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <edit-incident name="edit" incident-id="[[routeData.id]]"></edit-incident>
-        <view-incident name="view" incident-id="[[routeData.id]]"></view-incident>
+        <edit-incident name="edit"></edit-incident>
+        <view-incident name="view"></view-incident>
       </iron-pages>
     `;
   }

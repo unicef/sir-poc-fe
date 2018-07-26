@@ -9,8 +9,9 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '../common/datepicker-lite.js';
 
-import { addEvent } from '../../actions/events.js';
-import { store } from '../store.js';
+import { fetchEvent } from '../../actions/events.js';
+import { selectEvent } from '../../reducers/events.js';
+import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -71,7 +72,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     return {
       event: {
         type: Object,
-        value: {}
       },
       readonly: {
         type: Boolean,
@@ -79,17 +79,42 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       },
       title: String,
       state: Object,
-      store: Object
+      store: Object,
+      eventId: {
+        type: Number,
+        computed: '_setEventId(state.app.locationInfo.eventId)',
+        observer: '_idChanged'
+      }
     };
   }
 
   connectedCallback() {
-    super.connectedCallback();
     this.store = store;
+    super.connectedCallback();
+  }
+
+  _setEventId(id) {
+    return id;
+  }
+
+  _idChanged(newId) {
+    if (!newId || !this.isOnExpectedPage(this.state)) {
+      return;
+    }
+    if (!this.state.app.offline) {
+      this.store.dispatch(fetchEvent(this.eventId));
+    }
   }
 
   _stateChanged(state) {
     this.state = state;
+
+    if (!this.isOnExpectedPage(this.state)) {
+      return;
+    }
+
+    // *The event is loaded from Redux until the GET finishes and refreshes it
+    this.set('event', selectEvent(this.state));
   }
 
   isVisible() {

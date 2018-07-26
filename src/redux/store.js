@@ -16,39 +16,32 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
+import { persistStore, persistCombineReducers } from 'redux-persist';
 
 import app from '../reducers/app.js';
+import errors from '../reducers/errors.js';
 import events from '../reducers/events.js';
 import incidents from '../reducers/incidents.js';
 import staticData from '../reducers/static-data.js';
-import errors from '../reducers/errors.js';
 
-import { persistStore, persistCombineReducers } from 'redux-persist';
-
-import storage from 'redux-persist/es/storage';
+import { getStorage } from './storage/storage-loader.js';
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
 const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
 
-// Initializes the Redux store with a lazyReducerEnhancer (so that you can
-// lazily add reducers after the store has been created) and redux-thunk (so
-// that you can dispatch async actions). See the "Redux and state management"
-// section of the wiki for more details:
-// https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management
-
 const persistConfig = {
   key: 'sir-app',
-  storage,
+  storage: getStorage(),
+  blacklist: ['errors']
 };
-
 
 const persistedReducer = persistCombineReducers(persistConfig, {
   app,
+  errors,
   events,
   incidents,
-  staticData,
-  errors
+  staticData
 });
 
 // lazy reducers are not being used with redux-persist

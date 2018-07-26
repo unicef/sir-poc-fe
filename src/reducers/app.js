@@ -17,7 +17,7 @@ import {
   UPDATE_LOCATION_INFO,
 } from '../actions/app.js';
 
-const app = (state = {narrowDrawer: false, offline: false, locationInfo: {selectedModule: '', page: '', selectedItemId: ''}}, action) => {
+const app = (state = {narrowDrawer: false, offline: false, locationInfo: {selectedModule: '', page: '', eventId: '', incidentId: ''}}, action) => {
   switch (action.type) {
     case UPDATE_OFFLINE:
       return {
@@ -51,14 +51,36 @@ const app = (state = {narrowDrawer: false, offline: false, locationInfo: {select
 
 export default app;
 
-const appSelector = state => state.app;
-export const onNewEvent = createSelector(
-  appSelector,
-  (app) => (app.page === 'new' && app.selectedModule === 'events')
+const locationInfoSelector = state => state.app.locationInfo;
+export const isOnNewEvent = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'events')
 );
 
-export const onNewIncident = createSelector(
-  appSelector,
-  (app) => (app.page === 'new' && app.selectedModule === 'incidents')
+export const isOnViewEvent = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'view' && locInfo.selectedModule === 'events')
+);
+
+export const isOnEditEvent = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'edit' && locInfo.selectedModule === 'events'
+    && locInfo.eventId)
+);
+
+export const isOnNewIncident = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'new' && locInfo.selectedModule === 'incidents')
+);
+
+export const isOnViewIncident = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'view' && locInfo.selectedModule === 'incidents')
+);
+
+export const isOnEditIncident = createSelector(
+  locationInfoSelector,
+  (locInfo) => (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
+    && locInfo.incidentId)
 );
 

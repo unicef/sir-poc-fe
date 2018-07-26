@@ -103,15 +103,16 @@ export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
 
 export const updateLocationInfo = (path, queryParams) => {
 
-  let [selectedModule, page, selectedItemId] = extractInfoFromPath(path);
+  let [selectedModule, page, eventId, incidentId] = extractInfoFromPath(path);
 
   return {
     type: UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
-      page,
-      selectedItemId,
-      queryParams
+      page,      
+      queryParams,
+      eventId,
+      incidentId
     }
   };
 }
@@ -120,8 +121,14 @@ function extractInfoFromPath(path) {
   const splitPath = (path || '').slice(1).split('/');
   let selectedModule = splitPath[0];
   let page = splitPath[1] || '';
-  let selectedItemId = splitPath[2] || '';
-  return [selectedModule, page, selectedItemId];
+  let eventId='';
+  let incidentId='';
+  if (selectedModule === 'events') {
+    eventId = splitPath[2] || '';
+  } else {
+    incidentId = splitPath[2] || '';
+  }
+  return [selectedModule, page, eventId, incidentId];
 }
 
 

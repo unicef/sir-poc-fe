@@ -9,7 +9,10 @@ export const EDIT_EVENT_SUCCESS = 'EDIT_EVENT_SUCCESS';
 export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
 export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
 export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
+export const RECEIVE_EVENT = 'RECEIVE_EVENT';
 
+
+// ----- BASIC ACTION CREATORS -----------
 const editEventSuccess = (event, id) => {
   return {
     type: EDIT_EVENT_SUCCESS,
@@ -39,10 +42,18 @@ const receiveEvents = (events) => {
   };
 }
 
+const receiveEvent = (event) => {
+  return {
+    type: RECEIVE_EVENT,
+    event
+  };
+}
+// ------------------------------
+
 const addEventOnline = (newEvent, dispatch) => {
   makeRequest(Endpoints.newEvent, newEvent).then((result) => {
-    dispatch(addEventSuccess(JSON.parse(result)));
     updatePath('/events/list/');
+    dispatch(addEventSuccess(JSON.parse(result)));
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
@@ -53,8 +64,8 @@ const addEventOffline = (newEvent, dispatch) => {
   newEvent.id = generateRandomHash();
   newEvent.unsynced = true;
 
-  dispatch(addEventSuccess(newEvent));
   updatePath('/events/list/');
+  dispatch(addEventSuccess(newEvent));
 }
 
 const editEventOnline = (event, dispatch, state) => {
@@ -64,8 +75,8 @@ const editEventOnline = (event, dispatch, state) => {
 
   makeRequest(endpoint, modifiedFields).then((result) => {
     let response = JSON.parse(result);
-    dispatch(editEventSuccess(response, response.id));
     updatePath('/events/list/');
+    dispatch(editEventSuccess(response, response.id));
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
@@ -74,8 +85,8 @@ const editEventOnline = (event, dispatch, state) => {
 
 const editEventOffline = (event, dispatch) => {
   event.unsynced = true;
-  dispatch(editEventSuccess(event, event.id));
   updatePath('/events/list/');
+  dispatch(editEventSuccess(event, event.id));
 }
 
 export const addEvent = (newEvent) => (dispatch, getState) => {
@@ -97,9 +108,9 @@ export const editEvent = (event) => (dispatch, getState) => {
 export const syncEvent = (event) => (dispatch, getState) => {
   makeRequest(Endpoints.newEvent, event).then((result) => {
     let response = JSON.parse(result);
+    updatePath('/events/list/');
     dispatch(editEventSuccess(response, event.id));
     dispatch(updateEventIdsInIncidents(event.id, response.id))
-    updatePath('/events/list/');
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
@@ -111,3 +122,12 @@ export const fetchAndStoreEvents = () => (dispatch, getState) => {
     dispatch(receiveEvents(JSON.parse(result)));
   });
 };
+
+export const fetchEvent = (id) => (dispatch, getState) => {
+  let endpoint = prepareEndpoint(Endpoints.getEvent,  {id: id});
+  makeRequest(endpoint).then((response) => {
+    dispatch(receiveEvent(JSON.parse(response)));
+  });
+};
+
+

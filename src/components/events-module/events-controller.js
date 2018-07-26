@@ -11,7 +11,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../store.js';
+import { store } from '../../redux/store.js';
 import { lazyLoadEventPages } from '../../actions/app.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
@@ -27,7 +27,7 @@ class EventsController extends connect(store)(PolymerElement) {
 
       <app-route
         route="{{route}}"
-        pattern="/:section/:id"
+        pattern="/events/:section/:id"
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
@@ -35,8 +35,8 @@ class EventsController extends connect(store)(PolymerElement) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <events-list name="list"></events-list>
         <add-event name="new"></add-event>
-        <view-event name="view" event-id="[[routeData.id]]"></view-event>
-        <edit-event name="edit" event-id="[[routeData.id]]"></edit-event>
+        <view-event name="view"></view-event>
+        <edit-event name="edit"></edit-event>
       </iron-pages>
     `;
   }

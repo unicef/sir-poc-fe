@@ -11,8 +11,8 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store} from '../store.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
@@ -29,7 +29,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       <style include="shared-styles filters-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
-          padding: 10px;
         }
 
         etools-data-table-row[unsynced] {
@@ -42,6 +41,10 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
         .col-data iron-icon {
           margin-right: 16px;
+        }
+
+        @media screen and (max-width: 767px) {
+          /* mobile specific css, under tablet min 768px */
         }
 
       </style>
@@ -85,24 +88,27 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
-                <span class="col-data col-3">
+                <span class="col-data col-3" data-col-header-label="Description">
                   <span class="truncate">
                     <a href="/events/view/[[item.id]]"> [[item.description]] </a>
                   </span>
                 </span>
-              <span class="col-data col-3" title="[[item.start_date]]">
+                <span class="col-data col-3" title="[[item.start_date]]" data-col-header-label="Start date">
                     [[item.start_date]]
                 </span>
-              <span class="col-data col-3" title="[[item.location]]">
+                <span class="col-data col-3" title="[[item.location]]" data-col-header-label="Location">
                   <span class="truncate">[[item.location]]</span>
                 </span>
-              <span class="col-data col-2">
+                <span class="col-data col-2" data-col-header-label="Status">
                   <span class="truncate">[[getStatus(item)]]</span>
                 </span>
-              <span class="col-data col-1">
-                  <a href="/events/view/[[item.id]]"> <iron-icon icon="assignment"></iron-icon> </a>
-                  <a href="/events/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]"> <iron-icon
-                      icon="editor:mode-edit"></iron-icon> </a>
+                <span class="col-data col-1" data-col-header-label="Actions">
+                  <a href="/events/view/[[item.id]]">
+                    <iron-icon icon="assignment"></iron-icon>
+                  </a>
+                  <a href="/events/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]">
+                    <iron-icon icon="editor:mode-edit"></iron-icon>
+                  </a>
                 </span>
             </div>
             <div slot="row-data-details">

@@ -116,7 +116,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
     if (!isOnNewEvent(this.state)) {
       // *The event is loaded from Redux until the GET finishes and refreshes it
-      this.set('event', selectEvent(this.state));
+      this.set('event', JSON.parse(JSON.stringify(selectEvent(this.state))));
     }
   }
 

@@ -329,7 +329,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
     if (!isOnNewIncident(this.state)) {
       // *The incident is loaded from Redux until the GET finishes and refreshes it
-      this.set('incident', selectIncident(this.state));
+      this.set('incident', JSON.parse(JSON.stringify(selectIncident(this.state))));
     }
   }
 

@@ -19,6 +19,9 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/app-route/app-location.js';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/av-icons.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
@@ -71,21 +74,46 @@ class MyApp extends connect(store)(PolymerElement) {
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
         }
+        
+        #menu-header {
+          @apply --layout-horizontal;
+          height: 63px;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        }    
+        
+        #menu-header iron-icon {
+          color: var(--secondary-text-color);
+          height: 48px;
+          margin-right: 8px;
+        }
 
         .drawer-list a {
+          @apply --layout-horizontal;
+          @apply --layout-center;
           font-weight: normal;
-          display: block;
           padding: 0 32px;
           text-decoration: none;
-          color: var(--app-secondary-color);
+          color: var(--primary-text-color);
           line-height: 40px;
+        }
+        .drawer-list a iron-icon {
+          margin-right: 8px;
+          color: var(--secondary-text-color);
+        }
+        .drawer-list a.menu-heading[selected] {
+          color: var(--app-primary-color);
         }
         .drawer-list a.menu-heading {
           padding: 0 24px;
+          font-size: 18px;
+          margin-top: 16px;
         }
-        a[selected] {
-          color: black;
+        .drawer-list a[selected] {
           font-weight: bold;
+        }
+        .drawer-list a[selected]:not(.menu-heading) {
+          background-color: var(--menu-selected-bg-color);
+          color: var(--app-primary-color);
         }
       </style>
 
@@ -98,16 +126,43 @@ class MyApp extends connect(store)(PolymerElement) {
       <app-drawer-layout fullbleed="" narrow="{{narrow}}">
         <!-- Drawer content -->
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-          <app-toolbar>Menu</app-toolbar>
+          <app-toolbar id="menu-header">
+            <iron-icon icon="event"></iron-icon>
+            <span>Menu</span>
+          </app-toolbar>
 
           <div class="drawer-list">
-            <a class="menu-heading" selected$="[[pathsMatch(page, 'events')]]" href="[[rootPath]]events/list/">Events</a>
-              <a selected$="[[pathsMatch(route.path, '/events/list/')]]" href="[[rootPath]]events/list/">Events List</a>
-              <a selected$="[[pathsMatch(route.path, '/events/new/')]]" href="[[rootPath]]events/new/">New Event</a>
+            <a class="menu-heading" 
+              selected$="[[pathsMatch(page, 'events')]]" 
+              href="[[rootPath]]events/list/">Events</a>
+            
+            <a selected$="[[pathsMatch(route.path, '/events/list/')]]" 
+              href="[[rootPath]]events/list/">
+                <iron-icon icon="list"></iron-icon>
+                <span>Events List</span>
+              </a>
+              
+            <a selected$="[[pathsMatch(route.path, '/events/new/')]]" 
+              href="[[rootPath]]events/new/">
+              <iron-icon icon="av:playlist-add"></iron-icon>
+              <span>New Event</span>
+            </a>
 
-            <a class="menu-heading" selected$="[[pathsMatch(page, 'incidents')]]" href="[[rootPath]]incidents/list/">Incidents</a>
-              <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
-              <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]" href="[[rootPath]]incidents/new/">New Incident</a>
+            <a class="menu-heading" 
+              selected$="[[pathsMatch(page, 'incidents')]]" 
+              href="[[rootPath]]incidents/list/">Incidents</a>
+              
+            <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]" 
+              href="[[rootPath]]incidents/list/">
+              <iron-icon icon="list"></iron-icon>
+              <span>Incidents List</span>
+            </a>
+              
+            <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]" 
+              href="[[rootPath]]incidents/new/">
+              <iron-icon icon="av:playlist-add"></iron-icon>
+              <span>New Incident</span>
+            </a>
           </div>
 
         </app-drawer>

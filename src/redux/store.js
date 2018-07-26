@@ -50,5 +50,6 @@ export const store = createStore(
   persistedReducer,
   compose(lazyReducerEnhancer(combineReducers), applyMiddleware(thunk))
 );
-
+// storeReady() gets called after the old state is loaded from storage 
+// any data pushed to redux before this callback fires will be overwritten by the old state
 export const persistor = persistStore(store, null, () => store.dispatch(storeReady()));

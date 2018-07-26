@@ -78,6 +78,16 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       etools-dropdown-lite, etools-dropdown-multi-lite {
         width: 100%;
       }
+      
+      
+      @media screen and (max-width: 767px) {
+        /* mobile, under 768px */
+        .card {
+          margin: 16px;
+          padding: 16px;
+        }
+      }
+      
     </style>
   </template>
 </dom-module>`;

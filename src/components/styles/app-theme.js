@@ -7,10 +7,14 @@ $_documentContainer.innerHTML = `
   <custom-style>
     <style>
       html {
-
-        --app-primary-color: #4285f4;
+        --app-primary-color: #0099ff;
         --app-secondary-color: black;
         --light-primary-text-color: #fff;
+        
+        --primary-text-color: rgba(0, 0, 0, 0.87);
+        --secondary-text-color: rgba(0, 0, 0, 0.54);
+        
+        --menu-selected-bg-color: #e8e8e8;
       }
     </style>
   </custom-style>`;

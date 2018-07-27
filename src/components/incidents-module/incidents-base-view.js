@@ -156,8 +156,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </div>
 
-        <br>
-
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-input type="text" readonly="[[readonly]]" label="Injuries" value="{{incident.injuries}}"></paper-input>
@@ -200,6 +198,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   options="[[staticData.vehicleTypes]]"
                                   selected="{{incident.vehicle_type}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
             <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
                                   readonly="[[readonly]]"
                                   label="Contributing factor"
@@ -207,6 +207,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   selected="{{incident.contributing_factor}}">
             </etools-dropdown-lite>
           </div>
+        </div>
+
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
                                   readonly="[[readonly]]"
@@ -214,6 +217,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   options="[[staticData.crashTypes]]"
                                   selected="{{incident.crash_type}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <paper-checkbox hidden$="[[!isAccident(incident.incident_category)]]"
+                            checked="{{incident.near_miss}}"
+                            disabled="[[readonly]]">
+              Near miss
+            </paper-checkbox>
           </div>
         </div>
 

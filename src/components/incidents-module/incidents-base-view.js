@@ -24,6 +24,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         :host {
           @apply --layout-vertical;
         }
+        .details {
+          margin-top: 28px;
+        }
       </style>
 
       <div class="card">
@@ -78,7 +81,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <p> [[selectedEvent.note]] </p>
+            <div class="details"> [[selectedEvent.note]] </div>
           </div>
         </div>
         <div class="row-h flex-c">
@@ -91,8 +94,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <p> [[selectedIncidentCategory.description]] </p>
-            <p> [[selectedIncidentCategory.comment]] </p>
+            <div class="details">
+              [[selectedIncidentCategory.description]]
+            </div>
+            <div class="details" hidden$="[[!selectedIncidentCategory.comment]]">
+              [[selectedIncidentCategory.comment]]
+            </div>
           </div>
         </div>
 
@@ -106,7 +113,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <p> [[selectedThreatCategory.description]] </p>
+            <div class="details"> [[selectedThreatCategory.description]] </div>
           </div>
         </div>
         <div class="row-h flex-c">
@@ -119,7 +126,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <p> [[selectedTarget.description]] </p>
+            <div class="details"> [[selectedTarget.description]] </div>
           </div>
         </div>
 
@@ -175,7 +182,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <p> [[selectedCriticality.description]] </p>
+            <div class="details"> [[selectedCriticality.description]] </div>
           </div>
         </div>
 

@@ -15,6 +15,22 @@ export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 
+export const loadAllStaticData = () => (dispatch) => {
+  dispatch(fetchAndStoreIncidentCategories());
+  dispatch(fetchAndStoreThreatCategories());
+  dispatch(fetchAndStoreCriticalities());
+  dispatch(fetchAndStoreVehicleTypes());
+  dispatch(fetchAndStoreCrashTypes());
+  dispatch(fetchAndStoreCountries());
+  dispatch(fetchAndStoreAgencies());
+  dispatch(fetchAndStoreRegions());
+  dispatch(fetchAndStoreFactors());
+  dispatch(fetchAndStoreTargets());
+  dispatch(fetchAndStoreWeapons());
+  dispatch(fetchAndStoreUsers());
+  dispatch(fetchAndStoreTeams());
+};
+
 export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.incidentCategories).then(result => {
     dispatch(receiveIncidentCategories(JSON.parse(result)));

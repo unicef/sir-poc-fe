@@ -36,7 +36,6 @@ import { updateMetadata } from 'pwa-helpers/metadata.js';
 import './snack-bar/snack-bar.js';
 import { store } from '../redux/store.js';
 
-import { loadAllStaticData } from './data/static-data-loader.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 // These are the actions needed by this element.
 import {
@@ -74,13 +73,13 @@ class MyApp extends connect(store)(PolymerElement) {
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
         }
-        
+
         #menu-header {
           @apply --layout-horizontal;
           height: 63px;
           border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-        }    
-        
+        }
+
         #menu-header iron-icon {
           color: var(--secondary-text-color);
           height: 48px;
@@ -132,33 +131,33 @@ class MyApp extends connect(store)(PolymerElement) {
           </app-toolbar>
 
           <div class="drawer-list">
-            <a class="menu-heading" 
-              selected$="[[pathsMatch(page, 'events')]]" 
+            <a class="menu-heading"
+              selected$="[[pathsMatch(page, 'events')]]"
               href="[[rootPath]]events/list/">Events</a>
-            
-            <a selected$="[[pathsMatch(route.path, '/events/list/')]]" 
+
+            <a selected$="[[pathsMatch(route.path, '/events/list/')]]"
               href="[[rootPath]]events/list/">
                 <iron-icon icon="list"></iron-icon>
                 <span>Events List</span>
               </a>
-              
-            <a selected$="[[pathsMatch(route.path, '/events/new/')]]" 
+
+            <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
               href="[[rootPath]]events/new/">
               <iron-icon icon="av:playlist-add"></iron-icon>
               <span>New Event</span>
             </a>
 
-            <a class="menu-heading" 
-              selected$="[[pathsMatch(page, 'incidents')]]" 
+            <a class="menu-heading"
+              selected$="[[pathsMatch(page, 'incidents')]]"
               href="[[rootPath]]incidents/list/">Incidents</a>
-              
-            <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]" 
+
+            <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]"
               href="[[rootPath]]incidents/list/">
               <iron-icon icon="list"></iron-icon>
               <span>Incidents List</span>
             </a>
-              
-            <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]" 
+
+            <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
               href="[[rootPath]]incidents/new/">
               <iron-icon icon="av:playlist-add"></iron-icon>
               <span>New Incident</span>
@@ -217,7 +216,6 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    loadAllStaticData(store);
 
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
   }

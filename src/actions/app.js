@@ -9,6 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { updatePath } from '../components/common/navigation-helper.js';
+import { loadAllStaticData } from './static-data.js';
+import { fetchAndStoreEvents } from './events.js';
 
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
@@ -20,6 +22,11 @@ export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
 //TODO: add a sync data action when app is back online
 
 let snackbarTimer;
+
+export const storeReady = () => (dispatch) => {
+  dispatch(fetchAndStoreEvents());
+  dispatch(loadAllStaticData());
+};
 
 export const showSnackbar = () => (dispatch) => {
   dispatch({
@@ -101,7 +108,7 @@ export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
   }
 }
 
-export const updateLocationInfo = (path) => {
+export const updateLocationInfo = (path, queryParams) => {
 
   let [selectedModule, page, eventId, incidentId] = extractInfoFromPath(path);
 
@@ -109,7 +116,8 @@ export const updateLocationInfo = (path) => {
     type: UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
-      page,
+      page,      
+      queryParams,
       eventId,
       incidentId
     }

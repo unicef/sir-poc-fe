@@ -7,22 +7,25 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../redux/store.js';
+
 import PaginationMixin from '../common/pagination-mixin.js'
 
 import 'etools-data-table/etools-data-table.js';
+import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
+import '../styles/filters-styles.js';
 
 class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles data-table-styles grid-layout-styles">
+      <style include="shared-styles filters-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
         }
@@ -34,18 +37,33 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         .col-data > span {
           max-width: 100%;
         }
-        
+
+        .col-data iron-icon {
+          margin-right: 16px;
+        }        
+
         @media screen and (max-width: 767px) {
           /* mobile specific css, under tablet min 768px */
         }
+
       </style>
 
       <div class="card filters">
-        <paper-input class="search-input"
-                     no-label-float placeholder="Search by Person Involved, City or Description"
-                     value="{{q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+        <div class="row-h flex-c">
+          <paper-input class="filter search-input"
+                       placeholder="Search by Person Involved, City or Description"
+                       value="{{q}}">
+            <iron-icon icon="search" slot="prefix"></iron-icon>
+          </paper-input>
+
+          <etools-dropdown-multi-lite class="filter sync-filter"
+                                      label="Sync status"
+                                      options="[[itemSyncStatusOptions]]"
+                                      selected-values="{{selectedSyncStatuses}}"
+                                      hide-search>
+
+          </etools-dropdown-multi-lite>
+        </div>
       </div>
 
       <div class="card list">
@@ -131,7 +149,17 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber)'
+        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber, selectedSyncStatuses.length)'
+      },
+      itemSyncStatusOptions: {
+        type: Array,
+        value: [
+          {id: 'synced', name: 'Synced'},
+          {id: 'unsynced', name: 'Not Synced'},
+        ]
+      },
+      selectedSyncStatuses: {
+        type: Array
       }
     };
   }
@@ -152,8 +180,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   _filterData(incidents, q, pageSize, pageNumber) {
     let filteredIncidents = incidents ? JSON.parse(JSON.stringify(incidents)) : [];
-    if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string' && q !== '') {
+    if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string') {
       filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
+      filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.selectedSyncStatuses));
     }
 
     return this.applyPagination(filteredIncidents);
@@ -166,12 +195,20 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         String(e.description).toLowerCase().search(q) > -1;
   }
 
+  _applyStatusFilter(e, selectedSyncStatuses) {
+    if (selectedSyncStatuses.length === 0 || selectedSyncStatuses.length === this.itemSyncStatusOptions.length) {
+      return true;
+    }
+    const eStatus = e.unsynced ? 'unsynced' : 'synced';
+    return selectedSyncStatuses.some(s => s === eStatus);
+  }
+
   notEditable(incident, offline) {
     return offline && !incident.unsynced;
   }
 
   getStatus(incident) {
-    return incident.unsynced? 'Not Synced': incident.status;
+    return incident.unsynced ? 'Not Synced' : incident.status;
   }
 
 }

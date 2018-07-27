@@ -71,10 +71,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
         color: orange;
       }
 
-      iron-icon {
-        height: 16px;
-      }
-
       a {
         text-decoration: none;
       }

@@ -1,7 +1,6 @@
 import * as ACTIONS from '../actions/static-data.js';
 
 const defaultStaticData = {
-    // propertyCategories: [],
     incidentCategories: [],
     threatCategories: [],
     criticalities: [],
@@ -10,7 +9,6 @@ const defaultStaticData = {
     countries: [],
     agencies: [],
     regions: [],
-    // impacts: [],
     factors: [],
     targets: [],
     weapons: [],

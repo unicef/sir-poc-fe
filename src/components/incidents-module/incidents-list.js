@@ -110,7 +110,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip theme="light" open-on-click>
                     <span slot="field"> Not Synced </span>
-                    <span slot="message"> This event has not been sumitted to the server. Go to its edit page and save it when an internet connection is availale. </span>
+                    <span slot="message"> This incident has not been sumitted to the server. Go to its edit page and save it when an internet connection is availale. </span>
                   </etools-info-tooltip>
                 </template>
               </span>

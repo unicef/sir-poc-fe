@@ -67,7 +67,13 @@ class DatePickerLite extends PolymerElement {
   }
 
   dateChanged() {
+    if (this.date === undefined) {
+      return;
+    }
+
     if (!this.date) {
+      this.value = null;
+      this.readableDate = '';
       return;
     }
     this.$.ddMenu.opened = false;
@@ -78,7 +84,12 @@ class DatePickerLite extends PolymerElement {
   }
 
   valueChanged() {
+    if (this.value === undefined) {
+      return;
+    }
+
     if (!this.value) {
+      this.date = null;
       return;
     }
 

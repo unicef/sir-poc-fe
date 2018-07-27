@@ -59,7 +59,7 @@ export const selectEvent = createSelector(
   selectedEventId,
   (events, eventId) => {
     if (!eventId) {
-      return {};
+      return null;
     }
     return events.find(ev => String(ev.id) === String(eventId));
   }

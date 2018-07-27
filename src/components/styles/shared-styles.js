@@ -63,10 +63,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
         max-width: 400px;
       }
 
-      iron-icon {
-        height: 16px;
-      }
-
       a {
         text-decoration: none;
       }

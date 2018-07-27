@@ -120,7 +120,7 @@ class MyApp extends connect(store)(PolymerElement) {
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
       </app-location>
 
-      <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
+      <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{queryParams}}">
       </app-route>
 
       <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="900px">
@@ -203,13 +203,14 @@ class MyApp extends connect(store)(PolymerElement) {
       route: Object,
       routeData: Object,
       subroute: Object,
+      queryParams: Object,
       offline: Boolean
     };
   }
 
   static get observers() {
     return [
-      '_locationChanged(route.path)',
+      '_locationChanged(route.path, queryParams)',
       '_routePageChanged(routeData.page)'
     ];
   }
@@ -221,8 +222,8 @@ class MyApp extends connect(store)(PolymerElement) {
     installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
   }
 
-  _locationChanged(path) {
-    store.dispatch(updateLocationInfo(path));
+  _locationChanged(path, queryParams) {
+    store.dispatch(updateLocationInfo(path, queryParams));
   }
 
   pathsMatch(path1, path2) {

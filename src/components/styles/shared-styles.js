@@ -67,6 +67,10 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
         max-width: 400px;
       }
 
+      .warning {
+        color: orange;
+      }
+
       iron-icon {
         height: 16px;
       }
@@ -82,7 +86,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       etools-dropdown-lite, etools-dropdown-multi-lite {
         width: 100%;
       }
-
 
       @media screen and (max-width: 767px) {
         /* mobile, under 768px */

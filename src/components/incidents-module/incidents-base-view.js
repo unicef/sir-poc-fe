@@ -252,6 +252,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c">
             <div class="col col-12">
+              <span class="warning" hidden$="[[!state.app.offline]]">
+                Because there is no internet conenction the incident will be saved offine for now,
+                and you must sync it manually by saving it again when online
+              </span>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
               <p hidden$="[[!eventNotOk(incident.event, state.app.offline)]]"> Can't save, selected event must be synced first </p>
               <paper-button raised
                             on-click="save"

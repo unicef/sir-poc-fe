@@ -60,6 +60,14 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c">
             <div class="col col-12">
+              <span class="warning" hidden$="[[!state.app.offline]]">
+                Because there is no internet conenction the event will be saved offine for now,
+                and you must sync it manually by saving it again when online
+              </span>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
               <paper-button raised on-click="save"> Save </paper-button>
             </div>
           </div>

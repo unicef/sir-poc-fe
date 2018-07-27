@@ -294,10 +294,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!newId || !this.isOnExpectedPage(this.state)) {
       return;
     }
-    if (!this.state.app.offline) {
+    if (!this.isOfflineOrUnsynced()) {
       this.store.dispatch(fetchIncident(this.incidentId));
     }
   }
+
+  isOfflineOrUnsynced() {
+    return this.state.app.offline || (this.incident && this.incident.unsynced);
+  }
+
   _userSelected(event) {
     if (!event.detail.selectedItem) {
       return;

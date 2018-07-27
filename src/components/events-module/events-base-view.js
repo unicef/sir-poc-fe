@@ -102,9 +102,13 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     if (!newId || !this.isOnExpectedPage(this.state)) {
       return;
     }
-    if (!this.state.app.offline) {
+    if (!this.isOfflineOrUnsynced()) {
       this.store.dispatch(fetchEvent(this.eventId));
     }
+  }
+
+  isOfflineOrUnsynced() {
+    return this.state.app.offline || (this.event && this.event.unsynced);
   }
 
   _stateChanged(state) {

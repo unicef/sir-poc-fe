@@ -99,9 +99,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
               <span class="col-data col-3" title="[[item.city]]" data-col-header-label="City">
                   <span>[[item.city]]</span>
                 </span>
-              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]"
+              <span class="col-data col-3" type="[[_getIncidentName(item.incident_category)]]"
                     data-col-header-label="Incident Type">
-                <span>[[_getIncidentName(item.incident_type)]]</span>
+                <span>[[_getIncidentName(item.incident_category)]]</span>
               </span>
               <span class="col-data col-2" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">

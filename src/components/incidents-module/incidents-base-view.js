@@ -291,6 +291,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return id;
   }
   _idChanged(newId) {
+    if (!this.isOnExpectedPage(this.state)) {
+      return;
+    }
+
     if (!newId) {
       this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
@@ -298,9 +302,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
     }
 
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
     if (!this.isOfflineOrUnsynced()) {
       this.store.dispatch(fetchIncident(this.incidentId));
     }

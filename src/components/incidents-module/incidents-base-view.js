@@ -294,7 +294,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!newId) {
       this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
+    } else {
+      this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
     }
+
     if (!this.isOnExpectedPage(this.state)) {
       return;
     }
@@ -318,6 +321,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+
     if (!this.isOnExpectedPage(this.state)) {
       return;
     }
@@ -336,10 +340,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       elem.id = index;
       return elem;
     });
-    if (!isOnNewIncident(this.state)) {
-      // *The incident is loaded from Redux until the GET finishes and refreshes it
-      this.set('incident', JSON.parse(JSON.stringify(selectIncident(this.state))));
-    }
   }
 
   isNotReported(reported) {

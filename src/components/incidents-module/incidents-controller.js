@@ -39,6 +39,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
         <add-incident name="new"></add-incident>
         <edit-incident name="edit"></edit-incident>
         <view-incident name="view"></view-incident>
+        <incident-history name="history"></incident-history>
       </iron-pages>
     `;
   }

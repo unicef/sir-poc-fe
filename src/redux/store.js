@@ -34,7 +34,7 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
 const persistConfig = {
   key: 'sir-app',
   storage: getStorage(),
-  blacklist: ['errors']
+  blacklist: ['app', 'errors']
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {
@@ -50,6 +50,6 @@ export const store = createStore(
   persistedReducer,
   compose(lazyReducerEnhancer(combineReducers), applyMiddleware(thunk))
 );
-// storeReady() gets called after the old state is loaded from storage 
+// storeReady() gets called after the old state is loaded from storage
 // any data pushed to redux before this callback fires will be overwritten by the old state
 export const persistor = persistStore(store, null, () => store.dispatch(storeReady()));

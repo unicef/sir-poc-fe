@@ -124,7 +124,12 @@ export const fetchAndStoreEvents = () => (dispatch, getState) => {
 };
 
 export const fetchEvent = (id) => (dispatch, getState) => {
-  let endpoint = prepareEndpoint(Endpoints.getEvent,  {id: id});
+  let numberId = Number(id);
+  if (!numberId) {
+    updatePath('/events/list/');
+    return;
+  }
+  let endpoint = prepareEndpoint(Endpoints.getEvent,  {id: numberId});
   makeRequest(endpoint).then((response) => {
     dispatch(receiveEvent(JSON.parse(response)));
   });

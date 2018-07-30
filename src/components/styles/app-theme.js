@@ -10,11 +10,13 @@ $_documentContainer.innerHTML = `
         --app-primary-color: #0099ff;
         --app-secondary-color: black;
         --light-primary-text-color: #fff;
-        
+
         --primary-text-color: rgba(0, 0, 0, 0.87);
         --secondary-text-color: rgba(0, 0, 0, 0.54);
-        
+
         --menu-selected-bg-color: #e8e8e8;
+        --unsynced-item-bg-color: pink;
+        --warning-text-color: orange;
       }
     </style>
   </custom-style>`;

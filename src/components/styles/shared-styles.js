@@ -68,7 +68,7 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       }
 
       .warning {
-        color: orange;
+        color: var(--warning-text-color, orange);
       }
 
       a {

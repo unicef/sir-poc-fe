@@ -99,7 +99,10 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   }
 
   _idChanged(newId) {
-    if (!newId || !this.isOnExpectedPage(this.state)) {
+    if (!newId) {
+      this.event = JSON.parse(JSON.stringify(EventModel));
+    }
+    if (!this.isOnExpectedPage(this.state)) {
       return;
     }
     if (!this.isOfflineOrUnsynced()) {

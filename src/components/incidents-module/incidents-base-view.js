@@ -291,7 +291,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return id;
   }
   _idChanged(newId) {
-    if (!newId || !this.isOnExpectedPage(this.state)) {
+    if (!newId) {
+      this.incident = JSON.parse(JSON.stringify(IncidentModel));
+      return;
+    }
+    if (!this.isOnExpectedPage(this.state)) {
       return;
     }
     if (!this.isOfflineOrUnsynced()) {

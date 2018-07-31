@@ -1,11 +1,12 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import DateMixin from '../common/date-helper.js'
 
 
 /**
  * @polymer
  * @customElement
  */
-class DisplayComment extends PolymerElement {
+class DisplayComment extends DateMixin(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -20,7 +21,7 @@ class DisplayComment extends PolymerElement {
       <div class="comment">
           <div>
             <div>[[comment.username]] Username</div>
-            <div>[[comment.created]]</div>
+            <div>[[prettyDate(comment.created)]]</div>
           </div>
           <div>
             [[comment.comment]]
@@ -37,7 +38,6 @@ class DisplayComment extends PolymerElement {
       }
     };
   }
-
 
 
   connectedCallback() {

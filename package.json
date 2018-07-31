@@ -40,6 +40,7 @@
     "etools-data-table": "git+https://github.com/unicef-polymer/etools-data-table.git#upgrade-to-polymer3",
     "express": "^4.16.3",
     "http-proxy-middleware": "^0.18.0",
+    "moment": "^2.22.2",
     "pwa-helpers": "^0.8.3",
     "redux": "^4.0.0",
     "redux-persist": "^5.10.0",

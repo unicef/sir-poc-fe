@@ -13,7 +13,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-tabs/paper-tabs.js';
-import { fetchIncidents } from '../../actions/incidents.js';
+import { fetchIncidents, fetchIncidentComments } from '../../actions/incidents.js';
 import { lazyLoadIncidentPages } from '../../actions/app.js';
 import { store } from '../../redux/store.js';
 
@@ -94,6 +94,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
     store.dispatch(fetchIncidents());
+    store.dispatch(fetchIncidentComments());
   }
 
   _stateChanged(state) {

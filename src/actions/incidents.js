@@ -11,6 +11,7 @@ export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
 export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
 export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
 export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
+export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
 
 const editIncidentSuccess = (incident, id) => {
   return {
@@ -38,6 +39,13 @@ const receiveIncidents = (incidents) => {
   return {
     type: RECEIVE_INCIDENTS,
     incidents
+  };
+}
+
+const receiveIncidentComments = (comments) => {
+  return {
+    type: RECEIVE_INCIDENT_COMMENTS,
+    comments
   };
 }
 
@@ -122,6 +130,12 @@ export const syncIncident = (newIncident) => (dispatch, getState) => {
 export const fetchIncidents = () => (dispatch, getState) => {
   makeRequest(Endpoints.incidentsList).then((result) => {
     dispatch(receiveIncidents(JSON.parse(result)));
+  });
+}
+
+export const fetchIncidentComments = () => (dispatch, getState) => {
+  makeRequest(Endpoints.incidentsCommentsList).then((result) => {
+    dispatch(receiveIncidentComments(JSON.parse(result)));
   });
 }
 

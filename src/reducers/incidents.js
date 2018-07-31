@@ -3,17 +3,23 @@ import {
   ADD_INCIDENT_SUCCESS,
   RECEIVE_INCIDENTS,
   RECEIVE_INCIDENT,
-  UPDATE_EVENT_IDS
+  UPDATE_EVENT_IDS,
+  RECEIVE_INCIDENT_COMMENTS
 } from '../actions/incidents.js';
 
 import { createSelector } from 'reselect';
 
-const incidents = (state = {list: []}, action) => {
+const incidents = (state = {list: [], comments: []}, action) => {
   switch (action.type) {
     case RECEIVE_INCIDENTS:
       return {
         ...state,
         list: getRefreshedIncidents(state.list, action.incidents)
+      };
+    case RECEIVE_INCIDENT_COMMENTS:
+      return {
+        ...state,
+        comments: action.comments
       };
     case RECEIVE_INCIDENT:
       return {
@@ -76,6 +82,16 @@ export const selectIncident = createSelector(
     if (!incidentId) {
       return null;
     }
-    return incidents.find(i => String(i.id) === String(incidentId)) || null;
+    return incidents.find(i => String(i.id) === String(incidentId))
+     || null;
   }
-)
+);
+const commentsSelector = state => state.incidents.comments;
+export const selectIncidentComments = createSelector(
+  commentsSelector,
+  selectedIncidentId,
+  (comments, incidentId) => {
+    return comments.filter(c => String(c.incident) === String(incidentId))
+           || null;
+  }
+);

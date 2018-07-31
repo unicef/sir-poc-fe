@@ -32,7 +32,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         etools-data-table-row[unsynced] {
-          --list-bg-color: pink;
+          --list-bg-color: var(--unsynced-item-bg-color, pink);
         }
 
         .col-data > span {

@@ -121,7 +121,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
-
   }
 
   isVisible() {

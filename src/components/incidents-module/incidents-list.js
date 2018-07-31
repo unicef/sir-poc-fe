@@ -31,7 +31,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         etools-data-table-row[unsynced] {
-          --list-bg-color: pink;
+          --list-bg-color: var(--unsynced-item-bg-color, pink);
         }
 
         .col-data > span {
@@ -40,7 +40,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
         .col-data iron-icon {
           margin-right: 16px;
-        }        
+        }
 
         @media screen and (max-width: 767px) {
           /* mobile specific css, under tablet min 768px */
@@ -99,7 +99,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
               <span class="col-data col-3" title="[[item.city]]" data-col-header-label="City">
                   <span>[[item.city]]</span>
                 </span>
-              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]" 
+              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]"
                     data-col-header-label="Incident Type">
                 <span>[[_getIncidentName(item.incident_type)]]</span>
               </span>

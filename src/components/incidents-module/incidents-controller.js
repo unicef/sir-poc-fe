@@ -36,7 +36,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
-        <add-incident name="new"></add-incident>
+        <template is="dom-if" if="[[pageIs(page, 'new')]]" restamp>
+          <add-incident name="new"></add-incident>
+        </template>
         <edit-incident name="edit"></edit-incident>
         <view-incident name="view"></view-incident>
       </iron-pages>

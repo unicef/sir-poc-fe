@@ -110,9 +110,9 @@ export const editIncident = (incident) => (dispatch, getState) => {
 
 export const syncIncident = (newIncident) => (dispatch, getState) => {
   makeRequest(Endpoints.newIncident, newIncident).then((result) => {
+    updatePath('/incidents/list/');
     let response = JSON.parse(result);
     dispatch(editIncidentSuccess(response, newIncident.id));
-    updatePath('/incidents/list/');
   }).catch((error) => {
     dispatch(addIncidentFail(error.response));
     scrollToTop();
@@ -130,6 +130,10 @@ export const updateEventIdsInIncidents = (oldId, newId) => (dispatch) => {
 }
 
 export const fetchIncident = (id) => (dispatch, getState) => {
+  if (isNaN(id)) {
+    updatePath('/incidents/list/');
+    return;
+  }
   let endpoint = prepareEndpoint(Endpoints.getIncident,  {id: id});
   makeRequest(endpoint).then((response) => {
     dispatch(receiveIncident(JSON.parse(response)));

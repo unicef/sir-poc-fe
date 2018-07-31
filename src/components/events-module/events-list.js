@@ -17,8 +17,8 @@ import 'etools-info-tooltip';
 
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
-import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 
+import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
@@ -33,7 +33,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         etools-data-table-row[unsynced] {
-          --list-bg-color: pink;
+          --list-bg-color: var(--unsynced-item-bg-color, pink);
         }
 
         .col-data > span {

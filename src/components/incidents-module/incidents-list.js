@@ -31,7 +31,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         etools-data-table-row[unsynced] {
-          --list-bg-color: pink;
+          --list-bg-color: var(--unsynced-item-bg-color, pink);
         }
 
         .col-data > span {
@@ -100,8 +100,8 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   <span>[[item.city]]</span>
                 </span>
               <span class="col-data col-3" type="[[_getIncidentName(item.incident_category)]]"
-                    data-col-header-label="Incident Type">
-                <span>[[_getIncidentName(item.incident_category)]]</span>
+                  data-col-header-label="Incident Type">
+              <span>[[_getIncidentName(item.incident_category)]]</span>
               </span>
               <span class="col-data col-2" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">

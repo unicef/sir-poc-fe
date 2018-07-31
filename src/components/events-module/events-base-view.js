@@ -11,8 +11,8 @@ import '../common/datepicker-lite.js';
 
 import { fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
-import { isOnNewEvent } from '../../reducers/app.js';
 import { store } from '../../redux/store.js';
+import { EventModel } from './models/event-model.js';
 import '../common/errors-box.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -61,6 +61,14 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c">
             <div class="col col-12">
+              <span class="warning" hidden$="[[!state.app.offline]]">
+                Because there is no internet conenction the event will be saved offine for now,
+                and you must sync it manually by saving it again when online
+              </span>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
               <paper-button raised on-click="save"> Save </paper-button>
             </div>
           </div>
@@ -99,25 +107,28 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   }
 
   _idChanged(newId) {
-    if (!newId || !this.isOnExpectedPage(this.state)) {
-      return;
-    }
-    if (!this.state.app.offline) {
-      this.store.dispatch(fetchEvent(this.eventId));
-    }
-  }
-
-  _stateChanged(state) {
-    this.state = state;
-
     if (!this.isOnExpectedPage(this.state)) {
       return;
     }
 
-    if (!isOnNewEvent(this.state)) {
-      // *The event is loaded from Redux until the GET finishes and refreshes it
-      this.set('event', JSON.parse(JSON.stringify(selectEvent(this.state))));
+    if (!newId) {
+      this.event = JSON.parse(JSON.stringify(EventModel));
+      return;
     }
+
+    this.event = JSON.parse(JSON.stringify(selectEvent(this.state)));
+
+    if (!this.isOfflineOrUnsynced()) {
+      this.store.dispatch(fetchEvent(this.eventId));
+    }
+  }
+
+  isOfflineOrUnsynced() {
+    return this.state.app.offline || (this.event && this.event.unsynced);
+  }
+
+  _stateChanged(state) {
+    this.state = state;
   }
 
   isVisible() {

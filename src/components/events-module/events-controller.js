@@ -34,7 +34,9 @@ class EventsController extends connect(store)(PolymerElement) {
 
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <events-list name="list"></events-list>
-        <add-event name="new"></add-event>
+        <template is="dom-if" if="[[pageIs(page, 'new')]]" restamp>
+         <add-event name="new"></add-event>
+        </template>
         <view-event name="view"></view-event>
         <edit-event name="edit"></edit-event>
       </iron-pages>

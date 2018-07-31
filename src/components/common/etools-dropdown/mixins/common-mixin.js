@@ -162,6 +162,7 @@ export const CommonFunctionality = (superClass) => class extends ListItemUtils(s
 
     // focusout is used because blur acts weirdly on IE
     this.addEventListener('focusout', (e) => {
+      e.stopImmediatePropagation();
       this._closeMenu();
     });
 

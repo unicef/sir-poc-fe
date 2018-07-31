@@ -83,6 +83,9 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
     case 'edit':
       import('../components/incidents-module/edit-incident.js');
       break;
+    case 'comments':
+      import('../components/incidents-module/incident-comments.js');
+      break;
     default:
       updatePath('/404/');
       break;
@@ -116,7 +119,7 @@ export const updateLocationInfo = (path, queryParams) => {
     type: UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
-      page,      
+      page,
       queryParams,
       eventId,
       incidentId

@@ -177,8 +177,8 @@ class MyApp extends connect(store)(PolymerElement) {
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <events-controller name="events" route="[[route]]"></events-controller>
-            <incidents-controller name="incidents" route="[[route]]"></incidents-controller>
+            <events-controller name="events" route="{{route}}"></events-controller>
+            <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 

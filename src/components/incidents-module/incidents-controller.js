@@ -9,8 +9,10 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import '@polymer/paper-tabs/paper-tabs.js';
 import { fetchIncidents } from '../../actions/incidents.js';
 import { lazyLoadIncidentPages } from '../../actions/app.js';
 import { store } from '../../redux/store.js';
@@ -25,6 +27,14 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <style include="shared-styles">
         :host {
         }
+        .tabs-container {
+          background-color: white;
+          border-left: 1px solid #eeeeee;
+          --paper-tabs: {
+            font-size: 14px;
+            max-width: 350px;
+          }
+        }
       </style>
 
       <app-route
@@ -34,13 +44,33 @@ class IncidentsController extends connect(store)(PolymerElement) {
         tail="{{subroute}}">
       </app-route>
 
+      <template is="dom-if" if="[[_showTabs(page)]]">
+       <div class="tabs-container">
+        <paper-tabs id="tabs"
+                    selected="{{routeData.section}}"
+                    attr-for-selected="name"
+                    activate-event="tap"
+                    noink>
+          <paper-tab name="view">
+            VIEW
+          </paper-tab>
+          <paper-tab name="comments">
+            COMMENTS
+          </paper-tab>
+        </paper-tabs>
+        </div>
+      </template>
+
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
         <template is="dom-if" if="[[pageIs(page, 'new')]]" restamp>
           <add-incident name="new"></add-incident>
         </template>
         <edit-incident name="edit"></edit-incident>
+
         <view-incident name="view"></view-incident>
+        <incident-comments name="comments"></incident-comments>
+
       </iron-pages>
     `;
   }
@@ -79,6 +109,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   pageChanged(page) {
     store.dispatch(lazyLoadIncidentPages(page));
+  }
+  _showTabs(page) {
+    return page === 'view' || page === 'comments';
   }
 
 }

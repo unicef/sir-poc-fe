@@ -130,12 +130,11 @@ export const updateEventIdsInIncidents = (oldId, newId) => (dispatch) => {
 }
 
 export const fetchIncident = (id) => (dispatch, getState) => {
-  let numberId = Number(id);
-  if (!numberId) {
+  if (isNaN(id)) {
     updatePath('/incidents/list/');
     return;
   }
-  let endpoint = prepareEndpoint(Endpoints.getIncident,  {id: numberId});
+  let endpoint = prepareEndpoint(Endpoints.getIncident,  {id: id});
   makeRequest(endpoint).then((response) => {
     dispatch(receiveIncident(JSON.parse(response)));
   });

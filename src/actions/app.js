@@ -83,6 +83,9 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
     case 'edit':
       import('../components/incidents-module/edit-incident.js');
       break;
+    case 'history':
+      import('../components/incidents-module/incident-history.js');
+      break;
     default:
       updatePath('/404/');
       break;
@@ -116,7 +119,7 @@ export const updateLocationInfo = (path, queryParams) => {
     type: UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
-      page,      
+      page,
       queryParams,
       eventId,
       incidentId
@@ -128,8 +131,8 @@ function extractInfoFromPath(path) {
   const splitPath = (path || '').slice(1).split('/');
   let selectedModule = splitPath[0];
   let page = splitPath[1] || '';
-  let eventId='';
-  let incidentId='';
+  let eventId = '';
+  let incidentId = '';
   if (selectedModule === 'events') {
     eventId = splitPath[2] || '';
   } else {

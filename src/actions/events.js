@@ -107,8 +107,8 @@ export const editEvent = (event) => (dispatch, getState) => {
 
 export const syncEvent = (event) => (dispatch, getState) => {
   makeRequest(Endpoints.newEvent, event).then((result) => {
-    let response = JSON.parse(result);
     updatePath('/events/list/');
+    let response = JSON.parse(result);
     dispatch(editEventSuccess(response, event.id));
     dispatch(updateEventIdsInIncidents(event.id, response.id))
   }).catch((error) => {
@@ -124,10 +124,16 @@ export const fetchAndStoreEvents = () => (dispatch, getState) => {
 };
 
 export const fetchEvent = (id) => (dispatch, getState) => {
+  if (isNaN(id)) {
+    updatePath('/events/list/');
+    return;
+  }
   let endpoint = prepareEndpoint(Endpoints.getEvent,  {id: id});
   makeRequest(endpoint).then((response) => {
     dispatch(receiveEvent(JSON.parse(response)));
   });
 };
+
+
 
 

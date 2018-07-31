@@ -106,9 +106,9 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     if (!newId) {
       this.event = JSON.parse(JSON.stringify(EventModel));
       return;
-    } else {
-      this.event = JSON.parse(JSON.stringify(selectEvent(this.state)));
     }
+
+    this.event = JSON.parse(JSON.stringify(selectEvent(this.state)));
 
     if (!this.isOfflineOrUnsynced()) {
       this.store.dispatch(fetchEvent(this.eventId));

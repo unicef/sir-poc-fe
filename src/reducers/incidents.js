@@ -4,7 +4,8 @@ import {
   RECEIVE_INCIDENTS,
   RECEIVE_INCIDENT,
   UPDATE_EVENT_IDS,
-  RECEIVE_INCIDENT_COMMENTS
+  RECEIVE_INCIDENT_COMMENTS,
+  ADD_INCIDENT_COMMENT_SUCCESS
 } from '../actions/incidents.js';
 
 import { createSelector } from 'reselect';
@@ -30,6 +31,11 @@ const incidents = (state = {list: [], comments: []}, action) => {
       return {
         ...state,
         list: [...state.list, action.newIncident]
+      };
+    case ADD_INCIDENT_COMMENT_SUCCESS:
+      return {
+        ...state,
+        comments: [...state.comments, action.comment]
       };
     case EDIT_INCIDENT_SUCCESS:
       return {

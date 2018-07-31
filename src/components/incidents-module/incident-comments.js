@@ -2,7 +2,9 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { store } from '../../redux/store.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { selectIncidentComments } from '../../reducers/incidents.js';
+import { addComment } from '../../actions/incidents.js';
 import './display-comment.js';
+import './add-comment.js';
 import '../styles/shared-styles.js';
 
 /**
@@ -21,6 +23,10 @@ class IncidentComments extends connect(store)(PolymerElement) {
         <template is="dom-repeat" items="{{dataItems}}">
           <display-comment comment="[[item]]"> </display-comment>
         </template>
+      </div>
+
+      <div class="card list">
+        <add-comment on-add-comment="addComment"></add-comment>
       </div>
     `;
   }
@@ -76,7 +82,13 @@ class IncidentComments extends connect(store)(PolymerElement) {
     return comments;
   }
 
-
+  addComment(e) {
+    let comment = {
+      incident: this.incidentId,
+      comment: e.detail
+    }
+    store.dispatch(addComment(comment));
+  }
 
 }
 

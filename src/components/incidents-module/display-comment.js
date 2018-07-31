@@ -1,5 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import DateMixin from '../common/date-mixin.js'
+import DateMixin from '../common/date-mixin.js';
 
 
 /**
@@ -15,7 +15,7 @@ class DisplayComment extends DateMixin(PolymerElement) {
         }
 
         .comment {
-          padding: 20px 20px;
+          padding: 24px 20px;
         }
       </style>
       <div class="comment">
@@ -38,14 +38,6 @@ class DisplayComment extends DateMixin(PolymerElement) {
       }
     };
   }
-
-
-  connectedCallback() {
-    super.connectedCallback();
-
-  }
-
-
 }
 
 window.customElements.define('display-comment', DisplayComment);

@@ -4,6 +4,7 @@ import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
+import { serverError } from './errors.js'
 
 export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
 export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
@@ -12,6 +13,8 @@ export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
 export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
 export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
 export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
+export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
+
 
 const editIncidentSuccess = (incident, id) => {
   return {
@@ -25,6 +28,13 @@ const addIncidentSuccess = (newIncident) => {
   return {
     type: ADD_INCIDENT_SUCCESS,
     newIncident
+  };
+}
+
+const addCommentSuccess = (comment) => {
+  return {
+    type: ADD_INCIDENT_COMMENT_SUCCESS,
+    comment
   };
 }
 
@@ -73,6 +83,14 @@ const addIncidentOnline = (newIncident, dispatch) => {
   });
 }
 
+const addCommentOnline = (comment, dispatch) => {
+  makeRequest(Endpoints.addIncidentComment, comment).then((result) => {
+    dispatch(addCommentSuccess(JSON.parse(result)));
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+  });
+}
+
 const addIncidentOffline = (newIncident, dispatch) => {
   newIncident.id = generateRandomHash();
   newIncident.unsynced = true;
@@ -105,6 +123,14 @@ export const addIncident = (newIncident) => (dispatch, getState) => {
     addIncidentOffline(newIncident, dispatch);
   } else {
     addIncidentOnline(newIncident, dispatch);
+  }
+}
+
+export const addComment = (comment) => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    //TODO
+  } else {
+    addCommentOnline(comment, dispatch);
   }
 }
 

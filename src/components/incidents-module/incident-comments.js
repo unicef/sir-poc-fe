@@ -19,7 +19,7 @@ class IncidentComments extends connect(store)(PolymerElement) {
           display: block;
         }
       </style>
-      <div class="card list">
+      <div class="card list" hidden$="[[!dataItems.length]]">
         <template is="dom-repeat" items="{{dataItems}}">
           <display-comment comment="[[item]]"> </display-comment>
         </template>

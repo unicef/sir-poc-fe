@@ -2,15 +2,15 @@
 @license
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '../../styles/shared-styles.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
-import './incident-diff.js';
-import './revisions-list.js';
-
 import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { Endpoints } from '../../../config/endpoints.js';
+import '../../styles/shared-styles.js';
+
+import './incident-diff.js';
+import './revisions-list.js';
 
 export class IncidentHistory extends connect(store)(PolymerElement) {
   static get template() {

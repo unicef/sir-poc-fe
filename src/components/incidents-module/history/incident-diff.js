@@ -16,23 +16,28 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
         :host {
           @apply --layout-vertical;
         }
+        .label {
+          padding-top: 28px;
+        }
       </style>
 
       <div class="card">
         <template is="dom-repeat" items="[[changes]]">
           <div class="row-h flex-c">
-            <div class="col col-2">
-              <p>[[item.key]]</p>
+            <div class="col col-2 label">
+              [[getLabel(item.key)]]
             </div>
             <div class="col col-5">
               <paper-input readonly
                           label="Before"
+                          placeholder="<None>"
                           value="[[getReadableValue(item.key, item.before)]]">
               </paper-input>
             </div>
             <div class="col col-5">
               <paper-input readonly
                           label="After"
+                          placeholder="<None>"
                           value="[[getReadableValue(item.key, item.after)]]">
               </paper-input>
             </div>
@@ -66,7 +71,34 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
         notify: true,
         reflectToAttribute: true
       },
+      labelsMap: {
+        type: Object,
+        value: {
+          'city': 'City',
+          'note': 'Note',
+          'event': 'Event',
+          'region': 'Region',
+          'street': 'Street',
+          'target': 'Target',
+          'country': 'Country',
+          'on_duty': 'On Duty',
+          'injuries': 'Injuries',
+          'reported': 'Reported',
+          'crash_type': 'Crash Type',
+          'criticality': 'Criticality',
+          'description': 'Description',
+          'reported_to': 'Reported To',
+          'responsible': 'Responsible Party',
+          'vehicle_type': 'Vehicle Type',
+          'incident_time': 'Incident Time',
+          'incident_date': 'Incident Date',
+          'threat_category': 'Threat Category',
+          'incident_category': 'Incident Category',
+          'contributing_factor': 'Contributing Factor'
+        }
+      },
       changes: Array,
+      events: Array,
       staticData: Object
     };
   }
@@ -78,6 +110,7 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
 
   _stateChanged(state) {
     this.set('staticData', state.staticData);
+    this.set('events', state.events.list);
   }
 
   _setIncidentId(id) {
@@ -98,23 +131,58 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
       return {...item.change[key], key};
     });
 
-    this.hidden = !(changes.length > 1);
+    changes = changes.filter(elem => {
+      return elem.key !== 'version';
+    });
+
+    this.hidden = !changes.length;
     this.set('changes', changes);
+  }
+
+  getNameFromId(id, staticDataKey) {
+    let result = this.staticData[staticDataKey].find(v => v.id === Number(id));
+
+    return result.name || '';
+  }
+
+  getLabel(key) {
+    return this.labelsMap[key] || key;
   }
 
   getReadableValue(key, value) {
     if (value === 'None') {
       return value;
     }
+    let result;
     switch(key) {
+      case 'event':
+        let result = this.events.find(e => e.id === value);
+        return result.description;
       case 'vehicle_type':
-        let result = this.staticData.vehicleTypes.find(v => v.id === value);
-        return result.name;
+        return this.getNameFromId(value, 'vehicleTypes');
       case 'contributing_factor':
-        let result = this.staticData.contributingFactors.find(v => v.id === value);
-        return result.name;
+        return this.getNameFromId(value, 'factors');
+      case 'incident_category':
+        return this.getNameFromId(value, 'incidentCategories');
+      case 'threat_category':
+        return this.getNameFromId(value, 'threatCategories');
+      case 'vehicle_type':
+        return this.getNameFromId(value, 'vehicleTypes');
+      case 'criticality':
+        return this.getNameFromId(value, 'criticalities');
+      case 'crash_type':
+        return this.getNameFromId(value, 'crashTypes');
+      case 'region':
+        return this.getNameFromId(value, 'regions');
+      case 'target':
+        return this.getNameFromId(value, 'targets');
+      case 'country':
+        return this.getNameFromId(value, 'countries');
+      case 'incident_date':
+        return value;
+
       default:
-        return '<not defined yet>';
+        return value;
     }
   }
 

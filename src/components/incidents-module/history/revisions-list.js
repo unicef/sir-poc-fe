@@ -3,8 +3,9 @@
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-icon-button';
-import '../../styles/shared-styles.js';
 import 'etools-data-table';
+
+import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
 
 export class RevisionsList extends PolymerElement  {

@@ -76,6 +76,6 @@ export const selectIncident = createSelector(
     if (!incidentId) {
       return null;
     }
-    return incidents.find(i => String(i.id) === String(incidentId));
+    return incidents.find(i => String(i.id) === String(incidentId)) || null;
   }
 )

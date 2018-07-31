@@ -188,8 +188,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-12">
-            <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category)]]"
+          <div class="col col-12" hidden$="[[!incident.incident_category]]">
+            <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category, staticData)]]"
                                         readonly="[[readonly]]"
                                         label="Weapons used"
                                         options="[[staticData.weapons]]"
@@ -200,7 +200,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
+            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
                                   readonly="[[readonly]]"
                                   label="Vehicle Type"
                                   options="[[staticData.vehicleTypes]]"
@@ -208,7 +208,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
           <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
+            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
                                   readonly="[[readonly]]"
                                   label="Contributing factor"
                                   options="[[staticData.factors]]"
@@ -219,7 +219,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category)]]"
+            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
                                   readonly="[[readonly]]"
                                   label="Crash Type"
                                   options="[[staticData.crashTypes]]"
@@ -318,17 +318,33 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     this.store = store;
     super.connectedCallback();
   }
+
   _setIncidentId(id) {
     return id;
   }
+
   _idChanged(newId) {
-    if (!newId || !this.isOnExpectedPage(this.state)) {
+    if (!this.isOnExpectedPage(this.state)) {
       return;
     }
-    if (!this.state.app.offline) {
+
+    if (!newId) {
+      this.incident = JSON.parse(JSON.stringify(IncidentModel));
+      return;
+    }
+
+    this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
+
+
+    if (!this.isOfflineOrUnsynced()) {
       this.store.dispatch(fetchIncident(this.incidentId));
     }
   }
+
+  isOfflineOrUnsynced() {
+    return this.state.app.offline || (this.incident && this.incident.unsynced);
+  }
+
   _userSelected(event) {
     if (!event.detail.selectedItem) {
       return;
@@ -340,6 +356,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+
     if (!this.isOnExpectedPage(this.state)) {
       return;
     }
@@ -358,10 +375,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       elem.id = index;
       return elem;
     });
-    if (!isOnNewIncident(this.state)) {
-      // *The incident is loaded from Redux until the GET finishes and refreshes it
-      this.set('incident', JSON.parse(JSON.stringify(selectIncident(this.state))));
-    }
   }
 
   isNotReported(reported) {
@@ -369,6 +382,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   isAccident(incidentCategoryId) {
+    if (!this.staticData) {
+      return false;
+    }
+
     let incident = this.staticData.incidentCategories.find(elem => {
       return elem.id === incidentCategoryId;
     });

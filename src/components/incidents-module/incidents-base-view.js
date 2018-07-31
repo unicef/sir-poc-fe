@@ -25,6 +25,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         :host {
           @apply --layout-vertical;
         }
+        .details {
+          margin-top: 28px;
+        }
       </style>
 
       <div class="card">
@@ -65,25 +68,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </div>
 
-      <!--
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="First name" type="text" value="{{incident.primary_person.first_name}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Last name" type="text" value="{{incident.primary_person.last_name}}"></paper-input>
-            <datepicker-lite readonly="[[readonly]]" label="Date of birth" value="{{incident.primary_person.date_of_birth}}"></datepicker-lite>
-            <paper-input readonly="[[readonly]]" label="Nationality" type="text" value="{{incident.primary_person.nationality}}"></paper-input>
-            <etools-dropdown-lite readonly="[[readonly]]" label="Gender" options="[[genders]]" selected="{{incident.primary_person.gender}}"></etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="UN Employer" type="text" value="{{incident.primary_person.un_employer}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Job Title" type="text" value="{{incident.primary_person.job_title}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Type of Contract" type="text" value="{{incident.primary_person.type_of_contract}}"></paper-input>
-            <paper-input type="text" readonly="[[readonly]]" label="Contact info" value="{{incident.primary_person.contact}}"></paper-input>
-            <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
-          </div>
-        </div>
-      -->
-
         <div class="row-h">
           <h3> Incident details </h3>
         </div>
@@ -93,15 +77,30 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Event"
                                   options="[[events]]"
-                                  selected="{{incident.event}}">
+                                  selected="{{incident.event}}"
+                                  selected-item="{{selectedEvent}}">
             </etools-dropdown-lite>
           </div>
+          <div class="col col-6">
+            <div class="details"> [[selectedEvent.note]] </div>
+          </div>
+        </div>
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Incident Type"
                                   options="[[staticData.incidentCategories]]"
-                                  selected="{{incident.incident_category}}">
+                                  selected="{{incident.incident_category}}"
+                                  selected-item="{{selectedIncidentCategory}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <div class="details">
+              [[selectedIncidentCategory.description]]
+            </div>
+            <div class="details" hidden$="[[!selectedIncidentCategory.comment]]">
+              [[selectedIncidentCategory.comment]]
+            </div>
           </div>
         </div>
 
@@ -110,15 +109,25 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Threat category"
                                   options="[[staticData.threatCategories]]"
-                                  selected="{{incident.threat_category}}">
+                                  selected="{{incident.threat_category}}"
+                                  selected-item="{{selectedThreatCategory}}">
             </etools-dropdown-lite>
           </div>
+          <div class="col col-6">
+            <div class="details"> [[selectedThreatCategory.description]] </div>
+          </div>
+        </div>
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Target"
                                   options="[[staticData.targets]]"
-                                  selected="{{incident.target}}">
+                                  selected="{{incident.target}}"
+                                  selected-item="{{selectedTarget}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <div class="details"> [[selectedTarget.description]] </div>
           </div>
         </div>
 
@@ -155,8 +164,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </div>
 
-        <br>
-
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-input type="text" readonly="[[readonly]]" label="Injuries" value="{{incident.injuries}}"></paper-input>
@@ -171,8 +178,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Criticality"
                                   options="[[staticData.criticalities]]"
-                                  selected="{{incident.criticality}}">
+                                  selected="{{incident.criticality}}"
+                                  selected-item="{{selectedCriticality}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <div class="details"> [[selectedCriticality.description]] </div>
           </div>
         </div>
 
@@ -195,6 +206,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   options="[[staticData.vehicleTypes]]"
                                   selected="{{incident.vehicle_type}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
             <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
                                   readonly="[[readonly]]"
                                   label="Contributing factor"
@@ -202,6 +215,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   selected="{{incident.contributing_factor}}">
             </etools-dropdown-lite>
           </div>
+        </div>
+
+        <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
                                   readonly="[[readonly]]"
@@ -209,6 +225,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   options="[[staticData.crashTypes]]"
                                   selected="{{incident.crash_type}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-6">
+            <paper-checkbox hidden$="[[!isAccident(incident.incident_category)]]"
+                            checked="{{incident.near_miss}}"
+                            disabled="[[readonly]]">
+              Near miss
+            </paper-checkbox>
           </div>
         </div>
 
@@ -228,6 +251,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <span class="warning" hidden$="[[!state.app.offline]]">
+                Because there is no internet conenction the incident will be saved offine for now,
+                and you must sync it manually by saving it again when online
+              </span>
+            </div>
+          </div>
           <div class="row-h flex-c">
             <div class="col col-12">
               <p hidden$="[[!eventNotOk(incident.event, state.app.offline)]]"> Can't save, selected event must be synced first </p>

@@ -298,9 +298,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!newId) {
       this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
-    } else {
-      this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
     }
+
+    this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
+
 
     if (!this.isOfflineOrUnsynced()) {
       this.store.dispatch(fetchIncident(this.incidentId));

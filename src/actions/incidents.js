@@ -84,10 +84,12 @@ const addIncidentOnline = (newIncident, dispatch) => {
 }
 
 const addCommentOnline = (comment, dispatch) => {
-  makeRequest(Endpoints.addIncidentComment, comment).then((result) => {
+  return makeRequest(Endpoints.addIncidentComment, comment).then((result) => {
     dispatch(addCommentSuccess(JSON.parse(result)));
+    return true;
   }).catch((error) => {
     dispatch(serverError(error.response));
+    return false;
   });
 }
 
@@ -130,7 +132,7 @@ export const addComment = (comment) => (dispatch, getState) => {
   if (getState().app.offline === true) {
     //TODO
   } else {
-    addCommentOnline(comment, dispatch);
+    return addCommentOnline(comment, dispatch);
   }
 }
 

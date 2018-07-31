@@ -46,7 +46,11 @@ class AddComment extends PolymerElement {
     }
     this.dispatchEvent(new CustomEvent('add-comment', {detail: this.commentText}));
   }
-}
 
+  resetForm() {
+    this.commentText = '';
+    this.$.commentText.invalid = false;
+  }
+}
 
 window.customElements.define('add-comment', AddComment);

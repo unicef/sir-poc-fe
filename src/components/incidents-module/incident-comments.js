@@ -26,7 +26,7 @@ class IncidentComments extends connect(store)(PolymerElement) {
       </div>
 
       <div class="card list">
-        <add-comment on-add-comment="addComment"></add-comment>
+        <add-comment id="addComment" on-add-comment="addComment"></add-comment>
       </div>
     `;
   }
@@ -82,12 +82,15 @@ class IncidentComments extends connect(store)(PolymerElement) {
     return comments;
   }
 
-  addComment(e) {
+  async addComment(e) {
     let comment = {
       incident: this.incidentId,
       comment: e.detail
     }
-    store.dispatch(addComment(comment));
+    let successfull = await store.dispatch(addComment(comment));
+    if (successfull) {
+      this.$.addComment.resetForm();
+    }
   }
 
 }

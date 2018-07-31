@@ -2,13 +2,12 @@
 @license
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../redux/store.js';
-
-import '../styles/shared-styles.js';
-import '../styles/grid-layout-styles.js';
+import { store } from '../../../redux/store.js';
+import '../../styles/shared-styles.js';
+import '../../styles/grid-layout-styles.js';
 
 export class IncidentDiff extends connect(store)(PolymerElement)  {
   static get template() {
@@ -18,7 +17,8 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
           @apply --layout-vertical;
         }
       </style>
-      <div class="card" hidden$="[[shouldHide(item)]]">
+
+      <div class="card">
         <template is="dom-repeat" items="[[changes]]">
           <div class="row-h flex-c">
             <div class="col col-2">
@@ -38,6 +38,12 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
             </div>
           </div>
         </template>
+
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-button on-tap="hideDiff"> back to list </paper-button>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -48,10 +54,17 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
 
   static get properties() {
     return {
-      item: {
+      workingItem: {
         type: Object,
+        notify: true,
         observer: 'itemChanged',
         value: null
+      },
+      hidden: {
+        type: Boolean,
+        value: true,
+        notify: true,
+        reflectToAttribute: true
       },
       changes: Array,
       staticData: Object
@@ -71,6 +84,11 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
     return id;
   }
 
+  hideDiff() {
+    this.hidden = true;
+    this.workingItem = null;
+  }
+
   itemChanged(item) {
     if (!item) {
       return;
@@ -79,12 +97,9 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
     let changes = Object.keys(item.change).map(key => {
       return {...item.change[key], key};
     });
-    console.log(changes);
-    this.set('changes', changes);
-  }
 
-  shouldHide(item) {
-    return !item;
+    this.hidden = !(changes.length > 1);
+    this.set('changes', changes);
   }
 
   getReadableValue(key, value) {
@@ -95,7 +110,9 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
       case 'vehicle_type':
         let result = this.staticData.vehicleTypes.find(v => v.id === value);
         return result.name;
-        break;
+      case 'contributing_factor':
+        let result = this.staticData.contributingFactors.find(v => v.id === value);
+        return result.name;
       default:
         return '<not defined yet>';
     }

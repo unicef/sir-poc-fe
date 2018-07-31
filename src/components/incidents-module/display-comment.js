@@ -1,5 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import DateMixin from '../common/date-helper.js'
+import DateMixin from '../common/date-mixin.js'
 
 
 /**

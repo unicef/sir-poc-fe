@@ -15,7 +15,7 @@ import { store } from '../../redux/store.js';
 
 import PaginationMixin from '../common/pagination-mixin.js'
 
-import 'etools-data-table/etools-data-table.js';
+import '../../../node_modules/etools-data-table/etools-data-table.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';

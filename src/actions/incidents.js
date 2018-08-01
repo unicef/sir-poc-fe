@@ -15,7 +15,6 @@ export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
 export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
 export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
 
-
 const editIncidentSuccess = (incident, id) => {
   return {
     type: EDIT_INCIDENT_SUCCESS,
@@ -129,11 +128,7 @@ export const addIncident = (newIncident) => (dispatch, getState) => {
 }
 
 export const addComment = (comment) => (dispatch, getState) => {
-  if (getState().app.offline === true) {
-    //TODO
-  } else {
-    return addCommentOnline(comment, dispatch);
-  }
+  return addCommentOnline(comment, dispatch);
 }
 
 export const editIncident = (incident) => (dispatch, getState) => {

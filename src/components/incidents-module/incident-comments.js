@@ -54,7 +54,7 @@ class IncidentComments extends connect(store)(PolymerElement) {
   static get observers() {
     return [
       'setIncidentComments(incidentId, allComments)'
-    ]
+    ];
   }
 
   _stateChanged(state) {
@@ -86,7 +86,8 @@ class IncidentComments extends connect(store)(PolymerElement) {
     let comment = {
       incident: this.incidentId,
       comment: e.detail
-    }
+    };
+
     let successfull = await store.dispatch(addComment(comment));
     if (successfull) {
       this.$.addComment.resetForm();

@@ -51,12 +51,14 @@ const receiveEvent = (event) => {
 // ------------------------------
 
 const addEventOnline = (newEvent, dispatch) => {
-  makeRequest(Endpoints.newEvent, newEvent).then((result) => {
+  return makeRequest(Endpoints.newEvent, newEvent).then((result) => {
     updatePath('/events/list/');
     dispatch(addEventSuccess(JSON.parse(result)));
+    return true;
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
+    return false;
   });
 }
 
@@ -66,6 +68,7 @@ const addEventOffline = (newEvent, dispatch) => {
 
   updatePath('/events/list/');
   dispatch(addEventSuccess(newEvent));
+  return true;
 }
 
 const editEventOnline = (event, dispatch, state) => {
@@ -91,9 +94,9 @@ const editEventOffline = (event, dispatch) => {
 
 export const addEvent = (newEvent) => (dispatch, getState) => {
   if (getState().app.offline === true) {
-    addEventOffline(newEvent, dispatch);
+    return addEventOffline(newEvent, dispatch);
   } else {
-    addEventOnline(newEvent, dispatch);
+    return addEventOnline(newEvent, dispatch);
   }
 }
 

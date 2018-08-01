@@ -9,9 +9,9 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
-import { getLabelForField } from './history-helper.js';
+import HistoryHelpers from './history-helpers.js';
 
-export class RevisionsList extends connect(store)(PolymerElement)  {
+export class RevisionsList extends HistoryHelpers(connect(store)(PolymerElement))  {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
@@ -32,13 +32,13 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
           <etools-data-table-column class="col-3">
             Action
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             By user
           </etools-data-table-column>
           <etools-data-table-column class="col-4">
             Date and time
           </etools-data-table-column>
-          <etools-data-table-column class="col-1">
+          <etools-data-table-column class="col-2">
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -50,7 +50,7 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
                   [[item.action]]
                 </span>
               </span>
-              <span class="col-data col-4" data-col-header-label="Date and time">
+              <span class="col-data col-3" data-col-header-label="Date and time">
                 <span class="truncate">
                   [[getUserName(item.by_user)]]
                 </span>
@@ -60,7 +60,7 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
                   [[prettyDate(item.modified)]]
                 </span>
               </span>
-              <span class="col-data col-1">
+              <span class="col-data col-2">
                 <paper-icon-button icon="assignment" on-click="showEntireIncident"></paper-icon-button>
                 <paper-icon-button icon="editor:mode-edit" on-click="showChanges" hidden$="[[!hasChangedFilds(item.change)]]"></paper-icon-button>
               </span>
@@ -113,10 +113,6 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
     return action === 'create';
   }
 
-  hasChangedFilds(changesObj) {
-    return Object.keys(changesObj).length > 1;
-  }
-
   showChanges(event) {
     this.set('workingItem', event.model.__data.item);
     this.set('action', 'diff');
@@ -130,7 +126,7 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
   getChangedFileds(changesObj) {
     let changes = Object.keys(changesObj)
     changes = changes.filter(change => change !== 'version');
-    changes = changes.map(change => getLabelForField(change))
+    changes = changes.map(change => this.getLabelForField(change))
     return (changes.length > 0 ? changes: ['No changes']).join(', ');
   }
 

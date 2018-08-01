@@ -14,8 +14,9 @@ import '../../styles/shared-styles.js';
 import './incident-diff.js';
 import './revisions-list.js';
 import './incident-revision-view.js';
+import HistoryHelpers from './history-helpers.js';
 
-export class IncidentHistory extends connect(store)(PolymerElement) {
+export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -41,9 +42,11 @@ export class IncidentHistory extends connect(store)(PolymerElement) {
       <div class="card" hidden$="[[activePageIs('list', activePage)]]">
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-button on-tap="navigateToList"> back to list </paper-button>
-            <paper-button hidden$="[[activePageIs('diff', activePage)]]"
+            <paper-button on-tap="navigateToList"> back to changes list </paper-button>
+
+            <paper-button hidden$="[[hideViewChangesButton(activePage, workingItem.change)]]"
                           on-tap="navigateToDiff"> view changes only </paper-button>
+
             <paper-button hidden$="[[activePageIs('view', activePage)]]"
                           on-tap="navigateToView"> view entire incident </paper-button>
           </div>
@@ -71,8 +74,7 @@ export class IncidentHistory extends connect(store)(PolymerElement) {
       state: Object,
       activePage: {
         type: String,
-        value: 'list',
-        observer: '_pageChanged'
+        value: 'list'
       }
     };
   }
@@ -80,10 +82,6 @@ export class IncidentHistory extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
-  }
-
-  _pageChanged(nnew) {
-    console.log('page changed to', nnew);
   }
 
   navigateToList() {
@@ -100,6 +98,13 @@ export class IncidentHistory extends connect(store)(PolymerElement) {
 
   activePageIs(loc) {
     return this.activePage === loc;
+  }
+
+  hideViewChangesButton(activePage, change) {
+    if (!change) {
+      return true;
+    }
+    return this.activePageIs('diff', activePage) || !this.hasChangedFilds(change);
   }
 
   _itemChanged(neww, oldd) {

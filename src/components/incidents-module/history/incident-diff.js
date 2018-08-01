@@ -8,9 +8,9 @@ import '@polymer/paper-input/paper-input.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
-import { getLabelForField } from './history-helper.js';
+import HistoryHelpers from './history-helpers.js';
 
-export class IncidentDiff extends connect(store)(PolymerElement)  {
+export class IncidentDiff extends HistoryHelpers(connect(store)(PolymerElement))  {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles">
@@ -69,11 +69,6 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
-  }
-
-  ready() {
-    this.getLabelForField = getLabelForField;
-    super.ready();
   }
 
   _stateChanged(state) {

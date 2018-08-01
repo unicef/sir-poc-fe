@@ -8,6 +8,7 @@ import '@polymer/paper-input/paper-input.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
+import { getLabelForField } from './history-helper.js';
 
 export class IncidentDiff extends connect(store)(PolymerElement)  {
   static get template() {
@@ -25,7 +26,7 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
         <template is="dom-repeat" items="[[changes]]">
           <div class="row-h flex-c">
             <div class="col col-2 label">
-              [[getLabel(item.key)]]
+              [[getLabelForField(item.key)]]
             </div>
             <div class="col col-5">
               <paper-input readonly
@@ -71,32 +72,6 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
         notify: true,
         reflectToAttribute: true
       },
-      labelsMap: {
-        type: Object,
-        value: {
-          'city': 'City',
-          'note': 'Note',
-          'event': 'Event',
-          'region': 'Region',
-          'street': 'Street',
-          'target': 'Target',
-          'country': 'Country',
-          'on_duty': 'On Duty',
-          'injuries': 'Injuries',
-          'reported': 'Reported',
-          'crash_type': 'Crash Type',
-          'criticality': 'Criticality',
-          'description': 'Description',
-          'reported_to': 'Reported To',
-          'responsible': 'Responsible Party',
-          'vehicle_type': 'Vehicle Type',
-          'incident_time': 'Incident Time',
-          'incident_date': 'Incident Date',
-          'threat_category': 'Threat Category',
-          'incident_category': 'Incident Category',
-          'contributing_factor': 'Contributing Factor'
-        }
-      },
       changes: Array,
       events: Array,
       staticData: Object
@@ -106,6 +81,11 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+  }
+
+  ready() {
+    this.getLabelForField = getLabelForField;
+    super.ready();
   }
 
   _stateChanged(state) {
@@ -143,10 +123,6 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
     let result = this.staticData[staticDataKey].find(v => v.id === Number(id));
 
     return result.name || '';
-  }
-
-  getLabel(key) {
-    return this.labelsMap[key] || key;
   }
 
   getReadableValue(key, value) {

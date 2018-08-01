@@ -4,11 +4,13 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-icon-button';
 import 'etools-data-table';
-
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
+import { getLabelForField } from './history-helper.js';
 
-export class RevisionsList extends PolymerElement  {
+export class RevisionsList extends connect(store)(PolymerElement)  {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
@@ -18,6 +20,10 @@ export class RevisionsList extends PolymerElement  {
 
         etools-data-table-row[no-collapse] {
           padding-left: 32px;
+        }
+
+        .action {
+          text-transform: capitalize;
         }
       </style>
       <div class="card list">
@@ -39,18 +45,18 @@ export class RevisionsList extends PolymerElement  {
           <etools-data-table-row no-collapse="[[isCreateAction(item.action)]]">
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Change made by">
-                <span class="truncate">
+                <span class="truncate action">
                   [[item.action]]
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Date and time">
                 <span class="truncate">
-                  [[item.by_user_display]]
+                  [[getUserName(item.by_user)]]
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Date and time">
                 <span class="truncate">
-                  [[item.modified]]
+                  [[prettyDate(item.modified)]]
                 </span>
               </span>
               <span class="col-data col-1">
@@ -79,8 +85,22 @@ export class RevisionsList extends PolymerElement  {
       workingItem: {
         type: Object,
         notify: true
+      },
+      users: {
+        type: Array
       }
     };
+  }
+
+  _stateChanged(state) {
+    if (!state || !state.staticData) {
+      return;
+    }
+
+    this.users = state.staticData.users.map((user, key) => {
+      user.id = key + 1;
+      return user;
+    });
   }
 
   isCreateAction(action) {
@@ -96,8 +116,31 @@ export class RevisionsList extends PolymerElement  {
   }
 
   getChangedFileds(changesObj) {
-    let changes = Object.keys(changesObj).filter((change) => change !== 'version');
+    let changes = Object.keys(changesObj)
+    changes = changes.filter(change => change !== 'version');
+    changes = changes.map(change => getLabelForField(change))
     return (changes.length > 0 ? changes: ['No changes']).join(', ');
+  }
+
+  getUserName(userId) {
+    let user = this.users.find(u => u.id === Number(userId));
+    return user.first_name + ' ' + user.last_name;
+  }
+
+  // TODO: Remove this when the date behavior is ready
+  prettyDate(date) {
+    let today = new Date(date);
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0!
+    let yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    return dd + '-' + mm + '-' + yyyy;
   }
 
 }

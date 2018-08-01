@@ -323,8 +323,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     // TODO: this is TEMPORARY! user data should be more properly displayed
     this.staticData.users = state.staticData.users.map((elem, index) => {
       elem.name = elem.first_name + ' ' + elem.last_name;
-      elem.index_number = index;
-      elem.id = index;
+      elem.index_number = index + 1;
+      elem.id = index + 1;
       return elem;
     });
     if (!isOnNewIncident(this.state)) {

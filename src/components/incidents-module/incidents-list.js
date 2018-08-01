@@ -16,6 +16,7 @@ import 'etools-info-tooltip';
 
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
+
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -98,7 +99,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
               </span>
               <span class="col-data col-3" title="[[item.city]]" data-col-header-label="City">
                   <span>[[item.city]]</span>
-                </span>
+              </span>
               <span class="col-data col-3" type="[[_getIncidentName(item.incident_category)]]"
                   data-col-header-label="Incident Type">
               <span>[[_getIncidentName(item.incident_category)]]</span>

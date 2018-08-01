@@ -2,6 +2,8 @@
 @license
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-pages/iron-pages.js';
+
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
@@ -11,6 +13,7 @@ import '../../styles/shared-styles.js';
 
 import './incident-diff.js';
 import './revisions-list.js';
+import './incident-revision-view.js';
 
 export class IncidentHistory extends connect(store)(PolymerElement) {
   static get template() {
@@ -21,12 +24,31 @@ export class IncidentHistory extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <revisions-list hidden$="[[!diffElemHidden]]"
-                      history="[[history]]"
-                      working-item="{{workingItem}}"></revisions-list>
-      <incident-diff id="diffElem"
-                     hidden="{{diffElemHidden}}"
-                     working-item="{{workingItem}}"></incident-diff>
+      <iron-pages selected="[[activePage]]" attr-for-selected="name" role="main">
+        <revisions-list name="list"
+                        history="[[history]]"
+                        action="{{activePage}}"
+                        working-item="{{workingItem}}">
+        </revisions-list>
+        <incident-diff  name="diff"
+                        working-item="{{workingItem}}">
+        </incident-diff>
+        <incident-revision-view name="view"
+                        working-item="{{workingItem}}">
+        </incident-revision-view>
+      </iron-pages>
+
+      <div class="card" hidden$="[[activePageIs('list', activePage)]]">
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-button on-tap="navigateToList"> back to list </paper-button>
+            <paper-button hidden$="[[activePageIs('diff', activePage)]]"
+                          on-tap="navigateToDiff"> view changes only </paper-button>
+            <paper-button hidden$="[[activePageIs('view', activePage)]]"
+                          on-tap="navigateToView"> view entire incident </paper-button>
+          </div>
+        </div>
+      </div>
     `;
   }
 
@@ -47,13 +69,37 @@ export class IncidentHistory extends connect(store)(PolymerElement) {
       },
       history: Object,
       state: Object,
-      diffElemHidden: Boolean
+      activePage: {
+        type: String,
+        value: 'list',
+        observer: '_pageChanged'
+      }
     };
   }
 
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+  }
+
+  _pageChanged(nnew) {
+    console.log('page changed to', nnew);
+  }
+
+  navigateToList() {
+    this.activePage = 'list';
+  }
+
+  navigateToView() {
+    this.activePage = 'view';
+  }
+
+  navigateToDiff() {
+    this.activePage = 'diff';
+  }
+
+  activePageIs(loc) {
+    return this.activePage === loc;
   }
 
   _itemChanged(neww, oldd) {

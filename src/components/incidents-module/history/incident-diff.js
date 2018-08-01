@@ -44,12 +44,6 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
             </div>
           </div>
         </template>
-
-        <div class="row-h flex-c">
-          <div class="col col-12">
-            <paper-button on-tap="hideDiff"> back to list </paper-button>
-          </div>
-        </div>
       </div>
     `;
   }
@@ -65,12 +59,6 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
         notify: true,
         observer: 'itemChanged',
         value: null
-      },
-      hidden: {
-        type: Boolean,
-        value: true,
-        notify: true,
-        reflectToAttribute: true
       },
       changes: Array,
       events: Array,
@@ -97,11 +85,6 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
     return id;
   }
 
-  hideDiff() {
-    this.hidden = true;
-    this.workingItem = null;
-  }
-
   itemChanged(item) {
     if (!item) {
       return;
@@ -115,7 +98,6 @@ export class IncidentDiff extends connect(store)(PolymerElement)  {
       return elem.key !== 'version';
     });
 
-    this.hidden = !changes.length;
     this.set('changes', changes);
   }
 

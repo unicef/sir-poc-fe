@@ -3,6 +3,7 @@
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-icon-button';
+import '@polymer/iron-icons/editor-icons.js';
 import 'etools-data-table';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
@@ -60,7 +61,8 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
                 </span>
               </span>
               <span class="col-data col-1">
-                <paper-icon-button icon="assignment" on-click="showDetails" hidden$="[[!hasChangedFilds(item.change)]]"></paper-icon-button>
+                <paper-icon-button icon="assignment" on-click="showEntireIncident"></paper-icon-button>
+                <paper-icon-button icon="editor:mode-edit" on-click="showChanges" hidden$="[[!hasChangedFilds(item.change)]]"></paper-icon-button>
               </span>
             </div>
             <div slot="row-data-details">
@@ -84,6 +86,10 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
       history: Object,
       workingItem: {
         type: Object,
+        notify: true
+      },
+      action: {
+        type: String,
         notify: true
       },
       users: {
@@ -111,8 +117,14 @@ export class RevisionsList extends connect(store)(PolymerElement)  {
     return Object.keys(changesObj).length > 1;
   }
 
-  showDetails(event) {
+  showChanges(event) {
     this.set('workingItem', event.model.__data.item);
+    this.set('action', 'diff');
+  }
+
+  showEntireIncident(event) {
+    this.set('workingItem', event.model.__data.item);
+    this.set('action', 'view');
   }
 
   getChangedFileds(changesObj) {

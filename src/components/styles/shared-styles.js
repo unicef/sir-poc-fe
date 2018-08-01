@@ -64,6 +64,12 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
           display: block;
         }
       }
+      
+      etools-info-tooltip.info {
+        --etools-tooltip-trigger-icon: {
+          color: var(--primary-color);
+        }
+      }
 
       .list {
         padding-bottom: 36px;

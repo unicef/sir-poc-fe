@@ -22,8 +22,8 @@ class WarnMessage extends PolymerElement {
           flex: 1;
           padding: 8px 24px;
           color: var(--primary-text-color);
-          background-color: var(--lightest-info-color);
-          border: 1px solid var(--info-color);
+          background-color: var(--ternary-warning-color);
+          border: 1px solid var(--secondary-warning-color);
         }
       </style>
 

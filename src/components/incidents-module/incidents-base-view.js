@@ -2,14 +2,16 @@
  @license
  */
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-import '../common/etools-dropdown/etools-dropdown-lite.js';
-import '../common/datepicker-lite.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
+
+import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
+import '../common/etools-dropdown/etools-dropdown-lite.js';
+import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import {store} from '../../redux/store.js';
@@ -81,15 +83,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Event"
-                                  options="[[events]]"
-                                  selected="{{incident.event}}"
-                                  selected-item="{{selectedEvent}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details"> [[selectedEvent.note]]</div>
+            <etools-info-tooltip class="info" open-on-click form-field-align custom-icon
+                                 hide-tooltip$="[[!selectedEvent.note]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Event"
+                                    options="[[events]]"
+                                    selected="{{incident.event}}"
+                                    selected-item="{{selectedEvent}}">
+              </etools-dropdown-lite>
+              <iron-icon icon="info-outline" slot="custom-icon"></iron-icon>
+              <span slot="message">[[selectedEvent.note]]</span>
+            </etools-info-tooltip>
           </div>
         </div>
         <div class="row-h flex-c">
@@ -336,7 +340,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       staticData: Object,
       state: Object,
-      store: Object
+      store: Object,
+      selectedEvent: {
+        type: Object,
+        value: {}
+      }
     };
   }
 

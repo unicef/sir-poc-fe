@@ -18,11 +18,9 @@ $_documentContainer.innerHTML = `
         --menu-selected-bg-color: #e8e8e8;
         --unsynced-item-bg-color: pink;
         
-        --warning-text-color: orange;
-        
-        --info-color: #cebc06;
-        --light-info-color: #fff176;
-        --lightest-info-color: #fef9cd;
+        --primary-warning-color: #ff9044;
+        --secondary-warning-color: #cebc06;
+        --ternary-warning-color: #fef9cd;
       }
     </style>
   </custom-style>`;

@@ -19,6 +19,7 @@ import { store } from '../../redux/store.js';
 
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
+import '../common/etools-tabs.js';
 import '../styles/shared-styles.js';
 
 class IncidentsController extends connect(store)(PolymerElement) {
@@ -35,6 +36,20 @@ class IncidentsController extends connect(store)(PolymerElement) {
             max-width: 350px;
           }
         }
+
+        paper-tabs {
+          --paper-tabs-selection-bar-color: var(--app-primary-color);
+        }
+
+        paper-tab[link],
+        paper-tab {
+          --paper-tab-ink: var(--app-primary-color);
+          padding: 0 24px;
+        }
+
+        paper-tab.iron-selected {
+          color: var(--app-primary-color);
+        }
       </style>
 
       <app-route
@@ -45,19 +60,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
       </app-route>
 
       <template is="dom-if" if="[[_showTabs(page)]]">
-       <div class="tabs-container">
-        <paper-tabs id="tabs"
-                    selected="{{routeData.section}}"
-                    attr-for-selected="name"
-                    activate-event="tap"
-                    noink>
-          <paper-tab name="view">
-            VIEW
-          </paper-tab>
-          <paper-tab name="comments">
-            COMMENTS
-          </paper-tab>
-        </paper-tabs>
+        <div class="tabs-container">
+          <etools-tabs tabs="[[viewPageTabs]]" selected="{{routeData.section}}">
+          </etools-tabs>
         </div>
       </template>
 
@@ -80,7 +85,20 @@ class IncidentsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object
+      routeData: Object,
+      viewPageTabs: {
+        type: Array,
+        value: [
+          {
+            name: 'view',
+            tabLabel: 'VIEW'
+          },
+          {
+            name: 'comments',
+            tabLabel: 'COMMENTS'
+          }
+        ]
+      }
     };
   }
 

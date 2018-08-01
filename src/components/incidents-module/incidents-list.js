@@ -8,14 +8,15 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../redux/store.js';
+import 'etools-data-table/etools-data-table.js';
+import 'etools-info-tooltip';
 
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
-import 'etools-data-table/etools-data-table.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -98,13 +99,21 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
               </span>
               <span class="col-data col-3" title="[[item.city]]" data-col-header-label="City">
                   <span>[[item.city]]</span>
-                </span>
-              <span class="col-data col-3" type="[[_getIncidentName(item.incident_type)]]"
-                    data-col-header-label="Incident Type">
-                <span>[[_getIncidentName(item.incident_type)]]</span>
               </span>
-              <span class="col-data col-2" title="[[getStatus(item)]]" data-col-header-label="Status">
-                <span class="truncate">[[getStatus(item)]]</span>
+              <span class="col-data col-3" type="[[_getIncidentName(item.incident_category)]]"
+                  data-col-header-label="Incident Type">
+              <span>[[_getIncidentName(item.incident_category)]]</span>
+              </span>
+              <span class="col-data col-2" data-col-header-label="Status">
+                <template is="dom-if" if="[[!item.unsynced]]">
+                  [[item.status]]
+                </template>
+                <template is="dom-if" if="[[item.unsynced]]">
+                  <etools-info-tooltip theme="light" open-on-click>
+                    <span slot="field"> Not Synced </span>
+                    <span slot="message"> This incident has not been sumitted to the server. Go to its edit page and save it when an internet connection is availale. </span>
+                  </etools-info-tooltip>
+                </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                 <a href="/incidents/view/[[item.id]]">
@@ -206,11 +215,6 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   notEditable(incident, offline) {
     return offline && !incident.unsynced;
   }
-
-  getStatus(incident) {
-    return incident.unsynced ? 'Not Synced' : incident.status;
-  }
-
 }
 
 window.customElements.define('incidents-list', IncidentsList);

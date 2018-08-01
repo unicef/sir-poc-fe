@@ -9,20 +9,33 @@ import DateMixin from '../common/date-mixin.js';
 class DisplayComment extends DateMixin(PolymerElement) {
   static get template() {
     return html`
-      <style include="shared-styles">
+      <style>
         :host {
           display: block;
         }
-
-        .comment {
+        .container {
           padding: 24px 20px;
         }
+        .username {
+          color: var(--app-secondary-color);
+          font-weight: 600;
+        }
+        .date {
+          color: #bdbbbb;
+        }
+        .username-and-date {
+          padding-bottom:10px;
+          font-size:14px;
+        }
+
       </style>
-      <div class="comment">
-          <div>
-            <div>[[comment.username]] Username</div>
-            <div>[[prettyDate(comment.created)]]</div>
+      <div class="container">
+
+          <div class="username-and-date">
+            <div class="username">[[comment.username]] Username</div>
+            <div class="date">[[prettyDate(comment.created)]]</div>
           </div>
+
           <div>
             [[comment.comment]]
           </div>

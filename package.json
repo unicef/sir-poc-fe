@@ -38,6 +38,7 @@
     "browser-capabilities": "^1.1.1",
     "calendar-lite": "git+https://github.com/daniel-tabarcea/calendar-lite.git",
     "etools-data-table": "git+https://github.com/unicef-polymer/etools-data-table.git#upgrade-to-polymer3",
+    "etools-info-tooltip": "git+https://github.com/unicef-polymer/etools-info-tooltip.git#upgrade-to-polymer3",
     "express": "^4.16.3",
     "http-proxy-middleware": "^0.18.0",
     "moment": "^2.22.2",

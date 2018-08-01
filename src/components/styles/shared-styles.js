@@ -43,7 +43,7 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
       }
 
       *[hidden] {
-        display: none;
+        display: none !important;
       }
 
       paper-button {
@@ -57,6 +57,12 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
 
       paper-checkbox {
         line-height: 64px;
+      }
+      
+      paper-textarea {
+        --paper-input-container-input: {
+          display: block;
+        }
       }
 
       .list {

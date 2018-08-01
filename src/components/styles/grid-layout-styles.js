@@ -26,7 +26,7 @@ $_documentContainer.innerHTML = `
       }
 
       .row-h, .row-v {
-        padding: 4px 24px;
+        padding: 8px 24px;
       }
       .col {
         box-sizing: border-box;
@@ -100,6 +100,12 @@ $_documentContainer.innerHTML = `
         .col {
           flex: 0 0 100%;
           max-width: 100%;
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+        .row-h {
+          padding-top: 0;
+          padding-bottom: 0;
         }
       }
       /* TODO: more classes will e added if needed */

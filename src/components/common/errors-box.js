@@ -19,6 +19,7 @@ class ErrorsBox extends connect(store)(PolymerElement) {
     return html`
       <style include="paper-material-styles">
         :host {
+          width: 100%;
           display: block;
           padding: 16px;
           margin-bottom: 24px;

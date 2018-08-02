@@ -8,6 +8,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
 import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
+import { updatePath } from '../../common/navigation-helper.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
@@ -134,7 +135,9 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   }
 
   _idChanged(newId) {
-    if (!this.state.app.offline && newId) {
+    if (this.state.app.offline) {
+      updatePath('/incidents/list');
+    } else if (newId) {
       this._fetchHistory();
     }
   }

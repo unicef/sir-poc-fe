@@ -64,12 +64,17 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
                 </span>
               </span>
               <span class="col-data col-1">
-                <a href="/incidents/history/[[incidentId]]/view/[[item.id]]">
-                  <iron-icon icon="assignment"></iron-icon>
-                </a>
-                <a href="/incidents/history/[[incidentId]]/diff/[[item.id]]" hidden$="[[!hasChangedFilds(item.change)]]">
-                  <iron-icon icon="editor:mode-edit"></iron-icon>
-                </a>
+                <span title="View entire incident at this version">
+                  <a href="/incidents/history/[[incidentId]]/view/[[item.id]]">
+                    <iron-icon icon="assignment"></iron-icon>
+                  </a>
+                </span>
+                <span title="View changes from previous version"
+                      hidden$="[[!hasChangedFilds(item.change)]]">
+                  <a href="/incidents/history/[[incidentId]]/diff/[[item.id]]">
+                    <iron-icon icon="editor:mode-edit"></iron-icon>
+                  </a>
+                </span>
               </span>
             </div>
             <div slot="row-data-details">

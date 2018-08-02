@@ -32,7 +32,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         etools-data-table-row[unsynced] {
-          --list-bg-color: var(--unsynced-item-bg-color, pink);
+          --list-bg-color: var(--unsynced-item-bg-color);
         }
 
         .col-data > span {
@@ -109,7 +109,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   [[item.status]]
                 </template>
                 <template is="dom-if" if="[[item.unsynced]]">
-                  <etools-info-tooltip theme="light" open-on-click>
+                  <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
                     <span slot="message">This incident has not been sumitted to the server. Go to its edit page and 
                       save it when an internet connection is availale.</span>

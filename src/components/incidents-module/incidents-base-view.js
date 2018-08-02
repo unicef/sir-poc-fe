@@ -34,10 +34,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         errors-box {
           margin: 0 24px;
         }
-
-        .details {
-          margin-top: 24px;
-        }
       </style>
 
       <div class="card">
@@ -78,76 +74,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h">
-          <h3> Incident details </h3>
+          <h3>When & Where</h3>
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-info-tooltip class="info" open-on-click form-field-align custom-icon
-                                 hide-tooltip$="[[!selectedEvent.note]]">
-              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
-                                    label="Event"
-                                    options="[[events]]"
-                                    selected="{{incident.event}}"
-                                    selected-item="{{selectedEvent}}">
-              </etools-dropdown-lite>
-              <iron-icon icon="info-outline" slot="custom-icon"></iron-icon>
-              <span slot="message">[[selectedEvent.note]]</span>
-            </etools-info-tooltip>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Incident Type"
-                                  options="[[staticData.incidentCategories]]"
-                                  selected="{{incident.incident_category}}"
-                                  selected-item="{{selectedIncidentCategory}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details">
-              [[selectedIncidentCategory.description]]
-            </div>
-            <div class="details" hidden$="[[!selectedIncidentCategory.comment]]">
-              [[selectedIncidentCategory.comment]]
-            </div>
-          </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Threat category"
-                                  options="[[staticData.threatCategories]]"
-                                  selected="{{incident.threat_category}}"
-                                  selected-item="{{selectedThreatCategory}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details"> [[selectedThreatCategory.description]]</div>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Target"
-                                  options="[[staticData.targets]]"
-                                  selected="{{incident.target}}"
-                                  selected-item="{{selectedTarget}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details"> [[selectedTarget.description]]</div>
-          </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
+          <div class="col col-3">
             <datepicker-lite value="{{incident.incident_date}}" readonly="[[readonly]]"
                              label="Incident date"></datepicker-lite>
           </div>
-          <div class="col col-6">
+          <div class="col col-3">
             <paper-input readonly="[[readonly]]"
                          label="Incident time"
                          type="time"
@@ -157,12 +92,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
+          <div class="col col-3">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Country"
                                   options="[[staticData.countries]]"
                                   selected="{{incident.country}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-3">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Region"
                                   options="[[staticData.regions]]"
@@ -170,11 +107,70 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
 
-          <div class="col col-6">
+          <div class="col col-3">
             <paper-input readonly="[[readonly]]" label="City" type="text"
                          placeholder="&#8212;" value="{{incident.city}}"></paper-input>
+          </div>
+
+          <div class="col col-3">
             <paper-input readonly="[[readonly]]" label="Street" type="text"
                          placeholder="&#8212;" value="{{incident.street}}"></paper-input>
+          </div>
+        </div>
+
+        <div class="row-h">
+          <h3>Incident details</h3>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align 
+                                 hide-tooltip$="[[!selectedEvent.note]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Event"
+                                    options="[[events]]"
+                                    selected="{{incident.event}}"
+                                    selected-item="{{selectedEvent}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedEvent.note]]</span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description, selectedIncidentCategory.comment)]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Incident Type"
+                                    options="[[staticData.incidentCategories]]"
+                                    selected="{{incident.incident_category}}"
+                                    selected-item="{{selectedIncidentCategory}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
+              </span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[!selectedThreatCategory.description]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Threat category"
+                                    options="[[staticData.threatCategories]]"
+                                    selected="{{incident.threat_category}}"
+                                    selected-item="{{selectedThreatCategory}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedThreatCategory.description]]</span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[!selectedTarget.description]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Target"
+                                    options="[[staticData.targets]]"
+                                    selected="{{incident.target}}"
+                                    selected-item="{{selectedTarget}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedTarget.description]]</span>
+            </etools-info-tooltip>
           </div>
         </div>
 
@@ -200,21 +196,19 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Criticality"
-                                  options="[[staticData.criticalities]]"
-                                  selected="{{incident.criticality}}"
-                                  selected-item="{{selectedCriticality}}">
-            </etools-dropdown-lite>
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[!selectedCriticality.description]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Criticality"
+                                    options="[[staticData.criticalities]]"
+                                    selected="{{incident.criticality}}"
+                                    selected-item="{{selectedCriticality}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedCriticality.description]]</span>
+            </etools-info-tooltip>
           </div>
-          <div class="col col-6">
-            <div class="details">[[selectedCriticality.description]]</div>
-          </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-12" hidden$="[[!incident.incident_category]]">
+          <div class="col col-9" hidden$="[[!incident.incident_category]]">
             <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category, staticData)]]"
                                         readonly="[[readonly]]"
                                         label="Weapons used"
@@ -224,35 +218,29 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
-                                  readonly="[[readonly]]"
+        <div class="row-h flex-c" hidden$="[[!isAccident(incident.incident_category, staticData)]]">
+          <div class="col col-3">
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Vehicle Type"
                                   options="[[staticData.vehicleTypes]]"
                                   selected="{{incident.vehicle_type}}">
             </etools-dropdown-lite>
           </div>
-          <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
-                                  readonly="[[readonly]]"
+          <div class="col col-3">
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Contributing factor"
                                   options="[[staticData.factors]]"
                                   selected="{{incident.contributing_factor}}">
             </etools-dropdown-lite>
           </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
-                                  readonly="[[readonly]]"
+          <div class="col col-3">
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Crash Type"
                                   options="[[staticData.crashTypes]]"
                                   selected="{{incident.crash_type}}">
             </etools-dropdown-lite>
           </div>
-          <div class="col col-6">
+          <div class="col col-3">
             <paper-checkbox hidden$="[[!isAccident(incident.incident_category)]]"
                             checked="{{incident.near_miss}}"
                             disabled="[[readonly]]">
@@ -262,18 +250,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
+          <div class="col col-3">
             <paper-checkbox checked="{{incident.reported}}" disabled="[[readonly]]">Reported to police</paper-checkbox>
           </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <paper-input hidden$="[[isNotReported(incident.reported)]]" readonly="[[readonly]]" label="Reported to"
+          <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
+            <paper-input readonly="[[readonly]]" label="Reported to"
                          type="text" value="{{incident.reported_to}}" placeholder="&#8212;"></paper-input>
           </div>
-          <div class="col col-6">
-            <paper-input hidden$="[[isNotReported(incident.reported)]]" readonly="[[readonly]]"
+          <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
+            <paper-input readonly="[[readonly]]"
                          label="Responsible party" type="text" value="{{incident.responsible}}"
                          placeholder="&#8212;"></paper-input>
           </div>
@@ -342,6 +327,22 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       state: Object,
       store: Object,
       selectedEvent: {
+        type: Object,
+        value: {}
+      },
+      selectedIncidentCategory: {
+        type: Object,
+        value: {}
+      },
+      selectedThreatCategory: {
+        type: Object,
+        value: {}
+      },
+      selectedTarget: {
+        type: Object,
+        value: {}
+      },
+      selectedCriticality: {
         type: Object,
         value: {}
       }
@@ -438,4 +439,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     let selectedEvent = this.events.find(event => event.id === eventId);
     return selectedEvent.unsynced && !offline;
   }
+
+  _hideInfoTooltip() {
+    let arg = [...arguments];
+    return !arg.some(a => typeof a === 'string' && a !== '');
+  }
+
 }

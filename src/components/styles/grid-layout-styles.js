@@ -26,6 +26,7 @@ $_documentContainer.innerHTML = `
       }
 
       .row-h, .row-v {
+        position: relative;
         padding: 8px 24px;
       }
       .col {

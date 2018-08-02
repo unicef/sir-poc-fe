@@ -24,8 +24,8 @@ class ErrorsBox extends connect(store)(PolymerElement) {
           padding: 16px;
           margin-bottom: 24px;
           border-radius: 5px;
-          color: #ea4022;
-          background-color: #f8d7da;
+          color: var(--primary-error-color);
+          background-color: var(--secondary-error-color);
           box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
         }
 
@@ -51,8 +51,8 @@ class ErrorsBox extends connect(store)(PolymerElement) {
 
         paper-button {
           margin: 0;
-          background-color: #ea4022;
-          color: #fff;
+          background-color: var(--primary-error-color);
+          color: var(--light-primary-text-color);
         }
       </style>
 

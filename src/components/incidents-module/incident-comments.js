@@ -97,7 +97,7 @@ class IncidentComments extends connect(store)(PolymerElement) {
     };
 
     let successfull = await store.dispatch(addComment(comment));
-    if (successfull) {
+    if (typeof successfull === 'boolean' && successfull) {
       this.$.addComment.resetForm();
     }
   }

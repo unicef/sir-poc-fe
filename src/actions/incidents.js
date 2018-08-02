@@ -73,12 +73,14 @@ const updateEventIds = (newId, oldId) => {
 }
 
 const addIncidentOnline = (newIncident, dispatch) => {
-  makeRequest(Endpoints.newIncident, newIncident).then((result) => {
+  return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(addIncidentSuccess(JSON.parse(result)));
     updatePath('/incidents/list/');
+    return true;
   }).catch((error) => {
     dispatch(addIncidentFail(error.response));
     scrollToTop();
+    return false;
   });
 }
 
@@ -97,6 +99,7 @@ const addIncidentOffline = (newIncident, dispatch) => {
   newIncident.unsynced = true;
   updatePath('/incidents/list/');
   dispatch(addIncidentSuccess(newIncident));
+  return true;
 }
 
 const editIncidentOnline = (incident, dispatch, state) => {
@@ -121,9 +124,9 @@ const editIncidentOffline = (incident, dispatch) => {
 
 export const addIncident = (newIncident) => (dispatch, getState) => {
   if (getState().app.offline === true) {
-    addIncidentOffline(newIncident, dispatch);
+    return addIncidentOffline(newIncident, dispatch);
   } else {
-    addIncidentOnline(newIncident, dispatch);
+    return addIncidentOnline(newIncident, dispatch);
   }
 }
 

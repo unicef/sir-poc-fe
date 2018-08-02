@@ -117,10 +117,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
     }
 
     this.incidentId = state.app.locationInfo.incidentId;
-    this.users = state.staticData.users.map((user, key) => {
-      user.id = key + 1;
-      return user;
-    });
+    this.users = state.staticData.users;
   }
 
   isCreateAction(action) {
@@ -128,9 +125,11 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
   }
 
   getChangedFileds(changesObj) {
-    let changes = Object.keys(changesObj)
+    let changes = Object.keys(changesObj);
+
     changes = changes.filter(change => change !== 'version');
     changes = changes.map(change => this.getLabelForField(change))
+
     return (changes.length > 0 ? changes: ['No changes']).join(', ');
   }
 

@@ -221,6 +221,7 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _locationChanged(path, queryParams) {
+    store.dispatch({type: 'CLEAR_ERRORS'});
     store.dispatch(updateLocationInfo(path, queryParams));
   }
 
@@ -258,7 +259,6 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _pageChanged(page) {
-    store.dispatch({type: 'CLEAR_ERRORS'});
     store.dispatch(lazyLoadModules(page));
   }
 }

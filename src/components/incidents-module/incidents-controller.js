@@ -9,14 +9,17 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { fetchIncidents } from '../../actions/incidents.js';
+import '@polymer/paper-tabs/paper-tabs.js';
+import { fetchIncidents, fetchIncidentComments } from '../../actions/incidents.js';
 import { lazyLoadIncidentPages } from '../../actions/app.js';
 import { store } from '../../redux/store.js';
 
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
+import '../common/etools-tabs.js';
 import '../styles/shared-styles.js';
 
 class IncidentsController extends connect(store)(PolymerElement) {
@@ -24,6 +27,28 @@ class IncidentsController extends connect(store)(PolymerElement) {
     return html`
       <style include="shared-styles">
         :host {
+        }
+        .tabs-container {
+          background-color: white;
+          border-left: 1px solid #eeeeee;
+          --paper-tabs: {
+            font-size: 14px;
+            max-width: 350px;
+          }
+        }
+
+        paper-tabs {
+          --paper-tabs-selection-bar-color: var(--app-primary-color);
+        }
+
+        paper-tab[link],
+        paper-tab {
+          --paper-tab-ink: var(--app-primary-color);
+          padding: 0 24px;
+        }
+
+        paper-tab.iron-selected {
+          color: var(--app-primary-color);
         }
       </style>
 
@@ -34,13 +59,21 @@ class IncidentsController extends connect(store)(PolymerElement) {
         tail="{{subroute}}">
       </app-route>
 
+      <template is="dom-if" if="[[_showTabs(page)]]">
+        <div class="tabs-container">
+          <etools-tabs tabs="[[viewPageTabs]]" selected="{{routeData.section}}">
+          </etools-tabs>
+        </div>
+      </template>
+
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
         <incidents-list name="list"></incidents-list>
-        <template is="dom-if" if="[[pageIs(page, 'new')]]" restamp>
-          <add-incident name="new"></add-incident>
-        </template>
+        <add-incident name="new"></add-incident>
         <edit-incident name="edit"></edit-incident>
+
         <view-incident name="view"></view-incident>
+        <incident-comments name="comments"></incident-comments>
+
       </iron-pages>
     `;
   }
@@ -50,7 +83,20 @@ class IncidentsController extends connect(store)(PolymerElement) {
       page: String,
       route: Object,
       subroute: Object,
-      routeData: Object
+      routeData: Object,
+      viewPageTabs: {
+        type: Array,
+        value: [
+          {
+            name: 'view',
+            tabLabel: 'VIEW'
+          },
+          {
+            name: 'comments',
+            tabLabel: 'COMMENTS'
+          }
+        ]
+      }
     };
   }
 
@@ -64,6 +110,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
     store.dispatch(fetchIncidents());
+    store.dispatch(fetchIncidentComments());
   }
 
   _stateChanged(state) {
@@ -79,6 +126,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   pageChanged(page) {
     store.dispatch(lazyLoadIncidentPages(page));
+  }
+  _showTabs(page) {
+    return page === 'view' || page === 'comments';
   }
 
 }

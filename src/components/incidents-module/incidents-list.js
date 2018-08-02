@@ -11,8 +11,9 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
-import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip';
+import 'etools-data-table/etools-data-table.js';
+
 
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'

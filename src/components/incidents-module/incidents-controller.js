@@ -119,6 +119,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   pageChanged(page) {
+    if (page === 'history' && this.isOffline) {
+      updatePath('/');
+    }
     store.dispatch(lazyLoadIncidentPages(page));
   }
 

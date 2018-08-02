@@ -5,12 +5,13 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 
+import DateMixin from '../../common/date-mixin.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
 import HistoryHelpers from './history-helpers.js';
 
-export class IncidentDiff extends HistoryHelpers(connect(store)(PolymerElement))  {
+export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(PolymerElement)))  {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles">
@@ -121,8 +122,7 @@ export class IncidentDiff extends HistoryHelpers(connect(store)(PolymerElement))
       case 'country':
         return this.getNameFromId(value, 'countries');
       case 'incident_date':
-        return value;
-
+        return prettyDate(value);
       default:
         return value;
     }

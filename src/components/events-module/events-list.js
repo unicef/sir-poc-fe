@@ -11,13 +11,15 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
+import 'etools-info-tooltip';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import 'etools-data-table/etools-data-table.js';
+
+
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
-import 'etools-data-table/etools-data-table.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
@@ -32,7 +34,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         etools-data-table-row[unsynced] {
-          --list-bg-color: pink;
+          --list-bg-color: var(--unsynced-item-bg-color, pink);
         }
 
         .col-data > span {
@@ -100,7 +102,15 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   <span class="truncate">[[item.location]]</span>
                 </span>
                 <span class="col-data col-2" data-col-header-label="Status">
-                  <span class="truncate">[[getStatus(item)]]</span>
+                  <template is="dom-if" if="[[!item.unsynced]]">
+                    Synced
+                  </template>
+                  <template is="dom-if" if="[[item.unsynced]]">
+                    <etools-info-tooltip theme="light" open-on-click>
+                      <span slot="field"> Not Synced </span>
+                      <span slot="message"> This event has not been sumitted to the server. Go to its edit page and save it when an internet connection is availale. </span>
+                    </etools-info-tooltip>
+                  </template>
                 </span>
                 <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/events/view/[[item.id]]">
@@ -190,10 +200,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   notEditable(event, offline) {
     return offline && !event.unsynced;
-  }
-
-  getStatus(event) {
-    return event.unsynced ? 'Not Synced' : 'Synced';
   }
 }
 

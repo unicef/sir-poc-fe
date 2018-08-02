@@ -14,19 +14,19 @@ class AddEvent extends EventsBaseView {
     this.title = 'Add new event';
   }
 
-  _stateChanged(state) {
-    super._stateChanged(state);
-    if (isOnNewEvent(state)) {
-      this.event = JSON.parse(JSON.stringify(EventModel));
+  async save() {
+    let successfull = await this.store.dispatch(addEvent(this.event));
+    if (typeof successfull === 'boolean' && successfull) {
+      this.resetForm();
     }
-  }
-
-  save() {
-    this.store.dispatch(addEvent(this.event));
   }
 
   isOnExpectedPage() {
     return isOnNewEvent(this.state);
+  }
+
+  resetForm() {
+    this.event = JSON.parse(JSON.stringify(EventModel));
   }
 }
 

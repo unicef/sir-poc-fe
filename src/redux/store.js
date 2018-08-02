@@ -11,11 +11,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import {
   createStore,
   compose as origCompose,
-  applyMiddleware,
-  combineReducers
+  applyMiddleware
 } from 'redux';
 import thunk from 'redux-thunk';
-import { lazyReducerEnhancer } from 'pwa-helpers/lazy-reducer-enhancer.js';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 
 import { storeReady } from '../actions/app.js';
@@ -34,7 +32,7 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
 const persistConfig = {
   key: 'sir-app',
   storage: getStorage(),
-  blacklist: ['app', 'errors']
+  blacklist: ['errors', 'app']
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {
@@ -48,7 +46,7 @@ const persistedReducer = persistCombineReducers(persistConfig, {
 // lazy reducers are not being used with redux-persist
 export const store = createStore(
   persistedReducer,
-  compose(lazyReducerEnhancer(combineReducers), applyMiddleware(thunk))
+  compose(applyMiddleware(thunk))
 );
 // storeReady() gets called after the old state is loaded from storage
 // any data pushed to redux before this callback fires will be overwritten by the old state

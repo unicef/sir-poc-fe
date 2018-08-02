@@ -85,6 +85,8 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
       break;
     case 'history':
       import('../components/incidents-module/history/incident-history.js');
+    case 'comments':
+      import('../components/incidents-module/incident-comments.js');
       break;
     default:
       updatePath('/404/');
@@ -97,7 +99,6 @@ export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
   //
   // Note: `polymer build` doesn't like string concatenation in the import
   // statement, so break it up.
-  //TODO - check if already imported?
   switch (selectedModule) {
     case 'events':
       import('../components/events-module/events-controller.js');

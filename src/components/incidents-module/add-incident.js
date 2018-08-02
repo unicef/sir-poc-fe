@@ -3,8 +3,8 @@
 */
 import { addIncident } from '../../actions/incidents.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { IncidentModel } from './models/incident-model.js';
 import { isOnNewIncident } from '../../reducers/app.js';
+import { IncidentModel } from './models/incident-model';
 /**
  * @polymer
  * @customElement
@@ -16,20 +16,19 @@ class AddIncident extends IncidentsBaseView {
     this.title = 'Add new incident';
   }
 
-  _stateChanged(state) {
-    super._stateChanged(state);
-    if (isOnNewIncident(state)) {
-      this.incident = JSON.parse(JSON.stringify(IncidentModel));
+  async save() {
+    let successfull = await this.store.dispatch(addIncident(this.incident));
+    if (typeof successfull === 'boolean' && successfull) {
+      this.resetForm();
     }
-  }
-
-
-  save() {
-    this.store.dispatch(addIncident(this.incident));
   }
 
   isOnExpectedPage() {
     return isOnNewIncident(this.state);
+  }
+
+  resetForm() {
+    this.incident = JSON.parse(JSON.stringify(IncidentModel));
   }
 }
 

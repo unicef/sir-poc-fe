@@ -128,7 +128,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
     let changes = Object.keys(changesObj);
 
     changes = changes.filter(change => change !== 'version');
-    changes = changes.map(change => this.getLabelForField(change))
+    changes = changes.map(change => this.getLabelForField(change));
 
     return (changes.length > 0 ? changes: ['No changes']).join(', ');
   }

@@ -36,10 +36,10 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
                         history="[[history]]">
         </revisions-list>
         <incident-diff  name="diff"
-                        working-item="{{workingItem}}">
+                        working-item="[[workingItem]]">
         </incident-diff>
         <incident-revision-view name="view"
-                        working-item="{{workingItem}}">
+                        working-item="[[workingItem]]">
         </incident-revision-view>
       </iron-pages>
 
@@ -48,7 +48,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
           <div class="col col-12">
             <paper-button raised on-tap="navigateToList"> back to changes list </paper-button>
 
-            <paper-button hidden$="[[hideViewChangesButton(workingItem.change, routeData.section)]]"
+            <paper-button hidden$="[[shouldHideViewChangesButton(workingItem.change, routeData.section)]]"
                           on-tap="navigateToDiff"
                           raised> view changes only </paper-button>
 
@@ -83,28 +83,9 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
 
   static get observers() {
     return [
-      'routeChanged(routeData.section)',
-      'revisionIdChanged(routeData.revisionId, history)'
+      '_routeChanged(routeData.section)',
+      '_revisionIdChanged(routeData.revisionId, history)'
     ];
-  }
-
-  routeChanged(section, revId) {
-    if (!section) {
-      this.navigateToList();
-    }
-  }
-
-  revisionIdChanged(revId, history) {
-    if (!revId || !history) {
-      return;
-    }
-    let workingItem = history.find(item => item.id === Number(revId));
-    this.set('workingItem', workingItem);
-  }
-
-  connectedCallback() {
-    this.store = store;
-    super.connectedCallback();
   }
 
   navigateToList() {
@@ -123,11 +104,25 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
     return this.routeData.section === loc;
   }
 
-  hideViewChangesButton(change) {
+  shouldHideViewChangesButton(change) {
     if (!change) {
       return true;
     }
     return this.pageIs('diff') || !this.hasChangedFilds(change);
+  }
+
+  _routeChanged(section, revId) {
+    if (!section) {
+      this.navigateToList();
+    }
+  }
+
+  _revisionIdChanged(revId, history) {
+    if (!revId || !history) {
+      return;
+    }
+    let workingItem = history.find(item => item.id === Number(revId));
+    this.set('workingItem', workingItem);
   }
 
   _setIncidentId(id) {

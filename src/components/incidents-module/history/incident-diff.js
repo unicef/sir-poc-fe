@@ -56,9 +56,7 @@ export class IncidentDiff extends HistoryHelpers(connect(store)(PolymerElement))
     return {
       workingItem: {
         type: Object,
-        notify: true,
-        observer: 'itemChanged',
-        value: null
+        observer: 'itemChanged'
       },
       changes: Array,
       events: Array,
@@ -66,18 +64,9 @@ export class IncidentDiff extends HistoryHelpers(connect(store)(PolymerElement))
     };
   }
 
-  connectedCallback() {
-    this.store = store;
-    super.connectedCallback();
-  }
-
   _stateChanged(state) {
     this.set('staticData', state.staticData);
     this.set('events', state.events.list);
-  }
-
-  _setIncidentId(id) {
-    return id;
   }
 
   itemChanged(item) {

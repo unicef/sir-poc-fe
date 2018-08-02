@@ -23,7 +23,12 @@ export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
 
 let snackbarTimer;
 
-export const storeReady = () => (dispatch) => {
+export const storeReady = () => (dispatch, getState) => {
+  let state = getState();
+  if (state && state.app && state.app.offline) {
+    return;
+  }
+
   dispatch(fetchAndStoreEvents());
   dispatch(loadAllStaticData());
 };

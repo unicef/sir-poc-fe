@@ -31,18 +31,17 @@ class IncidentRevisionView extends IncidentsBaseView {
   }
 
   _setIncidentId() {
-    return 'null';
   }
 
   isOnExpectedPage() {
     return true;
   }
 
-  _itemChanged(nnew, oold) {
-    if (!nnew) {
+  _itemChanged(workingItem) {
+    if (!workingItem) {
       return;
     }
-    this.incident = nnew.data;
+    this.incident = workingItem.data;
   }
 }
 

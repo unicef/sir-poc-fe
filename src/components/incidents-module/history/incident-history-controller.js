@@ -62,7 +62,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   }
 
   static get is() {
-    return 'incident-history';
+    return 'incident-history-controller';
   }
 
   static get properties() {

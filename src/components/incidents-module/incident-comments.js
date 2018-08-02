@@ -21,7 +21,7 @@ class IncidentComments extends connect(store)(PolymerElement) {
       </style>
       <div class="card list" hidden$="[[!dataItems.length]]">
         <template is="dom-repeat" items="{{dataItems}}">
-          <display-comment comment="[[item]]"> </display-comment>
+          <display-comment comment="[[item]]" all-users="[[allUsers]]"> </display-comment>
         </template>
       </div>
 
@@ -40,6 +40,10 @@ class IncidentComments extends connect(store)(PolymerElement) {
       allComments: {
         type: Array,
         computed: '_setComments(state.incidents.comments)'
+      },
+      allUsers: {
+        type: Array,
+        computed: '_setUsers(state.staticDatausers)'
       },
       dataItems: {
         type: Array,
@@ -80,6 +84,10 @@ class IncidentComments extends connect(store)(PolymerElement) {
 
   _setComments(comments) {
     return comments;
+  }
+
+  _setUsers(users) {
+    return users;
   }
 
   async addComment(e) {

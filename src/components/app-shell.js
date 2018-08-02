@@ -119,7 +119,7 @@ class MyApp extends connect(store)(PolymerElement) {
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
       </app-location>
 
-      <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{queryParams}}">
+      <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
 
       <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="900px">
@@ -201,7 +201,6 @@ class MyApp extends connect(store)(PolymerElement) {
       snackbarOpened: Boolean,
       route: Object,
       routeData: Object,
-      subroute: Object,
       queryParams: Object,
       offline: Boolean
     };

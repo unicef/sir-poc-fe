@@ -25,11 +25,15 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
         }
       </style>
 
-      <iron-pages selected="[[activePage]]" attr-for-selected="name" role="main">
+      <app-route
+        route="{{route}}"
+        pattern="/incidents/history/:incidentId/:section/:revisionId"
+        data="{{routeData}}">
+      </app-route>
+
+      <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
         <revisions-list name="list"
-                        history="[[history]]"
-                        action="{{activePage}}"
-                        working-item="{{workingItem}}">
+                        history="[[history]]">
         </revisions-list>
         <incident-diff  name="diff"
                         working-item="{{workingItem}}">
@@ -39,18 +43,18 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
         </incident-revision-view>
       </iron-pages>
 
-      <div class="card" hidden$="[[activePageIs('list', activePage)]]">
+      <div class="card" hidden$="[[pageIs('list', routeData.section)]]">
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-button raised on-tap="navigateToList"> back to changes list </paper-button>
 
-            <paper-button hidden$="[[hideViewChangesButton(activePage, workingItem.change)]]"
-                          raised
-                          on-tap="navigateToDiff"> view changes only </paper-button>
+            <paper-button hidden$="[[hideViewChangesButton(workingItem.change, routeData.section)]]"
+                          on-tap="navigateToDiff"
+                          raised> view changes only </paper-button>
 
-            <paper-button hidden$="[[activePageIs('view', activePage)]]"
-                          raised
-                          on-tap="navigateToView"> view entire incident </paper-button>
+            <paper-button hidden$="[[pageIs('view', routeData.section)]]"
+                          on-tap="navigateToView"
+                          raised> view entire incident </paper-button>
           </div>
         </div>
       </div>
@@ -68,17 +72,34 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
         observer: '_idChanged'
       },
-      workingItem: {
-        type: Object,
-        observer: '_itemChanged'
-      },
+      workingItem: Object,
+      routeData: Object,
       history: Object,
+      route: Object,
       state: Object,
-      activePage: {
-        type: String,
-        value: 'list'
-      }
     };
+  }
+
+
+  static get observers() {
+    return [
+      'routeChanged(routeData.section)',
+      'revisionIdChanged(routeData.revisionId, history)'
+    ];
+  }
+
+  routeChanged(section, revId) {
+    if (!section) {
+      this.navigateToList();
+    }
+  }
+
+  revisionIdChanged(revId, history) {
+    if (!revId || !history) {
+      return;
+    }
+    let workingItem = history.find(item => item.id === Number(revId));
+    this.set('workingItem', workingItem);
   }
 
   connectedCallback() {
@@ -87,30 +108,26 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   }
 
   navigateToList() {
-    this.activePage = 'list';
+    this.set('routeData.section', 'list');
   }
 
   navigateToView() {
-    this.activePage = 'view';
+    this.set('routeData.section', 'view');
   }
 
   navigateToDiff() {
-    this.activePage = 'diff';
+    this.set('routeData.section', 'diff');
   }
 
-  activePageIs(loc) {
-    return this.activePage === loc;
+  pageIs(loc) {
+    return this.routeData.section === loc;
   }
 
-  hideViewChangesButton(activePage, change) {
+  hideViewChangesButton(change) {
     if (!change) {
       return true;
     }
-    return this.activePageIs('diff', activePage) || !this.hasChangedFilds(change);
-  }
-
-  _itemChanged(neww, oldd) {
-    // console.log('item changed', neww, oldd);
+    return this.pageIs('diff') || !this.hasChangedFilds(change);
   }
 
   _setIncidentId(id) {

@@ -2,7 +2,6 @@
 @license
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/paper-icon-button';
 import '@polymer/iron-icons/editor-icons.js';
 import 'etools-data-table';
 import { connect } from 'pwa-helpers/connect-mixin.js';
@@ -36,13 +35,13 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
           <etools-data-table-column class="col-3">
             Action
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-4">
             By user
           </etools-data-table-column>
           <etools-data-table-column class="col-4">
             Date and time
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
           </etools-data-table-column>
         </etools-data-table-header>
 
@@ -54,7 +53,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
                   [[item.action]]
                 </span>
               </span>
-              <span class="col-data col-3" data-col-header-label="Date and time">
+              <span class="col-data col-4" data-col-header-label="Date and time">
                 <span class="truncate">
                   [[getUserName(item.by_user)]]
                 </span>
@@ -64,9 +63,13 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
                   [[prettyDate(item.modified, 'D-MMM-YYYY hh:mm A')]]
                 </span>
               </span>
-              <span class="col-data col-2">
-                <paper-icon-button icon="assignment" on-click="showEntireIncident"></paper-icon-button>
-                <paper-icon-button icon="editor:mode-edit" on-click="showChanges" hidden$="[[!hasChangedFilds(item.change)]]"></paper-icon-button>
+              <span class="col-data col-1">
+                <a href="/incidents/history/[[incidentId]]/view/[[item.id]]">
+                  <iron-icon icon="assignment"></iron-icon>
+                </a>
+                <a href="/incidents/history/[[incidentId]]/diff/[[item.id]]" hidden$="[[!hasChangedFilds(item.change)]]">
+                  <iron-icon icon="editor:mode-edit"></iron-icon>
+                </a>
               </span>
             </div>
             <div slot="row-data-details">
@@ -88,6 +91,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
   static get properties() {
     return {
       history: Object,
+      incidentId: Number,
       workingItem: {
         type: Object,
         notify: true
@@ -103,10 +107,11 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
   }
 
   _stateChanged(state) {
-    if (!state || !state.staticData) {
+    if (!state || !state.staticData || !state.app) {
       return;
     }
 
+    this.incidentId = state.app.locationInfo.incidentId;
     this.users = state.staticData.users.map((user, key) => {
       user.id = key + 1;
       return user;
@@ -115,16 +120,6 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
 
   isCreateAction(action) {
     return action === 'create';
-  }
-
-  showChanges(event) {
-    this.set('workingItem', event.model.__data.item);
-    this.set('action', 'diff');
-  }
-
-  showEntireIncident(event) {
-    this.set('workingItem', event.model.__data.item);
-    this.set('action', 'view');
   }
 
   getChangedFileds(changesObj) {

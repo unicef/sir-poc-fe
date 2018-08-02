@@ -55,8 +55,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <app-route
         route="{{route}}"
         pattern="/incidents/:section/:id"
-        data="{{routeData}}"
-        tail="{{subroute}}">
+        data="{{routeData}}">
       </app-route>
 
       <template is="dom-if" if="[[_showTabs(page)]]">
@@ -72,7 +71,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
         <edit-incident name="edit"></edit-incident>
 
         <view-incident name="view"></view-incident>
-        <incident-history name="history"></incident-history>
+        <incident-history route="{{route}}" name="history"></incident-history>
         <incident-comments name="comments"></incident-comments>
 
       </iron-pages>
@@ -83,7 +82,6 @@ class IncidentsController extends connect(store)(PolymerElement) {
     return {
       page: String,
       route: Object,
-      subroute: Object,
       routeData: Object,
       isOffline: Boolean,
       viewPageTabs: {
@@ -142,7 +140,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
       ];
   }
   _showTabs(page) {
-    return ['view', 'comments', 'history'].indexOf(page) > -1;
+    return !!this.viewPageTabs.find(pt => pt.name === page);
   }
 
 }

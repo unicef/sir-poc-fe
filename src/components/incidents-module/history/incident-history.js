@@ -42,12 +42,14 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       <div class="card" hidden$="[[activePageIs('list', activePage)]]">
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-button on-tap="navigateToList"> back to changes list </paper-button>
+            <paper-button raised on-tap="navigateToList"> back to changes list </paper-button>
 
             <paper-button hidden$="[[hideViewChangesButton(activePage, workingItem.change)]]"
+                          raised
                           on-tap="navigateToDiff"> view changes only </paper-button>
 
             <paper-button hidden$="[[activePageIs('view', activePage)]]"
+                          raised
                           on-tap="navigateToView"> view entire incident </paper-button>
           </div>
         </div>

@@ -85,18 +85,10 @@ class IncidentsController extends connect(store)(PolymerElement) {
       route: Object,
       subroute: Object,
       routeData: Object,
+      isOffline: Boolean,
       viewPageTabs: {
         type: Array,
-        value: [
-          {
-            name: 'view',
-            tabLabel: 'VIEW'
-          },
-          {
-            name: 'comments',
-            tabLabel: 'COMMENTS'
-          }
-        ]
+        computed: 'getTabs(isOffline)'
       }
     };
   }
@@ -115,6 +107,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
+    if (state && state.app) {
+      this.isOffline = state.app.offline;
+    }
   }
 
   routeChanged(section) {
@@ -128,8 +123,26 @@ class IncidentsController extends connect(store)(PolymerElement) {
   pageChanged(page) {
     store.dispatch(lazyLoadIncidentPages(page));
   }
+
+  getTabs(offline) {
+    return [
+        {
+          name: 'view',
+          tabLabel: 'VIEW'
+        },
+        {
+          name: 'comments',
+          tabLabel: 'COMMENTS'
+        },
+        {
+          name: 'history',
+          tabLabel: 'HISTORY',
+          hidden: offline
+        }
+      ];
+  }
   _showTabs(page) {
-    return page === 'view' || page === 'comments';
+    return ['view', 'comments', 'history'].indexOf(page) > -1;
   }
 
 }

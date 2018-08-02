@@ -6,12 +6,16 @@ import '@polymer/paper-icon-button';
 import '@polymer/iron-icons/editor-icons.js';
 import 'etools-data-table';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+
 import { store } from '../../../redux/store.js';
-import '../../styles/shared-styles.js';
-import '../../styles/grid-layout-styles.js';
+import DateMixin from '../../common/date-mixin.js';
 import HistoryHelpers from './history-helpers.js';
 
-export class RevisionsList extends HistoryHelpers(connect(store)(PolymerElement))  {
+import '../../styles/shared-styles.js';
+import '../../styles/grid-layout-styles.js';
+
+
+export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
@@ -57,7 +61,7 @@ export class RevisionsList extends HistoryHelpers(connect(store)(PolymerElement)
               </span>
               <span class="col-data col-4" data-col-header-label="Date and time">
                 <span class="truncate">
-                  [[prettyDate(item.modified)]]
+                  [[prettyDate(item.modified, 'D-MMM-YYYY hh:mm A')]]
                 </span>
               </span>
               <span class="col-data col-2">
@@ -133,22 +137,6 @@ export class RevisionsList extends HistoryHelpers(connect(store)(PolymerElement)
   getUserName(userId) {
     let user = this.users.find(u => u.id === Number(userId));
     return user.first_name + ' ' + user.last_name;
-  }
-
-  // TODO: Remove this when the date behavior is ready
-  prettyDate(date) {
-    let today = new Date(date);
-    let dd = today.getDate();
-    let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear();
-
-    if (dd < 10) {
-      dd = '0' + dd;
-    }
-    if (mm < 10) {
-      mm = '0' + mm;
-    }
-    return dd + '-' + mm + '-' + yyyy;
   }
 
 }

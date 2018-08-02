@@ -21,6 +21,14 @@ export const Endpoints = {
     url: baseUrl + "/api/incidents/",
     method: 'GET'
   },
+  incidentsCommentsList: {
+    url: baseUrl + "/api/comments/",
+    method: 'GET'
+  },
+  addIncidentComment: {
+    url: baseUrl + "/api/comments/",
+    method: 'POST'
+  },
   newIncident: {
     url: baseUrl + "/api/incidents/",
     method: 'POST'

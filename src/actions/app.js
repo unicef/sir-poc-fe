@@ -83,6 +83,9 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
     case 'edit':
       import('../components/incidents-module/edit-incident.js');
       break;
+    case 'comments':
+      import('../components/incidents-module/incident-comments.js');
+      break;
     default:
       updatePath('/404/');
       break;
@@ -94,7 +97,6 @@ export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
   //
   // Note: `polymer build` doesn't like string concatenation in the import
   // statement, so break it up.
-  //TODO - check if already imported?
   switch (selectedModule) {
     case 'events':
       import('../components/events-module/events-controller.js');
@@ -116,7 +118,7 @@ export const updateLocationInfo = (path, queryParams) => {
     type: UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
-      page,      
+      page,
       queryParams,
       eventId,
       incidentId

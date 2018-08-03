@@ -60,7 +60,9 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
       <template is="dom-if" if="[[_showTabs(page)]]">
         <div class="tabs-container">
-          <etools-tabs tabs="[[viewPageTabs]]" selected="{{routeData.section}}">
+          <etools-tabs tabs="[[viewPageTabs]]"
+                       selected="{{routeData.section}}"
+                       on-click="tabClicked">
           </etools-tabs>
         </div>
       </template>
@@ -72,7 +74,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
         <view-incident name="view"></view-incident>
         <incident-comments name="comments"></incident-comments>
-        <incident-history-controller route="{{route}}" name="history"></incident-history-controller>
+        <incident-history-controller route="{{route}}" name="history" id="historyElem"></incident-history-controller>
       </iron-pages>
     `;
   }
@@ -103,6 +105,11 @@ class IncidentsController extends connect(store)(PolymerElement) {
     store.dispatch(fetchIncidentComments());
   }
 
+  tabClicked(e) {
+    if (this.page === 'history') {
+      this.$.historyElem.reset();
+    }
+  }
   _stateChanged(state) {
     if (state && state.app) {
       this.isOffline = state.app.offline;

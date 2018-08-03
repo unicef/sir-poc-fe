@@ -20,6 +20,9 @@ class EditIncident extends IncidentsBaseView {
   }
 
   save() {
+    if (!this.validate()) {
+      return;
+    }
     if (this.incident.unsynced && !this.state.app.offline) {
       this.store.dispatch(syncIncident(this.incident));
     } else {

@@ -29,19 +29,21 @@ class DatePickerLite extends PolymerElement {
       <paper-dropdown-menu id="ddMenu" 
                            label="[[label]]"
                            placeholder="&#8212;"
-                           value="[[readableDate]]" 
-                           hidden$="[[readonly]]">
+                           value="[[readableDate]]"
+                           hidden$="[[readonly]]"
+                           required="[[required]]"
+                           error-message="[[errorMessage]]">
         <calendar-lite slot="dropdown-content" on-date-change="datePicked">
         </calendar-lite>
       </paper-dropdown-menu>
 
+      <!-- TODO: why do we use this field? -->
       <paper-input type="text"
                    label="[[label]]"
                    placeholder="&#8212;"
                    readonly 
                    value="[[readableDate]]"
                    hidden$="[[!readonly]]"></paper-input>
-
     `;
   }
 
@@ -58,8 +60,37 @@ class DatePickerLite extends PolymerElement {
       },
       readableDate: String,
       label: String,
-      readonly: Boolean
+      readonly: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      required: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      autoValidate: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      errorMessage: {
+        type: String,
+        value: 'This field is required'
+      }
     };
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.$.ddMenu.addEventListener('blur', this._triggerAutoValidate.bind(this));
+  }
+
+  _triggerAutoValidate() {
+    if (this.autoValidate) {
+      this.validate();
+    }
   }
 
   _getDateString(date) {
@@ -92,6 +123,7 @@ class DatePickerLite extends PolymerElement {
 
     this.dateJustChanged = true;
     this.value = this._getDateString(this.date);
+    this._triggerAutoValidate();
   }
 
   valueChanged() {
@@ -109,6 +141,10 @@ class DatePickerLite extends PolymerElement {
       return;
     }
     this.date = new Date(this.value);
+  }
+
+  validate() {
+    return this.$.ddMenu.validate();
   }
 }
 

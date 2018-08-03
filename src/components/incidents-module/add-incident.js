@@ -17,6 +17,9 @@ class AddIncident extends IncidentsBaseView {
   }
 
   async save() {
+    if (!this.validate()) {
+      return;
+    }
     let successfull = await this.store.dispatch(addIncident(this.incident));
     if (typeof successfull === 'boolean' && successfull) {
       this.resetForm();

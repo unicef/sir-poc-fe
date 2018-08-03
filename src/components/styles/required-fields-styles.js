@@ -25,10 +25,12 @@ $_documentContainer.innerHTML = `<dom-module id="required-fields-styles">
       }
 
       paper-input[required],
+      paper-textarea[required],
       paper-input-container[required],
       etools-date-input[required],
       etools-dropdown-lite[required],
-      etools-dropdown-multi-lite[required] {
+      etools-dropdown-multi-lite[required],
+      datepicker-lite[required] {
         --paper-input-container-label: {
           @apply --required-star-style;
           color: var(--secondary-text-color, #737373)

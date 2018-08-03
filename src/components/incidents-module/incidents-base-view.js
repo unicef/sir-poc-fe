@@ -14,6 +14,7 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
+import {validateFields} from '../common/validations-helper.js';
 import {store} from '../../redux/store.js';
 import {IncidentModel} from './models/incident-model.js';
 import {selectIncident} from '../../reducers/incidents.js';
@@ -80,24 +81,34 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <datepicker-lite value="{{incident.incident_date}}" readonly="[[readonly]]"
-                             label="Incident date"></datepicker-lite>
+            <datepicker-lite id="incidentDate" 
+                             value="{{incident.incident_date}}" 
+                             readonly="[[readonly]]"
+                             label="Incident date" 
+                             required auto-validate
+                             error-message="Incident date is required"></datepicker-lite>
           </div>
           <div class="col col-3">
-            <paper-input readonly="[[readonly]]"
+            <paper-input id="incidentTime"
+                         readonly="[[readonly]]"
                          label="Incident time"
                          type="time"
-                         value="{{incident.incident_time}}">
+                         value="{{incident.incident_time}}"
+                         required auto-validate
+                         error-message="Incident time is required">
             </paper-input>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <etools-dropdown-lite readonly="[[readonly]]"
+            <etools-dropdown-lite id="country" 
+                                  readonly="[[readonly]]"
                                   label="Country"
                                   options="[[staticData.countries]]"
-                                  selected="{{incident.country}}">
+                                  selected="{{incident.country}}"
+                                  required auto-validate
+                                  error-message="Country is required">
             </etools-dropdown-lite>
           </div>
           <div class="col col-3">
@@ -109,13 +120,19 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
 
           <div class="col col-3">
-            <paper-input readonly="[[readonly]]" label="City" type="text"
-                         placeholder="&#8212;" value="{{incident.city}}"></paper-input>
+            <paper-input id="city" 
+                         readonly="[[readonly]]" label="City" type="text"
+                         placeholder="&#8212;" value="{{incident.city}}"
+                         required auto-validate
+                         error-message="City is required"></paper-input>
           </div>
 
           <div class="col col-3">
-            <paper-input readonly="[[readonly]]" label="Street" type="text"
-                         placeholder="&#8212;" value="{{incident.street}}"></paper-input>
+            <paper-input id="street"
+                         readonly="[[readonly]]" label="Street" type="text"
+                         placeholder="&#8212;" value="{{incident.street}}"
+                         required auto-validate
+                         error-message="Street is required"></paper-input>
           </div>
         </div>
 
@@ -125,7 +142,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <etools-info-tooltip class="info" open-on-click form-field-align 
+            <etools-info-tooltip class="info" open-on-click form-field-align
                                  hide-tooltip$="[[!selectedEvent.note]]">
               <etools-dropdown-lite slot="field" readonly="[[readonly]]"
                                     label="Event"
@@ -152,11 +169,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-3">
             <etools-info-tooltip class="info" open-on-click form-field-align
                                  hide-tooltip$="[[!selectedThreatCategory.description]]">
-              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+              <etools-dropdown-lite id="threatCategory"
+                                    slot="field" 
+                                    readonly="[[readonly]]"
                                     label="Threat category"
                                     options="[[staticData.threatCategories]]"
                                     selected="{{incident.threat_category}}"
-                                    selected-item="{{selectedThreatCategory}}">
+                                    selected-item="{{selectedThreatCategory}}"
+                                    required auto-validate
+                                    error-message="Threat category is required">
               </etools-dropdown-lite>
               <span slot="message">[[selectedThreatCategory.description]]</span>
             </etools-info-tooltip>
@@ -164,11 +185,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-3">
             <etools-info-tooltip class="info" open-on-click form-field-align
                                  hide-tooltip$="[[!selectedTarget.description]]">
-              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+              <etools-dropdown-lite id="target"
+                                    slot="field" 
+                                    readonly="[[readonly]]"
                                     label="Target"
                                     options="[[staticData.targets]]"
                                     selected="{{incident.target}}"
-                                    selected-item="{{selectedTarget}}">
+                                    selected-item="{{selectedTarget}}"
+                                    required auto-validate
+                                    error-message="Target is required">
               </etools-dropdown-lite>
               <span slot="message">[[selectedTarget.description]]</span>
             </etools-info-tooltip>
@@ -177,8 +202,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-textarea readonly="[[readonly]]" label="Injuries" placeholder="&#8212;"
-                            value="{{incident.injuries}}"></paper-textarea>
+            <paper-textarea id="injuries" readonly="[[readonly]]" label="Injuries" placeholder="&#8212;"
+                            value="{{incident.injuries}}" required auto-validate
+                            error-message="Injuries details required"></paper-textarea>
           </div>
         </div>
 
@@ -275,7 +301,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="row-h flex-c" hidden$="[[!eventNotOk(incident.event, state.app.offline)]]">
             <warn-message message="Can't save, selected event must be synced first"></warn-message>
           </div>
-          
+
           <div class="row-h flex-c">
             <div class="col col-12">
               <paper-button raised
@@ -444,6 +470,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   _hideInfoTooltip() {
     let arg = [...arguments];
     return !arg.some(a => typeof a === 'string' && a !== '');
+  }
+
+  validate() {
+    const fieldsToValidateSelectors = ['#incidentDate', '#incidentTime', '#country', '#street', '#city', '#injuries',
+      '#target', '#threatCategory'];
+    return validateFields(this, fieldsToValidateSelectors);
   }
 
 }

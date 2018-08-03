@@ -30,11 +30,11 @@ const HistoryHelpers = baseClass => class extends baseClass {
     };
   }
 
-  getLabelForField (key) {
+  getLabelForField(key) {
     return this.labelsMap[key] || key;
   }
 
-  hasChangedFilds (changesObj) {
+  hasChangedFilds(changesObj) {
     // length > 1 because changesObj.version does not count as a change
     return Object.keys(changesObj).length > 1;
   }

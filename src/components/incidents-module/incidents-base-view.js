@@ -1,50 +1,56 @@
 /**
-@license
-*/
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+ @license
+ */
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-checkbox/paper-checkbox.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
+
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-checkbox/paper-checkbox.js';
 import '../common/errors-box.js';
-import { store } from '../../redux/store.js';
-import { IncidentModel } from './models/incident-model.js';
-import { selectIncident } from '../../reducers/incidents.js';
-import { isOnNewIncident } from '../../reducers/app.js';
-import { fetchIncident } from '../../actions/incidents.js';
+import '../common/warn-message.js';
+import {store} from '../../redux/store.js';
+import {IncidentModel} from './models/incident-model.js';
+import {selectIncident} from '../../reducers/incidents.js';
+import {isOnNewIncident} from '../../reducers/app.js';
+import {fetchIncident} from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles">
         :host {
           @apply --layout-vertical;
         }
-        .details {
-          margin-top: 28px;
+
+        errors-box {
+          margin: 0 24px;
         }
       </style>
 
       <div class="card">
         <div class="row-h">
-          <h2> [[title]] </h2>
+          <h2>[[title]]</h2>
         </div>
-        <div class="row-h">
+        <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
 
         <div class="row-h">
-          <h3> Primary Person data </h3>
+          <h3>Primary Person data</h3>
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
+          <div class="col col-3">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Primary person"
                                   trigger-value-change-event
@@ -54,89 +60,30 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
 
-          <div class="col col-6">
+          <div class="col col-3">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Agency"
                                   options="[[staticData.agencies]]"
                                   selected="{{incident.primary_person.agency}}">
             </etools-dropdown-lite>
           </div>
-        </div>
 
-        <div class="row-h flex-c">
           <div class="col col-6">
             <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
           </div>
+
         </div>
 
         <div class="row-h">
-          <h3> Incident details </h3>
+          <h3>When & Where</h3>
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Event"
-                                  options="[[events]]"
-                                  selected="{{incident.event}}"
-                                  selected-item="{{selectedEvent}}">
-            </etools-dropdown-lite>
+          <div class="col col-3">
+            <datepicker-lite value="{{incident.incident_date}}" readonly="[[readonly]]"
+                             label="Incident date"></datepicker-lite>
           </div>
-          <div class="col col-6">
-            <div class="details"> [[selectedEvent.note]] </div>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Incident Type"
-                                  options="[[staticData.incidentCategories]]"
-                                  selected="{{incident.incident_category}}"
-                                  selected-item="{{selectedIncidentCategory}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details">
-              [[selectedIncidentCategory.description]]
-            </div>
-            <div class="details" hidden$="[[!selectedIncidentCategory.comment]]">
-              [[selectedIncidentCategory.comment]]
-            </div>
-          </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Threat category"
-                                  options="[[staticData.threatCategories]]"
-                                  selected="{{incident.threat_category}}"
-                                  selected-item="{{selectedThreatCategory}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details"> [[selectedThreatCategory.description]] </div>
-          </div>
-        </div>
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Target"
-                                  options="[[staticData.targets]]"
-                                  selected="{{incident.target}}"
-                                  selected-item="{{selectedTarget}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details"> [[selectedTarget.description]] </div>
-          </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <datepicker-lite value="{{incident.incident_date}}" readonly="[[readonly]]" label="Incident date"></datepicker-lite>
-          </div>
-          <div class="col col-6">
+          <div class="col col-3">
             <paper-input readonly="[[readonly]]"
                          label="Incident time"
                          type="time"
@@ -146,12 +93,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
+          <div class="col col-3">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Country"
                                   options="[[staticData.countries]]"
                                   selected="{{incident.country}}">
             </etools-dropdown-lite>
+          </div>
+          <div class="col col-3">
             <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Region"
                                   options="[[staticData.regions]]"
@@ -159,37 +108,108 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-dropdown-lite>
           </div>
 
-          <div class="col col-6">
-            <paper-input readonly="[[readonly]]" label="City" type="text" value="{{incident.city}}"></paper-input>
-            <paper-input readonly="[[readonly]]" label="Street" type="text" value="{{incident.street}}"></paper-input>
+          <div class="col col-3">
+            <paper-input readonly="[[readonly]]" label="City" type="text"
+                         placeholder="&#8212;" value="{{incident.city}}"></paper-input>
+          </div>
+
+          <div class="col col-3">
+            <paper-input readonly="[[readonly]]" label="Street" type="text"
+                         placeholder="&#8212;" value="{{incident.street}}"></paper-input>
+          </div>
+        </div>
+
+        <div class="row-h">
+          <h3>Incident details</h3>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align 
+                                 hide-tooltip$="[[!selectedEvent.note]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Event"
+                                    options="[[events]]"
+                                    selected="{{incident.event}}"
+                                    selected-item="{{selectedEvent}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedEvent.note]]</span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description, selectedIncidentCategory.comment)]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Incident Type"
+                                    options="[[staticData.incidentCategories]]"
+                                    selected="{{incident.incident_category}}"
+                                    selected-item="{{selectedIncidentCategory}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
+              </span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[!selectedThreatCategory.description]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Threat category"
+                                    options="[[staticData.threatCategories]]"
+                                    selected="{{incident.threat_category}}"
+                                    selected-item="{{selectedThreatCategory}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedThreatCategory.description]]</span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[!selectedTarget.description]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Target"
+                                    options="[[staticData.targets]]"
+                                    selected="{{incident.target}}"
+                                    selected-item="{{selectedTarget}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedTarget.description]]</span>
+            </etools-info-tooltip>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-input type="text" readonly="[[readonly]]" label="Injuries" value="{{incident.injuries}}"></paper-input>
-            <paper-input type="text" readonly="[[readonly]]" label="Incident Description" value="{{incident.description}}"></paper-input>
-            <paper-input type="text" readonly="[[readonly]]" label="Incident Note" value="{{incident.note}}"></paper-input>
-          </div>
-        </div>
-
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite readonly="[[readonly]]"
-                                  label="Criticality"
-                                  options="[[staticData.criticalities]]"
-                                  selected="{{incident.criticality}}"
-                                  selected-item="{{selectedCriticality}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
-            <div class="details"> [[selectedCriticality.description]] </div>
+            <paper-textarea readonly="[[readonly]]" label="Injuries" placeholder="&#8212;"
+                            value="{{incident.injuries}}"></paper-textarea>
           </div>
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-12" hidden$="[[!incident.incident_category]]">
+          <div class="col col-12">
+            <paper-textarea readonly="[[readonly]]" label="Incident Description" placeholder="&#8212;"
+                            value="{{incident.description}}"></paper-textarea>
+          </div>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            <paper-textarea readonly="[[readonly]]" label="Incident Note" placeholder="&#8212;"
+                            value="{{incident.note}}"></paper-textarea>
+          </div>
+        </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <etools-info-tooltip class="info" open-on-click form-field-align
+                                 hide-tooltip$="[[!selectedCriticality.description]]">
+              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
+                                    label="Criticality"
+                                    options="[[staticData.criticalities]]"
+                                    selected="{{incident.criticality}}"
+                                    selected-item="{{selectedCriticality}}">
+              </etools-dropdown-lite>
+              <span slot="message">[[selectedCriticality.description]]</span>
+            </etools-info-tooltip>
+          </div>
+          <div class="col col-9" hidden$="[[!incident.incident_category]]">
             <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category, staticData)]]"
                                         readonly="[[readonly]]"
                                         label="Weapons used"
@@ -199,35 +219,29 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
-                                  readonly="[[readonly]]"
+        <div class="row-h flex-c" hidden$="[[!isAccident(incident.incident_category, staticData)]]">
+          <div class="col col-3">
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Vehicle Type"
                                   options="[[staticData.vehicleTypes]]"
                                   selected="{{incident.vehicle_type}}">
             </etools-dropdown-lite>
           </div>
-          <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
-                                  readonly="[[readonly]]"
+          <div class="col col-3">
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Contributing factor"
                                   options="[[staticData.factors]]"
                                   selected="{{incident.contributing_factor}}">
             </etools-dropdown-lite>
           </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite hidden$="[[!isAccident(incident.incident_category, staticData)]]"
-                                  readonly="[[readonly]]"
+          <div class="col col-3">
+            <etools-dropdown-lite readonly="[[readonly]]"
                                   label="Crash Type"
                                   options="[[staticData.crashTypes]]"
                                   selected="{{incident.crash_type}}">
             </etools-dropdown-lite>
           </div>
-          <div class="col col-6">
+          <div class="col col-3">
             <paper-checkbox hidden$="[[!isAccident(incident.incident_category)]]"
                             checked="{{incident.near_miss}}"
                             disabled="[[readonly]]">
@@ -237,32 +251,33 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
+          <div class="col col-3">
             <paper-checkbox checked="{{incident.reported}}" disabled="[[readonly]]">Reported to police</paper-checkbox>
           </div>
-        </div>
-
-        <div class="row-h flex-c">
-          <div class="col col-6">
-            <paper-input hidden$="[[isNotReported(incident.reported)]]" readonly="[[readonly]]" label="Reported to" type="text" value="{{incident.reported_to}}"></paper-input>
+          <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
+            <paper-input readonly="[[readonly]]" label="Reported to"
+                         type="text" value="{{incident.reported_to}}" placeholder="&#8212;"></paper-input>
           </div>
-          <div class="col col-6">
-            <paper-input hidden$="[[isNotReported(incident.reported)]]" readonly="[[readonly]]" label="Responsible party" type="text" value="{{incident.responsible}}"></paper-input>
+          <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
+            <paper-input readonly="[[readonly]]"
+                         label="Responsible party" type="text" value="{{incident.responsible}}"
+                         placeholder="&#8212;"></paper-input>
           </div>
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <div class="row-h flex-c">
-            <div class="col col-12">
-              <span class="warning" hidden$="[[!state.app.offline]]">
-                Because there is no internet conenction the incident will be saved offine for now,
-                and you must sync it manually by saving it again when online
-              </span>
-            </div>
+          <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
+            <warn-message message="Because there is no internet conenction the event will be saved offine for now,
+                                    and you must sync it manually by saving it again when online">
+            </warn-message>
           </div>
+
+          <div class="row-h flex-c" hidden$="[[!eventNotOk(incident.event, state.app.offline)]]">
+            <warn-message message="Can't save, selected event must be synced first"></warn-message>
+          </div>
+          
           <div class="row-h flex-c">
             <div class="col col-12">
-              <p hidden$="[[!eventNotOk(incident.event, state.app.offline)]]"> Can't save, selected event must be synced first </p>
               <paper-button raised
                             on-click="save"
                             disabled$="[[eventNotOk(incident.event, state.app.offline)]]">
@@ -311,7 +326,27 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       staticData: Object,
       state: Object,
-      store: Object
+      store: Object,
+      selectedEvent: {
+        type: Object,
+        value: {}
+      },
+      selectedIncidentCategory: {
+        type: Object,
+        value: {}
+      },
+      selectedThreatCategory: {
+        type: Object,
+        value: {}
+      },
+      selectedTarget: {
+        type: Object,
+        value: {}
+      },
+      selectedCriticality: {
+        type: Object,
+        value: {}
+      }
     };
   }
 
@@ -403,6 +438,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
     let selectedEvent = this.events.find(event => event.id === eventId);
-    return !!selectedEvent.unsynced && !offline;
+    return selectedEvent.unsynced && !offline;
   }
+
+  _hideInfoTooltip() {
+    let arg = [...arguments];
+    return !arg.some(a => typeof a === 'string' && a !== '');
+  }
+
 }

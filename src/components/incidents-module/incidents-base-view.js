@@ -1,12 +1,12 @@
 /**
  @license
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -14,11 +14,10 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import {store} from '../../redux/store.js';
-import {IncidentModel} from './models/incident-model.js';
-import {selectIncident} from '../../reducers/incidents.js';
-import {isOnNewIncident} from '../../reducers/app.js';
-import {fetchIncident} from '../../actions/incidents.js';
+import { store } from '../../redux/store.js';
+import { IncidentModel } from './models/incident-model.js';
+import { selectIncident } from '../../reducers/incidents.js';
+import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 
@@ -124,7 +123,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <etools-info-tooltip class="info" open-on-click form-field-align 
+            <etools-info-tooltip class="info" open-on-click form-field-align
                                  hide-tooltip$="[[!selectedEvent.note]]">
               <etools-dropdown-lite slot="field" readonly="[[readonly]]"
                                     label="Event"
@@ -274,7 +273,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="row-h flex-c" hidden$="[[!eventNotOk(incident.event, state.app.offline)]]">
             <warn-message message="Can't save, selected event must be synced first"></warn-message>
           </div>
-          
+
           <div class="row-h flex-c">
             <div class="col col-12">
               <paper-button raised
@@ -304,14 +303,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Array,
         value: [
           {id: true, name: 'On Duty'},
-          {id: false, name: 'Off Duty'},
+          {id: false, name: 'Off Duty'}
         ]
       },
       reported: {
         type: Array,
         value: [
           {id: true, name: 'Reported'},
-          {id: false, name: 'Not Reported'},
+          {id: false, name: 'Not Reported'}
         ]
       },
       events: {
@@ -398,13 +397,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
     this.staticData = state.staticData;
 
-    this.events = state.events.list.map(elem => {
+    this.events = state.events.list.map((elem) => {
       elem.name = elem.description;
       return elem;
     });
 
     // TODO: this is TEMPORARY! user data should be more properly displayed
-    this.staticData.users = state.staticData.users.map(elem => {
+    this.staticData.users = state.staticData.users.map((elem) => {
       elem.name = elem.first_name + ' ' + elem.last_name;
       return elem;
     });
@@ -419,7 +418,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
 
-    let incident = this.staticData.incidentCategories.find(elem => {
+    let incident = this.staticData.incidentCategories.find((elem) => {
       return elem.id === incidentCategoryId;
     });
 
@@ -438,8 +437,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return selectedEvent.unsynced && !offline;
   }
 
-  _hideInfoTooltip() {
-    let arg = [...arguments];
+  _hideInfoTooltip(...arg) {
     return !arg.some(a => typeof a === 'string' && a !== '');
   }
 

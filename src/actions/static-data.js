@@ -32,7 +32,7 @@ export const loadAllStaticData = () => (dispatch) => {
 };
 
 export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
-  makeRequest(Endpoints.incidentCategories).then(result => {
+  makeRequest(Endpoints.incidentCategories).then((result) => {
     dispatch(receiveIncidentCategories(JSON.parse(result)));
   });
 };
@@ -45,7 +45,7 @@ const receiveIncidentCategories = (incidentCategories) => {
 };
 
 export const fetchAndStoreThreatCategories = () => (dispatch, getState) => {
-  makeRequest(Endpoints.threatCategories).then(result => {
+  makeRequest(Endpoints.threatCategories).then((result) => {
     dispatch(receiveThreatCategories(JSON.parse(result)));
   });
 };
@@ -58,7 +58,7 @@ const receiveThreatCategories = (threatCategories) => {
 };
 
 export const fetchAndStoreCriticalities = () => (dispatch, getState) => {
-  makeRequest(Endpoints.criticalities).then(result => {
+  makeRequest(Endpoints.criticalities).then((result) => {
     dispatch(receiveCriticalities(JSON.parse(result)));
   });
 };
@@ -71,7 +71,7 @@ const receiveCriticalities = (criticalities) => {
 };
 
 export const fetchAndStoreVehicleTypes = () => (dispatch, getState) => {
-  makeRequest(Endpoints.vehicleTypes).then(result => {
+  makeRequest(Endpoints.vehicleTypes).then((result) => {
     dispatch(receiveVehicleTypes(JSON.parse(result)));
   });
 };
@@ -84,7 +84,7 @@ const receiveVehicleTypes = (vehicleTypes) => {
 };
 
 export const fetchAndStoreCountries = () => (dispatch, getState) => {
-  makeRequest(Endpoints.countries).then(result => {
+  makeRequest(Endpoints.countries).then((result) => {
     dispatch(receiveCountries(JSON.parse(result)));
   });
 };
@@ -97,7 +97,7 @@ const receiveCountries = (countries) => {
 };
 
 export const fetchAndStoreAgencies = () => (dispatch, getState) => {
-  makeRequest(Endpoints.agencies).then(result => {
+  makeRequest(Endpoints.agencies).then((result) => {
     dispatch(receiveAgencies(JSON.parse(result)));
   });
 };
@@ -110,7 +110,7 @@ const receiveAgencies = (agencies) => {
 };
 
 export const fetchAndStoreRegions = () => (dispatch, getState) => {
-  makeRequest(Endpoints.regions).then(result => {
+  makeRequest(Endpoints.regions).then((result) => {
     dispatch(receiveRegions(JSON.parse(result)));
   });
 };
@@ -123,7 +123,7 @@ const receiveRegions = (regions) => {
 };
 
 export const fetchAndStoreFactors = () => (dispatch, getState) => {
-  makeRequest(Endpoints.factors).then(result => {
+  makeRequest(Endpoints.factors).then((result) => {
     dispatch(receiveFactors(JSON.parse(result)));
   });
 };
@@ -136,7 +136,7 @@ const receiveFactors = (factors) => {
 };
 
 export const fetchAndStoreTargets = () => (dispatch, getState) => {
-  makeRequest(Endpoints.targets).then(result => {
+  makeRequest(Endpoints.targets).then((result) => {
     dispatch(receiveTargets(JSON.parse(result)));
   });
 };
@@ -149,7 +149,7 @@ const receiveTargets = (targets) => {
 };
 
 export const fetchAndStoreWeapons = () => (dispatch, getState) => {
-  makeRequest(Endpoints.weapons).then(result => {
+  makeRequest(Endpoints.weapons).then((result) => {
     dispatch(receiveWeapons(JSON.parse(result)));
   });
 };
@@ -162,7 +162,7 @@ const receiveWeapons = (weapons) => {
 };
 
 export const fetchAndStoreUsers = () => (dispatch, getState) => {
-  makeRequest(Endpoints.users).then(result => {
+  makeRequest(Endpoints.users).then((result) => {
     dispatch(receiveUsers(JSON.parse(result)));
   });
 };
@@ -175,7 +175,7 @@ const receiveUsers = (users) => {
 };
 
 export const fetchAndStoreTeams = () => (dispatch, getState) => {
-  makeRequest(Endpoints.teams).then(result => {
+  makeRequest(Endpoints.teams).then((result) => {
     dispatch(receiveTeams(JSON.parse(result)));
   });
 };
@@ -188,7 +188,7 @@ const receiveTeams = (teams) => {
 };
 
 export const fetchAndStoreCrashTypes = () => (dispatch, getState) => {
-  makeRequest(Endpoints.crashTypes).then(result => {
+  makeRequest(Endpoints.crashTypes).then((result) => {
     dispatch(receiveCrashTypes(JSON.parse(result)));
   });
 };
@@ -199,6 +199,3 @@ const receiveCrashTypes = (crashTypes) => {
     crashTypes
   };
 };
-
-
-

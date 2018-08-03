@@ -39,7 +39,7 @@ class WarnMessage extends PolymerElement {
         type: String,
         value: ''
       }
-    }
+    };
   }
 
 }

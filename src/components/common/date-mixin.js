@@ -1,5 +1,5 @@
 const DateMixin = baseClass => class extends baseClass {
-  prettyDate (dateString, format, placeholder) {
+  prettyDate(dateString, format, placeholder) {
     let date = this._convertDate(dateString);
     return (!date) ? (placeholder ? placeholder : ''): this._utcDate(date, format);
   }
@@ -35,8 +35,6 @@ const DateMixin = baseClass => class extends baseClass {
     return (date instanceof Date === false) ? false : (date.toString() !== 'Invalid Date');
   }
 
-}
+};
 
-export default DateMixin
-
-
+export default DateMixin;

@@ -6,7 +6,7 @@ import {ListItemUtils} from './list-item-utils-mixin.js';
  * @mixinFunction
  * @appliesMixin EsmmMixins.ListItemUtils
  */
-export const CommonFunctionality = (superClass) => class extends ListItemUtils(superClass) {
+export const CommonFunctionality = superClass => class extends ListItemUtils(superClass) {
 
   static get properties() {
     return {
@@ -42,17 +42,13 @@ export const CommonFunctionality = (superClass) => class extends ListItemUtils(s
       },
       readonly: {
         type: Boolean,
-        value: function () {
-          return false;
-        },
+        value: () => false,
         reflectToAttribute: true,
         observer: '_readonlyChanged'
       },
       invalid: {
         type: Boolean,
-        value: function () {
-          return false;
-        },
+        value: () => false,
         reflectToAttribute: true
       },
       /** Makes the dropdown to show top or bottom where it will fit better */
@@ -119,7 +115,7 @@ export const CommonFunctionality = (superClass) => class extends ListItemUtils(s
       /** Stop autofocus from paper-dialog */
       disableOnFocusHandling: {
         type: Boolean,
-        value: function () {
+        value: function() {
           return this.disableOnFocusHandling || this.isIEBrowser();
         },
         reflectToAttribute: true
@@ -377,7 +373,7 @@ export const CommonFunctionality = (superClass) => class extends ListItemUtils(s
   _resizeOptionsListHeight() {
     let ironDrContent = this._getIronDropdownContent();
 
-    let dropdownContentHeightCheck = setInterval(function () {
+    let dropdownContentHeightCheck = setInterval(() => {
       // opened dropdown coordinates
       let openedDropdownCoord = ironDrContent.getBoundingClientRect();
 
@@ -401,7 +397,7 @@ export const CommonFunctionality = (superClass) => class extends ListItemUtils(s
         let optionsList = this._getOptionsList();
         optionsList.style.maxHeight = listOptionsComputedHeight + 'px';
       }
-    }.bind(this), 0);
+    }, 0);
   }
 
   _onDropdownOpen() {

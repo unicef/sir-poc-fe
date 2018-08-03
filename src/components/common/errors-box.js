@@ -136,7 +136,9 @@ class ErrorsBox extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    if (!state) { return; }
+    if (!state) {
+      return;
+    }
     this.serverErrors = state.errors.serverError;
   }
 

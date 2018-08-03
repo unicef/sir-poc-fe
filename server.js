@@ -20,7 +20,7 @@ function getSourcesPath(request) {
 
 // FOR TESTING ONLY
 // routes /api/ requests to the test server so we can test the build with
-// the same back-end used for development 
+// the same back-end used for development
 app.use('/api', proxy({target: 'http://localhost:8080'}));
 
 app.get(/.*service-worker\.js/, function(req, res) {
@@ -29,6 +29,10 @@ app.get(/.*service-worker\.js/, function(req, res) {
 
 app.get(/.*web-animations-next-lite.min\.js/, function(req, res) {
   res.sendFile(getSourcesPath(req) + 'node_modules/web-animations-js/web-animations-next-lite.min.js');
+});
+
+app.get(/.*moment.min\.js/, function(req, res) {
+  res.sendFile(getSourcesPath(req) + 'node_modules/moment/min/moment.min.js');
 });
 
 app.use('/', (req, res, next) => {

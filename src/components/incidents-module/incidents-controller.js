@@ -71,9 +71,8 @@ class IncidentsController extends connect(store)(PolymerElement) {
         <edit-incident name="edit"></edit-incident>
 
         <view-incident name="view"></view-incident>
-        <incident-history-controller route="{{route}}" name="history"></incident-history-controller>
         <incident-comments name="comments"></incident-comments>
-
+        <incident-history-controller route="{{route}}" name="history"></incident-history-controller>
       </iron-pages>
     `;
   }

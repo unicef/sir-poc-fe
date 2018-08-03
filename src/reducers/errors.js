@@ -1,4 +1,4 @@
-import { SERVER_ERROR, CLEAR_ERRORS } from '../actions/errors.js'
+import { SERVER_ERROR, CLEAR_ERRORS } from '../actions/errors.js';
 
 const noErrors = {
   serverError: null
@@ -18,6 +18,6 @@ const errors = (state = {serverError: ''}, action) => {
     default:
       return state;
   }
-}
+};
 
 export default errors;

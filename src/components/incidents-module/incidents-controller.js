@@ -106,7 +106,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   tabClicked(e) {
-    if (this.page === 'history') {
+    if (this.page === 'history' && this.$.historyElem && this.$.historyElem.reset) {
       this.$.historyElem.reset();
     }
   }

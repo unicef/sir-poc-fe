@@ -2,7 +2,7 @@
 @license
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-icons/image-icons.js';
 import 'etools-data-table';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
@@ -72,7 +72,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
                 <span title="View changes from previous version"
                       hidden$="[[!hasChangedFilds(item.change)]]">
                   <a href="/incidents/history/[[incidentId]]/diff/[[item.id]]">
-                    <iron-icon icon="editor:mode-edit"></iron-icon>
+                    <iron-icon icon="image:compare"></iron-icon>
                   </a>
                 </span>
               </span>

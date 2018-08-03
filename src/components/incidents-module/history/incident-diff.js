@@ -122,7 +122,7 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
       case 'country':
         return this.getNameFromId(value, 'countries');
       case 'incident_date':
-        return prettyDate(value);
+        return this.prettyDate(value);
       default:
         return value;
     }

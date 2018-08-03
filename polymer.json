@@ -14,38 +14,21 @@
   ],
   "extraDependencies": [
     "manifest.json",
+    "node_modules/moment/min/moment.min.js",
     "node_modules/@webcomponents/webcomponentsjs/*.js",
-    "node_modules/web-animations-js/web-animations-next-lite.min.js",
     "!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",
-    "node_modules/@webcomponents/webcomponentsjs/bundles/*.js"
+    "node_modules/@webcomponents/webcomponentsjs/bundles/*.js",
+    "node_modules/web-animations-js/web-animations-next-lite.min.js"
   ],
   "builds": [
     {
-      "name": "esm-bundled",
+      "name": "es6-bundled",
       "browserCapabilities": [
         "es2015",
         "modules"
       ],
       "js": {
         "minify": true
-      },
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
-      "addServiceWorker": true
-    },
-    {
-      "name": "es6-bundled",
-      "browserCapabilities": [
-        "es2015"
-      ],
-      "js": {
-        "minify": true,
-        "transformModulesToAmd": true
       },
       "css": {
         "minify": true

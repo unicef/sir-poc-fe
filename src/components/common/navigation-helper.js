@@ -1,6 +1,6 @@
 export function updatePath(newPath) {
   window.history.pushState({}, '', newPath);
-  window.dispatchEvent(new CustomEvent('location-changed'));
+  window.dispatchEvent(new Event('popstate'));
 }
 
 export function redirectToLogin() {

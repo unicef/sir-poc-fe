@@ -55,7 +55,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   trigger-value-change-event
                                   on-etools-selected-item-changed="_userSelected"
                                   options="[[staticData.users]]"
-                                  selected="{{incident.primary_person.index_number}}">
+                                  selected="{{incident.primary_person.id}}">
             </etools-dropdown-lite>
           </div>
 
@@ -384,7 +384,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
-    this.incident.primary_person.index_number = event.detail.selectedItem.index_number;
+    this.incident.primary_person.id = event.detail.selectedItem.id;
     this.incident.primary_person.first_name = event.detail.selectedItem.first_name;
     this.incident.primary_person.last_name = event.detail.selectedItem.last_name;
   }
@@ -404,10 +404,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
 
     // TODO: this is TEMPORARY! user data should be more properly displayed
-    this.staticData.users = state.staticData.users.map((elem, index) => {
+    this.staticData.users = state.staticData.users.map(elem => {
       elem.name = elem.first_name + ' ' + elem.last_name;
-      elem.index_number = index;
-      elem.id = index;
       return elem;
     });
   }

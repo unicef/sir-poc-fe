@@ -121,12 +121,17 @@ export const syncEvent = (event) => (dispatch, getState) => {
 }
 
 export const fetchAndStoreEvents = () => (dispatch, getState) => {
-  makeRequest(Endpoints.eventsList).then(result => {
-    dispatch(receiveEvents(JSON.parse(result)));
-  });
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.eventsList).then(result => {
+      dispatch(receiveEvents(JSON.parse(result)));
+    });
+  }
 };
 
 export const fetchEvent = (id) => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return;
+  }
   if (isNaN(id)) {
     updatePath('/events/list/');
     return;

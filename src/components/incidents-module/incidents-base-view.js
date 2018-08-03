@@ -17,11 +17,12 @@ import { isOnNewIncident } from '../../reducers/app.js';
 import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
+import '../styles/required-fields-styles.js';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
     return html`
-      <style include="shared-styles grid-layout-styles">
+      <style include="shared-styles grid-layout-styles required-fields-styles">
         :host {
           @apply --layout-vertical;
         }

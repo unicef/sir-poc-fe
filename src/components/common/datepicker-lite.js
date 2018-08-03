@@ -1,5 +1,5 @@
 'use strict';
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-input/paper-input.js';
 import 'calendar-lite/calendar-lite.js';
@@ -10,26 +10,37 @@ import 'calendar-lite/calendar-lite.js';
  */
 class DatePickerLite extends PolymerElement {
   static get template() {
+    // language=HTML
     return html`
       <style>
         calendar-lite {
           --my-elem-primary: var(--app-primary-color, #4285f4);
         }
+
         paper-dropdown-menu {
           width: 100%;
         }
+
         *[hidden] {
           display: none;
         }
       </style>
 
-      <paper-dropdown-menu id="ddMenu" label="[[label]]" value="[[readableDate]]" hidden$="[[readonly]]">
+      <paper-dropdown-menu id="ddMenu" 
+                           label="[[label]]"
+                           placeholder="&#8212;"
+                           value="[[readableDate]]" 
+                           hidden$="[[readonly]]">
         <calendar-lite slot="dropdown-content" on-date-change="datePicked">
         </calendar-lite>
       </paper-dropdown-menu>
 
-
-      <paper-input type="text" label="[[label]]" readonly value="[[readableDate]]" hidden$="[[!readonly]]"></paper-input>
+      <paper-input type="text"
+                   label="[[label]]"
+                   placeholder="&#8212;"
+                   readonly 
+                   value="[[readableDate]]"
+                   hidden$="[[!readonly]]"></paper-input>
 
     `;
   }

@@ -8,14 +8,13 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
-import 'etools-info-tooltip';
 import 'etools-data-table/etools-data-table.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
 
-
-import { store } from '../../redux/store.js';
+import {store} from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js'
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -33,7 +32,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         }
 
         etools-data-table-row[unsynced] {
-          --list-bg-color: var(--unsynced-item-bg-color, pink);
+          --list-bg-color: var(--unsynced-item-bg-color);
         }
 
         .col-data > span {
@@ -102,7 +101,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   <span>[[item.city]]</span>
               </span>
               <span class="col-data col-3" type="[[_getIncidentName(item.incident_category)]]"
-                  data-col-header-label="Incident Type">
+                    data-col-header-label="Incident Type">
               <span>[[_getIncidentName(item.incident_category)]]</span>
               </span>
               <span class="col-data col-2" data-col-header-label="Status">
@@ -110,9 +109,10 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   [[item.status]]
                 </template>
                 <template is="dom-if" if="[[item.unsynced]]">
-                  <etools-info-tooltip theme="light" open-on-click>
-                    <span slot="field"> Not Synced </span>
-                    <span slot="message"> This incident has not been sumitted to the server. Go to its edit page and save it when an internet connection is availale. </span>
+                  <etools-info-tooltip class="info" open-on-click>
+                    <span slot="field">Not Synced</span>
+                    <span slot="message">This incident has not been sumitted to the server. Go to its edit page and 
+                      save it when an internet connection is availale.</span>
                   </etools-info-tooltip>
                 </template>
               </span>

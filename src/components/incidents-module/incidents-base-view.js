@@ -18,7 +18,6 @@ import { validateFields, resetFieldsValidations } from '../common/validations-he
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
-import { isOnNewIncident } from '../../reducers/app.js';
 import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';

@@ -10,8 +10,8 @@
 
 import '@polymer/polymer/polymer-element.js';
 
-const $_documentContainer = document.createElement('template');
-$_documentContainer.innerHTML = `<dom-module id="required-fields-styles">
+const documentContainer = document.createElement('template');
+documentContainer.innerHTML = `<dom-module id="required-fields-styles">
   <template>
     <style>
       :host > * {
@@ -44,4 +44,4 @@ $_documentContainer.innerHTML = `<dom-module id="required-fields-styles">
   </template>
 </dom-module>`;
 
-document.head.appendChild($_documentContainer.content);
+document.head.appendChild(documentContainer.content);

@@ -6,14 +6,14 @@ $_documentContainer.innerHTML = `
   <custom-style>
     <style>
       html {
-        --primary-color: red;
+        --primary-color: #0099ff;
 
-        --app-primary-color: pink; /* TODO: we should switch to --promary-color as it's used by polymer elements */
-        --app-secondary-color: yellow;
+        --app-primary-color: #0099ff; /* TODO: we should switch to --promary-color as it's used by polymer elements */
+        --app-secondary-color: black;
 
         --light-primary-text-color: #fff;
-        --primary-text-color: green;
-        --secondary-text-color: violet;
+        --primary-text-color: rgba(0, 0, 0, 0.87);
+        --secondary-text-color: rgba(0, 0, 0, 0.54);
 
         --primary-warning-color: #ff9044;
         --secondary-warning-color: #cebc06;

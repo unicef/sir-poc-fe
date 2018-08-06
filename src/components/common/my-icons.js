@@ -10,7 +10,9 @@
 
 import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
 const documentContainer = document.createElement('template');
-documentContainer.innerHTML = `<iron-iconset-svg name="my-icons" size="24">
+/* eslint-disable */
+documentContainer.innerHTML = `
+<iron-iconset-svg name="my-icons" size="24">
   <svg>
     <defs>
       <g id="arrow-back">
@@ -28,5 +30,6 @@ documentContainer.innerHTML = `<iron-iconset-svg name="my-icons" size="24">
     </defs>
   </svg>
 </iron-iconset-svg>`;
+/* eslint-enable */
 
 document.head.appendChild(documentContainer.content);

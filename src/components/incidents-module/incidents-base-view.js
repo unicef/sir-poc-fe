@@ -136,7 +136,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
           <div class="col col-3">
             <etools-info-tooltip class="info" open-on-click form-field-align
-                                 hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description, selectedIncidentCategory.comment)]]">
+                                 hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
+                                   selectedIncidentCategory.comment)]]">
               <etools-dropdown-lite slot="field" readonly="[[readonly]]"
                                     label="Incident Type"
                                     options="[[staticData.incidentCategories]]"

@@ -18,8 +18,8 @@ export const OPEN_SNACKBAR = 'OPEN_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
 export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
 
-//TODO: break this up into smaller files
-//TODO: add a sync data action when app is back online
+// TODO: break this up into smaller files
+// TODO: add a sync data action when app is back online
 
 let snackbarTimer;
 
@@ -42,8 +42,10 @@ export const showSnackbar = () => (dispatch) => {
     dispatch({ type: CLOSE_SNACKBAR }), 3000);
 };
 
-export const updateOffline = (offline) => (dispatch, getState) => {
-  if (!getState()) { return; }
+export const updateOffline = offline => (dispatch, getState) => {
+  if (!getState()) {
+    return;
+  }
   // Show the snackbar, unless this is the first load of the page.
   if (getState().app.offline !== undefined) {
     dispatch(showSnackbar());
@@ -54,8 +56,8 @@ export const updateOffline = (offline) => (dispatch, getState) => {
   });
 };
 
-export const lazyLoadEventPages = (page) => (dispatch, getState) => {
-  switch(page) {
+export const lazyLoadEventPages = page => (dispatch, getState) => {
+  switch (page) {
     case 'list':
       import('../components/events-module/events-list.js');
       break;
@@ -72,10 +74,10 @@ export const lazyLoadEventPages = (page) => (dispatch, getState) => {
       updatePath('/404/');
       break;
   }
-}
+};
 
-export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
-  switch(page) {
+export const lazyLoadIncidentPages = page => (dispatch, getState) => {
+  switch (page) {
     case 'list':
       import('../components/incidents-module/incidents-list.js');
       break;
@@ -90,6 +92,7 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
       break;
     case 'history':
       import('../components/incidents-module/history/incident-history-controller.js');
+      break;
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
       break;
@@ -97,9 +100,9 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
       updatePath('/404/');
       break;
   }
-}
+};
 
-export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
+export const lazyLoadModules = selectedModule => (dispatch, getState) => {
   // Import the page component on demand.
   //
   // Note: `polymer build` doesn't like string concatenation in the import
@@ -115,7 +118,7 @@ export const lazyLoadModules = (selectedModule) => (dispatch, getState) => {
       import('../components/non-found-module/404.js');
       break;
   }
-}
+};
 
 export const updateLocationInfo = (path, queryParams) => {
 
@@ -131,9 +134,9 @@ export const updateLocationInfo = (path, queryParams) => {
       incidentId
     }
   };
-}
+};
 
-function extractInfoFromPath(path) {
+const extractInfoFromPath = (path) => {
   const splitPath = (path || '').slice(1).split('/');
   let selectedModule = splitPath[0];
   let page = splitPath[1] || '';
@@ -145,6 +148,4 @@ function extractInfoFromPath(path) {
     incidentId = splitPath[2] || '';
   }
   return [selectedModule, page, eventId, incidentId];
-}
-
-
+};

@@ -118,6 +118,7 @@ class ErrorsBox extends connect(store)(PolymerElement) {
       if (serverErrors[field] instanceof Array && serverErrors[field].length > 0) {
         let fieldErrors = serverErrors[field].map(e => field + ' - ' + e);
         errsArr = [...errsArr, ...fieldErrors];
+        continue;
       }
 
       if (typeof serverErrors[field] === 'object') {

@@ -60,7 +60,7 @@ class DisplayComment extends DateMixin(PolymerElement) {
     if (userId === null || userId === undefined) {
       return 'N/A';
     }
-    let user = allUsers.find(u => Number(u.id) === Number(userId));
+    let user = this.allUsers.find(u => Number(u.id) === Number(userId));
     if (user) {
       return user.name;
     }

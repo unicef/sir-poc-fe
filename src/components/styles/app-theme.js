@@ -6,25 +6,25 @@ $_documentContainer.innerHTML = `
   <custom-style>
     <style>
       html {
-        --primary-color: #0099ff;
-        
-        --app-primary-color: #0099ff; /* TODO: we should switch to --promary-color as it's used by polymer elements */
-        --app-secondary-color: black;
-        
+        --primary-color: red;
+
+        --app-primary-color: pink; /* TODO: we should switch to --promary-color as it's used by polymer elements */
+        --app-secondary-color: yellow;
+
         --light-primary-text-color: #fff;
-        --primary-text-color: rgba(0, 0, 0, 0.87);
-        --secondary-text-color: rgba(0, 0, 0, 0.54);
-        
+        --primary-text-color: green;
+        --secondary-text-color: violet;
+
         --primary-warning-color: #ff9044;
         --secondary-warning-color: #cebc06;
         --ternary-warning-color: #fef9cd;
-        
+
         --primary-error-color: #ea4022;
         --secondary-error-color: #f8d7da;
-        
+
         --menu-selected-bg-color: #e8e8e8;
         --unsynced-item-bg-color: var(--secondary-error-color);
-        
+
       }
     </style>
   </custom-style>`;

@@ -14,7 +14,7 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import {validateFields} from '../common/validations-helper.js';
+import {validateFields, resetFieldsValidations} from '../common/validations-helper.js';
 import {store} from '../../redux/store.js';
 import {IncidentModel} from './models/incident-model.js';
 import {selectIncident} from '../../reducers/incidents.js';
@@ -52,12 +52,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <etools-dropdown-lite readonly="[[readonly]]"
+            <etools-dropdown-lite id="primaryPerson"
+                                  readonly="[[readonly]]"
                                   label="Primary person"
                                   trigger-value-change-event
                                   on-etools-selected-item-changed="_userSelected"
                                   options="[[staticData.users]]"
-                                  selected="{{incident.primary_person.id}}">
+                                  selected="{{incident.primary_person.id}}" 
+                                  required auto-validate
+                                  error-message="Primary person is required">
             </etools-dropdown-lite>
           </div>
 
@@ -156,11 +159,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-3">
             <etools-info-tooltip class="info" open-on-click form-field-align
                                  hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description, selectedIncidentCategory.comment)]]">
-              <etools-dropdown-lite slot="field" readonly="[[readonly]]"
-                                    label="Incident Type"
+              <etools-dropdown-lite id="incidentCat"
+                                    slot="field" 
+                                    readonly="[[readonly]]"
+                                    label="Incident category"
                                     options="[[staticData.incidentCategories]]"
                                     selected="{{incident.incident_category}}"
-                                    selected-item="{{selectedIncidentCategory}}">
+                                    selected-item="{{selectedIncidentCategory}}" 
+                                    required auto-validate
+                                    error-message="Incident category is required">
               </etools-dropdown-lite>
               <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
               </span>
@@ -204,14 +211,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-12">
             <paper-textarea id="injuries" readonly="[[readonly]]" label="Injuries" placeholder="&#8212;"
                             value="{{incident.injuries}}" required auto-validate
-                            error-message="Injuries details required"></paper-textarea>
+                            error-message="Injuries details are required"></paper-textarea>
           </div>
         </div>
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-textarea readonly="[[readonly]]" label="Incident Description" placeholder="&#8212;"
-                            value="{{incident.description}}"></paper-textarea>
+            <paper-textarea id="description" readonly="[[readonly]]" label="Incident Description" placeholder="&#8212;"
+                            value="{{incident.description}}" required auto-validate
+                            error-message="Description is required"></paper-textarea>
           </div>
         </div>
 
@@ -372,6 +380,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
+      },
+      fieldsToValidateSelectors: {
+        type: Array,
+        value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
+          '#city', '#incidentCat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }
@@ -471,9 +484,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   validate() {
-    const fieldsToValidateSelectors = ['#incidentDate', '#incidentTime', '#country', '#street', '#city', '#injuries',
-      '#target', '#threatCategory'];
-    return validateFields(this, fieldsToValidateSelectors);
+    return validateFields(this, this.fieldsToValidateSelectors);
+  }
+
+  resetValidations() {
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
 }

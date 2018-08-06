@@ -32,6 +32,7 @@ class DatePickerLite extends PolymerElement {
                            value="[[readableDate]]"
                            hidden$="[[readonly]]"
                            required="[[required]]"
+                           invalid="{{invalid}}"
                            error-message="[[errorMessage]]">
         <calendar-lite slot="dropdown-content" on-date-change="datePicked">
         </calendar-lite>
@@ -78,6 +79,10 @@ class DatePickerLite extends PolymerElement {
       errorMessage: {
         type: String,
         value: 'This field is required'
+      },
+      invalid: {
+        type: Boolean,
+        value: false
       }
     };
   }

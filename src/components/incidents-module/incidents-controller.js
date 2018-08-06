@@ -129,6 +129,12 @@ class IncidentsController extends connect(store)(PolymerElement) {
       updatePath('/');
     }
     store.dispatch(lazyLoadIncidentPages(page));
+
+    const newIncidentPage = this.shadowRoot.querySelector('add-incident');
+    if (page === 'new' && newIncidentPage instanceof PolymerElement) {
+      newIncidentPage.resetValidations();
+    }
+
   }
 
   getTabs(offline) {

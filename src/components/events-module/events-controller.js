@@ -28,8 +28,7 @@ class EventsController extends connect(store)(PolymerElement) {
       <app-route
         route="{{route}}"
         pattern="/events/:section/:id"
-        data="{{routeData}}"
-        tail="{{subroute}}">
+        data="{{routeData}}">
       </app-route>
 
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
@@ -45,7 +44,6 @@ class EventsController extends connect(store)(PolymerElement) {
     return {
       page: String,
       route: Object,
-      subroute: Object,
       routeData: Object
     };
   }

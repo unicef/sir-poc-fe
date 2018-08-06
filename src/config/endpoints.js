@@ -37,6 +37,10 @@ export const Endpoints = {
     url: baseUrl + "/api/incidents/<%=id%>/",
     method: 'GET'
   },
+  getIncidentHistory: {
+    url: baseUrl + "/api/incidents/<%=id%>/history/",
+    method: 'GET'
+  },
   editIncident: {
     url: baseUrl + "/api/incidents/<%=id%>/",
     method: 'PATCH'

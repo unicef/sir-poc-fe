@@ -154,15 +154,19 @@ export const syncIncident = (newIncident) => (dispatch, getState) => {
 }
 
 export const fetchIncidents = () => (dispatch, getState) => {
-  makeRequest(Endpoints.incidentsList).then((result) => {
-    dispatch(receiveIncidents(JSON.parse(result)));
-  });
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentsList).then((result) => {
+      dispatch(receiveIncidents(JSON.parse(result)));
+    });
+  }
 }
 
 export const fetchIncidentComments = () => (dispatch, getState) => {
-  makeRequest(Endpoints.incidentsCommentsList).then((result) => {
-    dispatch(receiveIncidentComments(JSON.parse(result)));
-  });
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentsCommentsList).then((result) => {
+      dispatch(receiveIncidentComments(JSON.parse(result)));
+    });
+  }
 }
 
 export const updateEventIdsInIncidents = (oldId, newId) => (dispatch) => {
@@ -170,6 +174,9 @@ export const updateEventIdsInIncidents = (oldId, newId) => (dispatch) => {
 }
 
 export const fetchIncident = (id) => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return;
+  }
   if (isNaN(id)) {
     updatePath('/incidents/list/');
     return;

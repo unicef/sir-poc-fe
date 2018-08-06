@@ -23,7 +23,12 @@ export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
 
 let snackbarTimer;
 
-export const storeReady = () => (dispatch) => {
+export const storeReady = () => (dispatch, getState) => {
+  let state = getState();
+  if (state && state.app && state.app.offline) {
+    return;
+  }
+
   dispatch(fetchAndStoreEvents());
   dispatch(loadAllStaticData());
 };
@@ -83,6 +88,8 @@ export const lazyLoadIncidentPages = (page) => (dispatch, getState) => {
     case 'edit':
       import('../components/incidents-module/edit-incident.js');
       break;
+    case 'history':
+      import('../components/incidents-module/history/incident-history-controller.js');
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
       break;
@@ -130,8 +137,8 @@ function extractInfoFromPath(path) {
   const splitPath = (path || '').slice(1).split('/');
   let selectedModule = splitPath[0];
   let page = splitPath[1] || '';
-  let eventId='';
-  let incidentId='';
+  let eventId = '';
+  let incidentId = '';
   if (selectedModule === 'events') {
     eventId = splitPath[2] || '';
   } else {

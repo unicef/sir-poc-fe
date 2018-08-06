@@ -55,13 +55,14 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <app-route
         route="{{route}}"
         pattern="/incidents/:section/:id"
-        data="{{routeData}}"
-        tail="{{subroute}}">
+        data="{{routeData}}">
       </app-route>
 
       <template is="dom-if" if="[[_showTabs(page)]]">
         <div class="tabs-container">
-          <etools-tabs tabs="[[viewPageTabs]]" selected="{{routeData.section}}">
+          <etools-tabs tabs="[[viewPageTabs]]"
+                       selected="{{routeData.section}}"
+                       on-click="tabClicked">
           </etools-tabs>
         </div>
       </template>
@@ -73,7 +74,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
         <view-incident name="view"></view-incident>
         <incident-comments name="comments"></incident-comments>
-
+        <incident-history-controller route="{{route}}" name="history" id="historyElem"></incident-history-controller>
       </iron-pages>
     `;
   }
@@ -82,20 +83,11 @@ class IncidentsController extends connect(store)(PolymerElement) {
     return {
       page: String,
       route: Object,
-      subroute: Object,
       routeData: Object,
+      isOffline: Boolean,
       viewPageTabs: {
         type: Array,
-        value: [
-          {
-            name: 'view',
-            tabLabel: 'VIEW'
-          },
-          {
-            name: 'comments',
-            tabLabel: 'COMMENTS'
-          }
-        ]
+        computed: 'getTabs(isOffline)'
       }
     };
   }
@@ -113,7 +105,15 @@ class IncidentsController extends connect(store)(PolymerElement) {
     store.dispatch(fetchIncidentComments());
   }
 
+  tabClicked(e) {
+    if (this.page === 'history' && this.$.historyElem && this.$.historyElem.reset) {
+      this.$.historyElem.reset();
+    }
+  }
   _stateChanged(state) {
+    if (state && state.app) {
+      this.isOffline = state.app.offline;
+    }
   }
 
   routeChanged(section) {
@@ -125,10 +125,31 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   pageChanged(page) {
+    if (page === 'history' && this.isOffline) {
+      updatePath('/');
+    }
     store.dispatch(lazyLoadIncidentPages(page));
   }
+
+  getTabs(offline) {
+    return [
+        {
+          name: 'view',
+          tabLabel: 'VIEW'
+        },
+        {
+          name: 'comments',
+          tabLabel: 'COMMENTS'
+        },
+        {
+          name: 'history',
+          tabLabel: 'HISTORY',
+          hidden: offline
+        }
+      ];
+  }
   _showTabs(page) {
-    return page === 'view' || page === 'comments';
+    return !!this.viewPageTabs.find(pt => pt.name === page);
   }
 
 }

@@ -32,7 +32,7 @@ class DisplayComment extends DateMixin(PolymerElement) {
       <div class="container">
 
           <div class="username-and-date">
-            <div class="username">[[_getUsername(comment.last_modift_user)]]</div>
+            <div class="username">[[_getUsername(comment.last_modify_user)]]</div>
             <div class="date">[[prettyDate(comment.created)]]</div>
           </div>
 
@@ -60,7 +60,7 @@ class DisplayComment extends DateMixin(PolymerElement) {
     if (userId === null || userId === undefined) {
       return 'N/A';
     }
-    let user = allUsers.find(u => Number(u.id) === Number(userId));
+    let user = this.allUsers.find(u => Number(u.id) === Number(userId));
     if (user) {
       return user.name;
     }

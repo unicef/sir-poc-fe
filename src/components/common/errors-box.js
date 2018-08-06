@@ -56,6 +56,9 @@ class ErrorsBox extends connect(store)(PolymerElement) {
           background-color: var(--primary-error-color);
           color: var(--light-primary-text-color);
         }
+        .cancel-li-display {
+          display: block;
+        }
       </style>
 
       <div class="errors-box-header">
@@ -64,7 +67,7 @@ class ErrorsBox extends connect(store)(PolymerElement) {
 
       <ul>
         <template is="dom-repeat" items=[[preparedErrors]]>
-          <li>[[item]]</li>
+          <li class$="[[getItemClass(item)]]">[[item]]</li>
         </template>
       </ul>
 
@@ -104,21 +107,36 @@ class ErrorsBox extends connect(store)(PolymerElement) {
       errs = [...errors];
     }
     if (serverErrors && serverErrors.constructor === Object && Object.keys(serverErrors).length > 0) {
-      let serverErrs = this._prepareServerErrors(serverErrors);
+      let serverErrs = this._getServerErrorsArray(serverErrors);
       errs = [...errs, ...serverErrs];
     }
     return errs;
   }
 
-  _prepareServerErrors(serverErrors) {
-    let errs = [];
+  _getServerErrorsArray(serverErrors) {
+    let errsArr = [];
+
     for (let field in serverErrors) {
       if (serverErrors[field] instanceof Array && serverErrors[field].length > 0) {
         let fieldErrors = serverErrors[field].map(e => field + ' - ' + e);
-        errs = [...errs, ...fieldErrors];
+        errsArr = [...errsArr, ...fieldErrors];
+        continue;
+      }
+
+      if (typeof serverErrors[field] === 'object') {
+        errsArr.push(field + ':');
+        let nestedErr = [];
+        for (let subfield in serverErrors[field]) {
+          nestedErr.push(' ' + subfield + ' - ' + serverErrors[field][subfield]);
+        }
+        errsArr = [...errsArr, ...nestedErr];
       }
     }
-    return errs;
+    return errsArr;
+  }
+
+  getItemClass(item) {
+    return item.startsWith(' ') ? 'cancel-li-display' : '';
   }
 
   _dismissErrors() {

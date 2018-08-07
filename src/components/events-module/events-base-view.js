@@ -31,7 +31,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
           margin: 0 24px;
         }
       </style>
-      
+
       <div class="card">
         <div class="row-h">
           <h2>[[title]]</h2>
@@ -49,7 +49,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <datepicker-lite label="End date" readonly="[[readonly]]" value="{{event.end_date}}"></datepicker-lite>
           </div>
           <div class="col col-6">
-            <paper-input label="Location" placeholder="&#8212;" type="text" 
+            <paper-input label="Location" placeholder="&#8212;" type="text"
                          readonly="[[readonly]]" value="{{event.location}}"></paper-input>
           </div>
         </div>
@@ -88,7 +88,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   static get properties() {
     return {
       event: {
-        type: Object,
+        type: Object
       },
       readonly: {
         type: Boolean,

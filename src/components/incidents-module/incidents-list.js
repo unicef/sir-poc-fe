@@ -15,7 +15,7 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import {store} from '../../redux/store.js';
-import PaginationMixin from '../common/pagination-mixin.js'
+import PaginationMixin from '../common/pagination-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../styles/shared-styles.js';
@@ -111,7 +111,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Go to its edit page and 
+                    <span slot="message">This incident has not been sumitted to the server. Go to its edit page and
                       save it when an internet connection is availale.</span>
                   </etools-info-tooltip>
                 </template>
@@ -165,7 +165,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         type: Array,
         value: [
           {id: 'synced', name: 'Synced'},
-          {id: 'unsynced', name: 'Not Synced'},
+          {id: 'unsynced', name: 'Not Synced'}
         ]
       },
       selectedSyncStatuses: {

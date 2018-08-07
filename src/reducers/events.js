@@ -1,11 +1,10 @@
+import { createSelector } from 'reselect';
 import {
   EDIT_EVENT_SUCCESS,
   ADD_EVENT_SUCCESS,
   RECEIVE_EVENTS,
   RECEIVE_EVENT
 } from '../actions/events.js';
-
-import { createSelector } from 'reselect';
 
 const events = (state = {list: []}, action) => {
   switch (action.type) {
@@ -32,7 +31,7 @@ const events = (state = {list: []}, action) => {
     default:
       return state;
   }
-}
+};
 
 export default events;
 
@@ -43,13 +42,12 @@ const getEditedList = (list, action) => {
     }
     return action.event;
   });
-}
+};
 
 const getRefreshedEvents = (oldEvents, newEvents) => {
   let unsynced = oldEvents.filter(elem => elem.unsynced);
   return [...newEvents, ...unsynced];
-}
-
+};
 
 // ---------- SELECTORS ---------
 const eventsSelector = state => state.events.list;
@@ -63,4 +61,4 @@ export const selectEvent = createSelector(
     }
     return events.find(ev => String(ev.id) === String(eventId)) || null;
   }
-)
+);

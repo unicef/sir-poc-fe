@@ -13,7 +13,7 @@ const defaultStaticData = {
     targets: [],
     weapons: [],
     users: [],
-    teams: [],
+    teams: []
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
@@ -85,6 +85,6 @@ const staticData = (state = defaultStaticData, action) => {
     default:
       return state;
   }
-}
+};
 
 export default staticData;

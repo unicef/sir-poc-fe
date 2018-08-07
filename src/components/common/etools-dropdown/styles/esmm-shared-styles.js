@@ -1,9 +1,9 @@
 import '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-const $_documentContainer = document.createElement('template');
-$_documentContainer.setAttribute('style', 'display: none;');
+const documentContainer = document.createElement('template');
+documentContainer.setAttribute('style', 'display: none;');
 
-$_documentContainer.innerHTML = `<custom-style>
+documentContainer.innerHTML = `<custom-style>
   <style>
     /* esmm global styles */
     html {
@@ -48,4 +48,4 @@ $_documentContainer.innerHTML = `<custom-style>
   </template>
 </dom-module>`;
 
-document.head.appendChild($_documentContainer.content);
+document.head.appendChild(documentContainer.content);

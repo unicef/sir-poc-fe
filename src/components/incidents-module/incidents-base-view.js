@@ -1,12 +1,12 @@
 /**
  @license
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -14,12 +14,11 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import {validateFields, resetFieldsValidations} from '../common/validations-helper.js';
-import {store} from '../../redux/store.js';
-import {IncidentModel} from './models/incident-model.js';
-import {selectIncident} from '../../reducers/incidents.js';
-import {isOnNewIncident} from '../../reducers/app.js';
-import {fetchIncident} from '../../actions/incidents.js';
+import { validateFields, resetFieldsValidations } from '../common/validations-helper.js';
+import { store } from '../../redux/store.js';
+import { IncidentModel } from './models/incident-model.js';
+import { selectIncident } from '../../reducers/incidents.js';
+import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
@@ -58,7 +57,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                   trigger-value-change-event
                                   on-etools-selected-item-changed="_userSelected"
                                   options="[[staticData.users]]"
-                                  selected="{{incident.primary_person.id}}" 
+                                  selected="{{incident.primary_person.id}}"
                                   required auto-validate
                                   error-message="Primary person is required">
             </etools-dropdown-lite>
@@ -84,10 +83,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <datepicker-lite id="incidentDate" 
-                             value="{{incident.incident_date}}" 
+            <datepicker-lite id="incidentDate"
+                             value="{{incident.incident_date}}"
                              readonly="[[readonly]]"
-                             label="Incident date" 
+                             label="Incident date"
                              required auto-validate
                              error-message="Incident date is required"></datepicker-lite>
           </div>
@@ -105,7 +104,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <etools-dropdown-lite id="country" 
+            <etools-dropdown-lite id="country"
                                   readonly="[[readonly]]"
                                   label="Country"
                                   options="[[staticData.countries]]"
@@ -123,7 +122,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
 
           <div class="col col-3">
-            <paper-input id="city" 
+            <paper-input id="city"
                          readonly="[[readonly]]" label="City" type="text"
                          placeholder="&#8212;" value="{{incident.city}}"
                          required auto-validate
@@ -158,14 +157,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
           <div class="col col-3">
             <etools-info-tooltip class="info" open-on-click form-field-align
-                                 hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description, selectedIncidentCategory.comment)]]">
+                                 hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
+                                   selectedIncidentCategory.comment)]]">
               <etools-dropdown-lite id="incidentCat"
-                                    slot="field" 
+                                    slot="field"
                                     readonly="[[readonly]]"
                                     label="Incident category"
                                     options="[[staticData.incidentCategories]]"
                                     selected="{{incident.incident_category}}"
-                                    selected-item="{{selectedIncidentCategory}}" 
+                                    selected-item="{{selectedIncidentCategory}}"
                                     required auto-validate
                                     error-message="Incident category is required">
               </etools-dropdown-lite>
@@ -177,7 +177,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-info-tooltip class="info" open-on-click form-field-align
                                  hide-tooltip$="[[!selectedThreatCategory.description]]">
               <etools-dropdown-lite id="threatCategory"
-                                    slot="field" 
+                                    slot="field"
                                     readonly="[[readonly]]"
                                     label="Threat category"
                                     options="[[staticData.threatCategories]]"
@@ -193,7 +193,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <etools-info-tooltip class="info" open-on-click form-field-align
                                  hide-tooltip$="[[!selectedTarget.description]]">
               <etools-dropdown-lite id="target"
-                                    slot="field" 
+                                    slot="field"
                                     readonly="[[readonly]]"
                                     label="Target"
                                     options="[[staticData.targets]]"
@@ -339,14 +339,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Array,
         value: [
           {id: true, name: 'On Duty'},
-          {id: false, name: 'Off Duty'},
+          {id: false, name: 'Off Duty'}
         ]
       },
       reported: {
         type: Array,
         value: [
           {id: true, name: 'Reported'},
-          {id: false, name: 'Not Reported'},
+          {id: false, name: 'Not Reported'}
         ]
       },
       events: {
@@ -438,13 +438,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
     this.staticData = state.staticData;
 
-    this.events = state.events.list.map(elem => {
+    this.events = state.events.list.map((elem) => {
       elem.name = elem.description;
       return elem;
     });
 
     // TODO: this is TEMPORARY! user data should be more properly displayed
-    this.staticData.users = state.staticData.users.map(elem => {
+    this.staticData.users = state.staticData.users.map((elem) => {
       elem.name = elem.first_name + ' ' + elem.last_name;
       return elem;
     });
@@ -459,7 +459,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
 
-    let incident = this.staticData.incidentCategories.find(elem => {
+    let incident = this.staticData.incidentCategories.find((elem) => {
       return elem.id === incidentCategoryId;
     });
 
@@ -478,8 +478,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return selectedEvent.unsynced && !offline;
   }
 
-  _hideInfoTooltip() {
-    let arg = [...arguments];
+  _hideInfoTooltip(...arg) {
     return !arg.some(a => typeof a === 'string' && a !== '');
   }
 

@@ -38,6 +38,6 @@ const HistoryHelpers = baseClass => class extends baseClass {
     // length > 1 because changesObj.version does not count as a change
     return Object.keys(changesObj).length > 1;
   }
-}
+};
 
 export default HistoryHelpers;

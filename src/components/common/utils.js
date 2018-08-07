@@ -31,7 +31,7 @@ export const objDiff = (object1, object2) => {
     return {
       ...diff,
       [key]: elem2
-    }
+    };
   }, {});
 };
 

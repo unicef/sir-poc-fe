@@ -80,17 +80,9 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
     ];
   }
 
-  reset() {
-    this.navigateToList();
-  }
-
-  navigateToList() {
-    this.set('routeData.section', 'list');
-  }
-
   _routeChanged(section, revId) {
     if (!section) {
-      this.navigateToList();
+      this.set('routeData.section', 'list');
     }
   }
 

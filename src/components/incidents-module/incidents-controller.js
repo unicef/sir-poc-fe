@@ -55,7 +55,13 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <app-route
         route="{{route}}"
         pattern="/incidents/:section/:id"
+        tail="{{subRoute}}"
         data="{{routeData}}">
+      </app-route>
+      <app-route
+        route="{{subRoute}}"
+        pattern="/:subsection"
+        data="{{subRouteData}}">
       </app-route>
 
       <template is="dom-if" if="[[_showTabs(page)]]">
@@ -74,7 +80,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
         <view-incident name="view"></view-incident>
         <incident-comments name="comments"></incident-comments>
-        <incident-history-controller route="{{route}}" name="history" id="historyElem"></incident-history-controller>
+        <incident-history-controller route="{{route}}" name="history"></incident-history-controller>
       </iron-pages>
     `;
   }
@@ -106,8 +112,8 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   tabClicked(e) {
-    if (this.page === 'history' && this.$.historyElem && this.$.historyElem.reset) {
-      this.$.historyElem.reset();
+    if (this.page === 'history') {
+      this.set('subRouteData.subsection', null);
     }
   }
   _stateChanged(state) {

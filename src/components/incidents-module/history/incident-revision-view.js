@@ -24,7 +24,7 @@ class IncidentRevisionView extends IncidentsBaseView {
         type: Object,
         observer: '_itemChanged'
       }
-    }
+    };
   }
 
   _idChanged() {

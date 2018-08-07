@@ -50,7 +50,7 @@ const incidents = (state = {list: [], comments: []}, action) => {
     default:
       return state;
   }
-}
+};
 
 export default incidents;
 
@@ -61,12 +61,12 @@ const getEditedList = (list, action) => {
     }
     return action.incident;
   });
-}
+};
 
 const getRefreshedIncidents = (oldIncidents, newIncidents) => {
   let unsynced = oldIncidents.filter(elem => elem.unsynced);
   return [...newIncidents, ...unsynced];
-}
+};
 
 const updateEventIds = (list, oldId, newId) => {
   return list.map((incident) => {
@@ -76,7 +76,7 @@ const updateEventIds = (list, oldId, newId) => {
 
     return incident;
   });
-}
+};
 
 // ---------- SELECTORS -------
 const incidentsSelector = state => state.incidents.list;

@@ -4,4 +4,4 @@ export const EventModel = {
   location: '',
   note: '',
   start_date: ''
-}
+};

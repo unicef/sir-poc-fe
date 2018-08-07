@@ -15,6 +15,9 @@ class AddEvent extends EventsBaseView {
   }
 
   async save() {
+    if (!this.validate()) {
+      return;
+    }
     let successfull = await this.store.dispatch(addEvent(this.event));
     if (typeof successfull === 'boolean' && successfull) {
       this.resetForm();

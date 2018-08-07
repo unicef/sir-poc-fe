@@ -9,12 +9,11 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../redux/store.js';
-import { lazyLoadEventPages } from '../../actions/app.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
+import { store } from '../../redux/store.js';
+import { lazyLoadEventPages } from '../../actions/app.js';
 import '../styles/shared-styles.js';
 
 class EventsController extends connect(store)(PolymerElement) {
@@ -73,6 +72,11 @@ class EventsController extends connect(store)(PolymerElement) {
 
   pageChanged(page) {
     store.dispatch(lazyLoadEventPages(page));
+
+    const newEventPage = this.shadowRoot.querySelector('add-event');
+    if (page === 'new' && newEventPage instanceof PolymerElement) {
+      newEventPage.resetValidations();
+    }
   }
 }
 

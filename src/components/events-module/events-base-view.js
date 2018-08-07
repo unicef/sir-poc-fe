@@ -17,12 +17,14 @@ import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
+import '../styles/required-fields-styles.js';
+import {resetFieldsValidations, validateFields} from "../common/validations-helper";
 
 export class EventsBaseView extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles grid-layout-styles">
+      <style include="shared-styles grid-layout-styles required-fields-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -41,14 +43,30 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-3">
-            <datepicker-lite label="Start date" readonly="[[readonly]]" value="{{event.start_date}}"></datepicker-lite>
+            <datepicker-lite id="startDate"
+                             label="Start date" 
+                             readonly="[[readonly]]" 
+                             value="{{event.start_date}}" 
+                             required auto-validate
+                             error-message="Start date is required"></datepicker-lite>
           </div>
           <div class="col col-3">
-            <datepicker-lite label="End date" readonly="[[readonly]]" value="{{event.end_date}}"></datepicker-lite>
+            <datepicker-lite id="endDate"
+                             label="End date" 
+                             readonly="[[readonly]]" 
+                             value="{{event.end_date}}" 
+                             required auto-validate
+                             error-message="End date is required"></datepicker-lite>
           </div>
           <div class="col col-6">
-            <paper-input label="Location" placeholder="&#8212;" type="text"
-                         readonly="[[readonly]]" value="{{event.location}}"></paper-input>
+            <paper-input id="location"
+                         label="Location" 
+                         placeholder="&#8212;"
+                         type="text"
+                         readonly="[[readonly]]"
+                         value="{{event.location}}"
+                         required auto-validate
+                         error-message="Location is required"></paper-input>
           </div>
         </div>
 
@@ -61,8 +79,13 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-textarea label="Description" readonly="[[readonly]]" placeholder="&#8212;"
-                            value="{{event.description}}"></paper-textarea>
+            <paper-textarea id="description" 
+                            label="Description" 
+                            readonly="[[readonly]]" 
+                            placeholder="&#8212;"
+                            value="{{event.description}}"
+                            required auto-validate
+                            error-message="Description is required"></paper-textarea>
           </div>
         </div>
 
@@ -99,6 +122,10 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         type: Number,
         computed: '_setEventId(state.app.locationInfo.eventId)',
         observer: '_idChanged'
+      },
+      fieldsToValidateSelectors: {
+        type: Array,
+        value: ['#startDate', '#endDate', '#location', '#description']
       }
     };
   }
@@ -138,5 +165,13 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   isVisible() {
     return this.classList.contains('iron-selected');
+  }
+
+  validate() {
+    return validateFields(this, this.fieldsToValidateSelectors);
+  }
+
+  resetValidations() {
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 }

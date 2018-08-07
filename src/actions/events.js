@@ -19,35 +19,35 @@ const editEventSuccess = (event, id) => {
     event,
     id
   };
-}
+};
 
 const addEventSuccess = (newEvent) => {
   return {
     type: ADD_EVENT_SUCCESS,
     newEvent
   };
-}
+};
 
 const addEventFail = (serverError) => {
   return {
     type: ADD_EVENT_FAIL,
     serverError
   };
-}
+};
 
 const receiveEvents = (events) => {
   return {
     type: RECEIVE_EVENTS,
     events
   };
-}
+};
 
 const receiveEvent = (event) => {
   return {
     type: RECEIVE_EVENT,
     event
   };
-}
+};
 // ------------------------------
 
 const addEventOnline = (newEvent, dispatch) => {
@@ -60,7 +60,7 @@ const addEventOnline = (newEvent, dispatch) => {
     scrollToTop();
     return false;
   });
-}
+};
 
 const addEventOffline = (newEvent, dispatch) => {
   newEvent.id = generateRandomHash();
@@ -69,7 +69,7 @@ const addEventOffline = (newEvent, dispatch) => {
   updatePath('/events/list/');
   dispatch(addEventSuccess(newEvent));
   return true;
-}
+};
 
 const editEventOnline = (event, dispatch, state) => {
   let origEvent = state.events.list.find(ev => ev.id === event.id);
@@ -84,51 +84,51 @@ const editEventOnline = (event, dispatch, state) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
   });
-}
+};
 
 const editEventOffline = (event, dispatch) => {
   event.unsynced = true;
   updatePath('/events/list/');
   dispatch(editEventSuccess(event, event.id));
-}
+};
 
-export const addEvent = (newEvent) => (dispatch, getState) => {
+export const addEvent = newEvent => (dispatch, getState) => {
   if (getState().app.offline === true) {
     return addEventOffline(newEvent, dispatch);
   } else {
     return addEventOnline(newEvent, dispatch);
   }
-}
+};
 
-export const editEvent = (event) => (dispatch, getState) => {
+export const editEvent = event => (dispatch, getState) => {
   if (getState().app.offline === true) {
     editEventOffline(event, dispatch);
   } else {
     editEventOnline(event, dispatch, getState());
   }
-}
+};
 
-export const syncEvent = (event) => (dispatch, getState) => {
+export const syncEvent = event => (dispatch, getState) => {
   makeRequest(Endpoints.newEvent, event).then((result) => {
     updatePath('/events/list/');
     let response = JSON.parse(result);
     dispatch(editEventSuccess(response, event.id));
-    dispatch(updateEventIdsInIncidents(event.id, response.id))
+    dispatch(updateEventIdsInIncidents(event.id, response.id));
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
   });
-}
+};
 
 export const fetchAndStoreEvents = () => (dispatch, getState) => {
   if (getState().app.offline !== true) {
-    makeRequest(Endpoints.eventsList).then(result => {
+    makeRequest(Endpoints.eventsList).then((result) => {
       dispatch(receiveEvents(JSON.parse(result)));
     });
   }
 };
 
-export const fetchEvent = (id) => (dispatch, getState) => {
+export const fetchEvent = id => (dispatch, getState) => {
   if (getState().app.offline === true) {
     return;
   }
@@ -136,12 +136,8 @@ export const fetchEvent = (id) => (dispatch, getState) => {
     updatePath('/events/list/');
     return;
   }
-  let endpoint = prepareEndpoint(Endpoints.getEvent,  {id: id});
+  let endpoint = prepareEndpoint(Endpoints.getEvent, {id});
   makeRequest(endpoint).then((response) => {
     dispatch(receiveEvent(JSON.parse(response)));
   });
 };
-
-
-
-

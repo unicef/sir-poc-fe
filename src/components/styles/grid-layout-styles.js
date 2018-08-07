@@ -1,8 +1,8 @@
 import '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
-const $_documentContainer = document.createElement('template');
-$_documentContainer.innerHTML = `
+const documentContainer = document.createElement('template');
+documentContainer.innerHTML = `
 <dom-module id="grid-layout-styles">
   <template>
     <style>
@@ -116,4 +116,4 @@ $_documentContainer.innerHTML = `
 </dom-module>
 `;
 
-document.head.appendChild($_documentContainer.content);
+document.head.appendChild(documentContainer.content);

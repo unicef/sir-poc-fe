@@ -11,8 +11,8 @@
 import '@polymer/polymer/polymer-element.js';
 import './button-styles.js';
 
-const $_documentContainer = document.createElement('template');
-$_documentContainer.innerHTML = `<dom-module id="shared-styles">
+const documentContainer = document.createElement('template');
+documentContainer.innerHTML = `<dom-module id="shared-styles">
   <template>
     <style include="button-styles">
       .card {
@@ -122,4 +122,4 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
   </template>
 </dom-module>`;
 
-document.head.appendChild($_documentContainer.content);
+document.head.appendChild(documentContainer.content);

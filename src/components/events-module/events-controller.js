@@ -72,6 +72,11 @@ class EventsController extends connect(store)(PolymerElement) {
 
   pageChanged(page) {
     store.dispatch(lazyLoadEventPages(page));
+
+    const newEventPage = this.shadowRoot.querySelector('add-event');
+    if (page === 'new' && newEventPage instanceof PolymerElement) {
+      newEventPage.resetValidations();
+    }
   }
 }
 

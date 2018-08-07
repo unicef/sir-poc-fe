@@ -11,7 +11,7 @@ import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
 import HistoryHelpers from './history-helpers.js';
 
-export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(PolymerElement)))  {
+export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles">
@@ -75,11 +75,11 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
       return;
     }
 
-    let changes = Object.keys(item.change).map(key => {
+    let changes = Object.keys(item.change).map((key) => {
       return {...item.change[key], key};
     });
 
-    changes = changes.filter(elem => {
+    changes = changes.filter((elem) => {
       return elem.key !== 'version';
     });
 
@@ -97,12 +97,10 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
       return value;
     }
     let result;
-    switch(key) {
+    switch (key) {
       case 'event':
-        let result = this.events.find(e => e.id === value);
+        result = this.events.find(e => e.id === value);
         return result.description;
-      case 'vehicle_type':
-        return this.getNameFromId(value, 'vehicleTypes');
       case 'contributing_factor':
         return this.getNameFromId(value, 'factors');
       case 'incident_category':

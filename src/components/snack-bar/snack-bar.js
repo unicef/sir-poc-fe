@@ -46,9 +46,11 @@ class SnackBar extends PolymerElement {
     `;
   }
 
-  static get properties() { return {
-    active: Boolean,
-  }}
+  static get properties() {
+    return {
+      active: Boolean
+    };
+  }
 }
 
 window.customElements.define('snack-bar', SnackBar);

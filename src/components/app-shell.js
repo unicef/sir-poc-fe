@@ -29,9 +29,7 @@ import './styles/app-theme.js';
 // basic stuff above, PWA stuff below
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-import { updateMetadata } from 'pwa-helpers/metadata.js';
 // This element is connected to the Redux store.
 import './snack-bar/snack-bar.js';
 import { store } from '../redux/store.js';
@@ -216,7 +214,7 @@ class MyApp extends connect(store)(PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
 
-    installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
+    installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
   _locationChanged(path, queryParams) {

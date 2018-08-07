@@ -76,7 +76,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       routeData: Object,
       history: Object,
       route: Object,
-      state: Object,
+      state: Object
     };
   }
 

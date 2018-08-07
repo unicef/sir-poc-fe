@@ -8,10 +8,8 @@ export const IncidentModel = {
   region: '',
   reported_to: '',
   responsible: '',
-  status: '',
   street: '',
   weapons_used: [],
-  //TOOD
   last_modify_user: 1,
   primary_person: {
     date_of_birth: '1970-01-01',
@@ -24,4 +22,4 @@ export const IncidentModel = {
   reported: false,
   submitted_by: 1,
   status: 'submitted'
-}
+};

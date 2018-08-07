@@ -9,10 +9,10 @@
  */
 
 import '@polymer/polymer/polymer-element.js';
-import './button-styles.js'
+import './button-styles.js';
 
-const $_documentContainer = document.createElement('template');
-$_documentContainer.innerHTML = `<dom-module id="filters-styles">
+const documentContainer = document.createElement('template');
+documentContainer.innerHTML = `<dom-module id="filters-styles">
   <template>
     <style>
       .filters .filter:not(:last-child) {
@@ -33,7 +33,7 @@ $_documentContainer.innerHTML = `<dom-module id="filters-styles">
         flex: 0 0 25%;
         max-width: 25%;
       }
-      
+
       @media screen and (max-width: 768px) {
         .search-input {
           display: block;
@@ -51,4 +51,4 @@ $_documentContainer.innerHTML = `<dom-module id="filters-styles">
   </template>
 </dom-module>`;
 
-document.head.appendChild($_documentContainer.content);
+document.head.appendChild(documentContainer.content);

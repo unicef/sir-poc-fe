@@ -20,6 +20,9 @@ class EditEvent extends EventsBaseView {
   }
 
   save() {
+    if (!this.validate()) {
+      return;
+    }
     if (this.event.unsynced && !this.state.app.offline) {
       this.store.dispatch(syncEvent(this.event));
     } else {

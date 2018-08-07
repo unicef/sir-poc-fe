@@ -2,16 +2,18 @@
 @license
 */
 import { IncidentsBaseView } from '../incidents-base-view.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import HistoryHelpers from './history-helpers.js';
+import './styles.js';
 
 /**
  * @polymer
  * @customElement
  */
-class IncidentRevisionView extends IncidentsBaseView {
+class IncidentRevisionView extends HistoryHelpers(IncidentsBaseView) {
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;
-    this.title = 'View incident revision';
   }
 
   static get is() {
@@ -26,11 +28,30 @@ class IncidentRevisionView extends IncidentsBaseView {
       }
     };
   }
+  static get getTitleTemplate() {
+
+    return html`
+      <style include="history-common-styles"></style>
+      <div class="row-h flex-c">
+        <div class="col-11">
+          <h3> View incident at this revision </h3>
+        </div>
+
+        <div class="col-1 nav-buttons">
+          ${this.getNavigationButtonsTemplate}
+        </div>
+      </div>
+    `;
+  }
 
   _idChanged() {
   }
 
   _setIncidentId() {
+  }
+
+  pageIs(loc) {
+    return loc === 'view';
   }
 
   isOnExpectedPage() {

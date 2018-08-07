@@ -9,12 +9,13 @@ import DateMixin from '../../common/date-mixin.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
+import './styles.js';
 import HistoryHelpers from './history-helpers.js';
 
 export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
     return html`
-      <style include="shared-styles grid-layout-styles">
+      <style include="shared-styles grid-layout-styles history-common-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -24,6 +25,15 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
       </style>
 
       <div class="card">
+        <div class="row-h flex-c">
+          <div class="col-11">
+            <h3> Changes performed </h3>
+          </div>
+
+          <div class="col-1 nav-buttons">
+            ${this.getNavigationButtonsTemplate}
+          </div>
+        </div>
         <template is="dom-repeat" items="[[changes]]">
           <div class="row-h flex-c">
             <div class="col col-2 label">
@@ -90,6 +100,10 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
     let result = this.staticData[staticDataKey].find(v => v.id === Number(id));
 
     return result.name || '';
+  }
+
+  pageIs(loc) {
+    return loc === 'diff';
   }
 
   getReadableValue(key, value) {

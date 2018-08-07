@@ -25,6 +25,7 @@ documentContainer.innerHTML = `
         --menu-selected-bg-color: #e8e8e8;
         --unsynced-item-bg-color: var(--secondary-error-color);
 
+        --list-primary-color: var(--primary-color);
       }
     </style>
   </custom-style>`;

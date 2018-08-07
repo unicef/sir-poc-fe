@@ -27,7 +27,7 @@ $_documentContainer.innerHTML = `
 
       .row-h, .row-v {
         position: relative;
-        padding: 8px 24px;
+        padding: 8px 0px;
       }
       .col {
         box-sizing: border-box;

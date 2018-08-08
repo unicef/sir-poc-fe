@@ -4,6 +4,7 @@
 import { IncidentsBaseView } from '../incidents-base-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import HistoryHelpers from './history-helpers.js';
+import './history-navigation-links.js';
 import './styles.js';
 
 /**
@@ -38,7 +39,7 @@ class IncidentRevisionView extends HistoryHelpers(IncidentsBaseView) {
         </div>
 
         <div class="col-1 nav-buttons">
-          ${this.getNavigationButtonsTemplate}
+          <history-navigation-links page="view" working-item="[[workingItem]]"></history-navigation-links>
         </div>
       </div>
     `;
@@ -48,10 +49,6 @@ class IncidentRevisionView extends HistoryHelpers(IncidentsBaseView) {
   }
 
   _setIncidentId() {
-  }
-
-  pageIs(loc) {
-    return loc === 'view';
   }
 
   isOnExpectedPage() {

@@ -5,9 +5,6 @@ documentContainer.innerHTML = `
   <dom-module id="history-common-styles">
     <template>
       <style>
-        a {
-          color: var(--primary-color);
-        }
         .nav-buttons {
           display: inline-flex;
           align-items: center;

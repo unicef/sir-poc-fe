@@ -11,6 +11,7 @@ import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
 import './styles.js';
 import HistoryHelpers from './history-helpers.js';
+import './history-navigation-links.js';
 
 export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
@@ -31,7 +32,7 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
           </div>
 
           <div class="col-1 nav-buttons">
-            ${this.getNavigationButtonsTemplate}
+            <history-navigation-links page="diff" working-item="[[workingItem]]"></history-navigation-links>
           </div>
         </div>
         <template is="dom-repeat" items="[[changes]]">
@@ -100,10 +101,6 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
     let result = this.staticData[staticDataKey].find(v => v.id === Number(id));
 
     return result.name || '';
-  }
-
-  pageIs(loc) {
-    return loc === 'diff';
   }
 
   getReadableValue(key, value) {

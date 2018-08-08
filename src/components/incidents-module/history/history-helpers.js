@@ -1,6 +1,3 @@
-import { html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icons/image-icons.js';
-
 const HistoryHelpers = baseClass => class extends baseClass {
   static get properties() {
     return {
@@ -31,31 +28,6 @@ const HistoryHelpers = baseClass => class extends baseClass {
         }
       }
     };
-  }
-
-  static get getNavigationButtonsTemplate() {
-    return html`
-      <a href="incidents/history/[[workingItem.data.id]]/list/">
-        <iron-icon icon="list"></iron-icon>
-      </a>
-      <a href="incidents/history/[[workingItem.data.id]]/view/[[workingItem.id]]" hidden$="[[pageIs('view')]]">
-        <iron-icon icon="assignment"></iron-icon>
-      </a>
-      <a href="incidents/history/[[workingItem.data.id]]/diff/[[workingItem.id]]" hidden$="[[shouldHideViewChangesButton(workingItem.change)]]">
-        <iron-icon icon="image:compare"></iron-icon>
-      </a>
-    `;
-  }
-
-  pageIs(loc) {
-    console.warn('method pageIs not implemented!');
-  }
-
-  shouldHideViewChangesButton(change) {
-    if (!change) {
-      return true;
-    }
-    return this.pageIs('diff') || !this.hasChangedFilds(change);
   }
 
   getLabelForField(key) {

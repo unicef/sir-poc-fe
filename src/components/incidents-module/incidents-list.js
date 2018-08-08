@@ -18,11 +18,13 @@ import {store} from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
+import '../common/etools-dropdown/etools-dropdown-lite.js';
+import '../common/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
+class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -64,6 +66,37 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                                       hide-search>
 
           </etools-dropdown-multi-lite>
+
+          <div>
+            <datepicker-lite id="fromDate"
+                             value="{{startDate}}"
+                             label="From (date of incident)"></datepicker-lite>
+          </div>
+          
+          <div>
+            <datepicker-lite id="endDate"
+                             value="{{endDate}}"
+                             label="To (date of incident)"></datepicker-lite>
+          </div>
+          
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <etools-dropdown-lite id="country"
+                                  label="Country"
+                                  options="[[staticData.countries]]"
+                                  selected="{{selectedCountry}}">
+            </etools-dropdown-lite>
+          </div>
+
+          <div class="col col-3">
+            <etools-dropdown-lite id="incidentType"
+                                  label="Incident Type"
+                                  options="[[staticData.incidentCategories]]"
+                                  selected="{{selectedIncidentCategory}}">
+            </etools-dropdown-lite>
+          </div>
+          
         </div>
       </div>
 
@@ -159,7 +192,8 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber, selectedSyncStatuses.length)'
+        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber, selectedSyncStatuses.length, ' +
+        'startDate, endDate, selectedCountry, selectedIncidentCategory)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -170,15 +204,64 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       },
       selectedSyncStatuses: {
         type: Array
+      },
+      startDate: {
+        type: Date,
+        observer: '_startDateChanged'
+      },
+      endDate: {
+        type: Date,
+        observer: '_endDateChanged'
+      },
+      store: Object,
+      state: Object,
+      staticData: Object,
+      selectedCountry: {
+        type: Object,
+        value: {}
+      },
+      selectedIncidentCategory: {
+        type: Object,
+        value: {}
       }
+
     };
+  }
+
+  connectedCallback() {
+    this.store = store;
+    super.connectedCallback();
+  }
+
+  _startDateChanged(){
+    this.startDate = this._getStartDate();
+  }
+
+  _getStartDate(){
+    if (!this.startDate){
+      return null;
+    }
+    return this.startDate;
+  }
+
+  _endDateChanged(){
+    this.endDate = this._getEndDate();
+  }
+
+  _getEndDate(){
+    if (!this.endDate){
+      return null;
+    }
+    return this.endDate;
   }
 
   _stateChanged(state) {
     if (!state) {
       return;
     }
+
     this.offline = state.app.offline;
+    this.staticData = state.staticData;
     this.incidents = state.incidents.list;
     this.incidentCategories = state.staticData.incidentCategories;
   }
@@ -193,6 +276,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string') {
       filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
       filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.selectedSyncStatuses));
+      filteredIncidents = filteredIncidents.filter(e => this._applyDateFilter(e, this._getStartDate(), this._getEndDate()));
+      filteredIncidents = filteredIncidents.filter(e => this._applyCountryFilter(e, this.selectedCountry));
+      filteredIncidents = filteredIncidents.filter(e => this._applyIncidentCategoryFilter(e, this.selectedIncidentCategory));
     }
 
     return this.applyPagination(filteredIncidents);
@@ -211,6 +297,45 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     }
     const eStatus = e.unsynced ? 'unsynced' : 'synced';
     return selectedSyncStatuses.some(s => s === eStatus);
+  }
+
+  _applyDateFilter(e, startDate, endDate) {
+
+    if (startDate && new Date(e.incident_date) <= new Date(startDate)){
+      return false;
+    }
+
+    if (endDate && new Date(e.incident_date) >= new Date(endDate)){
+      return false;
+    }
+
+    return true;
+  }
+
+  _applyCountryFilter(e, selectedCountry){
+
+    if (e.country === selectedCountry){
+      return true;
+    }
+
+    if ('{}' === JSON.stringify(selectedCountry)){
+      return true;
+    }
+
+    return false;
+  }
+
+  _applyIncidentCategoryFilter(e, selectedIncidentCategory){
+
+    if (e.incident_category === selectedIncidentCategory){
+      return true;
+    }
+
+    if ('{}' === JSON.stringify(selectedIncidentCategory)){
+      return true;
+    }
+
+    return false;
   }
 
   notEditable(incident, offline) {

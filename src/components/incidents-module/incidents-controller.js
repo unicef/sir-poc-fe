@@ -55,7 +55,13 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <app-route
         route="{{route}}"
         pattern="/incidents/:section/:id"
+        tail="{{subRoute}}"
         data="{{routeData}}">
+      </app-route>
+      <app-route
+        route="{{subRoute}}"
+        pattern="/:subsection"
+        data="{{subRouteData}}">
       </app-route>
 
       <template is="dom-if" if="[[_showTabs(page)]]">
@@ -74,7 +80,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
         <view-incident name="view"></view-incident>
         <incident-comments name="comments"></incident-comments>
-        <incident-history-controller route="{{route}}" name="history" id="historyElem"></incident-history-controller>
+        <incident-history-controller route="{{route}}" name="history"></incident-history-controller>
       </iron-pages>
     `;
   }
@@ -94,7 +100,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   static get observers() {
     return [
-      'routeChanged(routeData.section)',
+      'routeChanged(routeData.section, routeData.id)',
       'pageChanged(page)'
     ];
   }
@@ -106,18 +112,30 @@ class IncidentsController extends connect(store)(PolymerElement) {
   }
 
   tabClicked(e) {
-    if (this.page === 'history' && this.$.historyElem && this.$.historyElem.reset) {
-      this.$.historyElem.reset();
+    if (this.page === 'history') {
+      this.navigateToHistoryList();
     }
   }
+
+  navigateToHistoryList() {
+    // triggers history-controller to change to the list view
+    this.set('subRouteData.subsection', null);
+  }
+
   _stateChanged(state) {
     if (state && state.app) {
       this.isOffline = state.app.offline;
     }
   }
 
-  routeChanged(section) {
-    this.set('page', section ? section : 'list');
+  routeChanged(section, id) {
+    if (!section) {
+      this.set('page', 'list');
+    } else if (section !== 'list' && !id) {
+      this.set('routeData.section', 'list');
+    } else {
+      this.set('page', section);
+    }
   }
 
   pageIs(actualPage, expectedPage) {

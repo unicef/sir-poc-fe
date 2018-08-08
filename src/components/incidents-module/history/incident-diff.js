@@ -30,7 +30,6 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
           <div class="col-11">
             <h3> Changes performed </h3>
           </div>
-
           <div class="col-1 nav-buttons">
             <history-navigation-links page="diff" working-item="[[workingItem]]"></history-navigation-links>
           </div>

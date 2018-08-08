@@ -3,7 +3,6 @@
 */
 import { IncidentsBaseView } from '../incidents-base-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
-import HistoryHelpers from './history-helpers.js';
 import './history-navigation-links.js';
 import './styles.js';
 
@@ -11,7 +10,7 @@ import './styles.js';
  * @polymer
  * @customElement
  */
-class IncidentRevisionView extends HistoryHelpers(IncidentsBaseView) {
+class IncidentRevisionView extends IncidentsBaseView {
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;

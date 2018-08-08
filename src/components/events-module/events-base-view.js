@@ -2,23 +2,23 @@
  @license
  */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import '../common/datepicker-lite.js';
 
-import {fetchEvent} from '../../actions/events.js';
-import {selectEvent} from '../../reducers/events.js';
-import {store} from '../../redux/store.js';
-import {EventModel} from './models/event-model.js';
+import { fetchEvent } from '../../actions/events.js';
+import { selectEvent } from '../../reducers/events.js';
+import { store } from '../../redux/store.js';
+import { EventModel } from './models/event-model.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import {resetFieldsValidations, validateFields} from "../common/validations-helper";
+import { resetFieldsValidations, validateFields } from '../common/validations-helper';
 
 export class EventsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -46,23 +46,23 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         <div class="row-h flex-c">
           <div class="col col-3">
             <datepicker-lite id="startDate"
-                             label="Start date" 
-                             readonly="[[readonly]]" 
-                             value="{{event.start_date}}" 
+                             label="Start date"
+                             readonly="[[readonly]]"
+                             value="{{event.start_date}}"
                              required auto-validate
                              error-message="Start date is required"></datepicker-lite>
           </div>
           <div class="col col-3">
             <datepicker-lite id="endDate"
-                             label="End date" 
-                             readonly="[[readonly]]" 
-                             value="{{event.end_date}}" 
+                             label="End date"
+                             readonly="[[readonly]]"
+                             value="{{event.end_date}}"
                              required auto-validate
                              error-message="End date is required"></datepicker-lite>
           </div>
           <div class="col col-6">
             <paper-input id="location"
-                         label="Location" 
+                         label="Location"
                          placeholder="&#8212;"
                          type="text"
                          readonly="[[readonly]]"
@@ -81,9 +81,9 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-textarea id="description" 
-                            label="Description" 
-                            readonly="[[readonly]]" 
+            <paper-textarea id="description"
+                            label="Description"
+                            readonly="[[readonly]]"
                             placeholder="&#8212;"
                             value="{{event.description}}"
                             required auto-validate

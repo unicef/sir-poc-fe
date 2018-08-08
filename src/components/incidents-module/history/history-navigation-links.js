@@ -13,13 +13,21 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
         }
       </style>
 
-      <a href="incidents/history/[[workingItem.data.id]]/list">
+      <a href="incidents/history/[[workingItem.data.id]]/list" title="Go to changes list">
         <iron-icon icon="list"></iron-icon>
       </a>
-      <a href="incidents/history/[[workingItem.data.id]]/view/[[workingItem.id]]" hidden$="[[pageIs('view')]]">
+
+      <a href="incidents/history/[[workingItem.data.id]]/view/[[workingItem.id]]"
+           hidden$="[[pageIs('view')]]"
+           title="View entire incident at this version">
+
         <iron-icon icon="assignment"></iron-icon>
       </a>
-      <a href="incidents/history/[[workingItem.data.id]]/diff/[[workingItem.id]]" hidden$="[[shouldHideViewChangesButton(workingItem.change)]]">
+
+      <a href="incidents/history/[[workingItem.data.id]]/diff/[[workingItem.id]]"
+           hidden$="[[shouldHideViewChangesButton(workingItem.change)]]"
+           title="View changes from previous version">
+
         <iron-icon icon="image:compare"></iron-icon>
       </a>
     `;
@@ -33,7 +41,7 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
     return {
       page: String,
       workingItem: Object
-    }
+    };
   }
 
   pageIs(loc) {

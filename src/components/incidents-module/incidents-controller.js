@@ -113,9 +113,15 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   tabClicked(e) {
     if (this.page === 'history') {
-      this.set('subRouteData.subsection', null);
+      this.navigateToHistoryList();
     }
   }
+
+  navigateToHistoryList() {
+    // triggers history-controller to change to the list view
+    this.set('subRouteData.subsection', null);
+  }
+
   _stateChanged(state) {
     if (state && state.app) {
       this.isOffline = state.app.offline;

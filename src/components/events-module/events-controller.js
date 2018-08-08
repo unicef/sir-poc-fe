@@ -49,7 +49,7 @@ class EventsController extends connect(store)(PolymerElement) {
 
   static get observers() {
     return [
-      'routeChanged(routeData.section)',
+      'routeChanged(routeData.section, routeData.id)',
       'pageChanged(page)'
     ];
   }
@@ -62,8 +62,14 @@ class EventsController extends connect(store)(PolymerElement) {
   _stateChanged(state) {
   }
 
-  routeChanged(section) {
-    this.set('page', section ? section : 'list');
+  routeChanged(section, id) {
+    if (!section) {
+      this.set('page', 'list');
+    } else if (section !== 'list' && !id) {
+      this.set('routeData.section', 'list');
+    } else {
+      this.set('page', section);
+    }
   }
 
   pageIs(actualPage, expectedPage) {

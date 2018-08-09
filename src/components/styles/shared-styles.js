@@ -17,11 +17,21 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
     <style include="button-styles">
       .card {
         margin: 24px;
-        padding: 16px;
-        color: #757575;
+        padding: 24px;
+        color: var(--primary-text-color);
         border-radius: 5px;
         background-color: #fff;
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+
+      fieldset {
+        border: none;
+        margin: 0 0;
+        padding: 0 0;
+      }
+
+      fieldset>div {
+        padding-left: 10px;
       }
 
       .circle {
@@ -42,6 +52,10 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
         font-size: 22px;
       }
 
+      h3 {
+        color: var(--primary-color-darker);
+      }
+
       *[hidden] {
         display: none !important;
       }
@@ -57,6 +71,7 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
 
       paper-checkbox {
         line-height: 64px;
+        --paper-checkbox-unchecked-color: var(--secondary-text-color);
       }
 
       paper-textarea {

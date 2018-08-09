@@ -67,13 +67,13 @@ class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
 
           </etools-dropdown-multi-lite>
 
-          <div>
+          <div class="col col-3">
             <datepicker-lite id="fromDate"
                              value="{{startDate}}"
                              label="From (date of incident)"></datepicker-lite>
           </div>
           
-          <div>
+          <div class="col col-3">
             <datepicker-lite id="endDate"
                              value="{{endDate}}"
                              label="To (date of incident)"></datepicker-lite>

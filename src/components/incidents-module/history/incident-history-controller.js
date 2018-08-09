@@ -66,6 +66,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       workingItem: Object,
       subRouteData: Object,
       routeData: Object,
+      visible: Boolean,
       history: Object,
       route: Object,
       state: Object
@@ -76,8 +77,15 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   static get observers() {
     return [
       '_routeChanged(routeData.section)',
-      '_revisionIdChanged(subRouteData.revisionId, history)'
+      '_revisionIdChanged(subRouteData.revisionId, history)',
+      '_visibilityChanged(visible)'
     ];
+  }
+
+  _visibilityChanged(visible) {
+    if (visible) {
+      this.set('routeData.section', 'list');
+    }
   }
 
   _routeChanged(section, revId) {

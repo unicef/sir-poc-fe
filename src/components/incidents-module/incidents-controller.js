@@ -61,7 +61,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <app-route
         route="{{subRoute}}"
         pattern="/:subsection"
-        data="{{subRouteData}}">
+        data="{{subrouteData}}">
       </app-route>
 
       <template is="dom-if" if="[[_showTabs(page)]]">
@@ -73,14 +73,14 @@ class IncidentsController extends connect(store)(PolymerElement) {
         </div>
       </template>
 
-      <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+      <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
         <edit-incident name="edit"></edit-incident>
 
         <view-incident name="view"></view-incident>
         <incident-comments name="comments"></incident-comments>
-        <incident-history-controller route="{{route}}" name="history"></incident-history-controller>
+        <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
     `;
   }
@@ -119,7 +119,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   navigateToHistoryList() {
     // triggers history-controller to change to the list view
-    this.set('subRouteData.subsection', null);
+    this.set('subrouteData.subsection', null);
   }
 
   _stateChanged(state) {

@@ -130,6 +130,10 @@ class MyApp extends connect(store)(PolymerElement) {
 
           <div class="drawer-list">
             <a class="menu-heading"
+              selected$="[[pathsMatch(page, 'dashboard')]]"
+              href="[[rootPath]]dashboard"> Dashboard </a>
+
+            <a class="menu-heading"
               selected$="[[pathsMatch(page, 'events')]]"
               href="[[rootPath]]events/list/">Events</a>
 
@@ -177,6 +181,7 @@ class MyApp extends connect(store)(PolymerElement) {
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
+            <dashboard-controller name="dashboard"></dashboard-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 
@@ -233,7 +238,7 @@ class MyApp extends connect(store)(PolymerElement) {
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
       updatePath('events/list/');
-    } else if (['events', 'incidents'].indexOf(page) !== -1) {
+    } else if (['events', 'incidents', 'dashboard'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';

@@ -63,10 +63,14 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
         observer: '_idChanged'
       },
+      visible: {
+        type: Boolean,
+        value: false,
+        observer: '_visibilityChanged'
+      },
       workingItem: Object,
       subRouteData: Object,
       routeData: Object,
-      visible: Boolean,
       history: Object,
       route: Object,
       state: Object
@@ -77,8 +81,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   static get observers() {
     return [
       '_routeChanged(routeData.section)',
-      '_revisionIdChanged(subRouteData.revisionId, history)',
-      '_visibilityChanged(visible)'
+      '_revisionIdChanged(subRouteData.revisionId, history)'
     ];
   }
 

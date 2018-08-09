@@ -120,6 +120,11 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
+      visible: {
+        type: Boolean,
+        value: false,
+        observer: '_visibilityChanged'
+      },
       eventId: {
         type: Number,
         computed: '_setEventId(state.app.locationInfo.eventId)',
@@ -157,16 +162,18 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
-  isOfflineOrUnsynced() {
-    return this.state.app.offline || (this.event && this.event.unsynced);
+  _visibilityChanged(visible) {
+    if (visible) {
+      this.resetValidations();
+    }
   }
 
   _stateChanged(state) {
     this.state = state;
   }
 
-  isVisible() {
-    return this.classList.contains('iron-selected');
+  isOfflineOrUnsynced() {
+    return this.state.app.offline || (this.event && this.event.unsynced);
   }
 
   validate() {

@@ -32,9 +32,9 @@ class IncidentRevisionView extends IncidentsBaseView {
 
     return html`
       <style include="history-common-styles"></style>
-      <div class="row-h flex-c">
+      <div class="layout-horizontal flex-c">
         <div class="col-11">
-          <h3> View incident at this revision </h3>
+          <h2> View incident at this revision </h2>
         </div>
 
         <div class="col-1 nav-buttons">

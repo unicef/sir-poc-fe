@@ -41,7 +41,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <div class="card">   
+      <div class="card">
         ${this.getTitleTemplate}
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -403,9 +403,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   static get getTitleTemplate() {
     return html`
-      <div class="row-h">
-        <h2>[[title]]</h2>
-      </div>
+      <h2>[[title]]</h2>
     `;
   }
 

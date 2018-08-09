@@ -131,7 +131,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
   routeChanged(section, id) {
     if (!section) {
       this.set('page', 'list');
-    } else if (section !== 'list' && !id) {
+    } else if (['list', 'new'].indexOf(section) < 0 && !id) {
       this.set('routeData.section', 'list');
     } else {
       this.set('page', section);

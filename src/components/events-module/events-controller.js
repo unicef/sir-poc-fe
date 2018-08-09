@@ -8,7 +8,7 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { BaseController } from '../common/base-controller.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-button/paper-button.js';

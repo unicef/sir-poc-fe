@@ -82,6 +82,11 @@ documentContainer.innerHTML = `
         max-width: 83.33333333%;
       }
 
+      .col-11 {
+        flex: 0 0 91.66666667%;
+        max-width: 91.66666667%;
+      }
+
       .col-12 {
         flex: 0 0 100%;
         max-width: 100%;

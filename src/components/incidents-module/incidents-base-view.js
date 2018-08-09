@@ -41,8 +41,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <div class="card">
-          <h2>[[title]]</h2>
+      <div class="card">   
+        ${this.getTitleTemplate}
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
@@ -399,6 +399,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           '#city', '#incidentCat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
+  }
+
+  static get getTitleTemplate() {
+    return html`
+      <div class="row-h">
+        <h2>[[title]]</h2>
+      </div>
+    `;
   }
 
   connectedCallback() {

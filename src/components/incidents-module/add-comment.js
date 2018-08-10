@@ -14,14 +14,11 @@ class AddComment extends PolymerElement {
         :host {
           display: block;
         }
-        .container {
-          padding: 0px 24px;
-        }
         .btn {
           margin-top: 24px;
         }
       </style>
-      <div class="container">
+      <div>
           <errors-box></errors-box>
           <paper-textarea label="Write your comment here" id="commentText"
                           required auto-validate

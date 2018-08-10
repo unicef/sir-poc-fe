@@ -26,7 +26,7 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
       </style>
 
       <div class="card">
-        <div class="row-h flex-c">
+        <div class="layout-horizontal flex-c">
           <div class="col-11">
             <h3> Changes performed </h3>
           </div>

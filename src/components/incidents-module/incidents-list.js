@@ -24,7 +24,7 @@ import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
+class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -55,27 +55,27 @@ class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
         <div class="row-h flex-c">
           <paper-input class="filter search-input"
                        placeholder="Search by Person Involved, City or Description"
-                       value="{{q}}">
+                       value="{{filters.q}}">
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
           <etools-dropdown-multi-lite class="filter sync-filter"
                                       label="Sync status"
                                       options="[[itemSyncStatusOptions]]"
-                                      selected-values="{{selectedSyncStatuses}}"
+                                      selected-values="{{filters.syncStatus}}"
                                       hide-search>
 
           </etools-dropdown-multi-lite>
 
           <div class="col col-3">
             <datepicker-lite id="fromDate"
-                             value="{{startDate}}"
+                             value="{{filters.startDate}}"
                              label="From (date of incident)"></datepicker-lite>
           </div>
           
           <div class="col col-3">
             <datepicker-lite id="endDate"
-                             value="{{endDate}}"
+                             value="{{filters.endDate}}"
                              label="To (date of incident)"></datepicker-lite>
           </div>
           
@@ -84,16 +84,18 @@ class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
           <div class="col col-3">
             <etools-dropdown-lite id="country"
                                   label="Country"
+                                  enable-none-option
                                   options="[[staticData.countries]]"
-                                  selected="{{selectedCountry}}">
+                                  selected="{{filters.country}}">
             </etools-dropdown-lite>
           </div>
 
           <div class="col col-3">
             <etools-dropdown-lite id="incidentType"
                                   label="Incident Type"
+                                  enable-none-option
                                   options="[[staticData.incidentCategories]]"
-                                  selected="{{selectedIncidentCategory}}">
+                                  selected="{{filters.incidentCategory}}">
             </etools-dropdown-lite>
           </div>
           
@@ -188,12 +190,11 @@ class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
         value: []
       },
       incidentCategories: Array,
-      q: String,
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber, selectedSyncStatuses.length, ' +
-        'startDate, endDate, selectedCountry, selectedIncidentCategory)'
+        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length, ' +
+        'filters.startDate, filters.endDate, filters.country, filters.incidentCategory)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -202,57 +203,41 @@ class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      selectedSyncStatuses: {
-        type: Array
-      },
-      startDate: {
-        type: Date,
-        observer: '_startDateChanged'
-      },
-      endDate: {
-        type: Date,
-        observer: '_endDateChanged'
-      },
       store: Object,
       state: Object,
       staticData: Object,
-      selectedCountry: {
+      filters: {
         type: Object,
-        value: {}
-      },
-      selectedIncidentCategory: {
-        type: Object,
-        value: {}
+        value: {
+          incidentCategory : null,
+          country: null,
+          startDate: null,
+          endDate: null,
+          syncStatus: [],
+          q: null
+        }
       }
 
     };
   }
 
   connectedCallback() {
-    this.store = store;
     super.connectedCallback();
-  }
-
-  _startDateChanged(){
-    this.startDate = this._getStartDate();
+    this.store = store;
   }
 
   _getStartDate(){
-    if (!this.startDate){
+    if (!this.filters.startDate){
       return null;
     }
-    return this.startDate;
-  }
-
-  _endDateChanged(){
-    this.endDate = this._getEndDate();
+    return this.filters.startDate;
   }
 
   _getEndDate(){
-    if (!this.endDate){
+    if (!this.filters.endDate){
       return null;
     }
-    return this.endDate;
+    return this.filters.endDate;
   }
 
   _stateChanged(state) {
@@ -271,20 +256,25 @@ class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
     return incident.name || 'Not Specified';
   }
 
-  _filterData(incidents, q, pageSize, pageNumber) {
-    let filteredIncidents = incidents ? JSON.parse(JSON.stringify(incidents)) : [];
-    if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string') {
-      filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
-      filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.selectedSyncStatuses));
-      filteredIncidents = filteredIncidents.filter(e => this._applyDateFilter(e, this._getStartDate(), this._getEndDate()));
-      filteredIncidents = filteredIncidents.filter(e => this._applyCountryFilter(e, this.selectedCountry));
-      filteredIncidents = filteredIncidents.filter(e => this._applyIncidentCategoryFilter(e, this.selectedIncidentCategory));
+  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country, incidentCategory) {
+    if (!(incidents instanceof Array && incidents.length > 0)) {
+      return [];
     }
+    let filteredIncidents = JSON.parse(JSON.stringify(incidents));
+
+    filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
+    filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.filters.syncStatus));
+    filteredIncidents = filteredIncidents.filter(e => this._applyDateFilter(e, startDate, endDate));
+    filteredIncidents = filteredIncidents.filter(e => this._applyCountryFilter(e, country));
+    filteredIncidents = filteredIncidents.filter(e => this._applyIncidentCategoryFilter(e, incidentCategory));
 
     return this.applyPagination(filteredIncidents);
   }
 
   _applyQFilter(e, q) {
+    if (!q || q === '') {
+      return true;
+    }
     let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();
     return person.toLowerCase().search(q) > -1 ||
         String(e.city).toLowerCase().search(q) > -1 ||
@@ -314,28 +304,12 @@ class IncidentsList extends PaginationMixin(connect(store)(PolymerElement)) {
 
   _applyCountryFilter(e, selectedCountry){
 
-    if (e.country === selectedCountry){
-      return true;
-    }
-
-    if ('{}' === JSON.stringify(selectedCountry)){
-      return true;
-    }
-
-    return false;
+    return selectedCountry ? e.country === selectedCountry: true;
   }
 
   _applyIncidentCategoryFilter(e, selectedIncidentCategory){
 
-    if (e.incident_category === selectedIncidentCategory){
-      return true;
-    }
-
-    if ('{}' === JSON.stringify(selectedIncidentCategory)){
-      return true;
-    }
-
-    return false;
+    return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
   }
 
   notEditable(incident, offline) {

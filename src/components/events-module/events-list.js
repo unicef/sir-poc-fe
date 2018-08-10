@@ -171,7 +171,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       offline: Boolean,
       filteredEvents: {
         type: Array,
-        computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length' +
+        computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length, ' +
         'filters.startDate, filters.endDate)'
       },
       itemSyncStatusOptions: {
@@ -202,26 +202,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     this.offline = state.app.offline;
   }
 
-  // _getStartDate(){
-  //
-  //   // console.log("aaaaaaaaa", this.filters.startDate);
-  //
-  //   if (!this.filters.startDate) {
-  //     return null;
-  //   }
-  //   return this.filters.startDate;
-  // }
-  //
-  // _getEndDate() {
-  //   if (!this.filters.endDate) {
-  //     return null;
-  //   }
-  //   return this.filters.endDate;
-  // }
-
-
-  // moment('2010-10-20').isBetween('2010-10-19', '2010-10-25'); // true
-
   _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate) {
 
     if (!(events instanceof Array && events.length > 0)) {
@@ -229,13 +209,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     }
 
     let filteredEvents = JSON.parse(JSON.stringify(events));
-
-    // console.log("qqqqq  " ,q);
-    // console.log("startDate   ", startDate);
-    // console.log("endDate   ", endDate);
-    // console.log("syncStatus   ", this.filters.syncStatus);
-
-
 
     filteredEvents = filteredEvents.filter(e => this._applyQFilter(e, q));
     filteredEvents = filteredEvents.filter(e => this._applyStatusFilter(e, this.filters.syncStatus));
@@ -261,12 +234,9 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
   
   _applyDateFilter(e, startDate, endDate) {
 
-    console.log("start date  ", startDate);
-    console.log("end date   ", endDate);
+    return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
+        (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
 
-
-    
-    return true;
   }
 
   notEditable(event, offline) {

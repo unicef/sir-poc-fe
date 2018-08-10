@@ -25,7 +25,7 @@ class IncidentComments extends connect(store)(PolymerElement) {
         </template>
       </div>
 
-      <div class="card list">
+      <div class="card list" hidden$="[[isOffline]]">
         <add-comment id="addComment" on-add-comment="addComment"></add-comment>
       </div>
     `;
@@ -43,11 +43,15 @@ class IncidentComments extends connect(store)(PolymerElement) {
       },
       allUsers: {
         type: Array,
-        computed: '_setUsers(state.staticDatausers)'
+        computed: '_setUsers(state.staticData.users)'
       },
       dataItems: {
         type: Array,
         value: []
+      },
+      isOffline: {
+        type: Boolean,
+        computed: '_setIsOffline(state.app.offline)'
       },
       state: {
         type: Object
@@ -76,6 +80,10 @@ class IncidentComments extends connect(store)(PolymerElement) {
     }
 
     this.dataItems = JSON.parse(JSON.stringify(selectIncidentComments(this.state))) || [];
+  }
+
+  _setIsOffline(offline) {
+    return offline;
   }
 
   _setIncidentId(id) {

@@ -33,7 +33,7 @@ export const loadAllStaticData = () => (dispatch) => {
 
 export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.incidentCategories).then((result) => {
-    dispatch(receiveIncidentCategories(JSON.parse(result)));
+    dispatch(receiveIncidentCategories(result));
   });
 };
 
@@ -46,7 +46,7 @@ const receiveIncidentCategories = (incidentCategories) => {
 
 export const fetchAndStoreThreatCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.threatCategories).then((result) => {
-    dispatch(receiveThreatCategories(JSON.parse(result)));
+    dispatch(receiveThreatCategories(result));
   });
 };
 
@@ -59,7 +59,7 @@ const receiveThreatCategories = (threatCategories) => {
 
 export const fetchAndStoreCriticalities = () => (dispatch, getState) => {
   makeRequest(Endpoints.criticalities).then((result) => {
-    dispatch(receiveCriticalities(JSON.parse(result)));
+    dispatch(receiveCriticalities(result));
   });
 };
 
@@ -72,7 +72,7 @@ const receiveCriticalities = (criticalities) => {
 
 export const fetchAndStoreVehicleTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.vehicleTypes).then((result) => {
-    dispatch(receiveVehicleTypes(JSON.parse(result)));
+    dispatch(receiveVehicleTypes(result));
   });
 };
 
@@ -85,7 +85,7 @@ const receiveVehicleTypes = (vehicleTypes) => {
 
 export const fetchAndStoreCountries = () => (dispatch, getState) => {
   makeRequest(Endpoints.countries).then((result) => {
-    dispatch(receiveCountries(JSON.parse(result)));
+    dispatch(receiveCountries(result));
   });
 };
 
@@ -98,7 +98,7 @@ const receiveCountries = (countries) => {
 
 export const fetchAndStoreAgencies = () => (dispatch, getState) => {
   makeRequest(Endpoints.agencies).then((result) => {
-    dispatch(receiveAgencies(JSON.parse(result)));
+    dispatch(receiveAgencies(result));
   });
 };
 
@@ -111,7 +111,7 @@ const receiveAgencies = (agencies) => {
 
 export const fetchAndStoreRegions = () => (dispatch, getState) => {
   makeRequest(Endpoints.regions).then((result) => {
-    dispatch(receiveRegions(JSON.parse(result)));
+    dispatch(receiveRegions(result));
   });
 };
 
@@ -124,7 +124,7 @@ const receiveRegions = (regions) => {
 
 export const fetchAndStoreFactors = () => (dispatch, getState) => {
   makeRequest(Endpoints.factors).then((result) => {
-    dispatch(receiveFactors(JSON.parse(result)));
+    dispatch(receiveFactors(result));
   });
 };
 
@@ -137,7 +137,7 @@ const receiveFactors = (factors) => {
 
 export const fetchAndStoreTargets = () => (dispatch, getState) => {
   makeRequest(Endpoints.targets).then((result) => {
-    dispatch(receiveTargets(JSON.parse(result)));
+    dispatch(receiveTargets(result));
   });
 };
 
@@ -150,7 +150,7 @@ const receiveTargets = (targets) => {
 
 export const fetchAndStoreWeapons = () => (dispatch, getState) => {
   makeRequest(Endpoints.weapons).then((result) => {
-    dispatch(receiveWeapons(JSON.parse(result)));
+    dispatch(receiveWeapons(result));
   });
 };
 
@@ -163,7 +163,7 @@ const receiveWeapons = (weapons) => {
 
 export const fetchAndStoreUsers = () => (dispatch, getState) => {
   makeRequest(Endpoints.users).then((result) => {
-    dispatch(receiveUsers(JSON.parse(result)));
+    dispatch(receiveUsers(result));
   });
 };
 
@@ -176,7 +176,7 @@ const receiveUsers = (users) => {
 
 export const fetchAndStoreTeams = () => (dispatch, getState) => {
   makeRequest(Endpoints.teams).then((result) => {
-    dispatch(receiveTeams(JSON.parse(result)));
+    dispatch(receiveTeams(result));
   });
 };
 
@@ -189,7 +189,7 @@ const receiveTeams = (teams) => {
 
 export const fetchAndStoreCrashTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.crashTypes).then((result) => {
-    dispatch(receiveCrashTypes(JSON.parse(result)));
+    dispatch(receiveCrashTypes(result));
   });
 };
 

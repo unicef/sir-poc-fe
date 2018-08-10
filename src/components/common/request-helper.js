@@ -18,7 +18,7 @@ const generateRequestConfigOptions = function(endpoint, data) {
   let config = {
       url: endpoint.url,
       method: endpoint.method,
-      async: false,
+      async: true,
       handleAs: 'json',
       headers: _getRequestHeaders({}),
       body: data,

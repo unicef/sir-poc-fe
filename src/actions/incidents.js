@@ -74,7 +74,7 @@ const updateEventIds = (newId, oldId) => {
 
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
-    dispatch(addIncidentSuccess(JSON.parse(result)));
+    dispatch(addIncidentSuccess(result));
     updatePath('/incidents/list/');
     return true;
   }).catch((error) => {
@@ -86,7 +86,7 @@ const addIncidentOnline = (newIncident, dispatch) => {
 
 const addCommentOnline = (comment, dispatch) => {
   return makeRequest(Endpoints.addIncidentComment, comment).then((result) => {
-    dispatch(addCommentSuccess(JSON.parse(result)));
+    dispatch(addCommentSuccess(result));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));
@@ -145,8 +145,7 @@ export const editIncident = incident => (dispatch, getState) => {
 export const syncIncident = newIncident => (dispatch, getState) => {
   makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     updatePath('/incidents/list/');
-    let response = JSON.parse(result);
-    dispatch(editIncidentSuccess(response, newIncident.id));
+    dispatch(editIncidentSuccess(result, newIncident.id));
   }).catch((error) => {
     dispatch(addIncidentFail(error.response));
     scrollToTop();
@@ -156,7 +155,7 @@ export const syncIncident = newIncident => (dispatch, getState) => {
 export const fetchIncidents = () => (dispatch, getState) => {
   if (getState().app.offline !== true) {
     makeRequest(Endpoints.incidentsList).then((result) => {
-      dispatch(receiveIncidents(JSON.parse(result)));
+      dispatch(receiveIncidents(result));
     });
   }
 };
@@ -164,7 +163,7 @@ export const fetchIncidents = () => (dispatch, getState) => {
 export const fetchIncidentComments = () => (dispatch, getState) => {
   if (getState().app.offline !== true) {
     makeRequest(Endpoints.incidentsCommentsList).then((result) => {
-      dispatch(receiveIncidentComments(JSON.parse(result)));
+      dispatch(receiveIncidentComments(result));
     });
   }
 };
@@ -183,6 +182,6 @@ export const fetchIncident = id => (dispatch, getState) => {
   }
   let endpoint = prepareEndpoint(Endpoints.getIncident, {id});
   makeRequest(endpoint).then((response) => {
-    dispatch(receiveIncident(JSON.parse(response)));
+    dispatch(receiveIncident(response));
   });
 };

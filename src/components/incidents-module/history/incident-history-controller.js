@@ -122,7 +122,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   _fetchHistory() {
     let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id: this.incidentId});
     makeRequest(endpoint).then((response) => {
-      this.history = JSON.parse(response);
+      this.history = response;
     });
   }
 

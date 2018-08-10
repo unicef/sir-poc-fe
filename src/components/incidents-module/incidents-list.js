@@ -226,20 +226,6 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     this.store = store;
   }
 
-  _getStartDate(){
-    if (!this.filters.startDate){
-      return null;
-    }
-    return this.filters.startDate;
-  }
-
-  _getEndDate(){
-    if (!this.filters.endDate){
-      return null;
-    }
-    return this.filters.endDate;
-  }
-
   _stateChanged(state) {
     if (!state) {
       return;

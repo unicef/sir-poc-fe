@@ -70,13 +70,13 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           <div class="col col-3">
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
-                             label="From (date of incident)"></datepicker-lite>
+                             label="From"></datepicker-lite>
           </div>
           
           <div class="col col-3">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
-                             label="To (date of incident)"></datepicker-lite>
+                             label="To"></datepicker-lite>
           </div>
           
         </div>

@@ -259,7 +259,7 @@ export const CommonFunctionality = superClass => class extends ListItemUtils(sup
   }
 
   _computeShownOptions(options, search, enableNoneOption) {
-    if (this._isUndefined(options) || this._isUndefined(enableNoneOption)) {
+    if (options === null || this._isUndefined(options) || this._isUndefined(enableNoneOption)) {
       return;
     }
 

@@ -28,6 +28,33 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
       etools-dropdown-lite, etools-dropdown-multi-lite {
         width: 100%;
       }
+            
+      paper-input[readonly],
+      paper-textarea[readonly],
+      datepicker-lite[readonly],
+      etools-dropdown-lite[readonly],
+      etools-dropdown-multi-lite[readonly],
+      paper-input[disabled],
+      paper-textarea[disabled],
+      datepicker-lite[disabled],
+      etools-dropdown-lite[disabled],
+      etools-dropdown-multi-lite[disabled] {
+        
+        --paper-input-container-label-focus: {
+          color: var(--secondary-text-color, #737373);
+        };
+      
+        --paper-input-container-underline: {
+          border-bottom: 1px dashed var(--primary-text-color);
+        }
+        --paper-input-container-underline-focus: {
+          border-bottom: 1px dashed var(--primary-text-color);
+        }
+        --paper-input-container-underline-disabled: {
+          border-bottom: 1px dashed var(--primary-text-color);
+        } 
+      }
+      
 
       @media screen and (max-width: 767px) {
         /* mobile, under 768px */

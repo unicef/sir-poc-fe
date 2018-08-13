@@ -28,13 +28,15 @@ documentContainer.innerHTML = `
         --unsynced-item-bg-color: var(--secondary-error-color);
 
         --paper-input-container-label: {
-          color: var(--secondary-text-color, #737373)
+          color: var(--secondary-text-color, #737373);
         };
         --paper-input-container-label-floating: {
           color: var(--secondary-text-color, #737373);
         }
 
         --list-primary-color: var(--primary-color);
+        
+        --input-focus-bg: #e8e8e8;
 
       }
     </style>

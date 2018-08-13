@@ -68,6 +68,10 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
           padding: 5px 10px;
         };
       }
+      
+      paper-button iron-icon {
+        margin-right: 8px;
+      }
 
       etools-info-tooltip.info {
         --etools-tooltip-trigger-icon: {

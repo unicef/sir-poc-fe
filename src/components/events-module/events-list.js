@@ -21,6 +21,7 @@ import PaginationMixin from '../common/pagination-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
 import '../styles/shared-styles.js';
+import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
@@ -28,7 +29,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles filters-styles data-table-styles grid-layout-styles">
+      <style include="shared-styles form-fields-styles filters-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
         }

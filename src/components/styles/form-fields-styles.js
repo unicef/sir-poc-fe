@@ -54,12 +54,6 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
           border-bottom: 1px dashed var(--primary-text-color);
         } 
       }
-      
-
-      @media screen and (max-width: 767px) {
-        /* mobile, under 768px */
-        
-      }
 
     </style>
   </template>

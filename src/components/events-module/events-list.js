@@ -70,7 +70,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
                              label="From">
-
             </datepicker-lite>
           </div>
           
@@ -78,7 +77,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To">
-
             </datepicker-lite>
           </div>
           
@@ -171,8 +169,8 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       offline: Boolean,
       filteredEvents: {
         type: Array,
-        computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length, ' +
-        'filters.startDate, filters.endDate)'
+        computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, ' +
+        'filters.syncStatus.length, filters.startDate, filters.endDate)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -231,9 +229,8 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     const eStatus = e.unsynced ? 'unsynced' : 'synced';
     return selectedSyncStatuses.some(s => s === eStatus);
   }
-  
-  _applyDateFilter(e, startDate, endDate) {
 
+  _applyDateFilter(e, startDate, endDate) {
     return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
 

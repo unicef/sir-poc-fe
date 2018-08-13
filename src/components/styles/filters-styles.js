@@ -34,6 +34,22 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         max-width: 25%;
       }
 
+      @media screen and (max-width: 1440px) {
+        
+        .sync-filter {
+          min-width: 195px;
+          max-width: 100%;
+        }
+      }
+      
+      @media screen and (max-width: 1024px) {
+        
+        .sync-filter {
+          min-width: 125px;
+          max-width: 100%;
+        }
+      }
+      
       @media screen and (max-width: 768px) {
         .search-input {
           display: block;

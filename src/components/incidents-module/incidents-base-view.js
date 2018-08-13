@@ -338,6 +338,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      staticData: Object,
+      title: String,
+      state: Object,
+      store: Object,
       incident: {
         type: Object,
         value: () => JSON.parse(JSON.stringify(IncidentModel))
@@ -369,10 +373,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Boolean,
         value: false
       },
-      title: String,
-      staticData: Object,
-      state: Object,
-      store: Object,
+      visible: {
+        type: Boolean,
+        value: false,
+        observer: '_visibilityChanged'
+      },
       selectedEvent: {
         type: Object,
         value: {}
@@ -434,6 +439,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
+  _visibilityChanged(visible) {
+    if (visible) {
+      this.resetValidations();
+    }
+  }
+
   isOfflineOrUnsynced() {
     return this.state.app.offline || (this.incident && this.incident.unsynced);
   }
@@ -482,10 +493,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
 
     return incident && incident.name.startsWith('Accident');
-  }
-
-  isVisible() {
-    return this.classList.contains('iron-selected');
   }
 
   eventNotOk(eventId, offline) {

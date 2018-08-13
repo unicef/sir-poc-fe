@@ -1,4 +1,4 @@
-const baseUrl = 'http://' + window.location.host;
+const baseUrl = window.location.origin;
 
 export const Endpoints = {
   eventsList: {

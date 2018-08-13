@@ -8,8 +8,8 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-
+import { html } from '@polymer/polymer/polymer-element.js';
+import { BaseController } from '../common/base-controller.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-tabs/paper-tabs.js';
@@ -22,7 +22,7 @@ import '@polymer/app-route/app-route.js';
 import '../common/etools-tabs.js';
 import '../styles/shared-styles.js';
 
-class IncidentsController extends connect(store)(PolymerElement) {
+class IncidentsController extends connect(store)(BaseController) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -61,7 +61,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
       <app-route
         route="{{subRoute}}"
         pattern="/:subsection"
-        data="{{subRouteData}}">
+        data="{{subrouteData}}">
       </app-route>
 
       <template is="dom-if" if="[[_showTabs(page)]]">
@@ -73,14 +73,14 @@ class IncidentsController extends connect(store)(PolymerElement) {
         </div>
       </template>
 
-      <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+      <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
         <edit-incident name="edit"></edit-incident>
 
         <view-incident name="view"></view-incident>
         <incident-comments name="comments"></incident-comments>
-        <incident-history-controller route="{{route}}" name="history"></incident-history-controller>
+        <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
     `;
   }
@@ -98,19 +98,6 @@ class IncidentsController extends connect(store)(PolymerElement) {
     };
   }
 
-  static get observers() {
-    return [
-      'routeChanged(routeData.section, routeData.id)',
-      'pageChanged(page)'
-    ];
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    store.dispatch(fetchIncidents());
-    store.dispatch(fetchIncidentComments());
-  }
-
   tabClicked(e) {
     if (this.page === 'history') {
       this.navigateToHistoryList();
@@ -119,7 +106,7 @@ class IncidentsController extends connect(store)(PolymerElement) {
 
   navigateToHistoryList() {
     // triggers history-controller to change to the list view
-    this.set('subRouteData.subsection', null);
+    this.set('subrouteData.subsection', null);
   }
 
   _stateChanged(state) {
@@ -128,50 +115,31 @@ class IncidentsController extends connect(store)(PolymerElement) {
     }
   }
 
-  routeChanged(section, id) {
-    if (!section) {
-      this.set('page', 'list');
-    } else if (['list', 'new'].indexOf(section) < 0 && !id) {
-      this.set('routeData.section', 'list');
-    } else {
-      this.set('page', section);
-    }
-  }
-
-  pageIs(actualPage, expectedPage) {
-    return actualPage === expectedPage;
-  }
-
   pageChanged(page) {
     if (page === 'history' && this.isOffline) {
       updatePath('/');
     }
     store.dispatch(lazyLoadIncidentPages(page));
-
-    const newIncidentPage = this.shadowRoot.querySelector('add-incident');
-    if (page === 'new' && newIncidentPage instanceof PolymerElement) {
-      newIncidentPage.resetValidations();
-    }
-
   }
 
   getTabs(offline) {
     return [
-        {
-          name: 'view',
-          tabLabel: 'VIEW'
-        },
-        {
-          name: 'comments',
-          tabLabel: 'COMMENTS'
-        },
-        {
-          name: 'history',
-          tabLabel: 'HISTORY',
-          hidden: offline
-        }
-      ];
+      {
+        name: 'view',
+        tabLabel: 'VIEW'
+      },
+      {
+        name: 'comments',
+        tabLabel: 'COMMENTS'
+      },
+      {
+        name: 'history',
+        tabLabel: 'HISTORY',
+        hidden: offline
+      }
+    ];
   }
+
   _showTabs(page) {
     return !!this.viewPageTabs.find(pt => pt.name === page);
   }

@@ -64,6 +64,8 @@ const getEditedList = (list, action) => {
 };
 
 const getRefreshedIncidents = (oldIncidents, newIncidents) => {
+  oldIncidents = oldIncidents instanceof Array ? oldIncidents : [];
+  newIncidents = newIncidents instanceof Array ? newIncidents : [];
   let unsynced = oldIncidents.filter(elem => elem.unsynced);
   return [...newIncidents, ...unsynced];
 };

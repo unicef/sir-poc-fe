@@ -8,7 +8,8 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { BaseController } from '../common/base-controller.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
@@ -16,7 +17,7 @@ import { store } from '../../redux/store.js';
 import { lazyLoadEventPages } from '../../actions/app.js';
 import '../styles/shared-styles.js';
 
-class EventsController extends connect(store)(PolymerElement) {
+class EventsController extends connect(store)(BaseController) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -30,7 +31,7 @@ class EventsController extends connect(store)(PolymerElement) {
         data="{{routeData}}">
       </app-route>
 
-      <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+      <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <events-list name="list"></events-list>
          <add-event name="new"></add-event>
         <view-event name="view"></view-event>
@@ -47,42 +48,11 @@ class EventsController extends connect(store)(PolymerElement) {
     };
   }
 
-  static get observers() {
-    return [
-      'routeChanged(routeData.section, routeData.id)',
-      'pageChanged(page)'
-    ];
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    // list data loaded in static-data-loader.js
-  }
-
   _stateChanged(state) {
-  }
-
-  routeChanged(section, id) {
-    if (!section) {
-      this.set('page', 'list');
-    } else if (['list', 'new'].indexOf(section) < 0 && !id) {
-      this.set('routeData.section', 'list');
-    } else {
-      this.set('page', section);
-    }
-  }
-
-  pageIs(actualPage, expectedPage) {
-    return actualPage === expectedPage;
   }
 
   pageChanged(page) {
     store.dispatch(lazyLoadEventPages(page));
-
-    const newEventPage = this.shadowRoot.querySelector('add-event');
-    if (page === 'new' && newEventPage instanceof PolymerElement) {
-      newEventPage.resetValidations();
-    }
   }
 }
 

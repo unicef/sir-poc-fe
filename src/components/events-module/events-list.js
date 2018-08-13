@@ -19,6 +19,7 @@ import {store} from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
+import '../common/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
@@ -54,16 +55,31 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <div class="row-h row-flex">
           <paper-input class="filter search-input"
                        placeholder="Search by Description or Location"
-                       value="{{q}}">
+                       value="{{filters.q}}">
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
           <etools-dropdown-multi-lite class="filter sync-filter"
                                       label="Sync status"
                                       options="[[itemSyncStatusOptions]]"
-                                      selected-values="{{selectedSyncStatuses}}"
+                                      selected-values="{{filters.syncStatus}}"
                                       hide-search>
           </etools-dropdown-multi-lite>
+          
+          <div class="col col-3">
+            <datepicker-lite id="fromDate"
+                             value="{{filters.startDate}}"
+                             label="From">
+            </datepicker-lite>
+          </div>
+          
+          <div class="col col-3">
+            <datepicker-lite id="endDate"
+                             value="{{filters.endDate}}"
+                             label="To">
+            </datepicker-lite>
+          </div>
+          
         </div>
       </div>
 
@@ -150,11 +166,11 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         type: Object,
         value: []
       },
-      q: String,
       offline: Boolean,
       filteredEvents: {
         type: Array,
-        computed: '_filterData(events, q, pagination.pageSize, pagination.pageNumber, selectedSyncStatuses.length)'
+        computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, ' +
+        'filters.syncStatus.length, filters.startDate, filters.endDate)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -163,8 +179,14 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      selectedSyncStatuses: {
-        type: Array
+      filters: {
+        type: Object,
+        value: {
+          q: null,
+          startDate: null,
+          endDate: null,
+          syncStatus: []
+        }
       }
     };
   }
@@ -173,20 +195,30 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     if (!state) {
       return;
     }
+
     this.events = state.events.list;
     this.offline = state.app.offline;
   }
 
-  _filterData(events, q) {
-    let filteredEvents = events ? JSON.parse(JSON.stringify(events)) : [];
-    if (events instanceof Array && events.length > 0 && typeof q === 'string') {
-      filteredEvents = filteredEvents.filter(e => this._applyQFilter(e, q) &&
-          this._applyStatusFilter(e, this.selectedSyncStatuses));
+  _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate) {
+
+    if (!(events instanceof Array && events.length > 0)) {
+      return [];
     }
+
+    let filteredEvents = JSON.parse(JSON.stringify(events));
+
+    filteredEvents = filteredEvents.filter(e => this._applyQFilter(e, q));
+    filteredEvents = filteredEvents.filter(e => this._applyStatusFilter(e, this.filters.syncStatus));
+    filteredEvents = filteredEvents.filter(e => this._applyDateFilter(e, startDate, endDate));
+
     return this.applyPagination(filteredEvents);
   }
 
   _applyQFilter(e, q) {
+    if (!q || q === '') {
+      return true;
+    }
     return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
   }
 
@@ -196,6 +228,12 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     }
     const eStatus = e.unsynced ? 'unsynced' : 'synced';
     return selectedSyncStatuses.some(s => s === eStatus);
+  }
+
+  _applyDateFilter(e, startDate, endDate) {
+    return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
+        (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
+
   }
 
   notEditable(event, offline) {

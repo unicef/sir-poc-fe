@@ -49,8 +49,8 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
 
             <div class="row-h">
-              <div class="col col-3"> </div>
-              <div class="col col-6">
+              <div class="col col-4"> </div>
+              <div class="col col-4">
                 <div class="center-text">
                   <p> Show stastistics between </p>
                 </div>
@@ -69,7 +69,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                   </datepicker-lite>
                 </div>
               </div>
-              <div class="col col-3"> </div>
+              <div class="col col-4"> </div>
             </div>
 
             <div class="row-h">

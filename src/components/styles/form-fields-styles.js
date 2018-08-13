@@ -9,45 +9,31 @@
  */
 
 import '@polymer/polymer/polymer-element.js';
-import './button-styles.js';
 
 const documentContainer = document.createElement('template');
-documentContainer.innerHTML = `<dom-module id="filters-styles">
+documentContainer.innerHTML = `<dom-module id="form-fields-styles">
   <template>
     <style>
-      .filters .filter:not(:last-child) {
-        margin-right: 24px;
-      }
-      .sync-filter {
-        min-width: 250px;
-        width: auto;
-      }
-      .search-input {
-        max-width: 400px;
-        @apply --layout-horizontal;
-        --paper-input-container: {
-          width: 100%;
-        };
-        --paper-input-prefix: {
-          margin-right: 8px;
-        };
-        flex: 0 0 25%;
-        max-width: 25%;
+      paper-checkbox {
+        line-height: 64px;
+        --paper-checkbox-unchecked-color: var(--secondary-text-color);
       }
 
-      @media screen and (max-width: 768px) {
-        .search-input {
+      paper-textarea {
+        --paper-input-container-input: {
           display: block;
-          max-width: 100%;
-        }
-        .filters .filter:not(:last-child) {
-          margin-right: 0;
-        }
-        .sync-filter {
-          min-width: 0;
-          max-width: 100%;
         }
       }
+
+      etools-dropdown-lite, etools-dropdown-multi-lite {
+        width: 100%;
+      }
+
+      @media screen and (max-width: 767px) {
+        /* mobile, under 768px */
+        
+      }
+
     </style>
   </template>
 </dom-module>`;

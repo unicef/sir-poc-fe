@@ -69,17 +69,6 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
         };
       }
 
-      paper-checkbox {
-        line-height: 64px;
-        --paper-checkbox-unchecked-color: var(--secondary-text-color);
-      }
-
-      paper-textarea {
-        --paper-input-container-input: {
-          display: block;
-        }
-      }
-
       etools-info-tooltip.info {
         --etools-tooltip-trigger-icon: {
           color: var(--primary-color);
@@ -90,24 +79,12 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
         padding-bottom: 36px;
       }
 
-      .search-input {
-        max-width: 400px;
-      }
-
       .warning {
         color: var(--warning-text-color, orange);
       }
 
       a {
         text-decoration: none;
-      }
-
-      etools-dropdown-lite, etools-dropdown-multi-lite {
-        width: 100%;
-      }
-
-      etools-dropdown-lite, etools-dropdown-multi-lite {
-        width: 100%;
       }
 
       @media screen and (max-width: 767px) {

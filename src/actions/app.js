@@ -13,10 +13,11 @@ import { loadAllStaticData } from './static-data.js';
 import { fetchAndStoreEvents } from './events.js';
 import { fetchIncidents, fetchIncidentComments } from './incidents.js';
 
-export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
-export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 export const OPEN_SNACKBAR = 'OPEN_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
+export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
+export const UPDATE_ACTIVE_USER = 'UPDATE_ACTIVE_USER';
+export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
 
 // TODO: break this up into smaller files
@@ -43,6 +44,12 @@ export const showSnackbar = () => (dispatch) => {
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() =>
     dispatch({ type: CLOSE_SNACKBAR }), 3000);
+};
+export const updateActiveUser = activeUser => (dispatch) => {
+  dispatch({
+    type: UPDATE_ACTIVE_USER,
+    activeUser
+  });
 };
 
 export const updateOffline = offline => (dispatch, getState) => {

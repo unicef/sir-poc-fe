@@ -157,7 +157,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       filteredIncidents: {
         type: Array,
         computed: 'getIncidentsForPeriod(incidents, selectedStartDate, selectedEndDate)'
-      },
+      }
     };
   }
 
@@ -168,6 +168,16 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
     this.events = state.events.list;
     this.incidents = state.incidents.list;
+
+    let activeUserId = state.app.activeUser ? state.app.activeUser.id : null;
+
+    this.userEvents = this.events.filter((e) => {
+      // return !activeUserId || e.submitted_by === activeUserId;
+      return true; // events don't yet return a submitted_by
+    });
+    this.userIncidents = this.incidents.filter((e) => {
+      return !activeUserId || e.submitted_by === activeUserId;
+    });
   }
 
   getEventsForPeriod(events, selectedStartDate, selectedEndDate) {

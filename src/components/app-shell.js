@@ -26,6 +26,8 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
 
+import './common/etools-dropdown/etools-dropdown-lite.js';
+
 // basic stuff above, PWA stuff below
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
@@ -39,6 +41,7 @@ import { updatePath } from '../components/common/navigation-helper.js';
 import {
   updateOffline,
   lazyLoadModules,
+  updateActiveUser,
   updateLocationInfo
 } from '../actions/app.js';
 
@@ -112,6 +115,9 @@ class MyApp extends connect(store)(PolymerElement) {
           background-color: var(--menu-selected-bg-color);
           color: var(--app-primary-color);
         }
+        etools-dropdown-lite {
+          color: white;
+        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -175,6 +181,13 @@ class MyApp extends connect(store)(PolymerElement) {
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
               <div main-title="">SIR</div>
+              <div style="max-width:300px; float: right;">
+                <etools-dropdown-lite label="Active user"
+                                      trigger-value-change-event
+                                      on-etools-selected-item-changed="_userSelected"
+                                      options="[[users]]">
+                </etools-dropdown-lite>
+              </div>
             </app-toolbar>
           </app-header>
 
@@ -258,10 +271,22 @@ class MyApp extends connect(store)(PolymerElement) {
     // this.page = state.app.page;
     this.set('offline', state.app.offline);
     this.set('snackbarOpened', state.app.snackbarOpened);
+
+    this.users = state.staticData.users.map((elem) => {
+      elem.name = elem.first_name + ' ' + elem.last_name;
+      return elem;
+    });
   }
 
   _pageChanged(page) {
     store.dispatch(lazyLoadModules(page));
+  }
+
+  _userSelected(event) {
+    if (!event.detail.selectedItem) {
+      return;
+    }
+    store.dispatch(updateActiveUser(event.detail.selectedItem));
   }
 }
 

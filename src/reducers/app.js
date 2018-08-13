@@ -13,6 +13,7 @@ import {
   UPDATE_OFFLINE,
   OPEN_SNACKBAR,
   CLOSE_SNACKBAR,
+  UPDATE_ACTIVE_USER,
   UPDATE_DRAWER_STATE,
   UPDATE_LOCATION_INFO
 } from '../actions/app.js';
@@ -54,6 +55,11 @@ const app = (state = defaultState, action) => {
       return {
         ...state,
         locationInfo: action.locationInfo
+      };
+    case UPDATE_ACTIVE_USER:
+      return {
+        ...state,
+        activeUser: action.activeUser
       };
     default:
       return state;

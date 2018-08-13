@@ -35,6 +35,7 @@ class EtoolsDropdown extends DropdownRequiredMixins {
         :host {
           --paper-input-container-input: {
             cursor: var(--esmm-select-cursor);
+            color: white;
           }
         }
 

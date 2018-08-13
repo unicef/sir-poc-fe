@@ -1,12 +1,13 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import HistoryHelpers from './history-helpers.js';
 import '@polymer/iron-icons/image-icons.js';
+import '../../styles/shared-styles.js';
 
 export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
 
   static get template() {
     return html`
-      <style>
+      <style include="shared-styles">
         a {
           color: var(--primary-color);
           text-decoration: none;
@@ -14,21 +15,28 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
       </style>
 
       <a href="incidents/history/[[workingItem.data.id]]/list" title="Go to changes list">
-        <iron-icon icon="list"></iron-icon>
+        <paper-button raised class="white-bg smaller">
+          <iron-icon icon="list"></iron-icon>
+          History List
+        </paper-button>
       </a>
 
       <a href="incidents/history/[[workingItem.data.id]]/view/[[workingItem.id]]"
            hidden$="[[pageIs('view')]]"
            title="View entire incident at this version">
-
-        <iron-icon icon="assignment"></iron-icon>
+        <paper-button raised class="white-bg smaller">
+          <iron-icon icon="assignment"></iron-icon>
+           Incident at this revision
+        </paper-button>
       </a>
 
       <a href="incidents/history/[[workingItem.data.id]]/diff/[[workingItem.id]]"
            hidden$="[[shouldHideViewChangesButton(workingItem.change)]]"
            title="View changes from previous version">
-
-        <iron-icon icon="image:compare"></iron-icon>
+        <paper-button raised class="white-bg smaller">
+          <iron-icon icon="image:compare"></iron-icon>
+          Changes from prev. version
+        </paper-button>
       </a>
     `;
   }

@@ -13,7 +13,6 @@ import { BaseController } from '../common/base-controller.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-tabs/paper-tabs.js';
-import { fetchIncidents, fetchIncidentComments } from '../../actions/incidents.js';
 import { lazyLoadIncidentPages } from '../../actions/app.js';
 import { store } from '../../redux/store.js';
 

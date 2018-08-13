@@ -32,12 +32,12 @@ class IncidentRevisionView extends IncidentsBaseView {
 
     return html`
       <style include="history-common-styles"></style>
-      <div class="layout-horizontal flex-c">
-        <div class="col-11">
+      <div class="layout-horizontal space-between flex-c">
+        <div>
           <h2> View incident at this revision </h2>
         </div>
 
-        <div class="col-1 nav-buttons">
+        <div class="nav-buttons">
           <history-navigation-links page="view" working-item="[[workingItem]]"></history-navigation-links>
         </div>
       </div>

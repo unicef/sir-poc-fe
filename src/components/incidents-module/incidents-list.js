@@ -18,6 +18,8 @@ import {store} from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
+import '../common/etools-dropdown/etools-dropdown-lite.js';
+import '../common/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
@@ -53,17 +55,50 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <div class="row-h flex-c">
           <paper-input class="filter search-input"
                        placeholder="Search by Person Involved, City or Description"
-                       value="{{q}}">
+                       value="{{filters.q}}">
             <iron-icon icon="search" slot="prefix"></iron-icon>
           </paper-input>
 
           <etools-dropdown-multi-lite class="filter sync-filter"
                                       label="Sync status"
                                       options="[[itemSyncStatusOptions]]"
-                                      selected-values="{{selectedSyncStatuses}}"
+                                      selected-values="{{filters.syncStatus}}"
                                       hide-search>
 
           </etools-dropdown-multi-lite>
+
+          <div class="col col-3">
+            <datepicker-lite id="fromDate"
+                             value="{{filters.startDate}}"
+                             label="From (date of incident)"></datepicker-lite>
+          </div>
+          
+          <div class="col col-3">
+            <datepicker-lite id="endDate"
+                             value="{{filters.endDate}}"
+                             label="To (date of incident)"></datepicker-lite>
+          </div>
+          
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <etools-dropdown-lite id="country"
+                                  label="Country"
+                                  enable-none-option
+                                  options="[[staticData.countries]]"
+                                  selected="{{filters.country}}">
+            </etools-dropdown-lite>
+          </div>
+
+          <div class="col col-3">
+            <etools-dropdown-lite id="incidentType"
+                                  label="Incident Type"
+                                  enable-none-option
+                                  options="[[staticData.incidentCategories]]"
+                                  selected="{{filters.incidentCategory}}">
+            </etools-dropdown-lite>
+          </div>
+          
         </div>
       </div>
 
@@ -155,11 +190,11 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         value: []
       },
       incidentCategories: Array,
-      q: String,
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, q, pagination.pageSize, pagination.pageNumber, selectedSyncStatuses.length)'
+        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length, ' +
+        'filters.startDate, filters.endDate, filters.country, filters.incidentCategory)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -168,17 +203,36 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      selectedSyncStatuses: {
-        type: Array
+      store: Object,
+      state: Object,
+      staticData: Object,
+      filters: {
+        type: Object,
+        value: {
+          incidentCategory : null,
+          country: null,
+          startDate: null,
+          endDate: null,
+          syncStatus: [],
+          q: null
+        }
       }
+
     };
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.store = store;
   }
 
   _stateChanged(state) {
     if (!state) {
       return;
     }
+
     this.offline = state.app.offline;
+    this.staticData = state.staticData;
     this.incidents = state.incidents.list;
     this.incidentCategories = state.staticData.incidentCategories;
   }
@@ -188,17 +242,25 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return incident.name || 'Not Specified';
   }
 
-  _filterData(incidents, q, pageSize, pageNumber) {
-    let filteredIncidents = incidents ? JSON.parse(JSON.stringify(incidents)) : [];
-    if (incidents instanceof Array && incidents.length > 0 && typeof q === 'string') {
-      filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
-      filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.selectedSyncStatuses));
+  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country, incidentCategory) {
+    if (!(incidents instanceof Array && incidents.length > 0)) {
+      return [];
     }
+    let filteredIncidents = JSON.parse(JSON.stringify(incidents));
+
+    filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
+    filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.filters.syncStatus));
+    filteredIncidents = filteredIncidents.filter(e => this._applyDateFilter(e, startDate, endDate));
+    filteredIncidents = filteredIncidents.filter(e => this._applyCountryFilter(e, country));
+    filteredIncidents = filteredIncidents.filter(e => this._applyIncidentCategoryFilter(e, incidentCategory));
 
     return this.applyPagination(filteredIncidents);
   }
 
   _applyQFilter(e, q) {
+    if (!q || q === '') {
+      return true;
+    }
     let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();
     return person.toLowerCase().search(q) > -1 ||
         String(e.city).toLowerCase().search(q) > -1 ||
@@ -211,6 +273,29 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     }
     const eStatus = e.unsynced ? 'unsynced' : 'synced';
     return selectedSyncStatuses.some(s => s === eStatus);
+  }
+
+  _applyDateFilter(e, startDate, endDate) {
+
+    if (startDate && new Date(e.incident_date) <= new Date(startDate)){
+      return false;
+    }
+
+    if (endDate && new Date(e.incident_date) >= new Date(endDate)){
+      return false;
+    }
+
+    return true;
+  }
+
+  _applyCountryFilter(e, selectedCountry){
+
+    return selectedCountry ? e.country === selectedCountry: true;
+  }
+
+  _applyIncidentCategoryFilter(e, selectedIncidentCategory){
+
+    return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
   }
 
   notEditable(incident, offline) {

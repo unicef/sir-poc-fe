@@ -14,14 +14,15 @@ class DisplayComment extends DateMixin(PolymerElement) {
           display: block;
         }
         .container {
-          padding: 24px 20px;
+          padding: 24px 0;
         }
         .username {
-          color: var(--app-secondary-color);
           font-weight: 600;
+          color: var(--primary-color-darker);
         }
         .date {
-          color: #bdbbbb;
+          color: var(--secondary-text-color);
+          font-size: 13px;
         }
         .username-and-date {
           padding-bottom:10px;

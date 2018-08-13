@@ -63,6 +63,11 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
         observer: '_idChanged'
       },
+      visible: {
+        type: Boolean,
+        value: false,
+        observer: '_visibilityChanged'
+      },
       workingItem: Object,
       subRouteData: Object,
       routeData: Object,
@@ -78,6 +83,12 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       '_routeChanged(routeData.section)',
       '_revisionIdChanged(subRouteData.revisionId, history)'
     ];
+  }
+
+  _visibilityChanged(visible) {
+    if (visible) {
+      this.set('routeData.section', 'list');
+    }
   }
 
   _routeChanged(section, revId) {
@@ -111,7 +122,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   _fetchHistory() {
     let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id: this.incidentId});
     makeRequest(endpoint).then((response) => {
-      this.history = JSON.parse(response);
+      this.history = response;
     });
   }
 

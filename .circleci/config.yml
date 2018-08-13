@@ -66,6 +66,7 @@ jobs:
       - image: circleci/node:8
         environment:
           API_URL: https://api.github.com/repos/unicef/sir-poc-fe
+          RELEASE_MATCH: "release/*"
     steps:
       - checkout
       - add_ssh_keys:

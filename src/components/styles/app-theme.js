@@ -35,8 +35,6 @@ documentContainer.innerHTML = `
         }
 
         --list-primary-color: var(--primary-color);
-        
-        --input-focus-bg: #e8e8e8;
 
       }
     </style>

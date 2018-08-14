@@ -144,7 +144,7 @@ jobs:
               if [[ $CIRCLE_BRANCH == $RELEASE_MATCH ]]; then
                 curl --user ${CIRCLE_RELEASE_TOKEN}: \
                   --fail \
-                  --data build_parameters[TAG]=$TAG \
+                  --data build_parameters[BUILD_TAG]=$TAG \
                   --data build_parameters[CIRCLE_JOB]=frontend \
                   https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/sir-releases/tree/develop
               else

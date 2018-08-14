@@ -1,0 +1,37 @@
+{
+  "extends": ["eslint:recommended", "google"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
+  },
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "html"
+  ],
+  "rules": {
+    "linebreak-style": "off",
+    "padded-blocks": "off",
+    "brace-style": "off",
+    "new-cap": "off",
+    "no-var": "off",
+    "no-console": ["error", {"allow": ["warn", "error"]}],
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off",
+    "guard-for-in": "off",
+    "object-curly-spacing": "off",
+    "comma-dangle": ["error", "never"],
+    "max-len": ["error", {"code": 120 }],
+    "camelcase": ["error", {"properties": "never"}],
+    "arrow-parens": [2, "as-needed", {"requireForBlockBody": true}]
+  },
+  "globals": {
+    "moment": true,
+    "require": true,
+    "Promise": true,
+    "MyAppGlobals": true
+  }
+}

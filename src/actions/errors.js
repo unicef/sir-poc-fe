@@ -6,10 +6,10 @@ export const serverError = (serverError) => {
     type: SERVER_ERROR,
     serverError
   };
-}
+};
 
 export const clearErrors = () => {
   return {
     type: CLEAR_ERRORS
-  }
-}
+  };
+};

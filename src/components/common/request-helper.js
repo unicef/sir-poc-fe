@@ -1,6 +1,6 @@
 
 import '@polymer/iron-ajax/iron-request.js';
-import { updatePath, redirectToLogin } from './navigation-helper.js';
+import { redirectToLogin } from './navigation-helper.js';
 
 // let ironRequestElem;
 
@@ -15,10 +15,10 @@ const getRequestElement = function() {
 };
 
 const generateRequestConfigOptions = function(endpoint, data) {
-  let config =  {
+  let config = {
       url: endpoint.url,
       method: endpoint.method,
-      async: false,
+      async: true,
       handleAs: 'json',
       headers: _getRequestHeaders({}),
       body: data,
@@ -48,10 +48,9 @@ export const makeRequest = function(endpoint, data = {}) {
   let requestElem = getRequestElement();
 
   requestElem.send(reqConfig);
-  return requestElem.completes.then(result => {
+  return requestElem.completes.then((result) => {
     return result.response;
   }).catch((error) => {
-    console.log('error caught,', requestElem.xhr.status);
     if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
       redirectToLogin();
     }
@@ -132,4 +131,14 @@ const _getClientConfiguredHeaders = (additionalHeaders) => {
 const _csrfSafeMethod = (method) => {
   // these HTTP methods do not require CSRF protection
   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+};
+
+export const prepareEndpoint = (endpoint, data) => {
+  let endpointCpy = JSON.parse(JSON.stringify(endpoint));
+
+  Object.keys(data).forEach((key) => {
+    endpointCpy.url = endpointCpy.url.replace('<%='+ key + '%>', data[key]);
+  });
+
+  return endpointCpy;
 };

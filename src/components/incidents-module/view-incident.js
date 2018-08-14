@@ -2,6 +2,7 @@
 @license
 */
 import { IncidentsBaseView } from './incidents-base-view.js';
+import { isOnViewIncident } from '../../reducers/app';
 
 /**
  * @polymer
@@ -14,17 +15,8 @@ class ViewIncident extends IncidentsBaseView {
     this.title = 'View incident';
   }
 
-  static get properties() {
-    return {
-      incidentId: {
-        type: Number,
-        observer: '_idChanged'
-      }
-    };
-  }
-
-  _idChanged(newId) {
-    this.set('incident', this.state.incidents.list.find(elem => elem.id == this.incidentId ));
+  isOnExpectedPage() {
+    return isOnViewIncident(this.state);
   }
 
 }

@@ -1,65 +1,106 @@
 /**
-@license
-*/
+ @license
+ */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-// import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
+import '../common/datepicker-lite.js';
 
-import { addEvent } from '../../actions/events.js';
-import { store } from '../store.js';
+import { fetchEvent } from '../../actions/events.js';
+import { selectEvent } from '../../reducers/events.js';
+import { store } from '../../redux/store.js';
+import { EventModel } from './models/event-model.js';
 import '../common/errors-box.js';
+import '../common/warn-message.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
+import '../styles/required-fields-styles.js';
+import { resetFieldsValidations, validateFields } from '../common/validations-helper';
 
 export class EventsBaseView extends connect(store)(PolymerElement) {
- static get template() {
+  static get template() {
+    // language=HTML
     return html`
-      <style include="shared-styles grid-layout-styles">
+      <style include="shared-styles grid-layout-styles required-fields-styles">
         :host {
           @apply --layout-vertical;
         }
-        paper-button {
-          margin: 8px 24px;
-          padding: 8px;
+
+        errors-box {
+          margin: 0 24px;
         }
       </style>
-      <div class="card">
-        <div class="row-h">
-          <h2> [[title]] </h2>
-        </div>
 
-        <div class="row-h">
+      <div class="card">
+        <h2>[[title]]</h2>
+
+        <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <paper-input label="Start date" type="date" readonly="[[readonly]]" value="{{event.start_date}}"></paper-input>
+          <div class="col col-3">
+            <datepicker-lite id="startDate"
+                             label="Start date"
+                             readonly="[[readonly]]"
+                             value="{{event.start_date}}"
+                             required auto-validate
+                             error-message="Start date is required"></datepicker-lite>
+          </div>
+          <div class="col col-3">
+            <datepicker-lite id="endDate"
+                             label="End date"
+                             readonly="[[readonly]]"
+                             value="{{event.end_date}}"
+                             required auto-validate
+                             error-message="End date is required"></datepicker-lite>
           </div>
           <div class="col col-6">
-            <paper-input label="End date" type="date" readonly="[[readonly]]" value="{{event.end_date}}"></paper-input>
+            <paper-input id="location"
+                         label="Location"
+                         placeholder="&#8212;"
+                         type="text"
+                         readonly="[[readonly]]"
+                         value="{{event.location}}"
+                         required auto-validate
+                         error-message="Location is required"></paper-input>
           </div>
         </div>
 
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <paper-input label="Location" type="text" readonly="[[readonly]]" value="{{event.location}}"></paper-input>
-          </div>
-          <div class="col col-6">
-            <paper-input label="Note" readonly="[[readonly]]" type="text" value="{{event.note}}"></paper-input>
+          <div class="col col-12">
+            <paper-textarea label="Note" readonly="[[readonly]]" placeholder="&#8212;"
+                            value="{{event.note}}"></paper-textarea>
           </div>
         </div>
+
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-input label="Description" type="text" readonly="[[readonly]]" value="{{event.description}}"></paper-input>
+            <paper-textarea id="description"
+                            label="Description"
+                            readonly="[[readonly]]"
+                            placeholder="&#8212;"
+                            value="{{event.description}}"
+                            required auto-validate
+                            error-message="Description is required"></paper-textarea>
           </div>
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
-          <paper-button raised on-click="save"> Save </paper-button>
+          <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
+            <warn-message message="Because there is no internet conenction the event will be saved offine for now,
+                                    and you must sync it manually by saving it again when online">
+            </warn-message>
+          </div>
+
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-button raised on-click="save">Save</paper-button>
+            </div>
+          </div>
         </template>
       </div>
     `;
@@ -68,8 +109,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   static get properties() {
     return {
       event: {
-        type: Object,
-        value: {}
+        type: Object
       },
       readonly: {
         type: Boolean,
@@ -77,19 +117,68 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       },
       title: String,
       state: Object,
-      store: Object
+      store: Object,
+      visible: {
+        type: Boolean,
+        value: false,
+        observer: '_visibilityChanged'
+      },
+      eventId: {
+        type: Number,
+        computed: '_setEventId(state.app.locationInfo.eventId)',
+        observer: '_idChanged'
+      },
+      fieldsToValidateSelectors: {
+        type: Array,
+        value: ['#startDate', '#endDate', '#location', '#description']
+      }
     };
   }
+
   connectedCallback() {
-    super.connectedCallback();
     this.store = store;
+    super.connectedCallback();
+  }
+
+  _setEventId(id) {
+    return id;
+  }
+
+  _idChanged(newId) {
+    if (!this.isOnExpectedPage(this.state)) {
+      return;
+    }
+
+    if (!newId) {
+      this.event = JSON.parse(JSON.stringify(EventModel));
+      return;
+    }
+
+    this.set('event', JSON.parse(JSON.stringify(selectEvent(this.state))));
+    if (!this.isOfflineOrUnsynced()) {
+      this.store.dispatch(fetchEvent(this.eventId));
+    }
+  }
+
+  _visibilityChanged(visible) {
+    if (visible) {
+      this.resetValidations();
+    }
   }
 
   _stateChanged(state) {
     this.state = state;
   }
 
-  isVisible() {
-    return this.classList.contains('iron-selected');
+  isOfflineOrUnsynced() {
+    return this.state.app.offline || (this.event && this.event.unsynced);
+  }
+
+  validate() {
+    return validateFields(this, this.fieldsToValidateSelectors);
+  }
+
+  resetValidations() {
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 }

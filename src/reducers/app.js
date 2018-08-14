@@ -14,10 +14,21 @@ import {
   OPEN_SNACKBAR,
   CLOSE_SNACKBAR,
   UPDATE_DRAWER_STATE,
-  UPDATE_LOCATION_INFO,
+  UPDATE_LOCATION_INFO
 } from '../actions/app.js';
 
-const app = (state = {narrowDrawer: false, locationInfo: {selectedModule: '', page: '', selectedItemId: ''}}, action) => {
+const defaultState = {
+  offline: false,
+  narrowDrawer: false,
+  locationInfo: {
+    selectedModule: '',
+    incidentId: '',
+    eventId: '',
+    page: ''
+  }
+};
+
+const app = (state = defaultState, action) => {
   switch (action.type) {
     case UPDATE_OFFLINE:
       return {
@@ -28,7 +39,7 @@ const app = (state = {narrowDrawer: false, locationInfo: {selectedModule: '', pa
       return {
         ...state,
         narrowDrawer: action.opened
-      }
+      };
     case OPEN_SNACKBAR:
       return {
         ...state,
@@ -47,18 +58,40 @@ const app = (state = {narrowDrawer: false, locationInfo: {selectedModule: '', pa
     default:
       return state;
   }
-}
+};
 
 export default app;
 
-const appSelector = state => state.app;
-export const onNewEvent = createSelector(
-  appSelector,
-  (app) => (app.page === 'new' && app.selectedModule === 'events')
+const locationInfoSelector = state => state.app.locationInfo;
+export const isOnNewEvent = createSelector(
+  locationInfoSelector,
+  locInfo => (locInfo.page === 'new' && locInfo.selectedModule === 'events')
 );
 
-export const onNewIncident = createSelector(
-  appSelector,
-  (app) => (app.page === 'new' && app.selectedModule === 'incidents')
+export const isOnViewEvent = createSelector(
+  locationInfoSelector,
+  locInfo => (locInfo.page === 'view' && locInfo.selectedModule === 'events')
+);
+
+export const isOnEditEvent = createSelector(
+  locationInfoSelector,
+  locInfo => (locInfo.page === 'edit' && locInfo.selectedModule === 'events'
+    && locInfo.eventId)
+);
+
+export const isOnNewIncident = createSelector(
+  locationInfoSelector,
+  locInfo => (locInfo.page === 'new' && locInfo.selectedModule === 'incidents')
+);
+
+export const isOnViewIncident = createSelector(
+  locationInfoSelector,
+  locInfo => (locInfo.page === 'view' && locInfo.selectedModule === 'incidents')
+);
+
+export const isOnEditIncident = createSelector(
+  locationInfoSelector,
+  locInfo => (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
+    && locInfo.incidentId)
 );
 

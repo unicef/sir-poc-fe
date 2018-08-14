@@ -1,8 +1,8 @@
 import '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
-const $_documentContainer = document.createElement('template');
-$_documentContainer.innerHTML = `
+const documentContainer = document.createElement('template');
+documentContainer.innerHTML = `
 <dom-module id="grid-layout-styles">
   <template>
     <style>
@@ -20,15 +20,76 @@ $_documentContainer.innerHTML = `
          @apply --layout-vertical;
       }
 
-      .row-v {
-        @apply --layout-vertical;
-      }
       .flex-c {
         /* flex container */
         @apply --layout-flex;
       }
+
       .row-h, .row-v {
-        padding: 4px 24px;
+        position: relative;
+        padding: 8px 0px;
+      }
+      .col {
+        box-sizing: border-box;
+      }
+      .col-1 {
+        flex: 0 0 8.333333333%;
+        max-width: 8.333333333%;
+      }
+
+      .col-2 {
+        flex: 0 0 16.66666667%;
+        max-width: 16.66666667%;
+      }
+
+      .col-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+      }
+
+      .col-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+      }
+
+      .col-5 {
+        flex: 0 0 41.66666667%;
+        max-width: 41.66666667%;
+      }
+
+      .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+
+      .col-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+      }
+
+      .col-8 {
+        flex: 0 0 66.66666667%;
+        max-width: 66.66666667%;
+      }
+
+      .col-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+      }
+
+      .col-10 {
+        flex: 0 0 83.33333333%;
+        max-width: 83.33333333%;
+      }
+
+      .col-11 {
+        flex: 0 0 91.66666667%;
+        max-width: 91.66666667%;
+      }
+
+      .col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
       }
 
       @media only screen and (min-width: 900px) {
@@ -36,68 +97,21 @@ $_documentContainer.innerHTML = `
           @apply --layout-horizontal;
         }
 
-        .col {
-          /* @apply --layout-horizontal; */
-          /* box-sizing: border-box; */
-        }
-
         .col:not(:first-of-type) {
           padding-left: 24px;
         }
+      }
 
-        .col-1 {
-          flex: 0 0 8.333333333%;
-          max-width: 8.333333333%;
-        }
-
-        .col-2 {
-          flex: 0 0 16.66666667%;
-          max-width: 16.66666667%;
-        }
-
-        .col-3 {
-          flex: 0 0 25%;
-          max-width: 25%;
-        }
-
-        .col-4 {
-          flex: 0 0 33.333333%;
-          max-width: 33.333333%;
-        }
-
-        .col-5 {
-          flex: 0 0 41.66666667%;
-          max-width: 41.66666667%;
-        }
-
-        .col-6 {
-          flex: 0 0 50%;
-          max-width: 50%;
-        }
-
-        .col-7 {
-          flex: 0 0 58.333333%;
-          max-width: 58.333333%;
-        }
-
-        .col-8 {
-          flex: 0 0 66.66666667%;
-          max-width: 66.66666667%;
-        }
-
-        .col-9 {
-          flex: 0 0 75%;
-          max-width: 75%;
-        }
-
-        .col-10 {
-          flex: 0 0 83.33333333%;
-          max-width: 83.33333333%;
-        }
-
-        .col-12 {
+      @media only screen and (max-width: 900px) {
+        .col {
           flex: 0 0 100%;
           max-width: 100%;
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+        .row-h {
+          padding-top: 0;
+          padding-bottom: 0;
         }
       }
       /* TODO: more classes will e added if needed */
@@ -107,4 +121,4 @@ $_documentContainer.innerHTML = `
 </dom-module>
 `;
 
-document.head.appendChild($_documentContainer.content);
+document.head.appendChild(documentContainer.content);

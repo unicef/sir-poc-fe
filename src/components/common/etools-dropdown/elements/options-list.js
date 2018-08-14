@@ -1,4 +1,4 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-repeat.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
@@ -7,7 +7,7 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-item/paper-item-body.js';
-import {ListItemUtils} from '../mixins/list-item-utils-mixin.js';
+import { ListItemUtils } from '../mixins/list-item-utils-mixin.js';
 
 /**
  * @customElement
@@ -69,7 +69,7 @@ class EsmmOptionsList extends ListItemUtils(PolymerElement) {
                      selected-values="{{selectedValues}}">
         <template is="dom-repeat" items="[[shownOptions]]">
           <paper-icon-item disabled\$="[[item.disableSelection]]" item\$="[[item]]" internal-id\$="[[getValue(item)]]"
-                           on-click="_itemSelected" class\$="[[item.cssClass]] [[_getSelectedClass(item)]]"
+                           on-tap="_itemSelected" class\$="[[item.cssClass]] [[_getSelectedClass(item)]]"
                            title\$="[[_getItemTitle(item)]]">
 
             <iron-icon class="tick-icon" icon="check" slot="item-icon"></iron-icon>

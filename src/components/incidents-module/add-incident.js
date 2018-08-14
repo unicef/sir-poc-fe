@@ -3,34 +3,35 @@
 */
 import { addIncident } from '../../actions/incidents.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { IncidentModel } from './models/incident-model.js';
-import { onNewIncident } from '../../reducers/app.js';
+import { isOnNewIncident } from '../../reducers/app.js';
+import { IncidentModel } from './models/incident-model';
 /**
  * @polymer
  * @customElement
  */
 class AddIncident extends IncidentsBaseView {
-  static get observers() {
-    return [
-      'stateChanged(state)'
-    ];
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new incident';
   }
 
-  stateChanged() {
-    if (this.isVisible()  && onNewIncident(this.state)) {
-      this.incident = JSON.parse(JSON.stringify(IncidentModel));
+  async save() {
+    if (!this.validate()) {
+      return;
+    }
+    let successfull = await this.store.dispatch(addIncident(this.incident));
+    if (typeof successfull === 'boolean' && successfull) {
+      this.resetForm();
     }
   }
 
+  isOnExpectedPage() {
+    return isOnNewIncident(this.state);
+  }
 
-  save() {
-    this.store.dispatch(addIncident(this.incident));
+  resetForm() {
+    this.incident = JSON.parse(JSON.stringify(IncidentModel));
   }
 }
 

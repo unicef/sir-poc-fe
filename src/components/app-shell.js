@@ -19,6 +19,9 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/app-route/app-location.js';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/av-icons.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
@@ -26,15 +29,12 @@ import './styles/app-theme.js';
 // basic stuff above, PWA stuff below
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-import { updateMetadata } from 'pwa-helpers/metadata.js';
 // This element is connected to the Redux store.
 import './snack-bar/snack-bar.js';
-import { store } from './store.js';
+import { store } from '../redux/store.js';
 
-import { loadAllStaticData } from './data/static-data-loader.js';
-import { updatePath } from '/src/components/common/navigation-helper.js';
+import { updatePath } from '../components/common/navigation-helper.js';
 // These are the actions needed by this element.
 import {
   updateOffline,
@@ -72,42 +72,94 @@ class MyApp extends connect(store)(PolymerElement) {
           --paper-icon-button-ink-color: white;
         }
 
+        #menu-header {
+          @apply --layout-horizontal;
+          height: 63px;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        #menu-header iron-icon {
+          color: var(--secondary-text-color);
+          height: 48px;
+          margin-right: 8px;
+        }
+
         .drawer-list a {
+          @apply --layout-horizontal;
+          @apply --layout-center;
           font-weight: normal;
-          display: block;
           padding: 0 32px;
           text-decoration: none;
-          color: var(--app-secondary-color);
+          color: var(--primary-text-color);
           line-height: 40px;
+        }
+        .drawer-list a iron-icon {
+          margin-right: 8px;
+          color: var(--secondary-text-color);
+        }
+        .drawer-list a.menu-heading[selected] {
+          color: var(--app-primary-color);
         }
         .drawer-list a.menu-heading {
           padding: 0 24px;
+          font-size: 18px;
+          margin-top: 16px;
         }
-        a[selected] {
-          color: black;
+        .drawer-list a[selected] {
           font-weight: bold;
+        }
+        .drawer-list a[selected]:not(.menu-heading) {
+          background-color: var(--menu-selected-bg-color);
+          color: var(--app-primary-color);
         }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
       </app-location>
 
-      <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
+      <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
 
-      <app-drawer-layout fullbleed="" narrow="{{narrow}}">
+      <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="900px">
         <!-- Drawer content -->
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-          <app-toolbar>Menu</app-toolbar>
+          <app-toolbar id="menu-header">
+            <iron-icon icon="event"></iron-icon>
+            <span>Menu</span>
+          </app-toolbar>
 
           <div class="drawer-list">
-            <a class="menu-heading" selected$="[[pathsMatch(page, 'events')]]" href="[[rootPath]]events/list/">Events</a>
-              <a selected$="[[pathsMatch(route.path, '/events/list/')]]" href="[[rootPath]]events/list/">Events List</a>
-              <a selected$="[[pathsMatch(route.path, '/events/new/')]]" href="[[rootPath]]events/new/">New Event</a>
+            <a class="menu-heading"
+              selected$="[[pathsMatch(page, 'events')]]"
+              href="[[rootPath]]events/list/">Events</a>
 
-            <a class="menu-heading" selected$="[[pathsMatch(page, 'incidents')]]" href="[[rootPath]]incidents/list/">Incidents</a>
-              <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]" href="[[rootPath]]incidents/list/">Incidents List</a>
-              <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]" href="[[rootPath]]incidents/new/">New Incident</a>
+            <a selected$="[[pathsMatch(route.path, '/events/list/')]]"
+              href="[[rootPath]]events/list/">
+                <iron-icon icon="list"></iron-icon>
+                <span>Events List</span>
+              </a>
+
+            <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
+              href="[[rootPath]]events/new/">
+              <iron-icon icon="av:playlist-add"></iron-icon>
+              <span>New Event</span>
+            </a>
+
+            <a class="menu-heading"
+              selected$="[[pathsMatch(page, 'incidents')]]"
+              href="[[rootPath]]incidents/list/">Incidents</a>
+
+            <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]"
+              href="[[rootPath]]incidents/list/">
+              <iron-icon icon="list"></iron-icon>
+              <span>Incidents List</span>
+            </a>
+
+            <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
+              href="[[rootPath]]incidents/new/">
+              <iron-icon icon="av:playlist-add"></iron-icon>
+              <span>New Incident</span>
+            </a>
           </div>
 
         </app-drawer>
@@ -123,15 +175,15 @@ class MyApp extends connect(store)(PolymerElement) {
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <events-controller name="events" route="{{subroute}}"></events-controller>
-            <incidents-controller name="incidents" route="{{subroute}}"></incidents-controller>
+            <events-controller name="events" route="{{route}}"></events-controller>
+            <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 
         </app-header-layout>
         <snack-bar active$="[[snackbarOpened]]">
-          <span hidden$="[[offline]]">You are now offline</span>
-          <span hidden$="[[!offline]]">You are now online</span>
+          <span hidden$="[[!offline]]">You are now offline</span>
+          <span hidden$="[[offline]]">You are now online</span>
         </snack-bar>
       </app-drawer-layout>
     `;
@@ -147,27 +199,27 @@ class MyApp extends connect(store)(PolymerElement) {
       snackbarOpened: Boolean,
       route: Object,
       routeData: Object,
-      subroute: Object,
+      queryParams: Object,
       offline: Boolean
     };
   }
 
   static get observers() {
     return [
-      '_routePageChanged(routeData.page)',
-      '_locationChanged(route.path)'
+      '_locationChanged(route.path, queryParams)',
+      '_routePageChanged(routeData.page)'
     ];
   }
 
   connectedCallback() {
     super.connectedCallback();
-    installOfflineWatcher((offline) => store.dispatch(updateOffline(offline)));
 
-    loadAllStaticData(store);
+    installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
-  _locationChanged(path) {
-    store.dispatch(updateLocationInfo(path));
+  _locationChanged(path, queryParams) {
+    store.dispatch({type: 'CLEAR_ERRORS'});
+    store.dispatch(updateLocationInfo(path, queryParams));
   }
 
   pathsMatch(path1, path2) {
@@ -204,7 +256,6 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _pageChanged(page) {
-    store.dispatch({type: 'CLEAR_ERRORS'});
     store.dispatch(lazyLoadModules(page));
   }
 }

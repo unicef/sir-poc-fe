@@ -6,7 +6,7 @@ import '@polymer/paper-styles/element-styles/paper-material-styles.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../components/store.js';
+import { store } from '../../redux/store.js';
 import { clearErrors } from '../../actions/errors';
 
 /**
@@ -19,13 +19,16 @@ class ErrorsBox extends connect(store)(PolymerElement) {
     return html`
       <style include="paper-material-styles">
         :host {
+          width: 100%;
           display: block;
           padding: 16px;
           margin-bottom: 24px;
           border-radius: 5px;
-          color: #ea4022;
-          background-color: #f8d7da;
-          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          color: var(--primary-error-color);
+          background-color: var(--secondary-error-color);
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
         }
 
         :host(.hidden) {
@@ -50,8 +53,11 @@ class ErrorsBox extends connect(store)(PolymerElement) {
 
         paper-button {
           margin: 0;
-          background-color: #ea4022;
-          color: #fff;
+          background-color: var(--primary-error-color);
+          color: var(--light-primary-text-color);
+        }
+        .cancel-li-display {
+          display: block;
         }
       </style>
 
@@ -61,7 +67,7 @@ class ErrorsBox extends connect(store)(PolymerElement) {
 
       <ul>
         <template is="dom-repeat" items=[[preparedErrors]]>
-          <li>[[item]]</li>
+          <li class$="[[getItemClass(item)]]">[[item]]</li>
         </template>
       </ul>
 
@@ -101,21 +107,36 @@ class ErrorsBox extends connect(store)(PolymerElement) {
       errs = [...errors];
     }
     if (serverErrors && serverErrors.constructor === Object && Object.keys(serverErrors).length > 0) {
-      let serverErrs = this._prepareServerErrors(serverErrors);
+      let serverErrs = this._getServerErrorsArray(serverErrors);
       errs = [...errs, ...serverErrs];
     }
     return errs;
   }
 
-  _prepareServerErrors(serverErrors) {
-    let errs = [];
+  _getServerErrorsArray(serverErrors) {
+    let errsArr = [];
+
     for (let field in serverErrors) {
       if (serverErrors[field] instanceof Array && serverErrors[field].length > 0) {
         let fieldErrors = serverErrors[field].map(e => field + ' - ' + e);
-        errs = [...errs, ...fieldErrors];
+        errsArr = [...errsArr, ...fieldErrors];
+        continue;
+      }
+
+      if (typeof serverErrors[field] === 'object') {
+        errsArr.push(field + ':');
+        let nestedErr = [];
+        for (let subfield in serverErrors[field]) {
+          nestedErr.push(' ' + subfield + ' - ' + serverErrors[field][subfield]);
+        }
+        errsArr = [...errsArr, ...nestedErr];
       }
     }
-    return errs;
+    return errsArr;
+  }
+
+  getItemClass(item) {
+    return item.startsWith(' ') ? 'cancel-li-display' : '';
   }
 
   _dismissErrors() {
@@ -135,7 +156,9 @@ class ErrorsBox extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    if (!state) { return; }
+    if (!state) {
+      return;
+    }
     this.serverErrors = state.errors.serverError;
   }
 

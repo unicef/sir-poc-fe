@@ -8,16 +8,16 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { updatePath } from '../common/navigation-helper.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { BaseController } from '../common/base-controller.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../store.js';
-import { lazyLoadEventPages } from '../../actions/app.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/app-route/app-route.js';
+import { store } from '../../redux/store.js';
+import { lazyLoadEventPages } from '../../actions/app.js';
 import '../styles/shared-styles.js';
 
-class EventsController extends connect(store)(PolymerElement) {
+class EventsController extends connect(store)(BaseController) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -27,15 +27,15 @@ class EventsController extends connect(store)(PolymerElement) {
 
       <app-route
         route="{{route}}"
-        pattern="/:section/:id"
-        data="{{routeData}}"
-        tail="{{subroute}}">
+        pattern="/events/:section/:id"
+        data="{{routeData}}">
       </app-route>
 
-      <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+      <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <events-list name="list"></events-list>
-        <add-event name="new"></add-event>
-        <view-event name="view" event-id="[[routeData.id]]"></view-event>
+         <add-event name="new"></add-event>
+        <view-event name="view"></view-event>
+        <edit-event name="edit"></edit-event>
       </iron-pages>
     `;
   }
@@ -44,32 +44,11 @@ class EventsController extends connect(store)(PolymerElement) {
     return {
       page: String,
       route: Object,
-      subroute: Object,
       routeData: Object
     };
   }
 
-  static get observers() {
-    return [
-      'routeChanged(routeData.section)',
-      'pageChanged(page)'
-    ];
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    // list data loaded in static-data-loader.js
-  }
-
   _stateChanged(state) {
-  }
-
-  routeChanged(section) {
-    this.set('page', section ? section : 'list');
-  }
-
-  pageIs(actualPage, expectedPage) {
-    return actualPage === expectedPage;
   }
 
   pageChanged(page) {

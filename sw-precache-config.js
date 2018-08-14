@@ -11,7 +11,10 @@
 module.exports = {
   staticFileGlobs: [
     'src/**/*',
-    'manifest.json'
+    'manifest.json',
+    'node_modules/moment/min/moment.min.js',
+    'node_modules/web-animations-js/web-animations-next-lite.min.js',
+    'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js'
   ],
   runtimeCaching: [
     {

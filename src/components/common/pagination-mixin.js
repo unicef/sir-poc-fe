@@ -34,6 +34,6 @@ const PaginationMixin = baseClass => class extends baseClass {
     let startingIndex = (pageNumber - 1) * pageSize;
     return filteredList.slice(startingIndex, startingIndex + pageSize);
   }
-}
+};
 
 export default PaginationMixin;

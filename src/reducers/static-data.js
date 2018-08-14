@@ -1,30 +1,31 @@
 import * as ACTIONS from '../actions/static-data.js';
 
 const defaultStaticData = {
-    propertyCategories: [],
-    incidentTypes: [],
+    incidentCategories: [],
+    threatCategories: [],
     criticalities: [],
     vehicleTypes: [],
     crashTypes: [],
     countries: [],
+    agencies: [],
     regions: [],
-    impacts: [],
     factors: [],
+    targets: [],
     weapons: [],
     users: [],
-    teams: [],
+    teams: []
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
-    case ACTIONS.RECEIVE_PROPERTY_CATEGORIES:
+    case ACTIONS.RECEIVE_INCIDENT_CATEGORIES:
       return {
         ...state,
-        propertyCategories: action.propertyCategories
+        incidentCategories: action.incidentCategories
       };
-    case ACTIONS.RECEIVE_INCIDENT_TYPES:
+    case ACTIONS.RECEIVE_THREAT_CATEGORIES:
       return {
         ...state,
-        incidentTypes: action.incidentTypes
+        threatCategories: action.threatCategories
       };
     case ACTIONS.RECEIVE_CRITICALITIES:
       return {
@@ -46,20 +47,25 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         countries: action.countries
       };
+    case ACTIONS.RECEIVE_AGENCIES:
+      return {
+        ...state,
+        agencies: action.agencies
+      };
     case ACTIONS.RECEIVE_REGIONS:
       return {
         ...state,
         regions: action.regions
       };
-    case ACTIONS.RECEIVE_IMPACTS:
-      return {
-        ...state,
-        impacts: action.impacts
-      };
     case ACTIONS.RECEIVE_FACTORS:
       return {
         ...state,
         factors: action.factors
+      };
+    case ACTIONS.RECEIVE_TARGETS:
+      return {
+        ...state,
+        targets: action.targets
       };
     case ACTIONS.RECEIVE_WEAPONS:
       return {
@@ -79,6 +85,6 @@ const staticData = (state = defaultStaticData, action) => {
     default:
       return state;
   }
-}
+};
 
 export default staticData;

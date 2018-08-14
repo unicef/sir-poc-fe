@@ -1,5 +1,5 @@
 'use strict';
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-input/paper-input.js';
 import 'calendar-lite/calendar-lite.js';
@@ -10,27 +10,41 @@ import 'calendar-lite/calendar-lite.js';
  */
 class DatePickerLite extends PolymerElement {
   static get template() {
+    // language=HTML
     return html`
       <style>
         calendar-lite {
           --my-elem-primary: var(--app-primary-color, #4285f4);
         }
+
         paper-dropdown-menu {
           width: 100%;
         }
+
         *[hidden] {
           display: none;
         }
       </style>
 
-      <paper-dropdown-menu id="ddMenu" label="[[label]]" value="[[readableDate]]" hidden$="[[readonly]]">
+      <paper-dropdown-menu id="ddMenu" 
+                           label="[[label]]"
+                           placeholder="&#8212;"
+                           value="[[readableDate]]"
+                           hidden$="[[readonly]]"
+                           required="[[required]]"
+                           invalid="{{invalid}}"
+                           error-message="[[errorMessage]]">
         <calendar-lite slot="dropdown-content" on-date-change="datePicked">
         </calendar-lite>
       </paper-dropdown-menu>
 
-
-      <paper-input type="text" label="[[label]]" readonly value="[[readableDate]]" hidden$="[[!readonly]]"></paper-input>
-
+      <!-- TODO: why do we use this field? -->
+      <paper-input type="text"
+                   label="[[label]]"
+                   placeholder="&#8212;"
+                   readonly 
+                   value="[[readableDate]]"
+                   hidden$="[[!readonly]]"></paper-input>
     `;
   }
 
@@ -47,8 +61,41 @@ class DatePickerLite extends PolymerElement {
       },
       readableDate: String,
       label: String,
-      readonly: Boolean
+      readonly: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      required: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      autoValidate: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      errorMessage: {
+        type: String,
+        value: 'This field is required'
+      },
+      invalid: {
+        type: Boolean,
+        value: false
+      }
     };
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.$.ddMenu.addEventListener('blur', this._triggerAutoValidate.bind(this));
+  }
+
+  _triggerAutoValidate() {
+    if (this.autoValidate) {
+      this.validate();
+    }
   }
 
   _getDateString(date) {
@@ -67,7 +114,13 @@ class DatePickerLite extends PolymerElement {
   }
 
   dateChanged() {
+    if (this.date === undefined) {
+      return;
+    }
+
     if (!this.date) {
+      this.value = null;
+      this.readableDate = '';
       return;
     }
     this.$.ddMenu.opened = false;
@@ -75,10 +128,16 @@ class DatePickerLite extends PolymerElement {
 
     this.dateJustChanged = true;
     this.value = this._getDateString(this.date);
+    this._triggerAutoValidate();
   }
 
   valueChanged() {
+    if (this.value === undefined) {
+      return;
+    }
+
     if (!this.value) {
+      this.date = null;
       return;
     }
 
@@ -87,6 +146,10 @@ class DatePickerLite extends PolymerElement {
       return;
     }
     this.date = new Date(this.value);
+  }
+
+  validate() {
+    return this.$.ddMenu.validate();
   }
 }
 

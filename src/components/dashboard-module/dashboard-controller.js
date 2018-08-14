@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 
+import '../common/etools-dropdown/etools-dropdown-lite.js';
 import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
@@ -33,6 +34,17 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
         }
       </style>
 
+      <div class="card">
+        <div class="row-h">
+          <div class="col col-4">
+            <etools-dropdown-lite label="Active user"
+                                  trigger-value-change-event
+                                  on-etools-selected-item-changed="_userSelected"
+                                  options="[[users]]">
+            </etools-dropdown-lite>
+          </div>
+        </div>
+      </div>
       <div class="card">
         <div class="row-h flex-c">
           <div class="col-12">
@@ -83,7 +95,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                   </etools-data-table-column>
                 </etools-data-table-header>
 
-                <template id="rows" is="dom-repeat" items="[[events]]">
+                <template id="rows" is="dom-repeat" items="[[userEvents]]">
 
                   <etools-data-table-row unsynced$="[[item.unsynced]]">
                     <div slot="row-data">
@@ -108,7 +120,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                   </etools-data-table-column>
                 </etools-data-table-header>
 
-                <template id="rows" is="dom-repeat" items="[[incidents]]">
+                <template id="rows" is="dom-repeat" items="[[userIncidents]]">
 
                   <etools-data-table-row unsynced$="[[item.unsynced]]">
                     <div slot="row-data">
@@ -138,6 +150,12 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     return {
       events: Array,
       incidents: Array,
+      userEvents: Array,
+      userIncidents: Array,
+      activeUser: {
+        type: Object,
+        value: {}
+      },
       selectedEndDate: {
         type: String,
         value: () => {
@@ -168,6 +186,12 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
     this.events = state.events.list;
     this.incidents = state.incidents.list;
+    this.users = state.staticData.users.map((elem) => {
+      elem.name = elem.first_name + ' ' + elem.last_name;
+      return elem;
+    });
+
+    this.updateUserListsData();
   }
 
   getEventsForPeriod(events, selectedStartDate, selectedEndDate) {
@@ -192,6 +216,22 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     return filteredIncidents;
   }
 
+  _userSelected(event) {
+    if (!event.detail.selectedItem) {
+      return;
+    }
+    this.activeUser = event.detail.selectedItem;
+    this.updateUserListsData();
+  }
+
+  updateUserListsData() {
+    this.userEvents = this.events.filter((e) => {
+      return !this.activeUser.id || e.submitted_by === this.activeUser.id;
+    });
+    this.userIncidents = this.incidents.filter((e) => {
+      return !this.activeUser.id || e.submitted_by === this.activeUser.id;
+    });
+  }
 }
 
 window.customElements.define(DashboardController.is, DashboardController);

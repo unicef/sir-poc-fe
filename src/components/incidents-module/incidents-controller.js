@@ -75,9 +75,9 @@ class IncidentsController extends connect(store)(BaseController) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <edit-incident name="edit"></edit-incident>
+        <edit-incident name="edit" hidden$="[[!showEditTab]]"></edit-incident>
 
-        <view-incident name="view"></view-incident>
+        <view-incident name="view" hidden$="[[showEditTab]]"></view-incident>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
@@ -92,7 +92,11 @@ class IncidentsController extends connect(store)(BaseController) {
       isOffline: Boolean,
       viewPageTabs: {
         type: Array,
-        computed: 'getTabs(isOffline)'
+        computed: 'getTabs(isOffline, showEditTab)'
+      },
+      showEditTab: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -118,6 +122,12 @@ class IncidentsController extends connect(store)(BaseController) {
     if (page === 'history' && this.isOffline) {
       updatePath('/');
     }
+    if (page === 'edit') {
+      this.showEditTab = true;
+    }
+    if (page === 'view') {
+      this.showEditTab = false;
+    }
     store.dispatch(lazyLoadIncidentPages(page));
   }
 
@@ -125,7 +135,13 @@ class IncidentsController extends connect(store)(BaseController) {
     return [
       {
         name: 'view',
-        tabLabel: 'VIEW'
+        tabLabel: 'VIEW',
+        hidden: this.showEditTab
+      },
+      {
+        name: 'edit',
+        tabLabel: 'EDIT',
+        hidden: !this.showEditTab
       },
       {
         name: 'comments',

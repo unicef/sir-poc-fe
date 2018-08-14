@@ -201,6 +201,10 @@ class MyApp extends connect(store)(PolymerElement) {
         reflectToAttribute: true,
         observer: '_pageChanged'
       },
+      validPages: {
+        type: Array,
+        value: ['events', 'incidents', 'dashboard']
+      },
       snackbarOpened: Boolean,
       route: Object,
       routeData: Object,
@@ -235,10 +239,10 @@ class MyApp extends connect(store)(PolymerElement) {
      // Show the corresponding page according to the route.
      //
      // If no page was found in the route data, page will be an empty string.
-     // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
+     // Show the dashboard in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      updatePath('events/list/');
-    } else if (['events', 'incidents', 'dashboard'].indexOf(page) !== -1) {
+      updatePath('dashboard');
+    } else if (this._isValidPage(page)) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -262,6 +266,10 @@ class MyApp extends connect(store)(PolymerElement) {
 
   _pageChanged(page) {
     store.dispatch(lazyLoadModules(page));
+  }
+
+  _isValidPage(page) {
+    return this.validPages.indexOf(page) !== -1;
   }
 }
 

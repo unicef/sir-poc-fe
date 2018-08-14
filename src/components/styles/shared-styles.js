@@ -118,6 +118,9 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
         }
       }
 
+      etools-data-table-row[unsynced] {
+        --list-bg-color: var(--unsynced-item-bg-color);
+      }
     </style>
   </template>
 </dom-module>`;

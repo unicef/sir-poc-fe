@@ -18,6 +18,14 @@ documentContainer.innerHTML = `<dom-module id="button-styles">
         margin: 8px 0;
         padding: 8px;
       }
+
+      .white-bg {
+        background-color: white;
+        color: var(--primary-color, #309ae0);
+      }
+      .smaller {
+        font-size: 14px;
+      }
     </style>
   </template>
 </dom-module>`;

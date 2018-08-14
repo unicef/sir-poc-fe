@@ -20,6 +20,7 @@ import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { fetchIncident } from '../../actions/incidents.js';
 import '../styles/shared-styles.js';
+import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 
@@ -27,7 +28,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles grid-layout-styles required-fields-styles">
+      <style include="shared-styles form-fields-styles grid-layout-styles required-fields-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -94,7 +95,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
               <div class="col col-3">
                 <paper-input id="incidentTime"
-                            readonly="[[readonly]]"
+                            readonly$="[[readonly]]"
                             label="Incident time"
                             type="time"
                             value="{{incident.incident_time}}"
@@ -125,7 +126,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="col col-3">
               <paper-input id="city"
-                          readonly="[[readonly]]" label="City" type="text"
+                          readonly$="[[readonly]]" label="City" type="text"
                           placeholder="&#8212;" value="{{incident.city}}"
                           required auto-validate
                           error-message="City is required"></paper-input>
@@ -133,7 +134,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="col col-3">
               <paper-input id="street"
-                          readonly="[[readonly]]" label="Street" type="text"
+                          readonly$="[[readonly]]" label="Street" type="text"
                           placeholder="&#8212;" value="{{incident.street}}"
                           required auto-validate
                           error-message="Street is required"></paper-input>
@@ -211,7 +212,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="row-h flex-c">
               <div class="col col-12">
-                <paper-textarea id="injuries" readonly="[[readonly]]" label="Injuries"
+                <paper-textarea id="injuries" readonly$="[[readonly]]" label="Injuries"
                                 placeholder="&#8212;"
                                 value="{{incident.injuries}}"
                                 required auto-validate
@@ -221,7 +222,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="row-h flex-c">
               <div class="col col-12">
-                <paper-textarea id="description" readonly="[[readonly]]" label="Incident Description"
+                <paper-textarea id="description" readonly$="[[readonly]]" label="Incident Description"
                                 placeholder="&#8212;"
                                 value="{{incident.description}}"
                                 required auto-validate
@@ -231,7 +232,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="row-h flex-c">
               <div class="col col-12">
-                <paper-textarea readonly="[[readonly]]" label="Incident Note"
+                <paper-textarea readonly$="[[readonly]]" label="Incident Note"
                                 placeholder="&#8212;"
                                 value="{{incident.note}}"></paper-textarea>
               </div>
@@ -298,12 +299,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-checkbox>
               </div>
               <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
-                <paper-input readonly="[[readonly]]" label="Reported to"
+                <paper-input readonly$="[[readonly]]" label="Reported to"
                             type="text" value="{{incident.reported_to}}"
                             placeholder="&#8212;"></paper-input>
               </div>
               <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                             label="Responsible party" type="text" value="{{incident.responsible}}"
                             placeholder="&#8212;"></paper-input>
               </div>
@@ -332,8 +333,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
           </div>
         </template>
+        ${this.goToEditBtnTmpl}
       </div>
     `;
+  }
+
+  static get goToEditBtnTmpl() {
+    return html``;
   }
 
   static get properties() {

@@ -16,6 +16,7 @@ import { EventModel } from './models/event-model.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../styles/shared-styles.js';
+import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import { resetFieldsValidations, validateFields } from '../common/validations-helper';
@@ -24,7 +25,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles grid-layout-styles required-fields-styles">
+      <style include="shared-styles form-fields-styles grid-layout-styles required-fields-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -63,7 +64,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
                          label="Location"
                          placeholder="&#8212;"
                          type="text"
-                         readonly="[[readonly]]"
+                         readonly$="[[readonly]]"
                          value="{{event.location}}"
                          required auto-validate
                          error-message="Location is required"></paper-input>
@@ -72,7 +73,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <div class="row-h flex-c">
           <div class="col col-12">
-            <paper-textarea label="Note" readonly="[[readonly]]" placeholder="&#8212;"
+            <paper-textarea label="Note" readonly$="[[readonly]]" placeholder="&#8212;"
                             value="{{event.note}}"></paper-textarea>
           </div>
         </div>
@@ -81,7 +82,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
           <div class="col col-12">
             <paper-textarea id="description"
                             label="Description"
-                            readonly="[[readonly]]"
+                            readonly$="[[readonly]]"
                             placeholder="&#8212;"
                             value="{{event.description}}"
                             required auto-validate
@@ -102,8 +103,13 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             </div>
           </div>
         </template>
+        ${this.goToEditBtnTmpl}
       </div>
     `;
+  }
+
+  static get goToEditBtnTmpl() {
+    return html``;
   }
 
   static get properties() {

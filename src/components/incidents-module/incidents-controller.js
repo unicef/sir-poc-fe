@@ -13,7 +13,6 @@ import { BaseController } from '../common/base-controller.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-tabs/paper-tabs.js';
-import { fetchIncidents, fetchIncidentComments } from '../../actions/incidents.js';
 import { lazyLoadIncidentPages } from '../../actions/app.js';
 import { store } from '../../redux/store.js';
 
@@ -76,9 +75,9 @@ class IncidentsController extends connect(store)(BaseController) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <edit-incident name="edit"></edit-incident>
+        <edit-incident name="edit" hidden$="[[!showEditTab]]"></edit-incident>
 
-        <view-incident name="view"></view-incident>
+        <view-incident name="view" hidden$="[[showEditTab]]"></view-incident>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
@@ -93,7 +92,14 @@ class IncidentsController extends connect(store)(BaseController) {
       isOffline: Boolean,
       viewPageTabs: {
         type: Array,
-        computed: 'getTabs(isOffline)'
+        computed: 'getTabs(isOffline, showEditTab, incidentId)'
+      },
+      showEditTab: {
+        type: Boolean,
+        value: false
+      },
+      incidentId: {
+        type: String
       }
     };
   }
@@ -112,6 +118,7 @@ class IncidentsController extends connect(store)(BaseController) {
   _stateChanged(state) {
     if (state && state.app) {
       this.isOffline = state.app.offline;
+      this.incidentId = state.app.locationInfo.incidentId;
     }
   }
 
@@ -119,25 +126,46 @@ class IncidentsController extends connect(store)(BaseController) {
     if (page === 'history' && this.isOffline) {
       updatePath('/');
     }
+    if (page === 'edit') {
+      this.showEditTab = true;
+    }
+    if (page === 'view') {
+      this.showEditTab = false;
+    }
     store.dispatch(lazyLoadIncidentPages(page));
   }
 
-  getTabs(offline) {
+  getTabs(offline, showEditTab, incidentId) {
+    let hideHistory = this._unsyncedAndCreatedOffline(incidentId);
+    let hideComments = this._unsyncedAndCreatedOffline(incidentId);
+    hideHistory = hideHistory || offline;
+
     return [
       {
         name: 'view',
-        tabLabel: 'VIEW'
+        tabLabel: 'VIEW',
+        hidden: showEditTab
+      },
+      {
+        name: 'edit',
+        tabLabel: 'EDIT',
+        hidden: !showEditTab
       },
       {
         name: 'comments',
-        tabLabel: 'COMMENTS'
+        tabLabel: 'COMMENTS',
+        hidden: hideComments
       },
       {
         name: 'history',
         tabLabel: 'HISTORY',
-        hidden: offline
+        hidden: hideHistory
       }
     ];
+  }
+
+  _unsyncedAndCreatedOffline(id) {
+    return id && isNaN(id);
   }
 
   _showTabs(page) {

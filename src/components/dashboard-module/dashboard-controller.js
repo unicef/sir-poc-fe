@@ -88,13 +88,13 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
             <div class="row-h">
               <div class="col col-6">
                 <etools-data-table-header id="listHeader" label="Your Events" no-collapse>
-                  <etools-data-table-column class="col-5">
+                  <etools-data-table-column class="col-6">
                     Description
                   </etools-data-table-column>
                   <etools-data-table-column class="col-3">
                     Status
                   </etools-data-table-column>
-                  <etools-data-table-column class="col-4">
+                  <etools-data-table-column class="col-3">
                     Start date
                   </etools-data-table-column>
                 </etools-data-table-header>
@@ -103,7 +103,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
                   <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
                     <div slot="row-data">
-                      <span class="col-data col-5" data-col-header-label="Description">
+                      <span class="col-data col-6" data-col-header-label="Description">
                         <a href="/events/view/[[item.id]]"> [[item.description]] </a>
                       </span>
                       <span class="col-data col-3">
@@ -118,7 +118,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                           </etools-info-tooltip>
                         </template>
                       </span>
-                      <span class="col-data col-4" data-col-header-label="Start date">
+                      <span class="col-data col-3" data-col-header-label="Start date">
                         [[prettyDate(item.start_date)]]
                       </span>
                     </div>
@@ -128,13 +128,13 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
               </div>
               <div class="col col-6">
                 <etools-data-table-header id="listHeader" label="Your Incidents" no-collapse>
-                  <etools-data-table-column class="col-5">
+                  <etools-data-table-column class="col-6">
                     Description
                   </etools-data-table-column>
                   <etools-data-table-column class="col-3">
                     Status
                   </etools-data-table-column>
-                  <etools-data-table-column class="col-4">
+                  <etools-data-table-column class="col-3">
                     Start date
                   </etools-data-table-column>
                 </etools-data-table-header>
@@ -143,7 +143,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
                   <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
                     <div slot="row-data">
-                      <span class="col-data col-5" data-col-header-label="Description">
+                      <span class="col-data col-6" data-col-header-label="Description">
                         <a href="/incidents/view/[[item.id]]"> [[item.description]] </a>
                       </span>
                       <span class="col-data col-3">
@@ -158,7 +158,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                           </etools-info-tooltip>
                         </template>
                       </span>
-                      <span class="col-data col-4" data-col-header-label="Start date">
+                      <span class="col-data col-3" data-col-header-label="Start date">
                          [[prettyDate(item.incident_date)]]
                       </span>
                     </div>

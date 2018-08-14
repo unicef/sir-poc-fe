@@ -36,6 +36,7 @@ class ViewIncident extends IncidentsBaseView {
   isOnExpectedPage() {
     return isOnViewIncident(this.state);
   }
+
 }
 
 window.customElements.define('view-incident', ViewIncident);

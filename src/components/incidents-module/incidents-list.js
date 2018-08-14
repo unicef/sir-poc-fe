@@ -21,6 +21,7 @@ import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../styles/shared-styles.js';
+import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
@@ -28,13 +29,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles filters-styles data-table-styles grid-layout-styles">
+      <style include="shared-styles form-fields-styles filters-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
-        }
-
-        etools-data-table-row[unsynced] {
-          --list-bg-color: var(--unsynced-item-bg-color);
         }
 
         .col-data > span {
@@ -72,13 +69,13 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                              value="{{filters.startDate}}"
                              label="From"></datepicker-lite>
           </div>
-          
+
           <div class="col col-3">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To"></datepicker-lite>
           </div>
-          
+
         </div>
         <div class="row-h flex-c">
           <div class="col col-3">
@@ -98,7 +95,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                                   selected="{{filters.incidentCategory}}">
             </etools-dropdown-lite>
           </div>
-          
+
         </div>
       </div>
 

@@ -14,6 +14,9 @@ documentContainer.innerHTML = `
       .layout-horizontal {
          @apply --layout-horizontal;
       }
+      .space-between {
+        @apply --layout-justified;
+      }
 
       .layout-vertical,
       .col.layout-vertical {

@@ -23,6 +23,7 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         width: auto;
       }
       .search-input {
+        max-width: 400px;
         @apply --layout-horizontal;
         --paper-input-container: {
           width: 100%;

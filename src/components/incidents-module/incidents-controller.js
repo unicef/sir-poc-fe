@@ -92,7 +92,7 @@ class IncidentsController extends connect(store)(BaseController) {
       isOffline: Boolean,
       viewPageTabs: {
         type: Array,
-        computed: 'getTabs(isOffline)'
+        computed: 'getTabs(isOffline, activeIncidentId)'
       }
     };
   }
@@ -111,6 +111,7 @@ class IncidentsController extends connect(store)(BaseController) {
   _stateChanged(state) {
     if (state && state.app) {
       this.isOffline = state.app.offline;
+      this.activeIncidentId = state.app.locationInfo.incidentId;
     }
   }
 
@@ -121,7 +122,9 @@ class IncidentsController extends connect(store)(BaseController) {
     store.dispatch(lazyLoadIncidentPages(page));
   }
 
-  getTabs(offline) {
+  getTabs(offline, activeIncidentId) {
+    let hideHistory = activeIncidentId && isNaN(activeIncidentId);
+    hideHistory = hideHistory || offline;
     return [
       {
         name: 'view',
@@ -134,7 +137,7 @@ class IncidentsController extends connect(store)(BaseController) {
       {
         name: 'history',
         tabLabel: 'HISTORY',
-        hidden: offline
+        hidden: hideHistory
       }
     ];
   }

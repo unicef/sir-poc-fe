@@ -114,7 +114,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   }
 
   _idChanged(newId) {
-    if (!this.state.app.offline && newId) {
+    if (!this.state.app.offline && newId && !isNan(newId)) {
       this._fetchHistory();
     }
   }

@@ -130,6 +130,10 @@ class MyApp extends connect(store)(PolymerElement) {
 
           <div class="drawer-list">
             <a class="menu-heading"
+              selected$="[[pathsMatch(page, 'dashboard')]]"
+              href="[[rootPath]]dashboard"> Dashboard </a>
+
+            <a class="menu-heading"
               selected$="[[pathsMatch(page, 'events')]]"
               href="[[rootPath]]events/list/">Events</a>
 
@@ -177,6 +181,7 @@ class MyApp extends connect(store)(PolymerElement) {
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
+            <dashboard-controller name="dashboard"></dashboard-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 
@@ -195,6 +200,10 @@ class MyApp extends connect(store)(PolymerElement) {
         type: String,
         reflectToAttribute: true,
         observer: '_pageChanged'
+      },
+      validPages: {
+        type: Array,
+        value: ['events', 'incidents', 'dashboard']
       },
       snackbarOpened: Boolean,
       route: Object,
@@ -230,10 +239,10 @@ class MyApp extends connect(store)(PolymerElement) {
      // Show the corresponding page according to the route.
      //
      // If no page was found in the route data, page will be an empty string.
-     // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
+     // Show the dashboard in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      updatePath('events/list/');
-    } else if (['events', 'incidents'].indexOf(page) !== -1) {
+      updatePath('dashboard');
+    } else if (this._isValidPage(page)) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -257,6 +266,10 @@ class MyApp extends connect(store)(PolymerElement) {
 
   _pageChanged(page) {
     store.dispatch(lazyLoadModules(page));
+  }
+
+  _isValidPage(page) {
+    return this.validPages.indexOf(page) !== -1;
   }
 }
 

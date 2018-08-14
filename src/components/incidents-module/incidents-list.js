@@ -33,10 +33,6 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           display: block;
         }
 
-        etools-data-table-row[unsynced] {
-          --list-bg-color: var(--unsynced-item-bg-color);
-        }
-
         .col-data > span {
           max-width: 100%;
         }
@@ -72,13 +68,13 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                              value="{{filters.startDate}}"
                              label="From"></datepicker-lite>
           </div>
-          
+
           <div class="col col-3">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To"></datepicker-lite>
           </div>
-          
+
         </div>
         <div class="row-h flex-c">
           <div class="col col-3">
@@ -98,7 +94,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                                   selected="{{filters.incidentCategory}}">
             </etools-dropdown-lite>
           </div>
-          
+
         </div>
       </div>
 

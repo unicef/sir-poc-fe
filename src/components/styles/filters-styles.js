@@ -19,7 +19,7 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         margin-right: 24px;
       }
       .sync-filter {
-        min-width: 250px;
+        min-width: 125px;
         width: auto;
       }
       .search-input {
@@ -30,24 +30,8 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         --paper-input-prefix: {
           margin-right: 8px;
         };
-        flex: 0 0 25%;
-        max-width: 25%;
-      }
-
-      @media screen and (max-width: 1440px) {
-        
-        .sync-filter {
-          min-width: 195px;
-          max-width: 100%;
-        }
-      }
-      
-      @media screen and (max-width: 1024px) {
-        
-        .sync-filter {
-          min-width: 125px;
-          max-width: 100%;
-        }
+        flex: 0 0 20%;
+        max-width: 100%;
       }
       
       @media screen and (max-width: 768px) {

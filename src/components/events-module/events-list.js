@@ -191,6 +191,14 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     };
   }
 
+  static get observers() {
+    return [
+  //     '_init(active)',
+  //     '_tst()'
+        '_updateUrlAndData(filters.q)'
+    ];
+  }
+
   _stateChanged(state) {
     if (!state) {
       return;
@@ -239,6 +247,117 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
   notEditable(event, offline) {
     return offline && !event.unsynced;
   }
+
+  // Input: URL query params
+  // Initializes the properties of the list at page load
+  // to the params interpretted from the URL string.
+  _init(active) {
+    let urlQueryParams = this.urlParams;
+    console.log(this.urlParams);
+    if (!active || !urlQueryParams) {
+      return;
+    }
+    this.set('initComplete', false);
+    this.set('filters.q', urlQueryParams.q ? urlQueryParams.q : '');
+    this.set('initComplete', true);
+  }
+
+  // Updates URL state with new query string, and launches query
+  _updateUrlAndData() {
+  //     this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
+      let qs = this._buildQueryString();
+      console.log("query string: ", qs);
+
+      this._updateUrlAndDislayedData(this.currentPage + '/list',
+          qs,
+          this._filterListData.bind(this));
+  }
+
+
+  // Outputs the query string for the list
+  _buildQueryString() {
+    return this._buildUrlQueryString({
+      q: this.filters.q
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Outputs the query string for the list
+  _buildUrlQueryString(filters) {
+    let queryParams = [];
+
+    for (let field in filters) {
+      if (filters[field]) {
+        let filterValue = filters[field];
+        let filterUrlValue;
+
+        let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+        switch (filterValType) {
+          case 'array':
+            if (!_.isEmpty(filterValue)) {
+              filterUrlValue = filterValue.join('|');
+            }
+            break;
+          case 'object':
+            if (field === 'sort' && filterValue.field && filterValue.direction) {
+              filterUrlValue = filterValue.field + '.' + filterValue.direction;
+            }
+            break;
+          default:
+            if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
+              filterUrlValue = String(filterValue).trim();
+            }
+        }
+
+        if (filterUrlValue) {
+          queryParams.push(field + '=' + filterUrlValue);
+        }
+      }
+    }
+
+    return queryParams.join('&');
+  }
+
+  // Updates URL state with new query string, and launches query
+  _updateUrlAndDislayedData(currentPageUrlPath, lastUrlQueryStr, qs, filterData) {
+    if (qs !== lastUrlQueryStr) {
+      // update URL
+      this.updateAppState(currentPageUrlPath, qs, true);
+      // filter agreements
+      if (this.requiredDataLoaded) {
+        filterData();
+      }
+    } else {
+      if (location.search === '') {
+        // only update URL query string, without location change event being fired(no page refresh)
+        // used to keep prev list filters values when navigating from details to list page
+        this.updateAppState(currentPageUrlPath, qs, false);
+      }
+      if (this.forceDataRefresh && this.requiredDataLoaded) {
+        // re-filter list data
+        // this will only execute when [list-data]-loaded event is received
+        filterData();
+        this.set('forceDataRefresh', false);
+      }
+    }
+  }
+
+
 }
 
 window.customElements.define('events-list', EventsList);

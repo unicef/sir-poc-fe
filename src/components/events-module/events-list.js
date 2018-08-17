@@ -8,15 +8,20 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import '@polymer/iron-icons/notification-icons.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import {store} from '../../redux/store.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
+import { updatePath } from '../common/navigation-helper.js';
+
+import { syncEvent } from '../../actions/events.js';
+import { plainErrors } from '../../actions/errors.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -44,6 +49,11 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
         @media screen and (max-width: 767px) {
           /* mobile specific css, under tablet min 768px */
+        }
+
+        .sync-btn {
+          color: var(--primary-color);
+          cursor: pointer;
         }
 
       </style>
@@ -82,7 +92,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
       <div class="card list">
         <etools-data-table-header id="listHeader" label="Events">
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-2">
             Description
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
@@ -102,7 +112,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
-                <span class="col-data col-3" data-col-header-label="Description">
+                <span class="col-data col-2" data-col-header-label="Description">
                   <span class="truncate">
                     <a href="/events/view/[[item.id]]"> [[item.description]] </a>
                   </span>
@@ -120,16 +130,20 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   <template is="dom-if" if="[[item.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
-                      <span slot="message">This event has not been sumitted to the server. Go to its edit page
-                        and save it when an internet connection is availale.</span>
+                      <span slot="message">This event has not been sumitted to the server. Click the sync button when online to submit it. </span>
                     </etools-info-tooltip>
                   </template>
                 </span>
-              <span class="col-data col-1" data-col-header-label="Actions">
+              <span class="col-data col-2" data-col-header-label="Actions">
+                  <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                    <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem"></iron-icon>
+                    </div>
+                  </template>
                   <a href="/events/view/[[item.id]]">
-                    <iron-icon icon="assignment"></iron-icon>
+                    <iron-icon icon="assignment" title="View Event"></iron-icon>
                   </a>
-                  <a href="/events/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]">
+                  <a href="/events/edit/[[item.id]]" title="Edit Event" hidden$="[[notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
                 </span>
@@ -231,6 +245,23 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
 
+  }
+
+  _showSyncButton(unsynced, offline) {
+    return unsynced && !offline;
+  }
+
+  async _syncItem(event) {
+    if (!event || !event.model || !event.model.__data || !event.model.__data.item) {
+      return;
+    }
+    let element = event.model.__data.item;
+    let successfull = await store.dispatch(syncEvent(element));
+
+    if (successfull === false) {
+      updatePath('/events/edit/' + element.id + '/')
+      store.dispatch(plainErrors(['There was an error syncing your event. Please review the data and try again']));
+    }
   }
 
   notEditable(event, offline) {

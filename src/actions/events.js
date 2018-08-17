@@ -108,13 +108,15 @@ export const editEvent = event => (dispatch, getState) => {
 };
 
 export const syncEvent = event => (dispatch, getState) => {
-  makeRequest(Endpoints.newEvent, event).then((result) => {
+  return makeRequest(Endpoints.newEvent, event).then((result) => {
     updatePath('/events/list/');
     dispatch(editEventSuccess(result, event.id));
     dispatch(updateEventIdsInIncidents(event.id, response.id));
+    return true;
   }).catch((error) => {
     dispatch(addEventFail(error.response));
     scrollToTop();
+    return false;
   });
 };
 

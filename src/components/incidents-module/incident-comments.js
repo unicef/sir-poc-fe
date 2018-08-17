@@ -3,6 +3,7 @@ import { store } from '../../redux/store.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { selectIncidentComments } from '../../reducers/incidents.js';
 import { addComment } from '../../actions/incidents.js';
+import '../common/warn-message.js';
 import './display-comment.js';
 import './add-comment.js';
 import '../styles/shared-styles.js';
@@ -23,6 +24,10 @@ class IncidentComments extends connect(store)(PolymerElement) {
         <template is="dom-repeat" items="{{dataItems}}">
           <display-comment comment="[[item]]" all-users="[[allUsers]]"> </display-comment>
         </template>
+      </div>
+
+      <div class="card list" hidden$="[[!_noCommentsAndOffline(dataItems, isOffline)]]">
+        <warn-message hidden$="[[!isOffline]]" message="There are no comments."> </warn-message>
       </div>
 
       <div class="card list" hidden$="[[isOffline]]">
@@ -67,6 +72,10 @@ class IncidentComments extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+  }
+
+  _noCommentsAndOffline(comments, isOffline) {
+    return (!comments || !comments.length) && isOffline;
   }
 
   setIncidentComments(id, allComments) {

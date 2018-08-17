@@ -2,6 +2,8 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '../common/errors-box.js';
+import '../styles/shared-styles.js';
+import '../styles/form-fields-styles.js';
 
 /**
  * @polymer
@@ -10,7 +12,7 @@ import '../common/errors-box.js';
 class AddComment extends PolymerElement {
   static get template() {
     return html`
-      <style include="shared-styles">
+      <style include="shared-styles form-fields-styles">
         :host {
           display: block;
         }

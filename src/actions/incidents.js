@@ -143,12 +143,14 @@ export const editIncident = incident => (dispatch, getState) => {
 };
 
 export const syncIncident = newIncident => (dispatch, getState) => {
-  makeRequest(Endpoints.newIncident, newIncident).then((result) => {
+  return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     updatePath('/incidents/list/');
     dispatch(editIncidentSuccess(result, newIncident.id));
+    return true;
   }).catch((error) => {
     dispatch(addIncidentFail(error.response));
     scrollToTop();
+    return false;
   });
 };
 

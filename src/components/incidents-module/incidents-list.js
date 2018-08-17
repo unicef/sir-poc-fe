@@ -7,15 +7,19 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-icons/notification-icons.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import {store} from '../../redux/store.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
+import { updatePath } from '../common/navigation-helper.js';
+import { syncIncident } from '../../actions/incidents.js';
+import { plainErrors } from '../../actions/errors.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -40,6 +44,11 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
         .col-data iron-icon {
           margin-right: 16px;
+        }
+
+        .sync-btn {
+          color: var(--primary-color);
+          cursor: pointer;
         }
 
         @media screen and (max-width: 767px) {
@@ -105,7 +114,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           <etools-data-table-column class="col-3">
             Person involved
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-2">
             City
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
@@ -114,7 +123,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           <etools-data-table-column class="col-2">
             Status
           </etools-data-table-column>
-          <etools-data-table-column class="col-1">
+          <etools-data-table-column class="col-2">
             Actions
           </etools-data-table-column>
         </etools-data-table-header>
@@ -129,7 +138,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   </a>
                 </span>
               </span>
-              <span class="col-data col-3" title="[[item.city]]" data-col-header-label="City">
+              <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">
                   <span>[[item.city]]</span>
               </span>
               <span class="col-data col-3" type="[[_getIncidentName(item.incident_category)]]"
@@ -143,16 +152,20 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Go to its edit page and
-                      save it when an internet connection is availale.</span>
+                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when online to submit it.</span>
                   </etools-info-tooltip>
                 </template>
               </span>
-              <span class="col-data col-1" data-col-header-label="Actions">
+              <span class="col-data col-2" data-col-header-label="Actions">
+                <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                  <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem"></iron-icon>
+                  </div>
+                </template>
                 <a href="/incidents/view/[[item.id]]">
-                  <iron-icon icon="assignment"></iron-icon>
+                  <iron-icon icon="assignment" title="View Incident"></iron-icon>
                 </a>
-                <a href="/incidents/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]">
+                <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
               </span>
@@ -293,6 +306,22 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
   _applyIncidentCategoryFilter(e, selectedIncidentCategory){
 
     return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
+  }
+
+  _showSyncButton(unsynced, offline) {
+    return unsynced && !offline;
+  }
+
+  async _syncItem(event) {
+    if (!event || !event.model || !event.model.__data || !event.model.__data.item) {
+      return;
+    }
+    let element = event.model.__data.item;
+    let successfull = await store.dispatch(syncIncident(element));
+      if (successfull === false) {
+      updatePath('/incidents/edit/' + element.id + '/')
+      store.dispatch(plainErrors(['There was an error syncing your incident. Please review the data and try again']));
+    }
   }
 
   notEditable(incident, offline) {

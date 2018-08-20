@@ -36,7 +36,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
-        <h2>[[title]]</h2>
+        ${this.getTitleTemplate}
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -139,6 +139,12 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
         value: ['#startDate', '#endDate', '#location', '#description']
       }
     };
+  }
+
+  static get getTitleTemplate() {
+    return html`
+      <h2>[[title]]</h2>
+    `;
   }
 
   connectedCallback() {

@@ -64,14 +64,14 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
                 </span>
               </span>
               <span class="col-data col-1">
-                <span title="View entire incident at this version">
-                  <a href="/incidents/history/[[incidentId]]/view/[[item.id]]">
+                <span title="View entire event at this version">
+                  <a href="/events/history/[[eventId]]/view/[[item.id]]">
                     <iron-icon icon="assignment"></iron-icon>
                   </a>
                 </span>
                 <span title="View changes from previous version"
                       hidden$="[[!hasChangedFilds(item.change)]]">
-                  <a href="/incidents/history/[[incidentId]]/diff/[[item.id]]">
+                  <a href="/events/history/[[eventId]]/diff/[[item.id]]">
                     <iron-icon icon="image:compare"></iron-icon>
                   </a>
                 </span>
@@ -90,13 +90,13 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
   }
 
   static get is() {
-    return 'incident-revisions-list';
+    return 'event-revisions-list';
   }
 
   static get properties() {
     return {
       history: Object,
-      incidentId: Number,
+      eventId: Number,
       workingItem: {
         type: Object,
         notify: true
@@ -116,7 +116,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
       return;
     }
 
-    this.incidentId = state.app.locationInfo.incidentId;
+    this.eventId = state.app.locationInfo.eventId;
     this.users = state.staticData.users;
   }
 

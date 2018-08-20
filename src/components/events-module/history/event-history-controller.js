@@ -12,12 +12,12 @@ import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
-import './incident-diff.js';
+import './event-diff.js';
 import './revisions-list.js';
-import './incident-revision-view.js';
+import './event-revision-view.js';
 import HistoryHelpers from './history-helpers.js';
 
-export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
+export class EventHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -28,7 +28,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
 
       <app-route
         route="{{route}}"
-        pattern="/incidents/history/:incidentId/:section"
+        pattern="/events/history/:eventId/:section"
         data="{{routeData}}"
         tail="{{subRoute}}">
       </app-route>
@@ -39,28 +39,28 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       </app-route>
 
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
-        <incident-revisions-list name="list"
+        <event-revisions-list name="list"
                         history="[[history]]">
-        </incident-revisions-list>
-        <incident-diff  name="diff"
+        </event-revisions-list>
+        <event-diff  name="diff"
                         working-item="[[workingItem]]">
-        </incident-diff>
-        <incident-revision-view name="view"
+        </event-diff>
+        <event-revision-view name="view"
                         working-item="[[workingItem]]">
-        </incident-revision-view>
+        </event-revision-view>
       </iron-pages>
     `;
   }
 
   static get is() {
-    return 'incident-history-controller';
+    return 'event-history-controller';
   }
 
   static get properties() {
     return {
-      incidentId: {
+      eventId: {
         type: Number,
-        computed: '_setIncidentId(state.app.locationInfo.incidentId)',
+        computed: '_setEventId(state.app.locationInfo.eventId)',
         observer: '_idChanged'
       },
       visible: {
@@ -105,7 +105,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
     this.set('workingItem', workingItem);
   }
 
-  _setIncidentId(id) {
+  _setEventId(id) {
     return id;
   }
 
@@ -120,7 +120,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   }
 
   _fetchHistory() {
-    let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id: this.incidentId});
+    let endpoint = prepareEndpoint(Endpoints.getEventHistory, {id: this.eventId});
     makeRequest(endpoint).then((response) => {
       this.history = response;
     });
@@ -128,4 +128,4 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
 
 }
 
-window.customElements.define(IncidentHistory.is, IncidentHistory);
+window.customElements.define(EventHistory.is, EventHistory);

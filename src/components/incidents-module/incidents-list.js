@@ -113,7 +113,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
         <etools-data-table-header id="listHeader"
                                   label="Incidents">
           <etools-data-table-column class="col-3">
-            Person involved
+            Case number
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             City
@@ -132,11 +132,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
-              <span class="col-data col-3" data-col-header-label="Person involved">
+              <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
-                  <a href="/incidents/view/[[item.id]]">
-                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                  </a>
+                  <a href="/incidents/view/[[item.id]]"> N/A </a>
                 </span>
               </span>
               <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">

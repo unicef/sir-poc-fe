@@ -17,6 +17,7 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
+import DateMixin from '../common/date-mixin.js';
 import { updatePath } from '../common/navigation-helper.js';
 import { syncIncident } from '../../actions/incidents.js';
 import { plainErrors } from '../../actions/errors.js';
@@ -29,7 +30,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
+class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElement))) {
   static get template() {
     // language=HTML
     return html`
@@ -51,8 +52,8 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           cursor: pointer;
         }
 
-        @media screen and (max-width: 767px) {
-          /* mobile specific css, under tablet min 768px */
+        .row-details {
+          display: block;
         }
 
       </style>
@@ -170,16 +171,28 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 </template>
               </span>
             </div>
-            <div slot="row-data-details">
-              <div class="col-6">
-                <strong>Description:</strong>
-                <span>[[item.description]]</span>
-              </div>
-              <div class="col-6">
-                <strong>Note: </strong>
-                <span>[[item.note]]</span>
+            <div slot="row-data-details" class="row-details">
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Date created: </strong>
+                  <span>[[prettyDate(item.submitted_date)]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Date revised: </strong>
+                  <span>[[prettyDate(item.last_modify_date)]]</span>
+                </div>
               </div>
 
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Description: </strong>
+                  <span>[[item.description]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Note: </strong>
+                  <span>[[item.note]]</span>
+                </div>
+              </div>
             </div>
           </etools-data-table-row>
         </template>

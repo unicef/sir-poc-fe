@@ -157,17 +157,17 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 </template>
               </span>
               <span class="col-data col-2" data-col-header-label="Actions">
-                <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <div> <!-- this div prevents resizing of the icon on low resolutions -->
-                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem"></iron-icon>
-                  </div>
-                </template>
                 <a href="/incidents/view/[[item.id]]">
                   <iron-icon icon="assignment" title="View Incident"></iron-icon>
                 </a>
                 <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
+                <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                  <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem"></iron-icon>
+                  </div>
+                </template>
               </span>
             </div>
             <div slot="row-data-details">

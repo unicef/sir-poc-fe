@@ -12,10 +12,10 @@ import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
-import './incident-diff.js';
-import './revisions-list.js';
+import HistoryHelpers from '../../history-components/history-helpers.js';
+import '../../history-components/revisions-list.js';
+import '../../history-components/diff-view.js';
 import './incident-revision-view.js';
-import HistoryHelpers from './history-helpers.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
   static get template() {
@@ -39,12 +39,14 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       </app-route>
 
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
-        <incident-revisions-list name="list"
-                        history="[[history]]">
-        </incident-revisions-list>
-        <incident-diff  name="diff"
-                        working-item="[[workingItem]]">
-        </incident-diff>
+        <revisions-list name="list"
+                   module="incidents"
+                   history="[[history]]">
+        </revisions-list>
+        <diff-view name="diff"
+                   module="incidents"
+                   working-item="[[workingItem]]">
+        </diff-view>
         <incident-revision-view name="view"
                         working-item="[[workingItem]]">
         </incident-revision-view>

@@ -6,12 +6,12 @@ import '@polymer/iron-icons/image-icons.js';
 import 'etools-data-table';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import { store } from '../../../redux/store.js';
-import DateMixin from '../../common/date-mixin.js';
+import { store } from '../../redux/store.js';
+import DateMixin from '../common/date-mixin.js';
 import HistoryHelpers from './history-helpers.js';
 
-import '../../styles/shared-styles.js';
-import '../../styles/grid-layout-styles.js';
+import '../styles/shared-styles.js';
+import '../styles/grid-layout-styles.js';
 
 
 export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {

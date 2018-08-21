@@ -87,8 +87,9 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
     ];
   }
 
-  _visibilityChanged(visible) {
-    if (visible) {
+  _visibilityChanged(newValue, oldValue) {
+    let pageWasJustReloaded = typeof oldValue === 'undefined';
+    if (newValue && !pageWasJustReloaded) {
       this.set('routeData.section', 'list');
     }
   }

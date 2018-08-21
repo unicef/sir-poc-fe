@@ -67,7 +67,6 @@ export class EventHistory extends HistoryHelpers(connect(store)(PolymerElement))
       },
       visible: {
         type: Boolean,
-        value: false,
         observer: '_visibilityChanged'
       },
       workingItem: Object,
@@ -87,8 +86,9 @@ export class EventHistory extends HistoryHelpers(connect(store)(PolymerElement))
     ];
   }
 
-  _visibilityChanged(visible) {
-    if (visible) {
+  _visibilityChanged(newValue, oldValue) {
+    let pageWasJustReloaded = typeof oldValue === 'undefined';
+    if (newValue && !pageWasJustReloaded) {
       this.set('routeData.section', 'list');
     }
   }

@@ -17,6 +17,8 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import {store} from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
+import ListCommonMixin from '../common/list-common-mixin.js';
+import '../common/navigation-helper.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -24,7 +26,15 @@ import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
+/**
+ *
+ * @polymer
+ * @customElement
+ * @appliesMixin PaginationMixin
+ * @appliesMixin ListCommonMixin
+ *
+ */
+class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerElement))) {
   static get template() {
     // language=HTML
     return html`
@@ -102,25 +112,25 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
-          <etools-data-table-row unsynced$="[[item.unsynced]]">
+        <template id="rows" is="dom-repeat" items="[[filteredEvents]]" as="event">
+          <etools-data-table-row unsynced$="[[event.unsynced]]">
             <div slot="row-data">
                 <span class="col-data col-3" data-col-header-label="Description">
                   <span class="truncate">
-                    <a href="/events/view/[[item.id]]"> [[item.description]] </a>
+                    <a href="/events/view/[[event.id]]"> [[event.description]] </a>
                   </span>
                 </span>
-              <span class="col-data col-3" title="[[item.start_date]]" data-col-header-label="Start date">
-                    [[item.start_date]]
+              <span class="col-data col-3" title="[[event.start_date]]" data-col-header-label="Start date">
+                    [[event.start_date]]
                 </span>
-              <span class="col-data col-3" title="[[item.location]]" data-col-header-label="Location">
-                  <span class="truncate">[[item.location]]</span>
+              <span class="col-data col-3" title="[[event.location]]" data-col-header-label="Location">
+                  <span class="truncate">[[event.location]]</span>
                 </span>
               <span class="col-data col-2" data-col-header-label="Status">
-                  <template is="dom-if" if="[[!item.unsynced]]">
+                  <template is="dom-if" if="[[!event.unsynced]]">
                     Synced
                   </template>
-                  <template is="dom-if" if="[[item.unsynced]]">
+                  <template is="dom-if" if="[[event.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
                       <span slot="message">This event has not been sumitted to the server. Go to its edit page
@@ -129,10 +139,10 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   </template>
                 </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                  <a href="/events/view/[[item.id]]">
+                  <a href="/events/view/[[event.id]]">
                     <iron-icon icon="assignment"></iron-icon>
                   </a>
-                  <a href="/events/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]">
+                  <a href="/events/edit/[[event.id]]" hidden$="[[notEditable(event, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
                 </span>
@@ -140,11 +150,11 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
             <div slot="row-data-details">
               <div class="col-6">
                 <strong>Description: </strong>
-                <span>[[item.description]]</span>
+                <span>[[event.description]]</span>
               </div>
               <div class="col-6">
                 <strong>Note: </strong>
-                <span>[[item.note]]</span>
+                <span>[[event.note]]</span>
               </div>
 
             </div>
@@ -187,16 +197,9 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           endDate: null,
           syncStatus: []
         }
-      }
+      },
+      _queryParams: Object
     };
-  }
-
-  static get observers() {
-    return [
-  //     '_init(active)',
-  //     '_tst()'
-        '_updateUrlAndData(filters.q)'
-    ];
   }
 
   _stateChanged(state) {
@@ -206,9 +209,60 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
     this.events = state.events.list;
     this.offline = state.app.offline;
+
+    // console.log(state.app.locationInfo.queryParams);
+
+    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
+      this._queryParams = state.app.locationInfo.queryParams;
+    }
+
+    if (this._queryParams){
+      if (this._queryParams.q){
+        this.filters.q = this._queryParams.q;
+      }
+      if (this._queryParams.synced){
+        if (this._queryParams.synced.indexOf('|') > -1){
+          // console.log("2");
+          // console.log(this._queryParams.synced);
+          this.filters.syncStatus = this._queryParams.synced.split('|');
+          console.log(this.filters.syncStatus);
+        } else {
+          // console.log("1");
+          // console.log(this._queryParams.synced);
+          this.filters.syncStatus = [this._queryParams.synced];
+          console.log(this.filters.syncStatus);
+        }
+
+        // console.log('sync param',this._queryParams.synced.split('|'));
+
+      }
+      if (this._queryParams.start){
+        this.filters.startDate = this._queryParams.start;
+      }
+      if (this._queryParams.end){
+        this.filters.endDate = this._queryParams.end;
+      }
+    } 
+
+    // console.log(this._queryParams);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // console.log('query params: ', this._queryParams);
+  }
+
+  _updateUrlQs() {
+    const qs = this._buildQueryString();
+    this.updateAppState('/events/list', qs, true);
+    // this.updatePath('/events/list'+qs);
   }
 
   _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate) {
+
+    console.log('filter data...');
+
+    this._updateUrlQs();
 
     if (!(events instanceof Array && events.length > 0)) {
       return [];
@@ -248,115 +302,51 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return offline && !event.unsynced;
   }
 
-  // Input: URL query params
-  // Initializes the properties of the list at page load
-  // to the params interpretted from the URL string.
-  _init(active) {
-    let urlQueryParams = this.urlParams;
-    console.log(this.urlParams);
-    if (!active || !urlQueryParams) {
-      return;
-    }
-    this.set('initComplete', false);
-    this.set('filters.q', urlQueryParams.q ? urlQueryParams.q : '');
-    this.set('initComplete', true);
-  }
-
-  // Updates URL state with new query string, and launches query
-  _updateUrlAndData() {
-  //     this.set('csvDownloadUrl', this._buildCsvDownloadUrl());
-      let qs = this._buildQueryString();
-      console.log("query string: ", qs);
-
-      this._updateUrlAndDislayedData(this.currentPage + '/list',
-          qs,
-          this._filterListData.bind(this));
-  }
-
-
   // Outputs the query string for the list
   _buildQueryString() {
     return this._buildUrlQueryString({
-      q: this.filters.q
+      q: this.filters.q,
+      synced: this.filters.syncStatus,
+      start: this.filters.startDate,
+      end: this.filters.endDate
     });
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // Outputs the query string for the list
-  _buildUrlQueryString(filters) {
-    let queryParams = [];
-
-    for (let field in filters) {
-      if (filters[field]) {
-        let filterValue = filters[field];
-        let filterUrlValue;
-
-        let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
-        switch (filterValType) {
-          case 'array':
-            if (!_.isEmpty(filterValue)) {
-              filterUrlValue = filterValue.join('|');
-            }
-            break;
-          case 'object':
-            if (field === 'sort' && filterValue.field && filterValue.direction) {
-              filterUrlValue = filterValue.field + '.' + filterValue.direction;
-            }
-            break;
-          default:
-            if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
-              filterUrlValue = String(filterValue).trim();
-            }
-        }
-
-        if (filterUrlValue) {
-          queryParams.push(field + '=' + filterUrlValue);
-        }
-      }
-    }
-
-    return queryParams.join('&');
-  }
-
   // Updates URL state with new query string, and launches query
-  _updateUrlAndDislayedData(currentPageUrlPath, lastUrlQueryStr, qs, filterData) {
-    if (qs !== lastUrlQueryStr) {
+  _updateUrlAndDislayedData(currentPageUrlPath, qs, filterData) {
+    if (qs !== null) {
       // update URL
       this.updateAppState(currentPageUrlPath, qs, true);
-      // filter agreements
-      if (this.requiredDataLoaded) {
-        filterData();
-      }
+      filterData();
     } else {
       if (location.search === '') {
         // only update URL query string, without location change event being fired(no page refresh)
         // used to keep prev list filters values when navigating from details to list page
         this.updateAppState(currentPageUrlPath, qs, false);
       }
-      if (this.forceDataRefresh && this.requiredDataLoaded) {
-        // re-filter list data
-        // this will only execute when [list-data]-loaded event is received
         filterData();
-        this.set('forceDataRefresh', false);
-      }
     }
   }
 
+  /**
+   * Update app state
+   */
+  updateAppState(routePath, qs, dispatchLocationChange) {
+    // Using replace state to change the URL here ensures the browser's
+    // back button doesn't take you through every query
+    let currentState = window.history.state;
+
+    // console.log(currentState);
+
+    window.history.replaceState(currentState, null,
+        routePath + (qs.length ? '?' + qs : ''));
+
+    if (dispatchLocationChange) {
+      // This event lets app-location and app-route know
+      // the URL has changed
+      window.dispatchEvent(new CustomEvent('location-changed'));
+    }
+  }
 
 }
 

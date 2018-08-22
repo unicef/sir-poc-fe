@@ -17,7 +17,7 @@ import '../styles/grid-layout-styles.js';
 export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
     return html`
-      <style include="shared-styles grid-layout-styles data-table-styles">
+      <style include="shared-styles data-table-styles grid-layout-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -48,12 +48,12 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
         <template id="rows" is="dom-repeat" items="[[history]]">
           <etools-data-table-row no-collapse="[[isCreateAction(item.action)]]">
             <div slot="row-data">
-              <span class="col-data col-3" data-col-header-label="Change made by">
+              <span class="col-data col-3" data-col-header-label="Action">
                 <span class="truncate action">
                   [[item.action]]
                 </span>
               </span>
-              <span class="col-data col-4" data-col-header-label="Date and time">
+              <span class="col-data col-4" data-col-header-label="By user">
                 <span class="truncate">
                   [[getUserName(item.by_user)]]
                 </span>
@@ -63,7 +63,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
                   [[prettyDate(item.modified, 'D-MMM-YYYY hh:mm A')]]
                 </span>
               </span>
-              <span class="col-data col-1">
+              <span class="col-data col-1"  data-col-header-label="More">
                 <span title="View entire event at this version">
                   <a href="/[[module]]/history/[[item.data.id]]/view/[[item.id]]">
                     <iron-icon icon="assignment"></iron-icon>

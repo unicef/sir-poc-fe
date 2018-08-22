@@ -32,7 +32,6 @@ class IncidentsController extends connect(store)(BaseController) {
           border-left: 1px solid #eeeeee;
           --paper-tabs: {
             font-size: 14px;
-            max-width: 350px;
           }
         }
 
@@ -78,6 +77,7 @@ class IncidentsController extends connect(store)(BaseController) {
         <edit-incident name="edit" hidden$="[[!showEditTab]]"></edit-incident>
 
         <view-incident name="view" hidden$="[[showEditTab]]"></view-incident>
+        <impact-controller name="impact"></impact-controller>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
@@ -150,6 +150,10 @@ class IncidentsController extends connect(store)(BaseController) {
         name: 'edit',
         tabLabel: 'EDIT',
         hidden: !showEditTab
+      },
+      {
+        name: 'impact',
+        tabLabel: 'IMPACT'
       },
       {
         name: 'comments',

@@ -3,6 +3,9 @@ import { Endpoints } from '../config/endpoints.js';
 
 export const RECEIVE_INCIDENT_CATEGORIES = 'RECEIVE_INCIDENT_CATEGORIES';
 export const RECEIVE_THREAT_CATEGORIES = 'RECEIVE_THREAT_CATEGORIES';
+export const RECEIVE_PROGRAMME_IMPACTS = 'RECEIVE_PROGRAMME_IMPACTS';
+export const RECEIVE_PROPERTY_IMPACTS = 'RECEIVE_PROPERTY_IMPACTS';
+export const RECEIVE_PERSON_IMPACTS = 'RECEIVE_PERSON_IMPACTS';
 export const RECEIVE_CRITICALITIES = 'RECEIVE_CRITICALITIES';
 export const RECEIVE_VEHICLE_TYPES = 'RECEIVE_VEHICLE_TYPES';
 export const RECEIVE_CRASH_TYPES = 'RECEIVE_CRASH_TYPES';
@@ -18,6 +21,9 @@ export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreIncidentCategories());
   dispatch(fetchAndStoreThreatCategories());
+  dispatch(fetchAndStoreProgrammeImpacts());
+  dispatch(fetchAndStorePropertyImpacts());
+  dispatch(fetchAndStorePersonImpacts());
   dispatch(fetchAndStoreCriticalities());
   dispatch(fetchAndStoreVehicleTypes());
   dispatch(fetchAndStoreCrashTypes());
@@ -197,5 +203,44 @@ const receiveCrashTypes = (crashTypes) => {
   return {
     type: RECEIVE_CRASH_TYPES,
     crashTypes
+  };
+};
+
+export const fetchAndStoreProgrammeImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.programmeImpacts).then((result) => {
+    dispatch(receiveProgrammeImpacts(result));
+  });
+};
+
+const receiveProgrammeImpacts = (programmeImpacts) => {
+  return {
+    type: RECEIVE_PROGRAMME_IMPACTS,
+    programmeImpacts
+  };
+};
+
+export const fetchAndStorePropertyImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.propertyImpacts).then((result) => {
+    dispatch(receivePropertyImpacts(result));
+  });
+};
+
+const receivePropertyImpacts = (propertyImpacts) => {
+  return {
+    type: RECEIVE_PROPERTY_IMPACTS,
+    propertyImpacts
+  };
+};
+
+export const fetchAndStorePersonImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.personImpacts).then((result) => {
+    dispatch(receivePersonImpacts(result));
+  });
+};
+
+const receivePersonImpacts = (personImpacts) => {
+  return {
+    type: RECEIVE_PERSON_IMPACTS,
+    personImpacts
   };
 };

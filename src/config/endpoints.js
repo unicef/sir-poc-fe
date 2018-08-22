@@ -96,6 +96,18 @@ export const Endpoints = {
   threatCategories: {
     url: baseUrl + '/api/threat_categories/',
     method: 'GET'
-  }
+  },
+  personImpacts: {
+    url: baseUrl + '/api/impacts/person/',
+    method: 'GET'
+  },
+  propertyImpacts: {
+    url: baseUrl + '/api/impacts/property/',
+    method: 'GET'
+  },
+  programmeImpacts: {
+    url: baseUrl + '/api/impacts/programme/',
+    method: 'GET'
+  },
 
 };

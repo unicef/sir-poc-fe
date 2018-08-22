@@ -74,10 +74,10 @@ class IncidentsController extends connect(store)(BaseController) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <edit-incident name="edit" hidden$="[[!showEditTab]]"></edit-incident>
+        <edit-incident name="edit"></edit-incident>
 
-        <view-incident name="view" hidden$="[[showEditTab]]"></view-incident>
-        <impact-controller name="impact"></impact-controller>
+        <view-incident name="view"></view-incident>
+        <impact-controller name="impact" route="{{subRoute}}"></impact-controller>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
@@ -108,10 +108,17 @@ class IncidentsController extends connect(store)(BaseController) {
     if (this.page === 'history') {
       this.navigateToHistoryList();
     }
+    if (this.page === 'impact') {
+      this.navigateToImpactDetail();
+    }
   }
 
   navigateToHistoryList() {
     // triggers history-controller to change to the list view
+    this.set('subrouteData.subsection', null);
+  }
+
+  navigateToImpactDetail() {
     this.set('subrouteData.subsection', null);
   }
 

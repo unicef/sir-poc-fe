@@ -3,6 +3,7 @@
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import { updatePath } from '../../common/navigation-helper.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
@@ -58,6 +59,9 @@ export class ImpactController extends connect(store)(PolymerElement) {
         </div>
         <div name="programme">
           <h3> Programme </h3>
+        </div>
+        <div name="list">
+          <h3> List </h3>
         </div>
       </iron-pages>
 
@@ -130,6 +134,12 @@ export class ImpactController extends connect(store)(PolymerElement) {
   static get properties() {
     return {
       routeData: Object,
+      state: Object,
+      incidentId: {
+        type: Number,
+        computed: '_setIncidentId(state.app.locationInfo.incidentId)',
+        observer: '_idChanged'
+      },
       route: {
         type: Object,
         notify: true
@@ -137,26 +147,56 @@ export class ImpactController extends connect(store)(PolymerElement) {
     };
   }
 
-  _addUnPersonnel() {
-    this.set('routeData.section', 'un-personel');
+  static get observers() {
+    return [
+      '_sectionChanged(routeData.section)'
+    ];
   }
-  _addNonUn() {
-    this.set('routeData.section', 'non-un');
-  }
-  _addEvacuation() {
-    this.set('routeData.section', 'evacuation');
-  }
-  _addProperty() {
-    this.set('routeData.section', 'property');
-  }
-  _addPrimese() {
-    this.set('routeData.section', 'premise');
-  }
-  _addProgramme() {
-    this.set('routeData.section', 'programme');
+
+  _setIncidentId(id) {
+    return id;
   }
 
   _stateChanged(state) {
+    this.set('state', state);
+  }
+
+  _idChanged(newId) {
+
+  }
+
+  _sectionChanged(section) {
+    if (!section) {
+      updatePath(`incidents/impact/${this.incidentId}/list`);
+    }
+  }
+
+  _addUnPersonnel() {
+    updatePath(`incidents/impact/${this.incidentId}/un-personel`);
+  }
+
+  _addEvacuation() {
+    updatePath(`incidents/impact/${this.incidentId}/evacuation`);
+  }
+
+  _addProgramme() {
+    updatePath(`incidents/impact/${this.incidentId}/programme`);
+  }
+
+  _addProperty() {
+    updatePath(`incidents/impact/${this.incidentId}/property`);
+  }
+
+  _addPrimese() {
+    updatePath(`incidents/impact/${this.incidentId}/premise`);
+  }
+
+  _addNonUn() {
+    updatePath(`incidents/impact/${this.incidentId}/non-un`);
+  }
+
+  _stateChanged(state) {
+    this.state = state;
     // console.log(state.staticData.impacts.programme);
     // console.log(state.staticData.impacts.property);
     // console.log(state.staticData.impacts.person);

@@ -7,6 +7,7 @@ import { updatePath } from '../../common/navigation-helper.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
+import './impact-list.js';
 
 /**
  * @polymer
@@ -61,84 +62,18 @@ export class ImpactController extends connect(store)(PolymerElement) {
           <h3> Programme </h3>
         </div>
         <div name="list">
-          <h3> List </h3>
+          <impact-list></impact-list>
         </div>
       </iron-pages>
-
-      <div class="card">
-        <h3>Personnel</h3>
-        <hr>
-        <div class="right">
-          <paper-button raised
-              class="smaller"
-              on-click="_addUnPersonnel">
-            <iron-icon icon="add"></iron-icon>
-            Add UN Personnel
-          </paper-button>
-        </div>
-        <hr>
-        <div class="right">
-          <paper-button raised
-              class="smaller"
-              on-click="_addNonUn">
-            <iron-icon icon="add"></iron-icon>
-            Add NON UN Personnel
-          </paper-button>
-        </div>
-        <hr>
-        <div class="right">
-          <paper-button raised
-              class="smaller"
-              on-click="_addEvacuation">
-            <iron-icon icon="add"></iron-icon>
-            Add Evacuation
-          </paper-button>
-        </div>
-
-        <h3>UN Property(assets)</h3>
-        <hr>
-        <div class="right">
-          <paper-button raised
-              class="smaller"
-              on-click="_addProperty">
-            <iron-icon icon="add"></iron-icon>
-            Add UN Property
-          </paper-button>
-        </div>
-
-        <h3>UN Premises(facilities)</h3>
-        <hr>
-        <div class="right">
-          <paper-button raised
-              class="smaller"
-              on-click="_addPrimese">
-            <iron-icon icon="add"></iron-icon>
-            Add Premise
-          </paper-button>
-        </div>
-
-        <h3>UN Programme</h3>
-        <hr>
-        <div class="right">
-          <paper-button raised
-              class="smaller"
-              on-click="_addProgramme">
-            <iron-icon icon="add"></iron-icon>
-            Add Programme
-          </paper-button>
-        </div>
-      </div>
     `;
   }
 
   static get properties() {
     return {
       routeData: Object,
-      state: Object,
       incidentId: {
         type: Number,
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
-        observer: '_idChanged'
       },
       route: {
         type: Object,
@@ -157,49 +92,14 @@ export class ImpactController extends connect(store)(PolymerElement) {
     return id;
   }
 
-  _stateChanged(state) {
-    this.set('state', state);
-  }
-
-  _idChanged(newId) {
-
-  }
-
   _sectionChanged(section) {
     if (!section) {
       updatePath(`incidents/impact/${this.incidentId}/list`);
     }
   }
 
-  _addUnPersonnel() {
-    updatePath(`incidents/impact/${this.incidentId}/un-personel`);
-  }
-
-  _addEvacuation() {
-    updatePath(`incidents/impact/${this.incidentId}/evacuation`);
-  }
-
-  _addProgramme() {
-    updatePath(`incidents/impact/${this.incidentId}/programme`);
-  }
-
-  _addProperty() {
-    updatePath(`incidents/impact/${this.incidentId}/property`);
-  }
-
-  _addPrimese() {
-    updatePath(`incidents/impact/${this.incidentId}/premise`);
-  }
-
-  _addNonUn() {
-    updatePath(`incidents/impact/${this.incidentId}/non-un`);
-  }
-
   _stateChanged(state) {
     this.state = state;
-    // console.log(state.staticData.impacts.programme);
-    // console.log(state.staticData.impacts.property);
-    // console.log(state.staticData.impacts.person);
   }
 }
 

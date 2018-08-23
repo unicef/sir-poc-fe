@@ -36,7 +36,7 @@ export const objDiff = (object1, object2) => {
 };
 
 const arraysAreSame = (array1, array2) => {
-  return array1.length === array1.length &&
+  return array1.length === array2.length &&
          array1.length === array1.filter((elem, index) => {
            return array1[index] === array2[index];
          }).length;

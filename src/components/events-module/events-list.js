@@ -18,7 +18,6 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import {store} from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import '../common/navigation-helper.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -180,7 +179,7 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
       filteredEvents: {
         type: Array,
         computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, ' +
-        'filters.syncStatus.length, filters.startDate, filters.endDate)'
+        'filters.syncStatus.length, filters.startDate, filters.endDate, _queryParamsInitComplete)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -198,7 +197,24 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
           syncStatus: []
         }
       },
-      _queryParams: Object
+      _queryParams: {
+        type: Object,
+        observer: '_queryParamsChanged'
+      },
+      _queryParamsInitComplete: Boolean,
+      _lastQueryString: {
+        type: String,
+        value: ''
+      },
+      _isActiveModule: {
+        type: Boolean,
+        value: false,
+        observer: '_isActiveModuleChanged'
+      },
+      _moduleNavigatedFrom: {
+        type: String,
+        value: ''
+      }
     };
   }
 
@@ -207,66 +223,79 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
       return;
     }
 
+    this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
+
+    if (typeof state.app.locationInfo.selectedModule !== 'undefined') {
+      console.log("state app location ", state.app.locationInfo.selectedModule);
+      this.set('_isActiveModule', state.app.locationInfo.selectedModule === 'events');
+    }
+    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
+      this._queryParams = state.app.locationInfo.queryParams;
+    }
+
     this.events = state.events.list;
     this.offline = state.app.offline;
-
-    // console.log(state.app.locationInfo.queryParams);
 
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
       this._queryParams = state.app.locationInfo.queryParams;
     }
 
-    if (this._queryParams){
-      if (this._queryParams.q){
-        this.filters.q = this._queryParams.q;
+  }
+
+  _queryParamsChanged(params) {
+    
+    if (params && this._moduleNavigatedFrom === 'events') {
+
+      if (params.q && params.q !== this.filters.q) {
+        this.set('filters.q', params.q);
       }
-      if (this._queryParams.synced){
-        if (this._queryParams.synced.indexOf('|') > -1){
-          // console.log("2");
-          // console.log(this._queryParams.synced);
-          this.filters.syncStatus = this._queryParams.synced.split('|');
-          console.log(this.filters.syncStatus);
+
+      if (params.start){
+        this.set('filters.startDate', params.start);
+      }
+      if (params.end){
+        this.set('filters.endDate', params.end);
+      }
+      if (params.synced) {
+
+        if (params.synced.indexOf('|') > -1) {
+          this.set('filters.syncStatus', params.synced.split('|'));
         } else {
-          // console.log("1");
-          // console.log(this._queryParams.synced);
-          this.filters.syncStatus = [this._queryParams.synced];
-          console.log(this.filters.syncStatus);
+          this.set('filters.syncStatus', [params.synced]);
         }
-
-        // console.log('sync param',this._queryParams.synced.split('|'));
-
       }
-      if (this._queryParams.start){
-        this.filters.startDate = this._queryParams.start;
-      }
-      if (this._queryParams.end){
-        this.filters.endDate = this._queryParams.end;
-      }
-    } 
 
-    // console.log(this._queryParams);
+      this.set('_queryParamsInitComplete', true);
+    }
   }
 
   connectedCallback() {
     super.connectedCallback();
-    // console.log('query params: ', this._queryParams);
+    console.log('query params: ', this._queryParams);
   }
 
   _updateUrlQs() {
-    const qs = this._buildQueryString();
-    this.updateAppState('/events/list', qs, true);
-    // this.updatePath('/events/list'+qs);
+
+    this.set('_lastQueryString', this._buildQueryString());
+    this.updateAppState('/events/list', this._lastQueryString, false);
   }
 
-  _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate) {
+  _isActiveModuleChanged(newVal, oldVal) {
+    console.log(newVal, oldVal);
+    if (this._queryParamsInitComplete) {
+      if (newVal && newVal !== oldVal && this._lastQueryString !== '') {
+        this.updateAppState('/events/list', this._lastQueryString, false);
+      }
+    }
+  }
 
-    console.log('filter data...');
+  _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, queryParamsInit) {
 
-    this._updateUrlQs();
-
-    if (!(events instanceof Array && events.length > 0)) {
+    if (!queryParamsInit || !(events instanceof Array && events.length > 0)) {
       return [];
     }
+
+    this._updateUrlQs();
 
     let filteredEvents = JSON.parse(JSON.stringify(events));
 
@@ -310,42 +339,6 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
       start: this.filters.startDate,
       end: this.filters.endDate
     });
-  }
-
-  // Updates URL state with new query string, and launches query
-  _updateUrlAndDislayedData(currentPageUrlPath, qs, filterData) {
-    if (qs !== null) {
-      // update URL
-      this.updateAppState(currentPageUrlPath, qs, true);
-      filterData();
-    } else {
-      if (location.search === '') {
-        // only update URL query string, without location change event being fired(no page refresh)
-        // used to keep prev list filters values when navigating from details to list page
-        this.updateAppState(currentPageUrlPath, qs, false);
-      }
-        filterData();
-    }
-  }
-
-  /**
-   * Update app state
-   */
-  updateAppState(routePath, qs, dispatchLocationChange) {
-    // Using replace state to change the URL here ensures the browser's
-    // back button doesn't take you through every query
-    let currentState = window.history.state;
-
-    // console.log(currentState);
-
-    window.history.replaceState(currentState, null,
-        routePath + (qs.length ? '?' + qs : ''));
-
-    if (dispatchLocationChange) {
-      // This event lets app-location and app-route know
-      // the URL has changed
-      window.dispatchEvent(new CustomEvent('location-changed'));
-    }
   }
 
 }

@@ -20,7 +20,7 @@ import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import { updatePath } from '../common/navigation-helper.js';
 
-import { syncEvent } from '../../actions/events.js';
+import { syncEventOnList } from '../../actions/events.js';
 import { plainErrors } from '../../actions/errors.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -157,7 +157,6 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 <strong>Note: </strong>
                 <span>[[item.note]]</span>
               </div>
-
             </div>
           </etools-data-table-row>
         </template>
@@ -256,11 +255,10 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       return;
     }
     let element = event.model.__data.item;
-    let successfull = await store.dispatch(syncEvent(element));
+    let successfull = await store.dispatch(syncEventOnList(element));
 
     if (successfull === false) {
-      updatePath('/events/edit/' + element.id + '/')
-      store.dispatch(plainErrors(['There was an error syncing your event. Please review the data and try again']));
+      updatePath('/events/edit/' + element.id + '/');
     }
   }
 

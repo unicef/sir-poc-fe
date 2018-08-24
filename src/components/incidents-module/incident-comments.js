@@ -3,6 +3,7 @@ import { store } from '../../redux/store.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { selectIncidentComments } from '../../reducers/incidents.js';
 import { addComment } from '../../actions/incidents.js';
+import { clearErrors } from '../../actions/errors.js';
 import '../common/warn-message.js';
 import './display-comment.js';
 import './add-comment.js';
@@ -60,6 +61,11 @@ class IncidentComments extends connect(store)(PolymerElement) {
       },
       state: {
         type: Object
+      },
+      visible: {
+        type: Boolean,
+        value: false,
+        observer: '_visibilityChanged'
       }
     };
   }
@@ -72,6 +78,12 @@ class IncidentComments extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+  }
+
+  _visibilityChanged(visible) {
+    if (visible === false) {
+      store.dispatch(clearErrors());
+    }
   }
 
   _noCommentsAndOffline(comments, isOffline) {

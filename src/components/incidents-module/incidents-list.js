@@ -25,7 +25,6 @@ import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
-import {updatePath} from "../common/navigation-helper";
 
 class IncidentsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerElement))) {
   static get template() {
@@ -192,8 +191,9 @@ class IncidentsList extends connect(store)(PaginationMixin(ListCommonMixin(Polym
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length, ' +
-        'filters.startDate, filters.endDate, filters.country, filters.incidentCategory, _queryParamsInitComplete)'
+        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, ' +
+            'filters.syncStatus.length, filters.startDate, filters.endDate, filters.country, ' +
+            'filters.incidentCategory, _queryParamsInitComplete)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -208,7 +208,7 @@ class IncidentsList extends connect(store)(PaginationMixin(ListCommonMixin(Polym
       filters: {
         type: Object,
         value: {
-          incidentCategory : null,
+          incidentCategory: null,
           country: null,
           startDate: null,
           endDate: null,
@@ -253,7 +253,6 @@ class IncidentsList extends connect(store)(PaginationMixin(ListCommonMixin(Polym
 
 
   _isActiveModuleChanged(newVal, oldVal) {
-    console.log(newVal, oldVal);
     if (this._queryParamsInitComplete) {
       if (newVal && newVal !== oldVal && this._lastQueryString !== '') {
         this.updateAppState('/incidents/list', this._lastQueryString, false);
@@ -263,23 +262,22 @@ class IncidentsList extends connect(store)(PaginationMixin(ListCommonMixin(Polym
 
 
   _queryParamsChanged(params) {
-    console.log('============', this._moduleNavigatedFrom);
 
     if (params && this._moduleNavigatedFrom === 'incidents') {
 
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
-      if (params.incidentCategory && params.incidentCategory !== this.filters.incidentCategory){
+      if (params.incidentCategory && params.incidentCategory !== this.filters.incidentCategory) {
         this.set('filters.incidentCategory', Number(params.incidentCategory));
       }
       if (params.country && params.country !== this.filters.country) {
         this.filters.country = params.country;
       }
-      if (params.start){
+      if (params.start) {
         this.set('filters.startDate', params.start);
       }
-      if (params.end){
+      if (params.end) {
         this.set('filters.endDate', params.end);
       }
       if (params.synced) {
@@ -304,7 +302,6 @@ class IncidentsList extends connect(store)(PaginationMixin(ListCommonMixin(Polym
     this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
 
     if (typeof state.app.locationInfo.selectedModule !== 'undefined') {
-      console.log("state app location ", state.app.locationInfo.selectedModule);
       this.set('_isActiveModule', state.app.locationInfo.selectedModule === 'incidents');
     }
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
@@ -362,22 +359,22 @@ class IncidentsList extends connect(store)(PaginationMixin(ListCommonMixin(Polym
 
   _applyDateFilter(e, startDate, endDate) {
 
-    if (startDate && new Date(e.incident_date) <= new Date(startDate)){
+    if (startDate && new Date(e.incident_date) <= new Date(startDate)) {
       return false;
     }
 
-    if (endDate && new Date(e.incident_date) >= new Date(endDate)){
+    if (endDate && new Date(e.incident_date) >= new Date(endDate)) {
       return false;
     }
 
     return true;
   }
 
-  _applyCountryFilter(e, selectedCountry){
+  _applyCountryFilter(e, selectedCountry) {
     return selectedCountry ? e.country === selectedCountry : true;
   }
 
-  _applyIncidentCategoryFilter(e, selectedIncidentCategory){
+  _applyIncidentCategoryFilter(e, selectedIncidentCategory) {
     return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
   }
 

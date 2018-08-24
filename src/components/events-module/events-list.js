@@ -223,7 +223,6 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
     this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
 
     if (typeof state.app.locationInfo.selectedModule !== 'undefined') {
-      console.log("state app location ", state.app.locationInfo.selectedModule);
       this.set('_isActiveModule', state.app.locationInfo.selectedModule === 'events');
     }
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
@@ -240,17 +239,16 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
   }
 
   _queryParamsChanged(params) {
-    
     if (params && this._moduleNavigatedFrom === 'events') {
 
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
 
-      if (params.start){
+      if (params.start) {
         this.set('filters.startDate', params.start);
       }
-      if (params.end){
+      if (params.end) {
         this.set('filters.endDate', params.end);
       }
       if (params.synced) {
@@ -268,7 +266,6 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
 
   connectedCallback() {
     super.connectedCallback();
-    console.log('query params: ', this._queryParams);
   }
 
   _updateUrlQs() {
@@ -278,7 +275,6 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
   }
 
   _isActiveModuleChanged(newVal, oldVal) {
-    console.log(newVal, oldVal);
     if (this._queryParamsInitComplete) {
       if (newVal && newVal !== oldVal && this._lastQueryString !== '') {
         this.updateAppState('/events/list', this._lastQueryString, false);

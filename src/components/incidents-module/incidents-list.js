@@ -164,7 +164,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                  <div> <!-- this div princidents resizing of the icon on low resolutions -->
                     <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem"></iron-icon>
                   </div>
                 </template>
@@ -312,11 +312,11 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return unsynced && !offline;
   }
 
-  async _syncItem(event) {
-    if (!event || !event.model || !event.model.__data || !event.model.__data.item) {
+  async _syncItem(incident) {
+    if (!incident || !incident.model || !incident.model.__data || !incident.model.__data.item) {
       return;
     }
-    let element = event.model.__data.item;
+    let element = incident.model.__data.item;
     let successfull = await store.dispatch(syncIncident(element));
       if (successfull === false) {
       updatePath('/incidents/edit/' + element.id + '/')

@@ -219,7 +219,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       filters: {
         type: Object,
         value: {
-          incidentCategory : null,
+          incidentCategory: null,
           country: null,
           startDate: null,
           endDate: null,
@@ -287,23 +287,23 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   _applyDateFilter(e, startDate, endDate) {
 
-    if (startDate && new Date(e.incident_date) <= new Date(startDate)){
+    if (startDate && new Date(e.incident_date) <= new Date(startDate)) {
       return false;
     }
 
-    if (endDate && new Date(e.incident_date) >= new Date(endDate)){
+    if (endDate && new Date(e.incident_date) >= new Date(endDate)) {
       return false;
     }
 
     return true;
   }
 
-  _applyCountryFilter(e, selectedCountry){
+  _applyCountryFilter(e, selectedCountry) {
 
     return selectedCountry ? e.country === selectedCountry: true;
   }
 
-  _applyIncidentCategoryFilter(e, selectedIncidentCategory){
+  _applyIncidentCategoryFilter(e, selectedIncidentCategory) {
 
     return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
   }
@@ -318,8 +318,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     }
     let element = event.model.__data.item;
     let successfull = await store.dispatch(syncIncident(element));
-      if (successfull === false) {
-      updatePath('/incidents/edit/' + element.id + '/')
+
+    if (successfull === false) {
+      updatePath('/incidents/edit/' + element.id + '/');
       store.dispatch(plainErrors(['There was an error syncing your incident. Please review the data and try again']));
     }
   }

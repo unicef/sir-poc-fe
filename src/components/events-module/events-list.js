@@ -264,12 +264,7 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-  }
-
   _updateUrlQs() {
-
     this.set('_lastQueryString', this._buildQueryString());
     this.updateAppState('/events/list', this._lastQueryString, false);
   }
@@ -283,7 +278,6 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
   }
 
   _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, queryParamsInit) {
-
     if (!queryParamsInit || !(events instanceof Array && events.length > 0)) {
       return [];
     }
@@ -317,7 +311,6 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
   _applyDateFilter(e, startDate, endDate) {
     return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
-
   }
 
   notEditable(event, offline) {

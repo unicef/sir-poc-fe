@@ -124,8 +124,8 @@ class IncidentsController extends connect(store)(BaseController) {
 
   _stateChanged(state) {
     if (state && state.app) {
-      this.isOffline = state.app.offline;
       this.incidentId = state.app.locationInfo.incidentId;
+      this.isOffline = state.app.offline;
     }
   }
 

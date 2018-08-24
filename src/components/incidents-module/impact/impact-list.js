@@ -4,9 +4,12 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { updatePath } from '../../common/navigation-helper.js';
+import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
+import './impacted-personnel-list.js';
+import './evacuations-list.js';
 
 /**
  * @polymer
@@ -47,7 +50,6 @@ export class ImpactList extends connect(store)(PolymerElement) {
             Add UN Personnel
           </paper-button>
         </div>
-        <hr>
         <div class="right">
           <paper-button raised
               class="smaller"
@@ -56,6 +58,11 @@ export class ImpactList extends connect(store)(PolymerElement) {
             Add NON UN Personnel
           </paper-button>
         </div>
+
+        <impacted-personnel-list incident="[[incident]]"></impacted-personnel-list>
+
+
+        <h3>Evacuations</h3>
         <hr>
         <div class="right">
           <paper-button raised
@@ -65,6 +72,7 @@ export class ImpactList extends connect(store)(PolymerElement) {
             Add Evacuation
           </paper-button>
         </div>
+        <evacuations-list incident="[[incident]]"></evacuations-list>
 
         <h3>UN Property(assets)</h3>
         <hr>
@@ -105,6 +113,7 @@ export class ImpactList extends connect(store)(PolymerElement) {
   static get properties() {
     return {
       state: Object,
+      incident: Object,
       incidentId: {
         type: Number,
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
@@ -122,9 +131,9 @@ export class ImpactList extends connect(store)(PolymerElement) {
   }
 
   _idChanged(newId) {
-    // select the current working incident
+    // TODO: add checks so we don't fetch this info except when this section is active
+    this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
   }
-
 
   _addUnPersonnel() {
     updatePath(`incidents/impact/${this.incidentId}/un-personel`);

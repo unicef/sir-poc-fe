@@ -135,6 +135,7 @@ export const syncEventOnList = event => (dispatch, getState) => {
     return true;
   }).catch((error) => {
     dispatch(syncEventFail());
+    updatePath('/events/edit/' + event.id + '/');
     return false;
   });
 };

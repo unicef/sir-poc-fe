@@ -250,16 +250,12 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return unsynced && !offline;
   }
 
-  async _syncItem(event) {
+  _syncItem(event) {
     if (!event || !event.model || !event.model.__data || !event.model.__data.item) {
       return;
     }
     let element = event.model.__data.item;
-    let successfull = await store.dispatch(syncEventOnList(element));
-
-    if (successfull === false) {
-      updatePath('/events/edit/' + element.id + '/');
-    }
+    store.dispatch(syncEventOnList(element));
   }
 
   notEditable(event, offline) {

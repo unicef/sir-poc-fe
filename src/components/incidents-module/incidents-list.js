@@ -18,7 +18,7 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import { updatePath } from '../common/navigation-helper.js';
-import { syncIncident } from '../../actions/incidents.js';
+import { syncIncidentOnList } from '../../actions/incidents.js';
 import { plainErrors } from '../../actions/errors.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -312,16 +312,13 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return unsynced && !offline;
   }
 
-  async _syncItem(incident) {
+  _syncItem(incident) {
     if (!incident || !incident.model || !incident.model.__data || !incident.model.__data.item) {
       return;
     }
+
     let element = incident.model.__data.item;
-    let successfull = await store.dispatch(syncIncident(element));
-      if (successfull === false) {
-      updatePath('/incidents/edit/' + element.id + '/')
-      store.dispatch(plainErrors(['There was an error syncing your incident. Please review the data and try again']));
-    }
+    store.dispatch(syncIncidentOnList(element));
   }
 
   notEditable(incident, offline) {

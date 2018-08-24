@@ -7,6 +7,7 @@ import '@polymer/paper-input/paper-input.js';
 
 import DateMixin from '../../common/date-mixin.js';
 import { store } from '../../../redux/store.js';
+import '@polymer/paper-button/paper-button.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
 import './styles.js';
@@ -26,11 +27,11 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
       </style>
 
       <div class="card">
-        <div class="layout-horizontal flex-c">
-          <div class="col-11">
+        <div class="layout-horizontal space-between flex-c">
+          <div>
             <h3> Changes performed </h3>
           </div>
-          <div class="col-1 nav-buttons">
+          <div class="nav-buttons">
             <history-navigation-links page="diff" working-item="[[workingItem]]"></history-navigation-links>
           </div>
         </div>

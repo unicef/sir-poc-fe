@@ -99,6 +99,9 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
       break;
+    case 'impact':
+      import('../components/incidents-module/impact/impact-controller.js');
+      break;
     default:
       updatePath('/404/');
       break;
@@ -116,6 +119,9 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
       break;
     case 'incidents':
       import('../components/incidents-module/incidents-controller.js');
+      break;
+    case 'dashboard':
+      import('../components/dashboard-module/dashboard-controller.js');
       break;
     case 'view404':
       import('../components/non-found-module/404.js');

@@ -22,6 +22,7 @@ import ListCommonMixin from '../common/list-common-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
 import '../styles/shared-styles.js';
+import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
@@ -37,13 +38,9 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles filters-styles data-table-styles grid-layout-styles">
+      <style include="shared-styles form-fields-styles filters-styles data-table-styles grid-layout-styles">
         :host {
           display: block;
-        }
-
-        etools-data-table-row[unsynced] {
-          --list-bg-color: var(--unsynced-item-bg-color);
         }
 
         .col-data > span {
@@ -74,21 +71,21 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
                                       selected-values="{{filters.syncStatus}}"
                                       hide-search>
           </etools-dropdown-multi-lite>
-          
+
           <div class="col col-3">
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
                              label="From">
             </datepicker-lite>
           </div>
-          
+
           <div class="col col-3">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To">
             </datepicker-lite>
           </div>
-          
+
         </div>
       </div>
 

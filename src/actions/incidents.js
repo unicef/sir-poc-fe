@@ -4,7 +4,7 @@ import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
-import { serverError } from './errors.js';
+import { serverError, PLAIN_ERROR } from './errors.js';
 
 export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
 export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
@@ -37,10 +37,10 @@ const addCommentSuccess = (comment) => {
   };
 };
 
-const addIncidentFail = (serverError) => {
+const syncIncidentFail = () => {
   return {
-    type: ADD_INCIDENT_FAIL,
-    serverError
+    type: PLAIN_ERROR,
+    plainErrors: ['There was an error syncing your incident. Please review the data and try again']
   };
 };
 
@@ -78,7 +78,7 @@ const addIncidentOnline = (newIncident, dispatch) => {
     updatePath('/incidents/list/');
     return true;
   }).catch((error) => {
-    dispatch(addIncidentFail(error.response));
+    dispatch(serverError(error.response));
     scrollToTop();
     return false;
   });
@@ -111,7 +111,7 @@ const editIncidentOnline = (incident, dispatch, state) => {
     updatePath('/incidents/list/');
     dispatch(fetchIncidents());
   }).catch((error) => {
-    dispatch(addIncidentFail(error.response));
+    dispatch(serverError(error.response));
     scrollToTop();
   });
 };
@@ -142,13 +142,26 @@ export const editIncident = incident => (dispatch, getState) => {
   }
 };
 
+export const syncIncidentOnList = newIncident => (dispatch, getState) => {
+  return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
+    dispatch(editIncidentSuccess(result, newIncident.id));
+    return true;
+  }).catch((error) => {
+    dispatch(syncIncidentFail());
+    updatePath('/incidents/edit/' + newIncident.id + '/');
+    return false;
+  });
+};
+
 export const syncIncident = newIncident => (dispatch, getState) => {
-  makeRequest(Endpoints.newIncident, newIncident).then((result) => {
+  return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     updatePath('/incidents/list/');
     dispatch(editIncidentSuccess(result, newIncident.id));
+    return true;
   }).catch((error) => {
-    dispatch(addIncidentFail(error.response));
+    dispatch(serverError(error.response));
     scrollToTop();
+    return false;
   });
 };
 

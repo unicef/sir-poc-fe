@@ -160,6 +160,7 @@ class ErrorsBox extends connect(store)(PolymerElement) {
       return;
     }
     this.serverErrors = state.errors.serverError;
+    this.errors = state.errors.plainErrors;
   }
 
 }

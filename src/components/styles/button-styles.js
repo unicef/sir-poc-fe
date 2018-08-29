@@ -25,6 +25,7 @@ documentContainer.innerHTML = `<dom-module id="button-styles">
       }
       .smaller {
         font-size: 14px;
+        padding: 0 8px;
       }
     </style>
   </template>

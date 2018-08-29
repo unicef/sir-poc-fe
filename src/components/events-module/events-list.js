@@ -8,15 +8,20 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import '@polymer/iron-icons/notification-icons.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import {store} from '../../redux/store.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
+import { updatePath } from '../common/navigation-helper.js';
+
+import { syncEventOnList } from '../../actions/events.js';
+import { plainErrors } from '../../actions/errors.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -55,6 +60,11 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
           /* mobile specific css, under tablet min 768px */
         }
 
+        .sync-btn {
+          color: var(--primary-color);
+          cursor: pointer;
+        }
+
       </style>
 
       <div class="card filters">
@@ -91,7 +101,7 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
 
       <div class="card list">
         <etools-data-table-header id="listHeader" label="Events">
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-2">
             Description
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
@@ -111,7 +121,7 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]" as="event">
           <etools-data-table-row unsynced$="[[event.unsynced]]">
             <div slot="row-data">
-                <span class="col-data col-3" data-col-header-label="Description">
+                <span class="col-data col-2" data-col-header-label="Description">
                   <span class="truncate">
                     <a href="/events/view/[[event.id]]"> [[event.description]] </a>
                   </span>
@@ -129,18 +139,22 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
                   <template is="dom-if" if="[[event.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
-                      <span slot="message">This event has not been sumitted to the server. Go to its edit page
-                        and save it when an internet connection is availale.</span>
+                      <span slot="message">This event has not been sumitted to the server. Click the sync button when online to submit it. </span>
                     </etools-info-tooltip>
                   </template>
                 </span>
-              <span class="col-data col-1" data-col-header-label="Actions">
+              <span class="col-data col-2" data-col-header-label="Actions">
                   <a href="/events/view/[[event.id]]">
-                    <iron-icon icon="assignment"></iron-icon>
+                    <iron-icon icon="assignment" title="View Event"></iron-icon>
                   </a>
-                  <a href="/events/edit/[[event.id]]" hidden$="[[notEditable(event, offline)]]">
+                  <a href="/events/edit/[[event.id]]" title="Edit Event" hidden$="[[notEditable(event, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
+                  <template is="dom-if" if="[[_showSyncButton(event.unsynced, offline)]]">
+                    <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem"></iron-icon>
+                    </div>
+                  </template>
                 </span>
             </div>
             <div slot="row-data-details">
@@ -152,7 +166,6 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
                 <strong>Note: </strong>
                 <span>[[event.note]]</span>
               </div>
-
             </div>
           </etools-data-table-row>
         </template>
@@ -311,6 +324,18 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
   _applyDateFilter(e, startDate, endDate) {
     return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
+  }
+
+  _showSyncButton(unsynced, offline) {
+    return unsynced && !offline;
+  }
+
+  _syncItem(event) {
+    if (!event || !event.model || !event.model.__data || !event.model.__data.item) {
+      return;
+    }
+    let element = event.model.__data.item;
+    store.dispatch(syncEventOnList(element));
   }
 
   notEditable(event, offline) {

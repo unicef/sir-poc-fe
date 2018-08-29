@@ -19,8 +19,9 @@ import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 import { updatePath } from '../common/navigation-helper.js';
-import { syncIncident } from '../../actions/incidents.js';
+import { syncIncidentOnList } from '../../actions/incidents.js';
 import { plainErrors } from '../../actions/errors.js';
+import ListCommonMixin from '../common/list-common-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -163,7 +164,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                  <div> <!-- this div princidents resizing of the icon on low resolutions -->
                     <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem"></iron-icon>
                   </div>
                 </template>
@@ -214,8 +215,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length, ' +
-        'filters.startDate, filters.endDate, filters.country, filters.incidentCategory)'
+        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, ' +
+            'filters.syncStatus.length, filters.startDate, filters.endDate, filters.country, ' +
+            'filters.incidentCategory, _queryParamsInitComplete)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -230,13 +232,31 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
       filters: {
         type: Object,
         value: {
-          incidentCategory : null,
+          incidentCategory: null,
           country: null,
           startDate: null,
           endDate: null,
           syncStatus: [],
           q: null
         }
+      },
+      _queryParams: {
+        type: Object,
+        observer: '_queryParamsChanged'
+      },
+      _queryParamsInitComplete: Boolean,
+      _lastQueryString: {
+        type: String,
+        value: ''
+      },
+      _isActiveModule: {
+        type: Boolean,
+        value: false,
+        observer: '_isActiveModuleChanged'
+      },
+      _moduleNavigatedFrom: {
+        type: String,
+        value: ''
       }
 
     };
@@ -247,9 +267,69 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
     this.store = store;
   }
 
+
+  _updateUrlQs() {
+
+    this.set('_lastQueryString', this._buildQueryString());
+
+    this.updateAppState('/incidents/list', this._lastQueryString, false);
+  }
+
+
+  _isActiveModuleChanged(newVal, oldVal) {
+    if (this._queryParamsInitComplete) {
+      if (newVal && newVal !== oldVal && this._lastQueryString !== '') {
+        this.updateAppState('/incidents/list', this._lastQueryString, false);
+      }
+    }
+  }
+
+
+  _queryParamsChanged(params) {
+
+    if (params && this._moduleNavigatedFrom === 'incidents') {
+
+      if (params.q && params.q !== this.filters.q) {
+        this.set('filters.q', params.q);
+      }
+      if (params.incidentCategory && params.incidentCategory !== this.filters.incidentCategory) {
+        this.set('filters.incidentCategory', Number(params.incidentCategory));
+      }
+      if (params.country && params.country !== this.filters.country) {
+        this.filters.country = params.country;
+      }
+      if (params.start) {
+        this.set('filters.startDate', params.start);
+      }
+      if (params.end) {
+        this.set('filters.endDate', params.end);
+      }
+      if (params.synced) {
+
+        if (params.synced.indexOf('|') > -1) {
+          this.set('filters.syncStatus', params.synced.split('|'));
+        } else {
+          this.set('filters.syncStatus', [params.synced]);
+        }
+
+      }
+
+      this.set('_queryParamsInitComplete', true);
+    }
+  }
+
   _stateChanged(state) {
     if (!state) {
       return;
+    }
+
+    this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
+
+    if (typeof state.app.locationInfo.selectedModule !== 'undefined') {
+      this.set('_isActiveModule', state.app.locationInfo.selectedModule === 'incidents');
+    }
+    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
+      this._queryParams = state.app.locationInfo.queryParams;
     }
 
     this.offline = state.app.offline;
@@ -263,10 +343,15 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
     return incident.name || 'Not Specified';
   }
 
-  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country, incidentCategory) {
-    if (!(incidents instanceof Array && incidents.length > 0)) {
+  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country,
+              incidentCategory, qParamsInit) {
+
+    if (!qParamsInit || !(incidents instanceof Array && incidents.length > 0)) {
       return [];
     }
+
+    this._updateUrlQs();
+
     let filteredIncidents = JSON.parse(JSON.stringify(incidents));
 
     filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
@@ -298,24 +383,22 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
 
   _applyDateFilter(e, startDate, endDate) {
 
-    if (startDate && new Date(e.incident_date) <= new Date(startDate)){
+    if (startDate && new Date(e.incident_date) <= new Date(startDate)) {
       return false;
     }
 
-    if (endDate && new Date(e.incident_date) >= new Date(endDate)){
+    if (endDate && new Date(e.incident_date) >= new Date(endDate)) {
       return false;
     }
 
     return true;
   }
 
-  _applyCountryFilter(e, selectedCountry){
-
-    return selectedCountry ? e.country === selectedCountry: true;
+  _applyCountryFilter(e, selectedCountry) {
+    return selectedCountry ? e.country === selectedCountry : true;
   }
 
-  _applyIncidentCategoryFilter(e, selectedIncidentCategory){
-
+  _applyIncidentCategoryFilter(e, selectedIncidentCategory) {
     return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
   }
 
@@ -323,20 +406,29 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElem
     return unsynced && !offline;
   }
 
-  async _syncItem(event) {
-    if (!event || !event.model || !event.model.__data || !event.model.__data.item) {
+  _syncItem(incident) {
+    if (!incident || !incident.model || !incident.model.__data || !incident.model.__data.item) {
       return;
     }
-    let element = event.model.__data.item;
-    let successfull = await store.dispatch(syncIncident(element));
-      if (successfull === false) {
-      updatePath('/incidents/edit/' + element.id + '/')
-      store.dispatch(plainErrors(['There was an error syncing your incident. Please review the data and try again']));
-    }
+
+    let element = incident.model.__data.item;
+    store.dispatch(syncIncidentOnList(element));
   }
 
   notEditable(incident, offline) {
     return offline && !incident.unsynced;
+  }
+
+  // Outputs the query string for the list
+  _buildQueryString() {
+    return this._buildUrlQueryString({
+      incidentCategory: this.filters.incidentCategory,
+      country: this.filters.country,
+      start: this.filters.startDate,
+      end: this.filters.endDate,
+      synced: this.filters.syncStatus,
+      q: this.filters.q
+    });
   }
 }
 

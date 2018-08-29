@@ -66,7 +66,7 @@ const getEditedList = (list, action) => {
 const getRefreshedIncidents = (oldIncidents, newIncidents) => {
   oldIncidents = oldIncidents instanceof Array ? oldIncidents : [];
   newIncidents = newIncidents instanceof Array ? newIncidents : [];
-  let unsynced = oldIncidents.filter(elem => elem.unsynced);
+  let unsynced = oldIncidents.filter(elem => elem.unsynced && isNaN(elem.id));
   return [...newIncidents, ...unsynced];
 };
 

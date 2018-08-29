@@ -227,7 +227,6 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _locationChanged(path, queryParams) {
-    store.dispatch({type: 'CLEAR_ERRORS'});
     store.dispatch(updateLocationInfo(path, queryParams));
   }
 
@@ -247,7 +246,6 @@ class MyApp extends connect(store)(PolymerElement) {
     } else {
       this.page = 'view404';
     }
-
 
     // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {

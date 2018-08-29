@@ -18,10 +18,9 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
-import { updatePath } from '../common/navigation-helper.js';
+import DateMixin from '../common/date-mixin.js';
 
 import { syncEventOnList } from '../../actions/events.js';
-import { plainErrors } from '../../actions/errors.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -31,15 +30,17 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
+
 /**
  *
  * @polymer
  * @customElement
  * @appliesMixin PaginationMixin
+ * @appliesMixin DateMixin
  * @appliesMixin ListCommonMixin
  *
  */
-class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerElement))) {
+class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
   static get template() {
     // language=HTML
     return html`
@@ -65,6 +66,9 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
           cursor: pointer;
         }
 
+        .row-details {
+          display: block;
+        }
       </style>
 
       <div class="card filters">
@@ -102,7 +106,7 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
       <div class="card list">
         <etools-data-table-header id="listHeader" label="Events">
           <etools-data-table-column class="col-2">
-            Description
+            Case number
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
             Start date
@@ -121,17 +125,17 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]" as="event">
           <etools-data-table-row unsynced$="[[event.unsynced]]">
             <div slot="row-data">
-                <span class="col-data col-2" data-col-header-label="Description">
+                <span class="col-data col-2" data-col-header-label="Case number">
                   <span class="truncate">
-                    <a href="/events/view/[[event.id]]"> [[event.description]] </a>
+                    <a href="/events/view/[[item.id]]"> N/A </a>
                   </span>
                 </span>
-              <span class="col-data col-3" title="[[event.start_date]]" data-col-header-label="Start date">
-                    [[event.start_date]]
-                </span>
-              <span class="col-data col-3" title="[[event.location]]" data-col-header-label="Location">
-                  <span class="truncate">[[event.location]]</span>
-                </span>
+              <span class="col-data col-3" title="[[item.start_date]]" data-col-header-label="Start date">
+                [[item.start_date]]
+              </span>
+              <span class="col-data col-3" title="[[item.location]]" data-col-header-label="Location">
+                <span class="truncate">[[item.location]]</span>
+              </span>
               <span class="col-data col-2" data-col-header-label="Status">
                   <template is="dom-if" if="[[!event.unsynced]]">
                     Synced
@@ -157,14 +161,27 @@ class EventsList extends connect(store)(PaginationMixin(ListCommonMixin(PolymerE
                   </template>
                 </span>
             </div>
-            <div slot="row-data-details">
-              <div class="col-6">
-                <strong>Description: </strong>
-                <span>[[event.description]]</span>
+
+            <div slot="row-data-details" class="row-details">
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Date created: </strong>
+                  <span>[[prettyDate(item.submitted_date)]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Date revised: </strong>
+                  <span>[[prettyDate(item.last_modify_date)]]</span>
+                </div>
               </div>
-              <div class="col-6">
-                <strong>Note: </strong>
-                <span>[[event.note]]</span>
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Description: </strong>
+                  <span>[[item.description]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Note: </strong>
+                  <span>[[item.note]]</span>
+                </div>
               </div>
             </div>
           </etools-data-table-row>

@@ -30,7 +30,6 @@ export class ImpactController extends connect(store)(PolymerElement) {
         }
         paper-button {
           text-transform: none;
-          padding: 0 8px;
         }
         .right {
           text-align: right;

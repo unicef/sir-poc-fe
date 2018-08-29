@@ -5,16 +5,16 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 
-import DateMixin from '../../common/date-mixin.js';
-import { store } from '../../../redux/store.js';
+import DateMixin from '../common/date-mixin.js';
+import { store } from '../../redux/store.js';
 import '@polymer/paper-button/paper-button.js';
-import '../../styles/shared-styles.js';
-import '../../styles/grid-layout-styles.js';
+import '../styles/shared-styles.js';
+import '../styles/grid-layout-styles.js';
 import './styles.js';
 import HistoryHelpers from './history-helpers.js';
 import './history-navigation-links.js';
 
-export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
+export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles history-common-styles">
@@ -32,7 +32,7 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
             <h3> Changes performed </h3>
           </div>
           <div class="nav-buttons">
-            <history-navigation-links page="diff" working-item="[[workingItem]]"></history-navigation-links>
+            <history-navigation-links page="diff" working-item="[[workingItem]]" module="[[module]]"></history-navigation-links>
           </div>
         </div>
         <template is="dom-repeat" items="[[changes]]">
@@ -61,7 +61,7 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
   }
 
   static get is() {
-    return 'incident-diff';
+    return 'diff-view';
   }
 
   static get properties() {
@@ -70,9 +70,10 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
         type: Object,
         observer: 'itemChanged'
       },
+      staticData: Object,
       changes: Array,
-      events: Array,
-      staticData: Object
+      module: String,
+      events: Array
     };
   }
 
@@ -107,6 +108,7 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
     if (value === 'None') {
       return value;
     }
+
     let result;
     switch (key) {
       case 'event':
@@ -136,7 +138,6 @@ export class IncidentDiff extends DateMixin(HistoryHelpers(connect(store)(Polyme
         return value;
     }
   }
-
 }
 
-window.customElements.define(IncidentDiff.is, IncidentDiff);
+window.customElements.define(DiffView.is, DiffView);

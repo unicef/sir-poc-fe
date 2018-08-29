@@ -1,7 +1,7 @@
 /**
 @license
 */
-import { IncidentsBaseView } from '../incidents-base-view.js';
+import { EventsBaseView } from '../events-base-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import '../../history-components/history-navigation-links.js';
 import '../../history-components/styles.js';
@@ -10,14 +10,14 @@ import '../../history-components/styles.js';
  * @polymer
  * @customElement
  */
-class IncidentRevisionView extends IncidentsBaseView {
+class EventRevisionView extends EventsBaseView {
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;
   }
 
   static get is() {
-    return 'incident-revision-view';
+    return 'event-revision-view';
   }
 
   static get properties() {
@@ -34,11 +34,11 @@ class IncidentRevisionView extends IncidentsBaseView {
       <style include="history-common-styles"></style>
       <div class="layout-horizontal space-between flex-c">
         <div>
-          <h2> View incident at this revision </h2>
+          <h2> View event at this revision </h2>
         </div>
 
         <div class="nav-buttons">
-          <history-navigation-links page="view" module="incidents" working-item="[[workingItem]]"></history-navigation-links>
+          <history-navigation-links page="view" module="events" working-item="[[workingItem]]"></history-navigation-links>
         </div>
       </div>
     `;
@@ -47,7 +47,7 @@ class IncidentRevisionView extends IncidentsBaseView {
   _idChanged() {
   }
 
-  _setIncidentId() {
+  _setEventId() {
   }
 
   isOnExpectedPage() {
@@ -58,8 +58,8 @@ class IncidentRevisionView extends IncidentsBaseView {
     if (!workingItem) {
       return;
     }
-    this.incident = workingItem.data;
+    this.event = workingItem.data;
   }
 }
 
-window.customElements.define(IncidentRevisionView.is, IncidentRevisionView);
+window.customElements.define(EventRevisionView.is, EventRevisionView);

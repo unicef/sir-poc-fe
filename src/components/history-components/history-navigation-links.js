@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import HistoryHelpers from './history-helpers.js';
 import '@polymer/iron-icons/image-icons.js';
-import '../../styles/shared-styles.js';
+import '../styles/shared-styles.js';
 
 export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
 
@@ -14,24 +14,24 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
         }
       </style>
 
-      <a href="incidents/history/[[workingItem.data.id]]/list" title="Go to changes list">
+      <a href="[[module]]/history/[[workingItem.data.id]]/list/" title="Go to changes list">
         <paper-button raised class="white-bg smaller">
           <iron-icon icon="list"></iron-icon>
           History List
         </paper-button>
       </a>
 
-      <a href="incidents/history/[[workingItem.data.id]]/view/[[workingItem.id]]"
-           hidden$="[[pageIs('view')]]"
-           title="View entire incident at this version">
+      <a href="[[module]]/history/[[workingItem.data.id]]/view/[[workingItem.id]]/"
+           hidden$="[[_pageIs('view')]]"
+           title="View entire [[_getLabel(module)]] at this version">
         <paper-button raised class="white-bg smaller">
           <iron-icon icon="assignment"></iron-icon>
-           Incident at this revision
+           [[_getLabel(module)]] at this revision
         </paper-button>
       </a>
 
-      <a href="incidents/history/[[workingItem.data.id]]/diff/[[workingItem.id]]"
-           hidden$="[[shouldHideViewChangesButton(workingItem.change)]]"
+      <a href="[[module]]/history/[[workingItem.data.id]]/diff/[[workingItem.id]]/"
+           hidden$="[[_shouldHideViewChangesButton(workingItem.change)]]"
            title="View changes from previous version">
         <paper-button raised class="white-bg smaller">
           <iron-icon icon="image:compare"></iron-icon>
@@ -48,19 +48,29 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
   static get properties() {
     return {
       page: String,
+      module: String,
       workingItem: Object
     };
   }
 
-  pageIs(loc) {
+  _pageIs(loc) {
     return this.page === loc;
   }
 
-  shouldHideViewChangesButton(change) {
+  _shouldHideViewChangesButton(change) {
     if (!change) {
       return true;
     }
-    return this.pageIs('diff') || !this.hasChangedFilds(change);
+    return this._pageIs('diff') || !this.hasChangedFilds(change);
+  }
+
+  _getLabel(module) {
+    if (module === 'events') {
+      return 'event';
+    }
+    if (module === 'incidents') {
+      return 'incident';
+    }
   }
 }
 

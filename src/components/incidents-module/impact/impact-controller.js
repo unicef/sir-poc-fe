@@ -26,7 +26,6 @@ export class ImpactController extends PolymerElement {
         }
         paper-button {
           text-transform: none;
-          padding: 0 8px;
         }
         .right {
           text-align: right;

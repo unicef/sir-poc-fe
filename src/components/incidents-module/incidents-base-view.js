@@ -19,6 +19,7 @@ import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { fetchIncident } from '../../actions/incidents.js';
+import { clearErrors } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -448,6 +449,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   _visibilityChanged(visible) {
     if (visible) {
       this.resetValidations();
+    }
+    if (visible === false) {
+      store.dispatch(clearErrors());
     }
   }
 

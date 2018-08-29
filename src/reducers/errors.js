@@ -1,7 +1,8 @@
-import { SERVER_ERROR, CLEAR_ERRORS } from '../actions/errors.js';
+import { PLAIN_ERROR, SERVER_ERROR, CLEAR_ERRORS } from '../actions/errors.js';
 
 const noErrors = {
-  serverError: null
+  serverError: null,
+  plainErrors: null
 };
 
 const errors = (state = {serverError: ''}, action) => {
@@ -10,10 +11,14 @@ const errors = (state = {serverError: ''}, action) => {
       return noErrors;
     case SERVER_ERROR:
     case 'ADD_EVENT_FAIL':
-    case 'ADD_INCIDENT_FAIL':
       return {
         ...state,
         serverError: action.serverError
+      };
+    case PLAIN_ERROR:
+      return {
+        ...state,
+        plainErrors: action.plainErrors
       };
     default:
       return state;

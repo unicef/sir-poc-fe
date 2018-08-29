@@ -9,6 +9,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import '../common/datepicker-lite.js';
 
+import { clearErrors } from '../../actions/errors.js';
 import { fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
@@ -175,6 +176,9 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   _visibilityChanged(visible) {
     if (visible) {
       this.resetValidations();
+    }
+    if (visible === false) {
+      store.dispatch(clearErrors());
     }
   }
 

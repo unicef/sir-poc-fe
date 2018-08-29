@@ -102,6 +102,9 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
       break;
+    case 'impact':
+      import('../components/incidents-module/impact/impact-controller.js');
+      break;
     default:
       updatePath('/404/');
       break;

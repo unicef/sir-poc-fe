@@ -18,9 +18,7 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import { updatePath } from '../common/navigation-helper.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
-import { plainErrors } from '../../actions/errors.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -31,7 +29,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(DateMixin(PaginationMixin(PolymerElement))) {
+class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
   static get template() {
     // language=HTML
     return html`

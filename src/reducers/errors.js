@@ -11,7 +11,6 @@ const errors = (state = {serverError: ''}, action) => {
       return noErrors;
     case SERVER_ERROR:
     case 'ADD_EVENT_FAIL':
-    case 'ADD_INCIDENT_FAIL':
       return {
         ...state,
         serverError: action.serverError

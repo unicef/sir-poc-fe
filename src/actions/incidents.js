@@ -37,13 +37,6 @@ const addCommentSuccess = (comment) => {
   };
 };
 
-const addIncidentFail = (serverError) => {
-  return {
-    type: ADD_INCIDENT_FAIL,
-    serverError
-  };
-};
-
 const syncIncidentFail = () => {
   return {
     type: PLAIN_ERROR,
@@ -85,7 +78,7 @@ const addIncidentOnline = (newIncident, dispatch) => {
     updatePath('/incidents/list/');
     return true;
   }).catch((error) => {
-    dispatch(addIncidentFail(error.response));
+    dispatch(serverError(error.response));
     scrollToTop();
     return false;
   });
@@ -118,7 +111,7 @@ const editIncidentOnline = (incident, dispatch, state) => {
     updatePath('/incidents/list/');
     dispatch(fetchIncidents());
   }).catch((error) => {
-    dispatch(addIncidentFail(error.response));
+    dispatch(serverError(error.response));
     scrollToTop();
   });
 };
@@ -166,7 +159,7 @@ export const syncIncident = newIncident => (dispatch, getState) => {
     dispatch(editIncidentSuccess(result, newIncident.id));
     return true;
   }).catch((error) => {
-    dispatch(addIncidentFail(error.response));
+    dispatch(serverError(error.response));
     scrollToTop();
     return false;
   });

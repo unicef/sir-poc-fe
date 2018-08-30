@@ -217,7 +217,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
                                       selectedIncidentSubcategory.comment)]]">
-                  <etools-dropdown-lite id="incidentSubCat"
+                  <etools-dropdown-lite id="incidentSubcat"
                                         slot="field"
                                         readonly="[[readonly]]"
                                         label="Incident Subcategory"
@@ -227,7 +227,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         required auto-validate
                                         error-message="Incident subcategory is required">
                   </etools-dropdown-lite>
-                  <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
+                  <span slot="message">[[selectedIncidentSubcategory.description]]<br>[[selectedIncidentSubcategory.comment]]
                   </span>
                 </etools-info-tooltip>
               </div>
@@ -413,6 +413,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       },
       selectedIncidentCategory: {
         type: Object,
+        value: {},
+        observer: 'selIncidentCategChanged'
+      },
+      selectedIncidentSubcategory: {
+        type: Object,
         value: {}
       },
       selectedThreatCategory: {
@@ -430,7 +435,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
-          '#city', '#incidentCat', '#description', '#injuries', '#target', '#threatCategory']
+          '#city', '#incidentCat', '#incidentSubcat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }
@@ -509,6 +514,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       elem.name = elem.first_name + ' ' + elem.last_name;
       return elem;
     });
+  }
+
+  selIncidentCategChanged(incidentCategory) {
+    if (!this.incident.incident_subcategory) {
+      return;
+    }
+    let selSubcategIsValid = incidentCategory.subcategories.find(s => s.id == this.incident.incident_subcategory);
+    if (!selSubcategIsValid) {
+      this.set('incident.incident_subcategory', null);
+    }
   }
 
   isNotReported(reported) {

@@ -122,8 +122,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[filteredEvents]]" as="event">
-          <etools-data-table-row unsynced$="[[event.unsynced]]">
+        <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
+          <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
                 <span class="col-data col-2" data-col-header-label="Case number">
                   <span class="truncate">
@@ -137,10 +137,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                 <span class="truncate">[[item.location]]</span>
               </span>
               <span class="col-data col-2" data-col-header-label="Status">
-                  <template is="dom-if" if="[[!event.unsynced]]">
+                  <template is="dom-if" if="[[!item.unsynced]]">
                     Synced
                   </template>
-                  <template is="dom-if" if="[[event.unsynced]]">
+                  <template is="dom-if" if="[[item.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
                       <span slot="message">This event has not been sumitted to the server. Click the sync button when online to submit it. </span>
@@ -148,13 +148,13 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   </template>
                 </span>
               <span class="col-data col-2" data-col-header-label="Actions">
-                  <a href="/events/view/[[event.id]]">
+                  <a href="/events/view/[[item.id]]">
                     <iron-icon icon="assignment" title="View Event"></iron-icon>
                   </a>
-                  <a href="/events/edit/[[event.id]]" title="Edit Event" hidden$="[[notEditable(event, offline)]]">
+                  <a href="/events/edit/[[item.id]]" title="Edit Event" hidden$="[[notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
-                  <template is="dom-if" if="[[_showSyncButton(event.unsynced, offline)]]">
+                  <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                     <div> <!-- this div prevents resizing of the icon on low resolutions -->
                       <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem"></iron-icon>
                     </div>

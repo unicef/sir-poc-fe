@@ -161,24 +161,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
               <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
-                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
-                                      selectedIncidentCategory.comment)]]">
-                  <etools-dropdown-lite id="incidentCat"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Incident category"
-                                        options="[[staticData.incidentCategories]]"
-                                        selected="{{incident.incident_category}}"
-                                        selected-item="{{selectedIncidentCategory}}"
-                                        required auto-validate
-                                        error-message="Incident category is required">
-                  </etools-dropdown-lite>
-                  <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
-                  </span>
-                </etools-info-tooltip>
-              </div>
-              <div class="col col-3">
-                <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedThreatCategory.description]]">
                   <etools-dropdown-lite id="threatCategory"
                                         slot="field"
@@ -207,6 +189,46 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         error-message="Target is required">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedTarget.description]]</span>
+                </etools-info-tooltip>
+              </div>
+            </div>
+
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-info-tooltip class="info" open-on-click form-field-align
+                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
+                                      selectedIncidentCategory.comment)]]">
+                  <etools-dropdown-lite id="incidentCat"
+                                        slot="field"
+                                        readonly="[[readonly]]"
+                                        label="Incident category"
+                                        options="[[staticData.incidentCategories]]"
+                                        selected="{{incident.incident_category}}"
+                                        selected-item="{{selectedIncidentCategory}}"
+                                        required auto-validate
+                                        error-message="Incident category is required">
+                  </etools-dropdown-lite>
+                  <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
+                  </span>
+                </etools-info-tooltip>
+              </div>
+
+              <div class="col col-3">
+                <etools-info-tooltip class="info" open-on-click form-field-align
+                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
+                                      selectedIncidentSubcategory.comment)]]">
+                  <etools-dropdown-lite id="incidentSubcat"
+                                        slot="field"
+                                        readonly="[[readonly]]"
+                                        label="Incident Subcategory"
+                                        options="[[selectedIncidentCategory.subcategories]]"
+                                        selected="{{incident.incident_subcategory}}"
+                                        selected-item="{{selectedIncidentSubcategory}}"
+                                        required auto-validate
+                                        error-message="Incident subcategory is required">
+                  </etools-dropdown-lite>
+                  <span slot="message">[[selectedIncidentSubcategory.description]]<br>[[selectedIncidentSubcategory.comment]]
+                  </span>
                 </etools-info-tooltip>
               </div>
             </div>
@@ -391,6 +413,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       },
       selectedIncidentCategory: {
         type: Object,
+        value: {},
+        observer: 'selIncidentCategChanged'
+      },
+      selectedIncidentSubcategory: {
+        type: Object,
         value: {}
       },
       selectedThreatCategory: {
@@ -408,7 +435,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
-          '#city', '#incidentCat', '#description', '#injuries', '#target', '#threatCategory']
+          '#city', '#incidentCat', '#incidentSubcat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }
@@ -487,6 +514,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       elem.name = elem.first_name + ' ' + elem.last_name;
       return elem;
     });
+  }
+
+  selIncidentCategChanged(incidentCategory) {
+    if (!this.incident.incident_subcategory) {
+      return;
+    }
+    let selSubcategIsValid = incidentCategory.subcategories.find(s => s.id == this.incident.incident_subcategory);
+    if (!selSubcategIsValid) {
+      this.set('incident.incident_subcategory', null);
+    }
   }
 
   isNotReported(reported) {

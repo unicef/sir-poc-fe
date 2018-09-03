@@ -138,7 +138,11 @@ export const editIncident = incident => (dispatch, getState) => {
   if (getState().app.offline === true) {
     editIncidentOffline(incident, dispatch);
   } else {
-    editIncidentOnline(incident, dispatch, getState());
+    if (incident.unsynced) {
+      dispatch(syncIncident(incident));
+    } else {
+      editIncidentOnline(incident, dispatch, getState());
+    }
   }
 };
 

@@ -23,11 +23,8 @@ class EditEvent extends EventsBaseView {
     if (!this.validate()) {
       return;
     }
-    if (this.event.unsynced && !this.state.app.offline) {
-      this.store.dispatch(syncEvent(this.event));
-    } else {
-      this.store.dispatch(editEvent(this.event));
-    }
+
+    this.store.dispatch(editEvent(this.event));
   }
 
   isOnExpectedPage() {

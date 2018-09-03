@@ -15,7 +15,7 @@ class ViewEvent extends EventsBaseView {
   static get goToEditBtnTmpl() {
     // language=HTML
     return html`
-      <div class="row-h flex-c" hidden$="[[state.app.offline]]">
+      <div class="row-h flex-c" hidden$="[[!canEdit(state.app.offline, event.unsynced, event.id)]]">
         <div class="col col-12">
           <a href="/events/edit/[[eventId]]">
             <paper-button raised>
@@ -25,6 +25,16 @@ class ViewEvent extends EventsBaseView {
           </a>
         </div>
       </div>`;
+  }
+
+  canEdit(offline, unsynced, itemId) {
+    if (!offline) {
+      return true;
+    }
+    if (unsynced && isNaN(itemId)) {
+      return true;
+    }
+    return false;
   }
 
   connectedCallback() {

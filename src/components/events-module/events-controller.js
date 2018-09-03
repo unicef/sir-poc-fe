@@ -93,7 +93,7 @@ class EventsController extends connect(store)(BaseController) {
       showEditTab: {
         type: Boolean,
         value: false
-      },
+      }
     };
   }
 
@@ -140,6 +140,12 @@ class EventsController extends connect(store)(BaseController) {
   }
 
   pageChanged(page) {
+    if (page === 'edit') {
+      this.showEditTab = true;
+    }
+    if (page === 'view') {
+      this.showEditTab = false;
+    }
     store.dispatch(lazyLoadEventPages(page));
   }
 

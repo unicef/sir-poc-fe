@@ -20,6 +20,7 @@ import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
+import {updateAppState} from "../common/navigation-helper";
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -250,10 +251,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       visible: {
         type: Boolean,
         observer: '_visibilityChanged'
-      },
-      _moduleNavigatedFrom: {
-        type: String,
-        value: ''
       }
 
     };
@@ -264,25 +261,25 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     this.store = store;
   }
 
-  _updateUrlQs() {
+  _updateUrlQuery() {
     if (!this.visible) {
       return false;
     }
     this.set('_lastQueryString', this._buildQueryString());
-    this.updateAppState('/incidents/list', this._lastQueryString, false);
+    updateAppState('/incidents/list', this._lastQueryString, false);
   }
 
   _visibilityChanged(visible) {
     if (this._queryParamsInitComplete) {
       if (visible && this._lastQueryString !== '') {
-        this.updateAppState('/incidents/list', this._lastQueryString, false);
+        updateAppState('/incidents/list', this._lastQueryString, false);
       }
     }
   }
 
   _queryParamsChanged(params) {
 
-    if (params && this._moduleNavigatedFrom === 'incidents') {
+    if (params && this.visible ) {
 
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
@@ -318,8 +315,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       return;
     }
 
-    this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
-
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
       this._queryParams = state.app.locationInfo.queryParams;
     }
@@ -342,7 +337,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       return [];
     }
 
-    this._updateUrlQs();
+    this._updateUrlQuery();
 
     let filteredIncidents = JSON.parse(JSON.stringify(incidents));
 

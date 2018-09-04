@@ -42,23 +42,6 @@ const ListCommonMixin = superClass => class extends superClass {
     return queryParams.join('&');
   }
 
-  /**
-   * Update app state
-   */
-  updateAppState(routePath, qs, dispatchLocationChange) {
-
-    // Using replace state to change the URL here ensures the browser's
-    // back button doesn't take you through every query
-    let currentState = window.history.state;
-    window.history.replaceState(currentState, null,
-        routePath + (qs.length ? '?' + qs : ''));
-    if (dispatchLocationChange) {
-      // This event lets app-location and app-route know
-      // the URL has changed
-      window.dispatchEvent(new CustomEvent('location-changed'));
-    }
-  }
-
 };
 
 export default ListCommonMixin;

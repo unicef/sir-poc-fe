@@ -22,6 +22,7 @@ import DateMixin from '../common/date-mixin.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
+import {updateAppState} from "../common/navigation-helper";
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -237,10 +238,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         type: Boolean,
         value: false,
         observer: '_visibilityChanged'
-      },
-      _moduleNavigatedFrom: {
-        type: String,
-        value: ''
       }
     };
   }
@@ -249,8 +246,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
     if (!state) {
       return;
     }
-
-    this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
 
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
       this._queryParams = state.app.locationInfo.queryParams;
@@ -266,7 +261,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   }
 
   _queryParamsChanged(params) {
-    if (params && this._moduleNavigatedFrom === 'events') {
+    if ( params && this.visible ) {
 
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
@@ -291,12 +286,12 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
     }
   }
 
-  _updateUrlQs() {
+  _updateUrlQuery() {
     if (!this.visible) {
       return false;
     }
     this.set('_lastQueryString', this._buildQueryString());
-    this.updateAppState('/events/list', this._lastQueryString, false);
+    updateAppState('/events/list', this._lastQueryString, false);
   }
 
   _visibilityChanged(visible) {
@@ -312,7 +307,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       return [];
     }
 
-    this._updateUrlQs();
+    this._updateUrlQuery();
 
     let filteredEvents = JSON.parse(JSON.stringify(events));
 

@@ -233,10 +233,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         type: String,
         value: ''
       },
-      _isActiveModule: {
+      visible: {
         type: Boolean,
         value: false,
-        observer: '_isActiveModuleChanged'
+        observer: '_visibilityChanged'
       },
       _moduleNavigatedFrom: {
         type: String,
@@ -252,9 +252,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
 
     this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
 
-    if (typeof state.app.locationInfo.selectedModule !== 'undefined') {
-      this.set('_isActiveModule', state.app.locationInfo.selectedModule === 'events');
-    }
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
       this._queryParams = state.app.locationInfo.queryParams;
     }
@@ -295,13 +292,16 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   }
 
   _updateUrlQs() {
+    if (!this.visible) {
+      return false;
+    }
     this.set('_lastQueryString', this._buildQueryString());
     this.updateAppState('/events/list', this._lastQueryString, false);
   }
 
-  _isActiveModuleChanged(newVal, oldVal) {
+  _visibilityChanged(visible) {
     if (this._queryParamsInitComplete) {
-      if (newVal && newVal !== oldVal && this._lastQueryString !== '') {
+      if (visible && this._lastQueryString !== '') {
         this.updateAppState('/events/list', this._lastQueryString, false);
       }
     }

@@ -23,7 +23,7 @@ export class BaseController extends PolymerElement {
   }
 
   _idNotInUrlWhenRequired(section, id) {
-    return ['list', 'new'].indexOf(section) < 0 && !id
+    return ['list', 'new'].indexOf(section) < 0 && !id;
   }
 
   _redirectToList() {

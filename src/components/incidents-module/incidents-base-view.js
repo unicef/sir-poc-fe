@@ -337,8 +337,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
-            <warn-message message="Because there is no internet conenction the event will be saved offine for now,
-                                    and you must sync it manually by saving it again when online">
+            <warn-message hidden$="[[!_incidentHasTempIdOrNew(incidentId)]]"
+                          message="Because there is no internet connenction the incident will be saved offine for now,
+                                   and you must sync it manually by saving it again when online">
+            </warn-message>
+            <warn-message hidden$="[[_incidentHasTempIdOrNew(incidentId)]]"
+                          message="Can't edit a synced incident while offline">
             </warn-message>
           </div>
 
@@ -350,7 +354,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <div class="col col-12">
               <paper-button raised
                             on-click="save"
-                            disabled$="[[eventNotOk(incident.event, state.app.offline)]]">
+                            disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
                 Save
               </paper-button>
             </div>
@@ -473,6 +477,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
+  // It was created offline and not yet saved on server or new
+  _incidentHasTempIdOrNew(incidentId) {
+    if (!incidentId) {
+      return true;
+    }
+    return isNaN(incidentId);
+  }
+
   _visibilityChanged(visible) {
     if (visible) {
       this.resetValidations();
@@ -547,7 +559,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
     let selectedEvent = this.events.find(event => event.id === eventId);
-    return selectedEvent.unsynced && !offline;
+
+    return !offline && (selectedEvent && selectedEvent.unsynced);
+  }
+
+  // Only edit of unsynced and add new is possible offline
+  canNotSave(eventId, offline, incidentId) {
+    if (this.eventNotOk(eventId, offline)) {
+      return true;
+    }
+    return (offline && !!incidentId && !isNaN(incidentId));
   }
 
   _hideInfoTooltip(...arg) {

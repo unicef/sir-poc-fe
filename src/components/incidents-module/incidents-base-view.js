@@ -227,7 +227,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         required auto-validate
                                         error-message="Incident subcategory is required">
                   </etools-dropdown-lite>
-                  <span slot="message">[[selectedIncidentSubcategory.description]]<br>[[selectedIncidentSubcategory.comment]]
+                  <span slot="message">
+                    [[selectedIncidentSubcategory.description]]
+                    <br>
+                    [[selectedIncidentSubcategory.comment]]
                   </span>
                 </etools-info-tooltip>
               </div>

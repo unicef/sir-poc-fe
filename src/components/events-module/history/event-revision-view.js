@@ -38,7 +38,8 @@ class EventRevisionView extends EventsBaseView {
         </div>
 
         <div class="nav-buttons">
-          <history-navigation-links page="view" module="events" working-item="[[workingItem]]"></history-navigation-links>
+          <history-navigation-links page="view" module="events" working-item="[[workingItem]]">
+          </history-navigation-links>
         </div>
       </div>
     `;

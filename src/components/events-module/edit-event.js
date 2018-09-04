@@ -2,7 +2,7 @@
 @license
 */
 import { EventsBaseView } from './events-base-view.js';
-import { editEvent, syncEvent } from '../../actions/events.js';
+import { editEvent } from '../../actions/events.js';
 import { isOnEditEvent } from '../../reducers/app.js';
 
 /**

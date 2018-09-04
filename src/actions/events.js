@@ -111,7 +111,12 @@ export const editEvent = event => (dispatch, getState) => {
   if (getState().app.offline === true) {
     editEventOffline(event, dispatch);
   } else {
-    editEventOnline(event, dispatch, getState());
+    if (event.unsynced) {
+      dispatch(syncEvent(event));
+    } else {
+      editEventOnline(event, dispatch, getState());
+    }
+
   }
 };
 
@@ -119,7 +124,7 @@ export const syncEvent = event => (dispatch, getState) => {
   return makeRequest(Endpoints.newEvent, event).then((result) => {
     updatePath('/events/list/');
     dispatch(editEventSuccess(result, event.id));
-    dispatch(updateEventIdsInIncidents(event.id, response.id));
+    dispatch(updateEventIdsInIncidents(event.id, result.id));
     return true;
   }).catch((error) => {
     dispatch(addEventFail(error.response));
@@ -131,7 +136,7 @@ export const syncEvent = event => (dispatch, getState) => {
 export const syncEventOnList = event => (dispatch, getState) => {
   return makeRequest(Endpoints.newEvent, event).then((result) => {
     dispatch(editEventSuccess(result, event.id));
-    dispatch(updateEventIdsInIncidents(event.id, response.id));
+    dispatch(updateEventIdsInIncidents(event.id, result.id));
     return true;
   }).catch((error) => {
     dispatch(syncEventFail());

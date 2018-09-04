@@ -22,7 +22,7 @@ import DateMixin from '../common/date-mixin.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import {updateAppState} from "../common/navigation-helper";
+import {updateAppState} from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -144,7 +144,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   <template is="dom-if" if="[[item.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
-                      <span slot="message">This event has not been sumitted to the server. Click the sync button when online to submit it. </span>
+                      <span slot="message">This event has not been sumitted to the server. Click the sync button when 
+                                            online to submit it. </span>
                     </etools-info-tooltip>
                   </template>
                 </span>
@@ -157,7 +158,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   </a>
                   <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                     <div> <!-- this div prevents resizing of the icon on low resolutions -->
-                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem"></iron-icon>
+                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem">
+                      </iron-icon>
                     </div>
                   </template>
                 </span>

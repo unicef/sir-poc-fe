@@ -297,7 +297,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   _visibilityChanged(visible) {
     if (this._queryParamsInitComplete) {
       if (visible && this._lastQueryString !== '') {
-        this.updateAppState('/events/list', this._lastQueryString, false);
+        updateAppState('/events/list', this._lastQueryString, false);
       }
     }
   }

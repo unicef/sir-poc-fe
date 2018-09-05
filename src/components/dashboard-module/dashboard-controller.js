@@ -3,8 +3,12 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import '../common/etools-dropdown/etools-dropdown-lite.js';
+import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-icons/notification-icons.js';
+
 import { store } from '../../redux/store.js';
+import { syncEventOnList } from '../../actions/events.js';
+import { syncIncidentOnList } from '../../actions/incidents.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -33,19 +37,25 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
             width: calc(100% + 32px);
           }
         }
+
+        .col-data > span {
+          max-width: 100%;
+        }
+
+        .col-data iron-icon {
+          margin-right: 16px;
+        }
+
+        .sync-btn {
+          color: var(--primary-color);
+          cursor: pointer;
+        }
+
+        .row-details {
+          display: block;
+        }
       </style>
 
-      <div class="card">
-        <div class="row-h">
-          <div class="col col-4">
-            <etools-dropdown-lite label="Active user"
-                                  trigger-value-change-event
-                                  on-etools-selected-item-changed="_userSelected"
-                                  options="[[users]]">
-            </etools-dropdown-lite>
-          </div>
-        </div>
-      </div>
       <div class="card">
         <div class="row-h flex-c">
           <div class="col-12">
@@ -86,96 +96,78 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
             </div>
 
             <div class="row-h">
-              <div class="col col-6">
-                <etools-data-table-header id="listHeader" label="Your Events" no-collapse>
-                  <etools-data-table-column class="col-3">
+              <div class="col col-12">
+                <etools-data-table-header id="listHeader" label="Your Cases">
+                  <etools-data-table-column class="col-2">
                     Case number
                   </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
+                  <etools-data-table-column class="col-2">
+                    Case type
+                  </etools-data-table-column>
+                  <etools-data-table-column class="col-2">
                     Status
                   </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Date opened
+                  <etools-data-table-column class="col-2">
+                    Date created
                   </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Date revised
+                  <etools-data-table-column class="col-2">
+                    Date edited
+                  </etools-data-table-column>
+                  <etools-data-table-column class="col-2">
+                    Actions
                   </etools-data-table-column>
                 </etools-data-table-header>
 
-                <template id="rows" is="dom-repeat" items="[[userEvents]]">
-
-                  <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
+                <template id="rows" is="dom-repeat" items="[[cases]]">
+                  <etools-data-table-row unsynced$="[[item.unsynced]]">
                     <div slot="row-data">
-                      <span class="col-data col-3" data-col-header-label="Case number">
-                        <a href="/events/view/[[item.id]]"> N/A </a>
+                      <span class="col-data col-2" data-col-header-label="Case number">
+                        <a href="/[[item.case_type]]s/view/[[item.id]]"> N/A </a>
                       </span>
-                      <span class="col-data col-3" data-col-header-label="Status">
+                      <span class="col-data col-2" data-col-header-label="Case type">
+                        [[item.case_type]]
+                      </span>
+                      <span class="col-data col-2" data-col-header-label="Status">
                         <template is="dom-if" if="[[!item.unsynced]]">
                           Synced
                         </template>
                         <template is="dom-if" if="[[item.unsynced]]">
                           <etools-info-tooltip class="info" open-on-click>
                             <span slot="field">Not Synced</span>
-                            <span slot="message">This event has not been sumitted to the server. Go to its edit page
+                            <span slot="message">This [[item.case_type]] has not been sumitted to the server. Go to its edit page
                               and save it when an internet connection is availale.</span>
                           </etools-info-tooltip>
                         </template>
                       </span>
-                      <span class="col-data col-3" data-col-header-label="Date opened">
+                      <span class="col-data col-2" data-col-header-label="Date created">
                         [[prettyDate(item.submitted_date)]]
                       </span>
-                      <span class="col-data col-3" class="Date revised">
+                      <span class="col-data col-2" class="Date edited">
                         [[prettyDate(item.last_modify_date)]]
                       </span>
-                    </div>
-                  </etools-data-table-row>
-
-                </template>
-              </div>
-              <div class="col col-6">
-                <etools-data-table-header id="listHeader" label="Your Incidents" no-collapse>
-                  <etools-data-table-column class="col-3">
-                    Case number
-                  </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Status
-                  </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Date opened
-                  </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Date revised
-                  </etools-data-table-column>
-                </etools-data-table-header>
-
-                <template id="rows" is="dom-repeat" items="[[userIncidents]]">
-
-                  <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
-                    <div slot="row-data">
-                      <span class="col-data col-3" data-col-header-label="Case number">
-                        <a href="/incidents/view/[[item.id]]"> N/A </a>
-                      </span>
-                      <span class="col-data col-3" data-col-header-label="Status">
-                        <template is="dom-if" if="[[!item.unsynced]]">
-                          Synced
-                        </template>
-                        <template is="dom-if" if="[[item.unsynced]]">
-                          <etools-info-tooltip class="info" open-on-click>
-                            <span slot="field">Not Synced</span>
-                            <span slot="message">This incident has not been sumitted to the server. Go to its edit page
-                              and save it when an internet connection is availale.</span>
-                          </etools-info-tooltip>
+                      <span class="col-data col-2" data-col-header-label="Actions">
+                        <a href="/[[item.case_type]]s/view/[[item.id]]">
+                          <iron-icon icon="assignment" title="View [[item.case_type]]"></iron-icon>
+                        </a>
+                        <a href="/[[item.case_type]]s/edit/[[item.id]]" title="Edit [[item.case_type]]" hidden$="[[_notEditable(item, offline)]]">
+                          <iron-icon icon="editor:mode-edit"></iron-icon>
+                        </a>
+                        <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                          <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                            <iron-icon icon="notification:sync" title="Sync [[item.case_type]]" class="sync-btn" on-click="_syncItem"></iron-icon>
+                          </div>
                         </template>
                       </span>
-                      <span class="col-data col-3" data-col-header-label="Date opened">
-                        [[prettyDate(item.submitted_date)]]
-                      </span>
-                      <span class="col-data col-3" class="Date revised">
-                        [[prettyDate(item.last_modify_date)]]
-                      </span>
+                    </div>
+                    <div slot="row-data-details">
+                      <div class="row" hidden$="[[!_caseIs(item.case_type, 'event')]]">
+                        <p> I am an event </p>
+                      </div>
+                      <div class="row" hidden$="[[!_caseIs(item.case_type, 'incident')]]">
+                        <p> I am an incident </p>
+                      </div>
                     </div>
                   </etools-data-table-row>
-
                 </template>
               </div>
             </div>
@@ -193,8 +185,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     return {
       events: Array,
       incidents: Array,
-      userEvents: Array,
-      userIncidents: Array,
+      offline: Boolean,
       activeUser: {
         type: Object,
         value: {}
@@ -227,14 +218,21 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       return;
     }
 
-    this.events = state.events.list;
-    this.incidents = state.incidents.list;
-    this.users = state.staticData.users.map((elem) => {
-      elem.name = elem.first_name + ' ' + elem.last_name;
-      return elem;
+    this.offline = !!state.app.offline;
+
+    this.events = state.events.list.map((event) => {
+      event.case_type = 'event';
+      return event;
     });
 
-    this.updateUserListsData();
+    this.incidents = state.incidents.list.map((incident) => {
+      incident.case_type = 'incident';
+      return incident;
+    });
+
+    this.cases = [...this.events, ...this.incidents].sort((left, right) => {
+      return moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date));
+    });
   }
 
   getEventsForPeriod(events, selectedStartDate, selectedEndDate) {
@@ -242,8 +240,8 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       let evStart = moment(event.start_date);
       let evEnd = moment(event.end_date);
 
-      let cond1 = evStart.isBetween(selectedStartDate, selectedEndDate);
-      let cond2 = evEnd.isBetween(selectedStartDate, selectedEndDate);
+      let cond1 = evStart.isBetween(selectedStartDate, selectedEndDate, null, '[]');
+      let cond2 = evEnd.isBetween(selectedStartDate, selectedEndDate, null, '[]');
 
       return cond1 || cond2;
     });
@@ -253,27 +251,39 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
   getIncidentsForPeriod(incidents, selectedStartDate, selectedEndDate) {
     let filteredIncidents = incidents.filter((incident) => {
-      return moment(incident.incident_date).isBetween(selectedStartDate, selectedEndDate);
+      return moment(incident.incident_date).isBetween(selectedStartDate, selectedEndDate, null, '[]');
     });
 
     return filteredIncidents;
   }
 
-  _userSelected(event) {
-    if (!event.detail.selectedItem) {
+
+  _syncItem(item) {
+    if (!item || !item.model || !item.model.__data || !item.model.__data.item) {
       return;
     }
-    this.activeUser = event.detail.selectedItem;
-    this.updateUserListsData();
+
+    let element = item.model.__data.item;
+
+    if (element.case_type === 'incident') {
+      store.dispatch(syncIncidentOnList(element));
+    }
+
+    if (element.case_type === 'event') {
+      store.dispatch(syncEventOnList(element));
+    }
   }
 
-  updateUserListsData() {
-    this.userEvents = this.events.filter((e) => {
-      return !this.activeUser.id || e.submitted_by === this.activeUser.id;
-    });
-    this.userIncidents = this.incidents.filter((e) => {
-      return !this.activeUser.id || e.submitted_by === this.activeUser.id;
-    });
+  _notEditable(item, offline) {
+    return offline && !item.unsynced;
+  }
+
+  _showSyncButton(unsynced, offline) {
+    return unsynced && !offline;
+  }
+
+  _caseIs(givenType, expectedType) {
+    return givenType === expectedType;
   }
 }
 

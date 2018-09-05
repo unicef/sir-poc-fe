@@ -97,7 +97,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
             <div class="row-h">
               <div class="col col-12">
-                <etools-data-table-header id="listHeader" label="Your Cases">
+                <etools-data-table-header id="listHeader" no-title>
                   <etools-data-table-column class="col-2">
                     Case number
                   </etools-data-table-column>
@@ -142,7 +142,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                       <span class="col-data col-2" data-col-header-label="Date created">
                         [[prettyDate(item.submitted_date)]]
                       </span>
-                      <span class="col-data col-2" class="Date edited">
+                      <span class="col-data col-2" data-col-header-label="Date edited">
                         [[prettyDate(item.last_modify_date)]]
                       </span>
                       <span class="col-data col-2" data-col-header-label="Actions">
@@ -160,12 +160,34 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                       </span>
                     </div>
                     <div slot="row-data-details">
-                      <div class="row" hidden$="[[!_caseIs(item.case_type, 'event')]]">
-                        <p> I am an event </p>
-                      </div>
-                      <div class="row" hidden$="[[!_caseIs(item.case_type, 'incident')]]">
-                        <p> I am an incident </p>
-                      </div>
+                      <template is="dom-if" if="[[_caseIs(item.case_type, 'event')]]">
+                        <div class="row-h flex-c">
+                          <div class="col col-12">
+                            <strong> Location: </strong>
+                            [[item.location]]
+                          </div>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="[[_caseIs(item.case_type, 'incident')]]">
+                        <div class="row-h flex-c">
+                          <div class="col col-3">
+                            <strong> Category: </strong>
+                            [[getNameFromId(item.incident_category, 'incidentCategories')]]
+                          </div>
+                          <div class="col col-3">
+                            <strong> Region: </strong>
+                            [[getNameFromId(item.region, 'regions')]]
+                          </div>
+                          <div class="col col-3">
+                            <strong> Country: </strong>
+                            [[getNameFromId(item.country, 'countries')]]
+                          </div>
+                          <div class="col col-3">
+                            <strong> Person: </strong>
+                            [[item.primary_person.first_name]] [[item.primary_person.last_name]]
+                          </div>
+                        </div>
+                      </template>
                     </div>
                   </etools-data-table-row>
                 </template>
@@ -219,6 +241,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     }
 
     this.offline = !!state.app.offline;
+    this.staticData = state.staticData;
 
     this.events = state.events.list.map((event) => {
       event.case_type = 'event';
@@ -257,6 +280,11 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     return filteredIncidents;
   }
 
+
+  getNameFromId(id, staticDataKey) {
+    let result = this.staticData[staticDataKey].find(v => v.id === Number(id));
+    return result.name || '';
+  }
 
   _syncItem(item) {
     if (!item || !item.model || !item.model.__data || !item.model.__data.item) {

@@ -7,15 +7,19 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-icons/notification-icons.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import {store} from '../../redux/store.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
+import DateMixin from '../common/date-mixin.js';
+import { syncIncidentOnList } from '../../actions/incidents.js';
+import ListCommonMixin from '../common/list-common-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -25,7 +29,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
+class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
   static get template() {
     // language=HTML
     return html`
@@ -42,8 +46,13 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           margin-right: 16px;
         }
 
-        @media screen and (max-width: 767px) {
-          /* mobile specific css, under tablet min 768px */
+        .sync-btn {
+          color: var(--primary-color);
+          cursor: pointer;
+        }
+
+        .row-details {
+          display: block;
         }
 
       </style>
@@ -103,9 +112,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <etools-data-table-header id="listHeader"
                                   label="Incidents">
           <etools-data-table-column class="col-3">
-            Person involved
+            Case number
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-2">
             City
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
@@ -114,7 +123,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
           <etools-data-table-column class="col-2">
             Status
           </etools-data-table-column>
-          <etools-data-table-column class="col-1">
+          <etools-data-table-column class="col-2">
             Actions
           </etools-data-table-column>
         </etools-data-table-header>
@@ -122,14 +131,12 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
-              <span class="col-data col-3" data-col-header-label="Person involved">
+              <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
-                  <a href="/incidents/view/[[item.id]]">
-                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                  </a>
+                  <a href="/incidents/view/[[item.id]]"> N/A </a>
                 </span>
               </span>
-              <span class="col-data col-3" title="[[item.city]]" data-col-header-label="City">
+              <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">
                   <span>[[item.city]]</span>
               </span>
               <span class="col-data col-3" type="[[_getIncidentName(item.incident_category)]]"
@@ -143,30 +150,46 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Go to its edit page and
-                      save it when an internet connection is availale.</span>
+                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when online to submit it.</span>
                   </etools-info-tooltip>
                 </template>
               </span>
-              <span class="col-data col-1" data-col-header-label="Actions">
+              <span class="col-data col-2" data-col-header-label="Actions">
                 <a href="/incidents/view/[[item.id]]">
-                  <iron-icon icon="assignment"></iron-icon>
+                  <iron-icon icon="assignment" title="View Incident"></iron-icon>
                 </a>
-                <a href="/incidents/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]">
+                <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
+                <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                  <div> <!-- this div princidents resizing of the icon on low resolutions -->
+                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem"></iron-icon>
+                  </div>
+                </template>
               </span>
             </div>
-            <div slot="row-data-details">
-              <div class="col-6">
-                <strong>Description:</strong>
-                <span>[[item.description]]</span>
-              </div>
-              <div class="col-6">
-                <strong>Note: </strong>
-                <span>[[item.note]]</span>
+            <div slot="row-data-details" class="row-details">
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Date created: </strong>
+                  <span>[[prettyDate(item.submitted_date)]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Date revised: </strong>
+                  <span>[[prettyDate(item.last_modify_date)]]</span>
+                </div>
               </div>
 
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Description: </strong>
+                  <span>[[item.description]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Note: </strong>
+                  <span>[[item.note]]</span>
+                </div>
+              </div>
             </div>
           </etools-data-table-row>
         </template>
@@ -190,8 +213,9 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       offline: Boolean,
       filteredIncidents: {
         type: Array,
-        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, filters.syncStatus.length, ' +
-        'filters.startDate, filters.endDate, filters.country, filters.incidentCategory)'
+        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, ' +
+            'filters.syncStatus.length, filters.startDate, filters.endDate, filters.country, ' +
+            'filters.incidentCategory, _queryParamsInitComplete)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -206,13 +230,30 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
       filters: {
         type: Object,
         value: {
-          incidentCategory : null,
+          incidentCategory: null,
           country: null,
           startDate: null,
           endDate: null,
           syncStatus: [],
           q: null
         }
+      },
+      _queryParams: {
+        type: Object,
+        observer: '_queryParamsChanged'
+      },
+      _queryParamsInitComplete: Boolean,
+      _lastQueryString: {
+        type: String,
+        value: ''
+      },
+      visible: {
+        type: Boolean,
+        observer: '_visibilityChanged'
+      },
+      _moduleNavigatedFrom: {
+        type: String,
+        value: ''
       }
 
     };
@@ -223,9 +264,64 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     this.store = store;
   }
 
+  _updateUrlQs() {
+    if (!this.visible) {
+      return false;
+    }
+    this.set('_lastQueryString', this._buildQueryString());
+    this.updateAppState('/incidents/list', this._lastQueryString, false);
+  }
+
+  _visibilityChanged(visible) {
+    if (this._queryParamsInitComplete) {
+      if (visible && this._lastQueryString !== '') {
+        this.updateAppState('/incidents/list', this._lastQueryString, false);
+      }
+    }
+  }
+
+  _queryParamsChanged(params) {
+
+    if (params && this._moduleNavigatedFrom === 'incidents') {
+
+      if (params.q && params.q !== this.filters.q) {
+        this.set('filters.q', params.q);
+      }
+      if (params.incidentCategory && params.incidentCategory !== this.filters.incidentCategory) {
+        this.set('filters.incidentCategory', Number(params.incidentCategory));
+      }
+      if (params.country && params.country !== this.filters.country) {
+        this.filters.country = params.country;
+      }
+      if (params.start) {
+        this.set('filters.startDate', params.start);
+      }
+      if (params.end) {
+        this.set('filters.endDate', params.end);
+      }
+      if (params.synced) {
+
+        if (params.synced.indexOf('|') > -1) {
+          this.set('filters.syncStatus', params.synced.split('|'));
+        } else {
+          this.set('filters.syncStatus', [params.synced]);
+        }
+
+      }
+
+      this.set('_queryParamsInitComplete', true);
+    }
+  }
+
   _stateChanged(state) {
     if (!state) {
       return;
+    }
+
+    this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
+
+    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
+      this._queryParams = state.app.locationInfo.queryParams;
     }
 
     this.offline = state.app.offline;
@@ -239,10 +335,15 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     return incident.name || 'Not Specified';
   }
 
-  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country, incidentCategory) {
-    if (!(incidents instanceof Array && incidents.length > 0)) {
+  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country,
+              incidentCategory, qParamsInit) {
+
+    if (!qParamsInit || !(incidents instanceof Array && incidents.length > 0)) {
       return [];
     }
+
+    this._updateUrlQs();
+
     let filteredIncidents = JSON.parse(JSON.stringify(incidents));
 
     filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
@@ -258,6 +359,7 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
     if (!q || q === '') {
       return true;
     }
+    q = q.toLowerCase();
     let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();
     return person.toLowerCase().search(q) > -1 ||
         String(e.city).toLowerCase().search(q) > -1 ||
@@ -274,29 +376,52 @@ class IncidentsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
   _applyDateFilter(e, startDate, endDate) {
 
-    if (startDate && new Date(e.incident_date) <= new Date(startDate)){
+    if (startDate && new Date(e.incident_date) <= new Date(startDate)) {
       return false;
     }
 
-    if (endDate && new Date(e.incident_date) >= new Date(endDate)){
+    if (endDate && new Date(e.incident_date) >= new Date(endDate)) {
       return false;
     }
 
     return true;
   }
 
-  _applyCountryFilter(e, selectedCountry){
-
-    return selectedCountry ? e.country === selectedCountry: true;
+  _applyCountryFilter(e, selectedCountry) {
+    return selectedCountry ? e.country === selectedCountry : true;
   }
 
-  _applyIncidentCategoryFilter(e, selectedIncidentCategory){
-
+  _applyIncidentCategoryFilter(e, selectedIncidentCategory) {
     return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
+  }
+
+  _showSyncButton(unsynced, offline) {
+    return unsynced && !offline;
+  }
+
+  _syncItem(incident) {
+    if (!incident || !incident.model || !incident.model.__data || !incident.model.__data.item) {
+      return;
+    }
+
+    let element = incident.model.__data.item;
+    store.dispatch(syncIncidentOnList(element));
   }
 
   notEditable(incident, offline) {
     return offline && !incident.unsynced;
+  }
+
+  // Outputs the query string for the list
+  _buildQueryString() {
+    return this._buildUrlQueryString({
+      incidentCategory: this.filters.incidentCategory,
+      country: this.filters.country,
+      start: this.filters.startDate,
+      end: this.filters.endDate,
+      synced: this.filters.syncStatus,
+      q: this.filters.q
+    });
   }
 }
 

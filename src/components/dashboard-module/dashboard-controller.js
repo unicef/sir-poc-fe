@@ -88,14 +88,17 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
             <div class="row-h">
               <div class="col col-6">
                 <etools-data-table-header id="listHeader" label="Your Events" no-collapse>
-                  <etools-data-table-column class="col-6">
-                    Description
+                  <etools-data-table-column class="col-3">
+                    Case number
                   </etools-data-table-column>
                   <etools-data-table-column class="col-3">
                     Status
                   </etools-data-table-column>
                   <etools-data-table-column class="col-3">
-                    Start date
+                    Date opened
+                  </etools-data-table-column>
+                  <etools-data-table-column class="col-3">
+                    Date revised
                   </etools-data-table-column>
                 </etools-data-table-header>
 
@@ -103,10 +106,10 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
                   <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
                     <div slot="row-data">
-                      <span class="col-data col-6" data-col-header-label="Description">
-                        <a href="/events/view/[[item.id]]"> [[item.description]] </a>
+                      <span class="col-data col-3" data-col-header-label="Case number">
+                        <a href="/events/view/[[item.id]]"> N/A </a>
                       </span>
-                      <span class="col-data col-3">
+                      <span class="col-data col-3" data-col-header-label="Status">
                         <template is="dom-if" if="[[!item.unsynced]]">
                           Synced
                         </template>
@@ -118,8 +121,11 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
                           </etools-info-tooltip>
                         </template>
                       </span>
-                      <span class="col-data col-3" data-col-header-label="Start date">
-                        [[prettyDate(item.start_date)]]
+                      <span class="col-data col-3" data-col-header-label="Date opened">
+                        [[prettyDate(item.submitted_date)]]
+                      </span>
+                      <span class="col-data col-3" class="Date revised">
+                        [[prettyDate(item.last_modify_date)]]
                       </span>
                     </div>
                   </etools-data-table-row>
@@ -128,14 +134,17 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
               </div>
               <div class="col col-6">
                 <etools-data-table-header id="listHeader" label="Your Incidents" no-collapse>
-                  <etools-data-table-column class="col-6">
-                    Description
+                  <etools-data-table-column class="col-3">
+                    Case number
                   </etools-data-table-column>
                   <etools-data-table-column class="col-3">
                     Status
                   </etools-data-table-column>
                   <etools-data-table-column class="col-3">
-                    Start date
+                    Date opened
+                  </etools-data-table-column>
+                  <etools-data-table-column class="col-3">
+                    Date revised
                   </etools-data-table-column>
                 </etools-data-table-header>
 
@@ -143,23 +152,26 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
                   <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
                     <div slot="row-data">
-                      <span class="col-data col-6" data-col-header-label="Description">
-                        <a href="/incidents/view/[[item.id]]"> [[item.description]] </a>
+                      <span class="col-data col-3" data-col-header-label="Case number">
+                        <a href="/incidents/view/[[item.id]]"> N/A </a>
                       </span>
-                      <span class="col-data col-3">
+                      <span class="col-data col-3" data-col-header-label="Status">
                         <template is="dom-if" if="[[!item.unsynced]]">
-                          [[item.status]]
+                          Synced
                         </template>
                         <template is="dom-if" if="[[item.unsynced]]">
                           <etools-info-tooltip class="info" open-on-click>
                             <span slot="field">Not Synced</span>
-                            <span slot="message">This incident has not been sumitted to the server. Go to its edit page and
-                              save it when an internet connection is availale.</span>
+                            <span slot="message">This incident has not been sumitted to the server. Go to its edit page
+                              and save it when an internet connection is availale.</span>
                           </etools-info-tooltip>
                         </template>
                       </span>
-                      <span class="col-data col-3" data-col-header-label="Start date">
-                         [[prettyDate(item.incident_date)]]
+                      <span class="col-data col-3" data-col-header-label="Date opened">
+                        [[prettyDate(item.submitted_date)]]
+                      </span>
+                      <span class="col-data col-3" class="Date revised">
+                        [[prettyDate(item.last_modify_date)]]
                       </span>
                     </div>
                   </etools-data-table-row>

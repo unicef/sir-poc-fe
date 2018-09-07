@@ -73,6 +73,9 @@ export const lazyLoadEventPages = page => (dispatch, getState) => {
     case 'edit':
       import('../components/events-module/edit-event.js');
       break;
+    case 'history':
+      import('../components/events-module/history/event-history-controller.js');
+      break;
     default:
       updatePath('/404/');
       break;
@@ -98,6 +101,9 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
       break;
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
+      break;
+    case 'impact':
+      import('../components/incidents-module/impact/impact-controller.js');
       break;
     default:
       updatePath('/404/');

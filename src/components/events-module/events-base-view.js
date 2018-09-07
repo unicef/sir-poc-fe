@@ -9,6 +9,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import '../common/datepicker-lite.js';
 
+import { clearErrors } from '../../actions/errors.js';
 import { fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
@@ -36,7 +37,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
-        <h2>[[title]]</h2>
+        ${this.getTitleTemplate}
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -92,14 +93,19 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
-            <warn-message message="Because there is no internet conenction the event will be saved offine for now,
+            <warn-message hidden$="[[!_eventHasTempIdOrNew(eventId)]]"
+                          message="Because there is no internet conenction the event will be saved offine for now,
                                     and you must sync it manually by saving it again when online">
+            </warn-message>
+            <warn-message hidden$="[[_eventHasTempIdOrNew(eventId)]]"
+                        message="Can't edit a synced event while offline">
             </warn-message>
           </div>
 
           <div class="row-h flex-c">
             <div class="col col-12">
-              <paper-button raised on-click="save">Save</paper-button>
+              <paper-button raised on-click="save"
+                            disabled$="[[canNotSave(eventId, state.app.offline)]]">Save</paper-button>
             </div>
           </div>
         </template>
@@ -141,6 +147,12 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     };
   }
 
+  static get getTitleTemplate() {
+    return html`
+      <h2>[[title]]</h2>
+    `;
+  }
+
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
@@ -166,9 +178,26 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
+  // It was created offline and not yet saved on server or new
+  _eventHasTempIdOrNew(eventId) {
+    if (!eventId) {
+      return true;
+    }
+    return isNaN(eventId);
+  }
+
+  // Only edit of unsynced and add new is possible offline
+  canNotSave(eventId, offline) {
+    return (offline && !!eventId && !isNaN(eventId));
+  }
+
+
   _visibilityChanged(visible) {
     if (visible) {
       this.resetValidations();
+    }
+    if (visible === false) {
+      store.dispatch(clearErrors());
     }
   }
 

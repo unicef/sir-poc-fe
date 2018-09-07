@@ -5,12 +5,15 @@ import {html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { isOnViewIncident } from '../../reducers/app';
+import { store } from '../../redux/store.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 /**
  * @polymer
  * @customElement
+ *
  */
-class ViewIncident extends IncidentsBaseView {
+class ViewIncident extends connect(store)(IncidentsBaseView) {
 
   static get goToEditBtnTmpl() {
     // language=HTML

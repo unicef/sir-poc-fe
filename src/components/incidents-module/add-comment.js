@@ -1,4 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { store } from '../../redux/store.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '../common/errors-box.js';
@@ -9,7 +11,7 @@ import '../styles/form-fields-styles.js';
  * @polymer
  * @customElement
  */
-class AddComment extends PolymerElement {
+class AddComment extends connect(store)(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles form-fields-styles">

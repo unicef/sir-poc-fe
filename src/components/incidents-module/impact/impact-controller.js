@@ -7,7 +7,14 @@ import { updatePath } from '../../common/navigation-helper.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
-import './impact-list.js';
+import './impacts-view.js';
+
+import './forms/premise.js';
+import './forms/property.js';
+import './forms/programme.js';
+import './forms/evacuation.js';
+import './forms/un-personnel.js';
+import './forms/non-un-personnel.js';
 
 /**
  * @polymer
@@ -43,25 +50,25 @@ export class ImpactController extends connect(store)(PolymerElement) {
       </app-route>
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
         <div name="un-personel">
-          <h3> Add un personel </h3>
+          <un-personnel-form></un-personnel-form>
         </div>
         <div name="non-un">
-          <h3> Non Un </h3>
+          <non-un-personnel-form></non-un-personnel-form>
         </div>
         <div name="evacuation">
-          <h3> Evacuation </h3>
+          <evacuation-form></evacuation-form>
         </div>
         <div name="property">
-          <h3> Property </h3>
+          <property-form></property-form>
         </div>
         <div name="premise">
-          <h3> Premise </h3>
+          <premise-form></premise-form>
         </div>
         <div name="programme">
-          <h3> Programme </h3>
+          <programme-form></programme-form>
         </div>
         <div name="list">
-          <impact-list></impact-list>
+          <impacts-view></impacts-view>
         </div>
       </iron-pages>
     `;

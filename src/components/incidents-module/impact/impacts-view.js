@@ -8,16 +8,16 @@ import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
-import './impacted-personnel-list.js';
-import './evacuations-list.js';
+import './lists/impacted-personnel.js';
+import './lists/evacuations.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class ImpactList extends connect(store)(PolymerElement) {
+export class ImpactsView extends connect(store)(PolymerElement) {
   static get is() {
-    return 'impact-list';
+    return 'impacts-view';
   }
   static get template() {
     return html`
@@ -164,4 +164,4 @@ export class ImpactList extends connect(store)(PolymerElement) {
   }
 }
 
-window.customElements.define(ImpactList.is, ImpactList);
+window.customElements.define(ImpactsView.is, ImpactsView);

@@ -8,7 +8,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
 
-export class EvacuationsList extends PolymerElement {
+export class ProgrammesList extends PolymerElement {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
@@ -21,7 +21,7 @@ export class EvacuationsList extends PolymerElement {
         }
       </style>
 
-      <div hidden$="[[!evacuationsList.length]]">
+      <div hidden$="[[!programmesList.length]]">
         <etools-data-table-header id="listHeader" no-title>
           <etools-data-table-column class="col-6">
             Name
@@ -31,7 +31,7 @@ export class EvacuationsList extends PolymerElement {
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[evacuationsList]]">
+        <template id="rows" is="dom-repeat" items="[[programmesList]]">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
               <span class="col-data col-6" data-col-header-label="Date">
@@ -48,17 +48,17 @@ export class EvacuationsList extends PolymerElement {
           </etools-data-table-row>
         </template>
       <div>
-      <hr hidden$="[[evacuationsList.length]]">
+      <hr hidden$="[[programmesList.length]]">
     `;
   }
 
   static get is() {
-    return 'evacuations-list';
+    return 'programmes-list';
   }
 
   static get properties() {
     return {
-      evacuationsList: {
+      programmesList: {
         type: Array,
         value: []
       }
@@ -66,4 +66,4 @@ export class EvacuationsList extends PolymerElement {
   }
 }
 
-window.customElements.define(EvacuationsList.is, EvacuationsList);
+window.customElements.define(ProgrammesList.is, ProgrammesList);

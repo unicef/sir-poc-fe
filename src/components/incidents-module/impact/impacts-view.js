@@ -8,8 +8,13 @@ import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
-import './lists/impacted-personnel.js';
+
+import './lists/non-un-personnel.js';
+import './lists/un-personnel.js';
 import './lists/evacuations.js';
+import './lists/properties.js';
+import './lists/programmes.js';
+import './lists/premises.js';
 
 /**
  * @polymer
@@ -50,6 +55,8 @@ export class ImpactsView extends connect(store)(PolymerElement) {
             Add UN Personnel
           </paper-button>
         </div>
+        <un-personnel-list></un-personnel-list>
+
         <div class="right">
           <paper-button raised
               class="smaller"
@@ -58,8 +65,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
             Add NON UN Personnel
           </paper-button>
         </div>
-
-        <impacted-personnel-list incident="[[incident]]"></impacted-personnel-list>
+        <non-un-personnel-list></non-un-personnel-list>
 
 
         <h3>Evacuations</h3>
@@ -72,7 +78,8 @@ export class ImpactsView extends connect(store)(PolymerElement) {
             Add Evacuation
           </paper-button>
         </div>
-        <evacuations-list incident="[[incident]]"></evacuations-list>
+        <evacuations-list></evacuations-list>
+
 
         <h3>UN Property(assets)</h3>
         <hr>
@@ -84,17 +91,20 @@ export class ImpactsView extends connect(store)(PolymerElement) {
             Add UN Property
           </paper-button>
         </div>
+        <properties-list></properties-list>
+
 
         <h3>UN Premises(facilities)</h3>
         <hr>
         <div class="right">
           <paper-button raised
               class="smaller"
-              on-click="_addPrimese">
+              on-click="_addPremise">
             <iron-icon icon="add"></iron-icon>
             Add Premise
           </paper-button>
         </div>
+        <premises-list></premises-list>
 
         <h3>UN Programme</h3>
         <hr>
@@ -106,6 +116,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
             Add Programme
           </paper-button>
         </div>
+        <programmes-list></programmes-list>
       </div>
     `;
   }
@@ -151,7 +162,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
     updatePath(`incidents/impact/${this.incidentId}/property`);
   }
 
-  _addPrimese() {
+  _addPremise() {
     updatePath(`incidents/impact/${this.incidentId}/premise`);
   }
 

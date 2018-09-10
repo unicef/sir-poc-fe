@@ -8,7 +8,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
 
-export class ImpactedPesonnelList extends PolymerElement {
+export class PremisesList extends PolymerElement {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
@@ -20,46 +20,50 @@ export class ImpactedPesonnelList extends PolymerElement {
           padding-left: 32px;
         }
       </style>
-      <div hidden$="[[!incident.involved.length]]">
+
+      <div hidden$="[[!premisesList.length]]">
         <etools-data-table-header id="listHeader" no-title>
           <etools-data-table-column class="col-6">
             Name
           </etools-data-table-column>
           <etools-data-table-column class="col-6">
-            Type of Contract
+            Description
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[incident.involved]]">
+        <template id="rows" is="dom-repeat" items="[[premisesList]]">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
-              <span class="col-data col-6" data-col-header-label="Name">
+              <span class="col-data col-6" data-col-header-label="Date">
                 <span class="truncate">
-                  [[item.first_name]] [[item.last_name]]
+                  [[item.date]]
                 </span>
               </span>
-              <span class="col-data col-6" data-col-header-label="Type of Contract">
-                <span class="truncate">
-                  [[item.type_of_contract]]
+              <span class="col-data col-6" data-col-header-label="Description">
+                <span>
+                  [[item.description]]
                 </span>
               </span>
             </div>
           </etools-data-table-row>
         </template>
       <div>
-      <hr hidden$="[[incident.involved.length]]">
+      <hr hidden$="[[premisesList.length]]">
     `;
   }
 
   static get is() {
-    return 'impacted-personnel-list';
+    return 'premises-list';
   }
 
   static get properties() {
     return {
-      incident: Object
+      premisesList: {
+        type: Array,
+        value: []
+      }
     };
   }
 }
 
-window.customElements.define(ImpactedPesonnelList.is, ImpactedPesonnelList);
+window.customElements.define(PremisesList.is, PremisesList);

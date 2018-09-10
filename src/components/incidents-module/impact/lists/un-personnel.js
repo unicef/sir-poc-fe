@@ -8,7 +8,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
 
-export class EvacuationsList extends PolymerElement {
+export class UnPersonnelList extends PolymerElement {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
@@ -21,44 +21,44 @@ export class EvacuationsList extends PolymerElement {
         }
       </style>
 
-      <div hidden$="[[!evacuationsList.length]]">
+      <div hidden$="[[!personnelList.length]]">
         <etools-data-table-header id="listHeader" no-title>
           <etools-data-table-column class="col-6">
             Name
           </etools-data-table-column>
           <etools-data-table-column class="col-6">
-            Description
+            Type of Contract
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[evacuationsList]]">
+        <template id="rows" is="dom-repeat" items="[[personnelList]]">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
-              <span class="col-data col-6" data-col-header-label="Date">
+              <span class="col-data col-6" data-col-header-label="Name">
                 <span class="truncate">
-                  [[item.date]]
+                  [[item.first_name]] [[item.last_name]]
                 </span>
               </span>
-              <span class="col-data col-6" data-col-header-label="Description">
-                <span>
-                  [[item.description]]
+              <span class="col-data col-6" data-col-header-label="Type of Contract">
+                <span class="truncate">
+                  [[item.type_of_contract]]
                 </span>
               </span>
             </div>
           </etools-data-table-row>
         </template>
       <div>
-      <hr hidden$="[[evacuationsList.length]]">
+      <hr hidden$="[[personnelList.length]]">
     `;
   }
 
   static get is() {
-    return 'evacuations-list';
+    return 'un-personnel-list';
   }
 
   static get properties() {
     return {
-      evacuationsList: {
+      personnelList: {
         type: Array,
         value: []
       }
@@ -66,4 +66,4 @@ export class EvacuationsList extends PolymerElement {
   }
 }
 
-window.customElements.define(EvacuationsList.is, EvacuationsList);
+window.customElements.define(UnPersonnelList.is, UnPersonnelList);

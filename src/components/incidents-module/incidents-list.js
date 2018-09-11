@@ -187,7 +187,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when online to submit it.</span>
+                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when 
+                                          online to submit it.</span>
                   </etools-info-tooltip>
                 </template>
               </span>
@@ -200,7 +201,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </a>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                   <div> <!-- this div princidents resizing of the icon on low resolutions -->
-                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem"></iron-icon>
+                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
+                    </iron-icon>
                   </div>
                 </template>
               </span>

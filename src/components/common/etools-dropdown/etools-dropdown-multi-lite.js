@@ -1,7 +1,7 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-import {CommonFunctionality} from './mixins/common-mixin.js';
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { CommonFunctionality } from './mixins/common-mixin.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-dropdown/iron-dropdown.js';
 import '@polymer/neon-animation/neon-animations.js';
@@ -10,18 +10,11 @@ import './elements/selected-options.js';
 import './elements/searchbox-input.js';
 import './elements/options-list.js';
 import './styles/esmm-shared-styles.js';
-
 /**
- *
  * @polymer
  * @mixinFunction
- * @appliesMixin EsmmMixins.MissingOptions
- * @appliesMixin EsmmMixins.CommonFunctionality
- * @appliesMixin EtoolsLogsMixin
- *
  */
-const MultiDropdownRequiredMixins = CommonFunctionality(
-    PolymerElement);
+const MultiDropdownRequiredMixins = CommonFunctionality(PolymerElement);
 
 /**
  * `etools-dropdown-multi-lite`
@@ -29,7 +22,6 @@ const MultiDropdownRequiredMixins = CommonFunctionality(
  *
  * @customElement
  * @polymer
- * @appliesMixin MultiDropdownRequiredMixins
  * @demo demo/index-multi.html
  */
 class EtoolsDropdownMulti extends MultiDropdownRequiredMixins {

@@ -113,5 +113,21 @@ export const Endpoints = {
     url: baseUrl + '/api/impacts/programme/',
     method: 'GET'
   },
+  personnelCategories: {
+    url: baseUrl + '/api/person_categories/',
+    method: 'GET'
+  },
+  unLocations: {
+    url: baseUrl + '/api/un_locations/',
+    method: 'GET'
+  },
+  propertyTypes: {
+    url: baseUrl + '/api/property_types/',
+    method: 'GET'
+  },
+  nationalities: {
+    url: baseUrl + '/api/nationalities/',
+    method: 'GET'
+  },
 
 };

@@ -107,6 +107,26 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         teams: action.teams
       };
+    case ACTIONS.RECEIVE_UN_LOCATIONS:
+      return {
+        ...state,
+        unLocations: action.unLocations
+      };
+    case ACTIONS.RECEIVE_PROPERTY_TYPES:
+      return {
+        ...state,
+        propertyTypes: action.propertyTypes
+      };
+    case ACTIONS.RECEIVE_PERSONNEL_CATEGORIES:
+      return {
+        ...state,
+        personnelCategories: action.personnelCategories
+      };
+    case ACTIONS.RECEIVE_NATIONALITIES:
+      return {
+        ...state,
+        nationalities: action.nationalities
+      };
     default:
       return state;
   }

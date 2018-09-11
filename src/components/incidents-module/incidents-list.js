@@ -27,6 +27,7 @@ import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
+import {updateAppState} from '../common/navigation-helper';
 import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -317,24 +318,26 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     this.store = store;
   }
 
-  _updateUrlQs() {
+  _updateUrlQuery() {
     if (!this.visible) {
       return false;
     }
     this.set('_lastQueryString', this._buildQueryString());
-    this.updateAppState('/incidents/list', this._lastQueryString, false);
+    updateAppState('/incidents/list', this._lastQueryString, false);
   }
 
   _visibilityChanged(visible) {
     if (this._queryParamsInitComplete) {
       if (visible && this._lastQueryString !== '') {
-        this.updateAppState('/incidents/list', this._lastQueryString, false);
+        updateAppState('/incidents/list', this._lastQueryString, false);
       }
     }
   }
 
   _queryParamsChanged(params) {
-    if (params && this._moduleNavigatedFrom === 'incidents') {
+
+    if (params && this.visible ) {
+
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
@@ -391,8 +394,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!state) {
       return;
     }
-
-    this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
 
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
       this._queryParams = state.app.locationInfo.queryParams;

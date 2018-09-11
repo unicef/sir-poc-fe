@@ -28,17 +28,20 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
       etools-dropdown-lite, etools-dropdown-multi-lite {
         width: 100%;
       }
-            
+
       paper-input,
       paper-textarea,
       datepicker-lite,
       etools-dropdown-lite,
       etools-dropdown-multi-lite {
         --paper-input-container-underline-focus: {
-          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+          box-shadow:
+            0 2px 2px 0 rgba(0, 0, 0, 0.14),
+            0 1px 5px 0 rgba(0, 0, 0, 0.12),
+            0 3px 1px -2px rgba(0, 0, 0, 0.2);
         }
       }
-      
+
       paper-input[readonly],
       paper-textarea[readonly],
       datepicker-lite[readonly],
@@ -49,11 +52,11 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
       datepicker-lite[disabled],
       etools-dropdown-lite[disabled],
       etools-dropdown-multi-lite[disabled] {
-        
+
         --paper-input-container-label-focus: {
           color: var(--secondary-text-color, #737373);
         };
-      
+
         --paper-input-container-underline: {
           border-bottom: 1px dashed var(--primary-text-color);
         }
@@ -62,7 +65,7 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
         }
         --paper-input-container-underline-disabled: {
           border-bottom: 1px dashed var(--primary-text-color);
-        } 
+        }
       }
 
     </style>

@@ -64,7 +64,7 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
       .export paper-listbox {
         width: 110px;
       }
-
+      
       @media screen and (max-width: 768px) {
         .filter{
           width: 100%;

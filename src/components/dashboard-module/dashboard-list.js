@@ -87,12 +87,18 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               <a href="/[[item.case_type]]s/view/[[item.id]]">
                 <iron-icon icon="assignment" title="View [[item.case_type]]"></iron-icon>
               </a>
-              <a href="/[[item.case_type]]s/edit/[[item.id]]" title="Edit [[item.case_type]]" hidden$="[[_notEditable(item, offline)]]">
+              <a href="/[[item.case_type]]s/edit/[[item.id]]"
+                  title="Edit [[item.case_type]]"
+                  hidden$="[[_notEditable(item, offline)]]">
                 <iron-icon icon="editor:mode-edit"></iron-icon>
               </a>
               <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                 <div> <!-- this div prevents resizing of the icon on low resolutions -->
-                  <iron-icon icon="notification:sync" title="Sync [[item.case_type]]" class="sync-btn" on-click="_syncItem"></iron-icon>
+                  <iron-icon icon="notification:sync"
+                             title="Sync [[item.case_type]]"
+                             class="sync-btn"
+                             on-click="_syncItem">
+                  </iron-icon>
                 </div>
               </template>
             </span>
@@ -140,7 +146,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     return {
       events: Array,
       incidents: Array,
-      offline: Boolean,
+      offline: Boolean
     };
   }
 

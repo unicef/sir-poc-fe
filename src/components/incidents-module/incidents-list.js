@@ -301,10 +301,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         type: Boolean,
         observer: '_visibilityChanged'
       },
-      _moduleNavigatedFrom: {
-        type: String,
-        value: ''
-      },
       exportDocType: {
         type: String,
         observer: '_export'
@@ -335,9 +331,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _queryParamsChanged(params) {
-
     if (params && this.visible ) {
-
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
@@ -423,7 +417,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       return [];
     }
 
-    this._updateUrlQs();
+    this._updateUrlQuery();
 
     let filteredIncidents = JSON.parse(JSON.stringify(incidents));
 

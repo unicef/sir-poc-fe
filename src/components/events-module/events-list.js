@@ -22,7 +22,7 @@ import DateMixin from '../common/date-mixin.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import {updateAppState} from '../common/navigation-helper';
+import { updateAppState } from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -144,7 +144,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   <template is="dom-if" if="[[item.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
-                      <span slot="message">This event has not been sumitted to the server. Click the sync button when 
+                      <span slot="message">This event has not been sumitted to the server. Click the sync button when
                                             online to submit it. </span>
                     </etools-info-tooltip>
                   </template>
@@ -263,12 +263,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   }
 
   _queryParamsChanged(params) {
-    if ( params && this.visible ) {
-
+    if (params && this.visible) {
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
-
       if (params.start) {
         this.set('filters.startDate', params.start);
       }
@@ -276,7 +274,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         this.set('filters.endDate', params.end);
       }
       if (params.synced) {
-
         if (params.synced.indexOf('|') > -1) {
           this.set('filters.syncStatus', params.synced.split('|'));
         } else {

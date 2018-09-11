@@ -2,7 +2,7 @@
 @license
 */
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { editIncident, syncIncident } from '../../actions/incidents.js';
+import { editIncident } from '../../actions/incidents.js';
 import { isOnEditIncident } from '../../reducers/app.js';
 
 /**
@@ -23,11 +23,8 @@ class EditIncident extends IncidentsBaseView {
     if (!this.validate()) {
       return;
     }
-    if (this.incident.unsynced && !this.state.app.offline) {
-      this.store.dispatch(syncIncident(this.incident));
-    } else {
-      this.store.dispatch(editIncident(this.incident));
-    }
+
+    this.store.dispatch(editIncident(this.incident));
   }
 
   isOnExpectedPage() {

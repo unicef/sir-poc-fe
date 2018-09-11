@@ -9,13 +9,13 @@ import { isOnViewIncident } from '../../reducers/app';
 /**
  * @polymer
  * @customElement
+ *
  */
 class ViewIncident extends IncidentsBaseView {
-
   static get goToEditBtnTmpl() {
     // language=HTML
     return html`
-      <div class="row-h flex-c" hidden$="[[state.app.offline]]">
+      <div class="row-h flex-c" hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
         <div class="col col-12">
           <a href="/incidents/edit/[[incidentId]]">
             <paper-button raised>
@@ -25,6 +25,16 @@ class ViewIncident extends IncidentsBaseView {
           </a>
         </div>
       </div>`;
+  }
+
+  canEdit(offline, unsynced, itemId) {
+    if (!offline) {
+      return true;
+    }
+    if (unsynced && isNaN(itemId)) {
+      return true;
+    }
+    return false;
   }
 
   connectedCallback() {

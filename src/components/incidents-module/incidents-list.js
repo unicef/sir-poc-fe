@@ -9,6 +9,7 @@
  */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
@@ -26,6 +27,7 @@ import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
+import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -105,6 +107,27 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                               enable-none-option
                               options="[[selectedIncidentCategory.subcategories]]"
                               selected="{{filters.incidentSubcategory}}">
+        </etools-dropdown-lite>
+
+        <etools-dropdown-lite class="filter select"
+                              label="Events"
+                              enable-none-option
+                              options="[[events]]"
+                              selected="{{filters.event}}">
+        </etools-dropdown-lite>
+
+        <etools-dropdown-lite class="filter select"
+                              label="Target"
+                              enable-none-option
+                              options="[[staticData.targets]]"
+                              selected="{{filters.target}}">
+        </etools-dropdown-lite>
+
+        <etools-dropdown-lite class="filter select"
+                              label="Threat Category"
+                              enable-none-option
+                              options="[[staticData.threatCategories]]"
+                              selected="{{filters.threatCategory}}">
         </etools-dropdown-lite>
 
         <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
@@ -223,13 +246,19 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         type: Object,
         value: []
       },
+      events: {
+        type: Array,
+        value: []
+      },
+      threatCategories: Array,
       incidentCategories: Array,
       offline: Boolean,
       filteredIncidents: {
         type: Array,
         computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, ' +
             'filters.syncStatus.length, filters.startDate, filters.endDate, filters.country, ' +
-            'filters.incidentCategory, _queryParamsInitComplete)'
+            'filters.incidentCategory, _queryParamsInitComplete, filters.event, filters.target, ' +
+            'filters.incidentSubcategory, filters.threatCategory)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -250,7 +279,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           startDate: null,
           endDate: null,
           syncStatus: [],
-          q: null
+          q: null,
+          event: null,
+          target: null,
+          threatCategory: null
         }
       },
       _queryParams: {
@@ -270,7 +302,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         type: String,
         value: ''
       },
-      exportDocType: String,
+      exportDocType: {
+        type: String,
+        observer: '_export'
+      },
       selectedIncidentCategory: Object
     };
   }
@@ -344,6 +379,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     this.staticData = state.staticData;
     this.incidents = state.incidents.list;
     this.incidentCategories = state.staticData.incidentCategories;
+    this.threatCategories = state.staticData.threatCategories;
+
+    this.events = state.events.list.map((elem) => {
+      elem.name = elem.description;
+      return elem;
+    });
   }
 
   _getIncidentCategoryName(incidentTypeId) {
@@ -352,7 +393,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country,
-              incidentCategory, qParamsInit) {
+              incidentCategory, qParamsInit, event, target, subcategory, threatCategory) {
 
     if (!qParamsInit || !(incidents instanceof Array && incidents.length > 0)) {
       return [];
@@ -367,6 +408,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     filteredIncidents = filteredIncidents.filter(e => this._applyDateFilter(e, startDate, endDate));
     filteredIncidents = filteredIncidents.filter(e => this._applyCountryFilter(e, country));
     filteredIncidents = filteredIncidents.filter(e => this._applyIncidentCategoryFilter(e, incidentCategory));
+    filteredIncidents = filteredIncidents.filter(e => this._applyEventFilter(e, event));
+    filteredIncidents = filteredIncidents.filter(e => this._applyTargetFilter(e, target));
+    filteredIncidents = filteredIncidents.filter(e => this._applyIncidentSubcategoryFilter(e, subcategory));
+    filteredIncidents = filteredIncidents.filter(e => this._applyThreatCategoryFilter(e, threatCategory));
 
     return this.applyPagination(filteredIncidents);
   }
@@ -411,6 +456,22 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
   }
 
+  _applyIncidentSubcategoryFilter(e, selectedSubCategory) {
+    return selectedSubCategory ? e.incident_subcategory === selectedSubCategory : true;
+  }
+
+  _applyEventFilter(e, selectedEvent) {
+    return selectedEvent ? e.event === selectedEvent : true;
+  }
+
+  _applyTargetFilter(e, selectedTarget) {
+    return selectedTarget ? e.target === selectedTarget : true;
+  }
+
+  _applyThreatCategoryFilter(e, selectedThreatCategory) {
+    return selectedThreatCategory ? e.threat_category === selectedThreatCategory : true;
+  }
+
   _showSyncButton(unsynced, offline) {
     return unsynced && !offline;
   }
@@ -432,13 +493,45 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   _buildQueryString() {
     return this._buildUrlQueryString({
       incidentCategory: this.filters.incidentCategory,
+      incident_subcategory: this.filters.incident_subcategory,
       country: this.filters.country,
       start: this.filters.startDate,
       end: this.filters.endDate,
       synced: this.filters.syncStatus,
-      q: this.filters.q
+      q: this.filters.q,
+      event: this.filters.event,
+      target: this.filters.target,
+      thereat_category: this.filters.threatCategory
     });
   }
+
+  // Outputs the query string for the export
+  _buildExportQueryString(docType) {
+    return this._buildUrlQueryString({
+      incident_category: this.filters.incidentCategory,
+      incident_subcategory: this.filters.incident_subcategory,
+      country: this.filters.country,
+      incident_date__gt: this.filters.startDate,
+      incident_date__lt: this.filters.endDate,
+      q: this.filters.q,
+      event: this.filters.event,
+      format: docType,
+      target: this.filters.target,
+      thereat_category: this.filters.threatCategory
+    });
+  }
+
+  _export(docType) {
+    if (!docType || docType === '') {
+      return;
+    }
+    const url = Endpoints['incidents'].url;
+    const csvQStr = this._buildExportQueryString(docType);
+    const csvDownloadUrl = url + '?' + csvQStr;
+    this.set('exportDocType', '');
+    window.open(csvDownloadUrl, '_blank');
+  }
+
 }
 
 window.customElements.define('incidents-list', IncidentsList);

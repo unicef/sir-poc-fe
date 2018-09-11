@@ -4,12 +4,14 @@
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident } from '../../actions/incidents.js';
 import { isOnEditIncident } from '../../reducers/app.js';
+import { store } from '../../redux/store.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 /**
  * @polymer
  * @customElement
  */
-class EditIncident extends IncidentsBaseView {
+class EditIncident extends connect(store)(IncidentsBaseView) {
   static get is() {
     return 'edit-incident';
   }

@@ -15,9 +15,9 @@ import '../../styles/shared-styles.js';
 import HistoryHelpers from '../../history-components/history-helpers.js';
 import '../../history-components/revisions-list.js';
 import '../../history-components/diff-view.js';
-import './incident-revision-view.js';
+import './event-revision-view.js';
 
-export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
+export class EventHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -28,7 +28,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
 
       <app-route
         route="{{route}}"
-        pattern="/incidents/history/:incidentId/:section"
+        pattern="/events/history/:eventId/:section"
         data="{{routeData}}"
         tail="{{subRoute}}">
       </app-route>
@@ -40,34 +40,33 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
 
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
         <revisions-list name="list"
-                   module="incidents"
+                   module="events"
                    history="[[history]]">
         </revisions-list>
         <diff-view name="diff"
-                   module="incidents"
+                   module="events"
                    working-item="[[workingItem]]">
         </diff-view>
-        <incident-revision-view name="view"
+        <event-revision-view name="view"
                         working-item="[[workingItem]]">
-        </incident-revision-view>
+        </event-revision-view>
       </iron-pages>
     `;
   }
 
   static get is() {
-    return 'incident-history-controller';
+    return 'event-history-controller';
   }
 
   static get properties() {
     return {
-      incidentId: {
+      eventId: {
         type: Number,
-        computed: '_setIncidentId(state.app.locationInfo.incidentId)',
+        computed: '_setEventId(state.app.locationInfo.eventId)',
         observer: '_idChanged'
       },
       visible: {
         type: Boolean,
-        value: false,
         observer: '_visibilityChanged'
       },
       workingItem: Object,
@@ -108,7 +107,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
     this.set('workingItem', workingItem);
   }
 
-  _setIncidentId(id) {
+  _setEventId(id) {
     return id;
   }
 
@@ -123,7 +122,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   }
 
   _fetchHistory() {
-    let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id: this.incidentId});
+    let endpoint = prepareEndpoint(Endpoints.getEventHistory, {id: this.eventId});
     makeRequest(endpoint).then((response) => {
       this.history = response;
     });
@@ -131,4 +130,4 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
 
 }
 
-window.customElements.define(IncidentHistory.is, IncidentHistory);
+window.customElements.define(EventHistory.is, EventHistory);

@@ -19,6 +19,7 @@ import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { fetchIncident } from '../../actions/incidents.js';
+import { clearErrors } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -160,24 +161,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
               <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
-                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
-                                      selectedIncidentCategory.comment)]]">
-                  <etools-dropdown-lite id="incidentCat"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Incident category"
-                                        options="[[staticData.incidentCategories]]"
-                                        selected="{{incident.incident_category}}"
-                                        selected-item="{{selectedIncidentCategory}}"
-                                        required auto-validate
-                                        error-message="Incident category is required">
-                  </etools-dropdown-lite>
-                  <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
-                  </span>
-                </etools-info-tooltip>
-              </div>
-              <div class="col col-3">
-                <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedThreatCategory.description]]">
                   <etools-dropdown-lite id="threatCategory"
                                         slot="field"
@@ -206,6 +189,49 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         error-message="Target is required">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedTarget.description]]</span>
+                </etools-info-tooltip>
+              </div>
+            </div>
+
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-info-tooltip class="info" open-on-click form-field-align
+                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
+                                      selectedIncidentCategory.comment)]]">
+                  <etools-dropdown-lite id="incidentCat"
+                                        slot="field"
+                                        readonly="[[readonly]]"
+                                        label="Incident category"
+                                        options="[[staticData.incidentCategories]]"
+                                        selected="{{incident.incident_category}}"
+                                        selected-item="{{selectedIncidentCategory}}"
+                                        required auto-validate
+                                        error-message="Incident category is required">
+                  </etools-dropdown-lite>
+                  <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
+                  </span>
+                </etools-info-tooltip>
+              </div>
+
+              <div class="col col-3">
+                <etools-info-tooltip class="info" open-on-click form-field-align
+                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
+                                      selectedIncidentSubcategory.comment)]]">
+                  <etools-dropdown-lite id="incidentSubcat"
+                                        slot="field"
+                                        readonly="[[readonly]]"
+                                        label="Incident Subcategory"
+                                        options="[[selectedIncidentCategory.subcategories]]"
+                                        selected="{{incident.incident_subcategory}}"
+                                        selected-item="{{selectedIncidentSubcategory}}"
+                                        required auto-validate
+                                        error-message="Incident subcategory is required">
+                  </etools-dropdown-lite>
+                  <span slot="message">
+                    [[selectedIncidentSubcategory.description]]
+                    <br>
+                    [[selectedIncidentSubcategory.comment]]
+                  </span>
                 </etools-info-tooltip>
               </div>
             </div>
@@ -314,8 +340,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
-            <warn-message message="Because there is no internet conenction the event will be saved offine for now,
-                                    and you must sync it manually by saving it again when online">
+            <warn-message hidden$="[[!_incidentHasTempIdOrNew(incidentId)]]"
+                          message="Because there is no internet connenction the incident will be saved offine for now,
+                                   and you must sync it manually by saving it again when online">
+            </warn-message>
+            <warn-message hidden$="[[_incidentHasTempIdOrNew(incidentId)]]"
+                          message="Can't edit a synced incident while offline">
             </warn-message>
           </div>
 
@@ -327,7 +357,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <div class="col col-12">
               <paper-button raised
                             on-click="save"
-                            disabled$="[[eventNotOk(incident.event, state.app.offline)]]">
+                            disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
                 Save
               </paper-button>
             </div>
@@ -390,6 +420,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       },
       selectedIncidentCategory: {
         type: Object,
+        value: {},
+        observer: 'selIncidentCategChanged'
+      },
+      selectedIncidentSubcategory: {
+        type: Object,
         value: {}
       },
       selectedThreatCategory: {
@@ -407,7 +442,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
-          '#city', '#incidentCat', '#description', '#injuries', '#target', '#threatCategory']
+          '#city', '#incidentCat', '#incidentSubcat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }
@@ -445,9 +480,20 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
+  // It was created offline and not yet saved on server or new
+  _incidentHasTempIdOrNew(incidentId) {
+    if (!incidentId) {
+      return true;
+    }
+    return isNaN(incidentId);
+  }
+
   _visibilityChanged(visible) {
     if (visible) {
       this.resetValidations();
+    }
+    if (visible === false) {
+      store.dispatch(clearErrors());
     }
   }
 
@@ -485,6 +531,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
   }
 
+  selIncidentCategChanged(incidentCategory) {
+    if (!this.incident.incident_subcategory) {
+      return;
+    }
+    let selSubcategIsValid = incidentCategory.subcategories.find(s => s.id == this.incident.incident_subcategory);
+    if (!selSubcategIsValid) {
+      this.set('incident.incident_subcategory', null);
+    }
+  }
+
   isNotReported(reported) {
     return reported === false;
   }
@@ -506,7 +562,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
     let selectedEvent = this.events.find(event => event.id === eventId);
-    return selectedEvent.unsynced && !offline;
+
+    return !offline && (selectedEvent && selectedEvent.unsynced);
+  }
+
+  // Only edit of unsynced and add new is possible offline
+  canNotSave(eventId, offline, incidentId) {
+    if (this.eventNotOk(eventId, offline)) {
+      return true;
+    }
+    return (offline && !!incidentId && !isNaN(incidentId));
   }
 
   _hideInfoTooltip(...arg) {

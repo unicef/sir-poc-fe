@@ -8,15 +8,21 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import '@polymer/iron-icons/notification-icons.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import {store} from '../../redux/store.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
+import DateMixin from '../common/date-mixin.js';
+
+import { syncEventOnList } from '../../actions/events.js';
+import ListCommonMixin from '../common/list-common-mixin.js';
+import { updateAppState } from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -25,7 +31,17 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
+
+/**
+ *
+ * @polymer
+ * @customElement
+ * @appliesMixin PaginationMixin
+ * @appliesMixin DateMixin
+ * @appliesMixin ListCommonMixin
+ *
+ */
+class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
   static get template() {
     // language=HTML
     return html`
@@ -46,6 +62,14 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           /* mobile specific css, under tablet min 768px */
         }
 
+        .sync-btn {
+          color: var(--primary-color);
+          cursor: pointer;
+        }
+
+        .row-details {
+          display: block;
+        }
       </style>
 
       <div class="card filters">
@@ -82,8 +106,8 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
 
       <div class="card list">
         <etools-data-table-header id="listHeader" label="Events">
-          <etools-data-table-column class="col-3">
-            Description
+          <etools-data-table-column class="col-2">
+            Case number
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
             Start date
@@ -102,17 +126,17 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
             <div slot="row-data">
-                <span class="col-data col-3" data-col-header-label="Description">
+                <span class="col-data col-2" data-col-header-label="Case number">
                   <span class="truncate">
-                    <a href="/events/view/[[item.id]]"> [[item.description]] </a>
+                    <a href="/events/view/[[item.id]]"> N/A </a>
                   </span>
                 </span>
               <span class="col-data col-3" title="[[item.start_date]]" data-col-header-label="Start date">
-                    [[item.start_date]]
-                </span>
+                [[item.start_date]]
+              </span>
               <span class="col-data col-3" title="[[item.location]]" data-col-header-label="Location">
-                  <span class="truncate">[[item.location]]</span>
-                </span>
+                <span class="truncate">[[item.location]]</span>
+              </span>
               <span class="col-data col-2" data-col-header-label="Status">
                   <template is="dom-if" if="[[!item.unsynced]]">
                     Synced
@@ -120,30 +144,48 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
                   <template is="dom-if" if="[[item.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
-                      <span slot="message">This event has not been sumitted to the server. Go to its edit page
-                        and save it when an internet connection is availale.</span>
+                      <span slot="message">This event has not been sumitted to the server. Click the sync button when
+                                            online to submit it. </span>
                     </etools-info-tooltip>
                   </template>
                 </span>
-              <span class="col-data col-1" data-col-header-label="Actions">
+              <span class="col-data col-2" data-col-header-label="Actions">
                   <a href="/events/view/[[item.id]]">
-                    <iron-icon icon="assignment"></iron-icon>
+                    <iron-icon icon="assignment" title="View Event"></iron-icon>
                   </a>
-                  <a href="/events/edit/[[item.id]]" hidden$="[[notEditable(item, offline)]]">
+                  <a href="/events/edit/[[item.id]]" title="Edit Event" hidden$="[[notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
+                  <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                    <div> <!-- this div prevents resizing of the icon on low resolutions -->
+                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem">
+                      </iron-icon>
+                    </div>
+                  </template>
                 </span>
             </div>
-            <div slot="row-data-details">
-              <div class="col-6">
-                <strong>Description: </strong>
-                <span>[[item.description]]</span>
-              </div>
-              <div class="col-6">
-                <strong>Note: </strong>
-                <span>[[item.note]]</span>
-              </div>
 
+            <div slot="row-data-details" class="row-details">
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Date created: </strong>
+                  <span>[[prettyDate(item.submitted_date)]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Date revised: </strong>
+                  <span>[[prettyDate(item.last_modify_date)]]</span>
+                </div>
+              </div>
+              <div class="row-h flex-c">
+                <div class="col-6">
+                  <strong>Description: </strong>
+                  <span>[[item.description]]</span>
+                </div>
+                <div class="col-6">
+                  <strong>Note: </strong>
+                  <span>[[item.note]]</span>
+                </div>
+              </div>
             </div>
           </etools-data-table-row>
         </template>
@@ -167,7 +209,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       filteredEvents: {
         type: Array,
         computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, ' +
-        'filters.syncStatus.length, filters.startDate, filters.endDate)'
+        'filters.syncStatus.length, filters.startDate, filters.endDate, _queryParamsInitComplete)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -184,6 +226,20 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
           endDate: null,
           syncStatus: []
         }
+      },
+      _queryParams: {
+        type: Object,
+        observer: '_queryParamsChanged'
+      },
+      _queryParamsInitComplete: Boolean,
+      _lastQueryString: {
+        type: String,
+        value: ''
+      },
+      visible: {
+        type: Boolean,
+        value: false,
+        observer: '_visibilityChanged'
       }
     };
   }
@@ -193,15 +249,64 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
       return;
     }
 
+    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
+      this._queryParams = state.app.locationInfo.queryParams;
+    }
+
     this.events = state.events.list;
     this.offline = state.app.offline;
+
+    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
+      this._queryParams = state.app.locationInfo.queryParams;
+    }
+
   }
 
-  _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate) {
+  _queryParamsChanged(params) {
+    if (params && this.visible) {
+      if (params.q && params.q !== this.filters.q) {
+        this.set('filters.q', params.q);
+      }
+      if (params.start) {
+        this.set('filters.startDate', params.start);
+      }
+      if (params.end) {
+        this.set('filters.endDate', params.end);
+      }
+      if (params.synced) {
+        if (params.synced.indexOf('|') > -1) {
+          this.set('filters.syncStatus', params.synced.split('|'));
+        } else {
+          this.set('filters.syncStatus', [params.synced]);
+        }
+      }
 
-    if (!(events instanceof Array && events.length > 0)) {
+      this.set('_queryParamsInitComplete', true);
+    }
+  }
+
+  _updateUrlQuery() {
+    if (!this.visible) {
+      return false;
+    }
+    this.set('_lastQueryString', this._buildQueryString());
+    updateAppState('/events/list', this._lastQueryString, false);
+  }
+
+  _visibilityChanged(visible) {
+    if (this._queryParamsInitComplete) {
+      if (visible && this._lastQueryString !== '') {
+        updateAppState('/events/list', this._lastQueryString, false);
+      }
+    }
+  }
+
+  _filterData(events, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, queryParamsInit) {
+    if (!queryParamsInit || !(events instanceof Array && events.length > 0)) {
       return [];
     }
+
+    this._updateUrlQuery();
 
     let filteredEvents = JSON.parse(JSON.stringify(events));
 
@@ -216,6 +321,7 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
     if (!q || q === '') {
       return true;
     }
+    q = q.toLowerCase();
     return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
   }
 
@@ -230,12 +336,34 @@ class EventsList extends connect(store)(PaginationMixin(PolymerElement)) {
   _applyDateFilter(e, startDate, endDate) {
     return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
+  }
 
+  _showSyncButton(unsynced, offline) {
+    return unsynced && !offline;
+  }
+
+  _syncItem(event) {
+    if (!event || !event.model || !event.model.__data || !event.model.__data.item) {
+      return;
+    }
+    let element = event.model.__data.item;
+    store.dispatch(syncEventOnList(element));
   }
 
   notEditable(event, offline) {
     return offline && !event.unsynced;
   }
+
+  // Outputs the query string for the list
+  _buildQueryString() {
+    return this._buildUrlQueryString({
+      q: this.filters.q,
+      synced: this.filters.syncStatus,
+      start: this.filters.startDate,
+      end: this.filters.endDate
+    });
+  }
+
 }
 
 window.customElements.define('events-list', EventsList);

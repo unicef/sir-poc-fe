@@ -1,14 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-
-import '../common/etools-dropdown/etools-dropdown-lite.js';
 import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../common/datepicker-lite.js';
+import './dashboard-list.js';
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
@@ -37,138 +34,45 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
       <div class="card">
         <div class="row-h">
-          <div class="col col-4">
-            <etools-dropdown-lite label="Active user"
-                                  trigger-value-change-event
-                                  on-etools-selected-item-changed="_userSelected"
-                                  options="[[users]]">
-            </etools-dropdown-lite>
+          <div class="col col-6 center-text">
+            <div class="large-text"> [[filteredEvents.length]] </div>
+            Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
+          </div>
+          <div class="col col-6 center-text">
+            <div class="large-text"> [[filteredIncidents.length]] </div>
+            Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
         </div>
-      </div>
-      <div class="card">
-        <div class="row-h flex-c">
-          <div class="col-12">
-            <div class="row-h">
-              <div class="col col-6 center-text">
-                <div class="large-text"> [[filteredEvents.length]] </div>
-                Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
-              </div>
-              <div class="col col-6 center-text">
-                <div class="large-text"> [[filteredIncidents.length]] </div>
-                Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
-              </div>
+
+        <div class="row-h">
+          <div class="col col-4"> </div>
+          <div class="col col-4">
+            <div class="center-text">
+              <p> Show stastistics between </p>
             </div>
 
-
-            <div class="row-h">
-              <div class="col col-4"> </div>
-              <div class="col col-4">
-                <div class="center-text">
-                  <p> Show stastistics between </p>
-                </div>
-
-                <div class="center-text">
-                  <datepicker-lite value="{{selectedStartDate}}">
-                  </datepicker-lite>
-                </div>
-
-                <div class="center-text">
-                  <p> and </p>
-                </div>
-
-                <div class="center-text">
-                  <datepicker-lite value="{{selectedEndDate}}">
-                  </datepicker-lite>
-                </div>
-              </div>
-              <div class="col col-4"> </div>
+            <div class="center-text">
+              <datepicker-lite value="{{selectedStartDate}}">
+              </datepicker-lite>
             </div>
 
-            <div class="row-h">
-              <div class="col col-6">
-                <etools-data-table-header id="listHeader" label="Your Events" no-collapse>
-                  <etools-data-table-column class="col-6">
-                    Description
-                  </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Status
-                  </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Start date
-                  </etools-data-table-column>
-                </etools-data-table-header>
+            <div class="center-text">
+              <p> and </p>
+            </div>
 
-                <template id="rows" is="dom-repeat" items="[[userEvents]]">
-
-                  <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
-                    <div slot="row-data">
-                      <span class="col-data col-6" data-col-header-label="Description">
-                        <a href="/events/view/[[item.id]]"> [[item.description]] </a>
-                      </span>
-                      <span class="col-data col-3">
-                        <template is="dom-if" if="[[!item.unsynced]]">
-                          Synced
-                        </template>
-                        <template is="dom-if" if="[[item.unsynced]]">
-                          <etools-info-tooltip class="info" open-on-click>
-                            <span slot="field">Not Synced</span>
-                            <span slot="message">This event has not been sumitted to the server. Go to its edit page
-                              and save it when an internet connection is availale.</span>
-                          </etools-info-tooltip>
-                        </template>
-                      </span>
-                      <span class="col-data col-3" data-col-header-label="Start date">
-                        [[prettyDate(item.start_date)]]
-                      </span>
-                    </div>
-                  </etools-data-table-row>
-
-                </template>
-              </div>
-              <div class="col col-6">
-                <etools-data-table-header id="listHeader" label="Your Incidents" no-collapse>
-                  <etools-data-table-column class="col-6">
-                    Description
-                  </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Status
-                  </etools-data-table-column>
-                  <etools-data-table-column class="col-3">
-                    Start date
-                  </etools-data-table-column>
-                </etools-data-table-header>
-
-                <template id="rows" is="dom-repeat" items="[[userIncidents]]">
-
-                  <etools-data-table-row unsynced$="[[item.unsynced]]" no-collapse>
-                    <div slot="row-data">
-                      <span class="col-data col-6" data-col-header-label="Description">
-                        <a href="/incidents/view/[[item.id]]"> [[item.description]] </a>
-                      </span>
-                      <span class="col-data col-3">
-                        <template is="dom-if" if="[[!item.unsynced]]">
-                          [[item.status]]
-                        </template>
-                        <template is="dom-if" if="[[item.unsynced]]">
-                          <etools-info-tooltip class="info" open-on-click>
-                            <span slot="field">Not Synced</span>
-                            <span slot="message">This incident has not been sumitted to the server. Go to its edit page and
-                              save it when an internet connection is availale.</span>
-                          </etools-info-tooltip>
-                        </template>
-                      </span>
-                      <span class="col-data col-3" data-col-header-label="Start date">
-                         [[prettyDate(item.incident_date)]]
-                      </span>
-                    </div>
-                  </etools-data-table-row>
-
-                </template>
-              </div>
+            <div class="center-text">
+              <datepicker-lite value="{{selectedEndDate}}">
+              </datepicker-lite>
             </div>
           </div>
-        </template>
+          <div class="col col-4"> </div>
+        </div>
+
+        <div class="row-h">
+          <div class="col col-12">
+            <dashboard-list></dashboard-list>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -179,14 +83,6 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
   static get properties() {
     return {
-      events: Array,
-      incidents: Array,
-      userEvents: Array,
-      userIncidents: Array,
-      activeUser: {
-        type: Object,
-        value: {}
-      },
       selectedEndDate: {
         type: String,
         value: () => {
@@ -206,7 +102,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       filteredIncidents: {
         type: Array,
         computed: 'getIncidentsForPeriod(incidents, selectedStartDate, selectedEndDate)'
-      },
+      }
     };
   }
 
@@ -217,12 +113,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
     this.events = state.events.list;
     this.incidents = state.incidents.list;
-    this.users = state.staticData.users.map((elem) => {
-      elem.name = elem.first_name + ' ' + elem.last_name;
-      return elem;
-    });
-
-    this.updateUserListsData();
+    this.staticData = state.staticData;
   }
 
   getEventsForPeriod(events, selectedStartDate, selectedEndDate) {
@@ -230,8 +121,8 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       let evStart = moment(event.start_date);
       let evEnd = moment(event.end_date);
 
-      let cond1 = evStart.isBetween(selectedStartDate, selectedEndDate);
-      let cond2 = evEnd.isBetween(selectedStartDate, selectedEndDate);
+      let cond1 = evStart.isBetween(selectedStartDate, selectedEndDate, null, '[]');
+      let cond2 = evEnd.isBetween(selectedStartDate, selectedEndDate, null, '[]');
 
       return cond1 || cond2;
     });
@@ -241,28 +132,12 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
   getIncidentsForPeriod(incidents, selectedStartDate, selectedEndDate) {
     let filteredIncidents = incidents.filter((incident) => {
-      return moment(incident.incident_date).isBetween(selectedStartDate, selectedEndDate);
+      return moment(incident.incident_date).isBetween(selectedStartDate, selectedEndDate, null, '[]');
     });
 
     return filteredIncidents;
   }
 
-  _userSelected(event) {
-    if (!event.detail.selectedItem) {
-      return;
-    }
-    this.activeUser = event.detail.selectedItem;
-    this.updateUserListsData();
-  }
-
-  updateUserListsData() {
-    this.userEvents = this.events.filter((e) => {
-      return !this.activeUser.id || e.submitted_by === this.activeUser.id;
-    });
-    this.userIncidents = this.incidents.filter((e) => {
-      return !this.activeUser.id || e.submitted_by === this.activeUser.id;
-    });
-  }
 }
 
 window.customElements.define(DashboardController.is, DashboardController);

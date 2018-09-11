@@ -40,7 +40,6 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
           margin-right: 8px;
         };
         flex: 0 0 25%;
-        max-width: 25%;
       }
       
       .sync-filter {
@@ -67,16 +66,18 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
       }
 
       @media screen and (max-width: 768px) {
+        .filter{
+          width: 100%;
+        }
+        
         .search-input {
           display: block;
           max-width: 100%;
+          flex: 0 0 100%;
         }
+        
         .filters .filter:not(:last-child) {
-          margin-right: 0;
-        }
-        .sync-filter {
-          min-width: 0;
-          max-width: 100%;
+          margin-right: 0px;
         }
       }
     </style>

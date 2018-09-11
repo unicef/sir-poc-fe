@@ -334,32 +334,53 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _queryParamsChanged(params) {
-
     if (params && this._moduleNavigatedFrom === 'incidents') {
-
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
+
       if (params.incidentCategory && params.incidentCategory !== this.filters.incidentCategory) {
         this.set('filters.incidentCategory', Number(params.incidentCategory));
       }
+
       if (params.country && params.country !== this.filters.country) {
         this.filters.country = params.country;
       }
+
       if (params.start) {
         this.set('filters.startDate', params.start);
       }
+
       if (params.end) {
         this.set('filters.endDate', params.end);
       }
-      if (params.synced) {
 
+      if (params.synced) {
         if (params.synced.indexOf('|') > -1) {
           this.set('filters.syncStatus', params.synced.split('|'));
         } else {
           this.set('filters.syncStatus', [params.synced]);
         }
+      }
 
+      if (params.incident_category) {
+        this.set('filters.incidentCategory', params.incident_category);
+      }
+
+      if (params.incident_subcategory) {
+        this.set('filters.incidentSubcategory', params.incident_subcategory);
+      }
+
+      if (params.event) {
+        this.set('filters.event', params.event);
+      }
+
+      if (params.target) {
+        this.set('filters.target', params.target);
+      }
+
+      if (params.threat_category) {
+        this.set('filters.threatCategory', params.threat_category);
       }
 
       this.set('_queryParamsInitComplete', true);
@@ -405,73 +426,76 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
     let filteredIncidents = JSON.parse(JSON.stringify(incidents));
 
-    filteredIncidents = filteredIncidents.filter(e => this._applyQFilter(e, q));
-    filteredIncidents = filteredIncidents.filter(e => this._applyStatusFilter(e, this.filters.syncStatus));
-    filteredIncidents = filteredIncidents.filter(e => this._applyDateFilter(e, startDate, endDate));
-    filteredIncidents = filteredIncidents.filter(e => this._applyCountryFilter(e, country));
-    filteredIncidents = filteredIncidents.filter(e => this._applyIncidentCategoryFilter(e, incidentCategory));
-    filteredIncidents = filteredIncidents.filter(e => this._applyEventFilter(e, event));
-    filteredIncidents = filteredIncidents.filter(e => this._applyTargetFilter(e, target));
-    filteredIncidents = filteredIncidents.filter(e => this._applyIncidentSubcategoryFilter(e, subcategory));
-    filteredIncidents = filteredIncidents.filter(e => this._applyThreatCategoryFilter(e, threatCategory));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyQFilter(incident, q));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyStatusFilter(incident,
+                                                                                      this.filters.syncStatus));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyDateFilter(incident, startDate, endDate));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyCountryFilter(incident, country));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentCategoryFilter(incident,
+                                                                                                    incidentCategory));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyEventFilter(incident, event));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyTargetFilter(incident, target));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentSubcategoryFilter(incident,
+                                                                                                        subcategory));
+    filteredIncidents = filteredIncidents.filter(incident => this._applyThreatCategoryFilter(incident, threatCategory));
 
     return this.applyPagination(filteredIncidents);
   }
 
-  _applyQFilter(e, q) {
+  _applyQFilter(incident, q) {
     if (!q || q === '') {
       return true;
     }
     q = q.toLowerCase();
-    let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();
+    let person = (incident.primary_person.first_name + ' ' + incident.primary_person.last_name).trim();
     return person.toLowerCase().search(q) > -1 ||
-        String(e.city).toLowerCase().search(q) > -1 ||
-        String(e.description).toLowerCase().search(q) > -1;
+        String(incident.city).toLowerCase().search(q) > -1 ||
+        String(incident.description).toLowerCase().search(q) > -1;
   }
 
-  _applyStatusFilter(e, selectedSyncStatuses) {
+  _applyStatusFilter(incident, selectedSyncStatuses) {
     if (selectedSyncStatuses.length === 0 || selectedSyncStatuses.length === this.itemSyncStatusOptions.length) {
       return true;
     }
-    const eStatus = e.unsynced ? 'unsynced' : 'synced';
+    const eStatus = incident.unsynced ? 'unsynced' : 'synced';
     return selectedSyncStatuses.some(s => s === eStatus);
   }
 
-  _applyDateFilter(e, startDate, endDate) {
+  _applyDateFilter(incident, startDate, endDate) {
 
-    if (startDate && new Date(e.incident_date) <= new Date(startDate)) {
+    if (startDate && new Date(incident.incident_date) <= new Date(startDate)) {
       return false;
     }
 
-    if (endDate && new Date(e.incident_date) >= new Date(endDate)) {
+    if (endDate && new Date(incident.incident_date) >= new Date(endDate)) {
       return false;
     }
 
     return true;
   }
 
-  _applyCountryFilter(e, selectedCountry) {
-    return selectedCountry ? e.country === selectedCountry : true;
+  _applyCountryFilter(incident, selectedCountry) {
+    return selectedCountry ? incident.country === selectedCountry : true;
   }
 
-  _applyIncidentCategoryFilter(e, selectedIncidentCategory) {
-    return selectedIncidentCategory ? e.incident_category === selectedIncidentCategory : true;
+  _applyIncidentCategoryFilter(incident, selectedIncidentCategory) {
+    return selectedIncidentCategory ? incident.incident_category === selectedIncidentCategory : true;
   }
 
-  _applyIncidentSubcategoryFilter(e, selectedSubCategory) {
-    return selectedSubCategory ? e.incident_subcategory === selectedSubCategory : true;
+  _applyIncidentSubcategoryFilter(incident, selectedSubCategory) {
+    return selectedSubCategory ? incident.incident_subcategory === selectedSubCategory : true;
   }
 
-  _applyEventFilter(e, selectedEvent) {
-    return selectedEvent ? e.event === selectedEvent : true;
+  _applyEventFilter(incident, selectedEvent) {
+    return selectedEvent ? incident.event === selectedEvent : true;
   }
 
-  _applyTargetFilter(e, selectedTarget) {
-    return selectedTarget ? e.target === selectedTarget : true;
+  _applyTargetFilter(incident, selectedTarget) {
+    return selectedTarget ? incident.target === selectedTarget : true;
   }
 
-  _applyThreatCategoryFilter(e, selectedThreatCategory) {
-    return selectedThreatCategory ? e.threat_category === selectedThreatCategory : true;
+  _applyThreatCategoryFilter(incident, selectedThreatCategory) {
+    return selectedThreatCategory ? incident.threat_category === selectedThreatCategory : true;
   }
 
   _showSyncButton(unsynced, offline) {
@@ -494,8 +518,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   // Outputs the query string for the list
   _buildQueryString() {
     return this._buildUrlQueryString({
-      incidentCategory: this.filters.incidentCategory,
-      incident_subcategory: this.filters.incident_subcategory,
+      incident_category: this.filters.incidentCategory,
+      incident_subcategory: this.filters.incidentSubcategory,
       country: this.filters.country,
       start: this.filters.startDate,
       end: this.filters.endDate,
@@ -511,11 +535,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   _buildExportQueryString(docType) {
     return this._buildUrlQueryString({
       incident_category: this.filters.incidentCategory,
-      incident_subcategory: this.filters.incident_subcategory,
-      country: this.filters.country,
+      incident_subcategory: this.filters.incidentSubcategory,
       incident_date__gt: this.filters.startDate,
       incident_date__lt: this.filters.endDate,
-      q: this.filters.q,
       event: this.filters.event,
       format: docType,
       target: this.filters.target,

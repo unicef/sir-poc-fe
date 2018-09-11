@@ -3,8 +3,7 @@
  * @polymer
  * @mixinFunction
  */
-export const ListItemUtils =
-    superClass => class extends superClass {
+export const ListItemUtils = superClass => class extends superClass {
 
       static get properties() {
         return {

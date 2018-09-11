@@ -1,10 +1,10 @@
-import {ListItemUtils} from './list-item-utils-mixin.js';
+import { ListItemUtils } from './list-item-utils-mixin.js';
 
 /*
  * Common functionality for single selection and multiple selection dropdown
  * @polymer
  * @mixinFunction
- * @appliesMixin EsmmMixins.ListItemUtils
+ * @appliesMixin ListItemUtils
  */
 export const CommonFunctionality = superClass => class extends ListItemUtils(superClass) {
 

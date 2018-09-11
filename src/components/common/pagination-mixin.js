@@ -1,4 +1,8 @@
-
+/**
+ *
+ * @polymer
+ * @mixinFunction
+ */
 const PaginationMixin = baseClass => class extends baseClass {
   static get properties() {
     return {

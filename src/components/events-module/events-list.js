@@ -321,6 +321,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
     if (!q || q === '') {
       return true;
     }
+    q = q.toLowerCase();
     return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
   }
 

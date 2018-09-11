@@ -356,6 +356,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!q || q === '') {
       return true;
     }
+    q = q.toLowerCase();
     let person = (e.primary_person.first_name + ' ' + e.primary_person.last_name).trim();
     return person.toLowerCase().search(q) > -1 ||
         String(e.city).toLowerCase().search(q) > -1 ||

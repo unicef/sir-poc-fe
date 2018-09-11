@@ -5,7 +5,7 @@ import { updatePath } from '../components/common/navigation-helper.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { updateEventIdsInIncidents } from './incidents.js';
-import { PLAIN_ERROR } from  './errors.js';
+import { PLAIN_ERROR } from './errors.js';
 export const EDIT_EVENT_SUCCESS = 'EDIT_EVENT_SUCCESS';
 export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
 export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
@@ -111,7 +111,12 @@ export const editEvent = event => (dispatch, getState) => {
   if (getState().app.offline === true) {
     editEventOffline(event, dispatch);
   } else {
-    editEventOnline(event, dispatch, getState());
+    if (event.unsynced) {
+      dispatch(syncEvent(event));
+    } else {
+      editEventOnline(event, dispatch, getState());
+    }
+
   }
 };
 
@@ -119,7 +124,7 @@ export const syncEvent = event => (dispatch, getState) => {
   return makeRequest(Endpoints.newEvent, event).then((result) => {
     updatePath('/events/list/');
     dispatch(editEventSuccess(result, event.id));
-    dispatch(updateEventIdsInIncidents(event.id, response.id));
+    dispatch(updateEventIdsInIncidents(event.id, result.id));
     return true;
   }).catch((error) => {
     dispatch(addEventFail(error.response));
@@ -131,7 +136,7 @@ export const syncEvent = event => (dispatch, getState) => {
 export const syncEventOnList = event => (dispatch, getState) => {
   return makeRequest(Endpoints.newEvent, event).then((result) => {
     dispatch(editEventSuccess(result, event.id));
-    dispatch(updateEventIdsInIncidents(event.id, response.id));
+    dispatch(updateEventIdsInIncidents(event.id, result.id));
     return true;
   }).catch((error) => {
     dispatch(syncEventFail());

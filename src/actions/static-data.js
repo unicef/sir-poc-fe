@@ -182,6 +182,11 @@ export const fetchAndStoreUsers = () => (dispatch, getState) => {
 };
 
 const receiveUsers = (users) => {
+  users = users.map((elem) => {
+    elem.name = elem.first_name + ' ' + elem.last_name;
+    return elem;
+  });
+
   return {
     type: RECEIVE_USERS,
     users

@@ -218,7 +218,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       filteredIncidents: {
         type: Array,
         computed: 'getIncidentsForPeriod(incidents, selectedStartDate, selectedEndDate)'
-      },
+      }
     };
   }
 

@@ -32,7 +32,8 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
             <h3> Changes performed </h3>
           </div>
           <div class="nav-buttons">
-            <history-navigation-links page="diff" working-item="[[workingItem]]" module="[[module]]"></history-navigation-links>
+            <history-navigation-links page="diff" working-item="[[workingItem]]" module="[[module]]">
+            </history-navigation-links>
           </div>
         </div>
         <template is="dom-repeat" items="[[changes]]">

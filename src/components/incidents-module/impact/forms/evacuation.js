@@ -3,7 +3,14 @@
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-input/paper-textarea.js';
+
+import { addEvacuationOnline } from '../../../../actions/incidents.js';
 import { store } from '../../../../redux/store.js';
+import '../../../common/etools-dropdown/etools-dropdown-lite.js';
+import '../../../common/datepicker-lite.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
@@ -140,7 +147,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.evacuation]]"
-                            selected="{{data.impact_type}}"
+                            selected="{{data.impact}}"
                             selected-item="{{selectedImpactType}}"
                             required auto-validate
                             error-message="Impact is required">
@@ -153,7 +160,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
-                                value="{{incident.description}}"
+                                value="{{data.description}}"
                                 required auto-validate
                                 error-message="Description is required">
                 </paper-textarea>
@@ -161,6 +168,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
             </div>
           </div>
         </fieldset>
+        <paper-button on-click="saveEvacuation">Save</button>
       </div>
     `;
   }
@@ -181,6 +189,11 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.staticData = state.staticData;
+    this.data.incident_id = state.app.locationInfo.incidentId;
+  }
+
+  saveEvacuation() {
+    store.dispatch(addEvacuationOnline(this.data));
   }
 }
 

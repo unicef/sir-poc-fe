@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
 import { fetchAndStoreEvents } from './events.js';
-import { fetchIncidents, fetchIncidentComments } from './incidents.js';
+import { fetchIncidents, fetchIncidentComments, fetchIncidentEvacuations } from './incidents.js';
 
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
@@ -34,6 +34,7 @@ export const storeReady = () => (dispatch, getState) => {
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchIncidentComments());
+  dispatch(fetchIncidentEvacuations());
 };
 
 export const showSnackbar = () => (dispatch) => {

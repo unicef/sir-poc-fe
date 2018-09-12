@@ -25,14 +25,6 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/',
     method: 'GET'
   },
-  incidentsCommentsList: {
-    url: baseUrl + '/api/comments/',
-    method: 'GET'
-  },
-  addIncidentComment: {
-    url: baseUrl + '/api/comments/',
-    method: 'POST'
-  },
   newIncident: {
     url: baseUrl + '/api/incidents/',
     method: 'POST'
@@ -48,6 +40,22 @@ export const Endpoints = {
   editIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'
+  },
+  incidentsCommentsList: {
+    url: baseUrl + '/api/comments/',
+    method: 'GET'
+  },
+  addIncidentComment: {
+    url: baseUrl + '/api/comments/',
+    method: 'POST'
+  },
+  addIncidentEvacuation: {
+    url: baseUrl + '/api/incident_evacuations/',
+    method: 'POST'
+  },
+  incidentEvacuationsList: {
+    url: baseUrl + '/api/incident_evacuations/',
+    method: 'GET'
   },
   cities: {
     url: baseUrl + '/api/cities/',

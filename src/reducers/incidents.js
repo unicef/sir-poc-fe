@@ -1,11 +1,13 @@
 import {
+  ADD_INCIDENT_COMMENT_SUCCESS,
+  RECEIVE_INCIDENT_COMMENTS,
+  ADD_EVACUATION_SUCCESS,
   EDIT_INCIDENT_SUCCESS,
   ADD_INCIDENT_SUCCESS,
+  RECEIVE_EVACUATIONS,
   RECEIVE_INCIDENTS,
   RECEIVE_INCIDENT,
-  UPDATE_EVENT_IDS,
-  RECEIVE_INCIDENT_COMMENTS,
-  ADD_INCIDENT_COMMENT_SUCCESS
+  UPDATE_EVENT_IDS
 } from '../actions/incidents.js';
 
 import { createSelector } from 'reselect';
@@ -27,6 +29,11 @@ const incidents = (state = {list: [], comments: []}, action) => {
         ...state,
         list: getEditedList(state.list, action)
       };
+    case RECEIVE_EVACUATIONS:
+      return {
+        ...state,
+        evacuations: getRefreshedIncidents(state.evacuations, action.evacuations)
+      };
     case ADD_INCIDENT_SUCCESS:
       return {
         ...state,
@@ -36,6 +43,11 @@ const incidents = (state = {list: [], comments: []}, action) => {
       return {
         ...state,
         comments: [...state.comments, action.comment]
+      };
+    case ADD_EVACUATION_SUCCESS:
+      return {
+        ...state,
+        evacuations: [...state.evacuations, action.evacuation]
       };
     case EDIT_INCIDENT_SUCCESS:
       return {

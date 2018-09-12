@@ -114,12 +114,11 @@ class IncidentsController extends connect(store)(BaseController) {
   }
 
   navigateToHistoryList() {
-    // triggers history-controller to change to the list view
-    this.set('subrouteData.subsection', null);
+    updatePath(`incidents/history/${this.incidentId}/list`);
   }
 
   navigateToImpactDetail() {
-    this.set('subrouteData.subsection', null);
+    updatePath(`incidents/impact/${this.incidentId}/list`);
   }
 
   _stateChanged(state) {

@@ -49,6 +49,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'
   },
+  cities: {
+    url: baseUrl + '/api/cities/',
+    method: 'GET'
+  },
   regions: {
     url: baseUrl + '/api/regions/',
     method: 'GET'

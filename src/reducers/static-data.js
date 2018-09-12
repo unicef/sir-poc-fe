@@ -1,10 +1,14 @@
 import * as ACTIONS from '../actions/static-data.js';
 
 const defaultStaticData = {
+    personnelCategories: [],
     incidentCategories: [],
     threatCategories: [],
+    propertyTypes: [],
+    nationalities: [],
     criticalities: [],
     vehicleTypes: [],
+    unLocations: [],
     crashTypes: [],
     countries: [],
     agencies: [],
@@ -13,6 +17,7 @@ const defaultStaticData = {
     factors: [],
     targets: [],
     weapons: [],
+    cities: [],
     users: [],
     teams: []
 };
@@ -76,6 +81,11 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         agencies: action.agencies
+      };
+    case ACTIONS.RECEIVE_CITIES:
+      return {
+        ...state,
+        cities: action.cities
       };
     case ACTIONS.RECEIVE_REGIONS:
       return {

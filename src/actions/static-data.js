@@ -19,6 +19,7 @@ export const RECEIVE_REGIONS = 'RECEIVE_REGIONS';
 export const RECEIVE_FACTORS = 'RECEIVE_FACTORS';
 export const RECEIVE_TARGETS = 'RECEIVE_TARGETS';
 export const RECEIVE_WEAPONS = 'RECEIVE_WEAPONS';
+export const RECEIVE_CITIES = 'RECEIVE_CITIES';
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 
@@ -41,6 +42,7 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreFactors());
   dispatch(fetchAndStoreTargets());
   dispatch(fetchAndStoreWeapons());
+  dispatch(fetchAndStoreCities());
   dispatch(fetchAndStoreUsers());
   dispatch(fetchAndStoreTeams());
 };
@@ -133,6 +135,19 @@ const receiveRegions = (regions) => {
   return {
     type: RECEIVE_REGIONS,
     regions
+  };
+};
+
+export const fetchAndStoreCities = () => (dispatch, getState) => {
+  makeRequest(Endpoints.cities).then((result) => {
+    dispatch(receiveCities(result));
+  });
+};
+
+const receiveCities = (cities) => {
+  return {
+    type: RECEIVE_CITIES,
+    cities
   };
 };
 

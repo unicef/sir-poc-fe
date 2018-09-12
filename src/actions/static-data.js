@@ -3,6 +3,7 @@ import { Endpoints } from '../config/endpoints.js';
 
 export const RECEIVE_PERSONNEL_CATEGORIES = 'RECEIVE_PERSONNEL_CATEGORIES';
 export const RECEIVE_INCIDENT_CATEGORIES = 'RECEIVE_INCIDENT_CATEGORIES';
+export const RECEIVE_EVACUATION_IMPACTS = 'RECEIVE_EVACUATION_IMPACTS';
 export const RECEIVE_THREAT_CATEGORIES = 'RECEIVE_THREAT_CATEGORIES';
 export const RECEIVE_PROGRAMME_IMPACTS = 'RECEIVE_PROGRAMME_IMPACTS';
 export const RECEIVE_PROPERTY_IMPACTS = 'RECEIVE_PROPERTY_IMPACTS';
@@ -26,6 +27,7 @@ export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStorePersonnelCategories());
   dispatch(fetchAndStoreIncidentCategories());
+  dispatch(fetchAndStoreEvacuationImpacts());
   dispatch(fetchAndStoreThreatCategories());
   dispatch(fetchAndStoreProgrammeImpacts());
   dispatch(fetchAndStorePropertyImpacts());
@@ -244,6 +246,19 @@ const receiveProgrammeImpacts = (programmeImpacts) => {
   return {
     type: RECEIVE_PROGRAMME_IMPACTS,
     programmeImpacts
+  };
+};
+
+export const fetchAndStoreEvacuationImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.evacuationImpacts).then((result) => {
+    dispatch(receiveEvacuationImpacts(result));
+  });
+};
+
+const receiveEvacuationImpacts = (evacuationImpact) => {
+  return {
+    type: RECEIVE_EVACUATION_IMPACTS,
+    evacuationImpact
   };
 };
 

@@ -117,6 +117,10 @@ export const Endpoints = {
     url: baseUrl + '/api/impacts/programme/',
     method: 'GET'
   },
+  evacuationImpacts: {
+    url: baseUrl + '/api/impacts/evacuation/',
+    method: 'GET'
+  },
   personnelCategories: {
     url: baseUrl + '/api/person_categories/',
     method: 'GET'

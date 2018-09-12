@@ -50,6 +50,14 @@ const staticData = (state = defaultStaticData, action) => {
           programme: action.programmeImpacts
         }
       };
+    case ACTIONS.RECEIVE_EVACUATION_IMPACTS:
+      return {
+        ...state,
+        impacts: {
+          ...state.impacts,
+          evacuation: action.evacuationImpact
+        }
+      };
     case ACTIONS.RECEIVE_PROPERTY_IMPACTS:
       return {
         ...state,

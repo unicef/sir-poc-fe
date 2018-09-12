@@ -14,7 +14,6 @@ import './styles/esmm-shared-styles.js';
 /**
  * @polymer
  * @mixinFunction
- * @appliesMixin EsmmMixins.CommonFunctionality
  */
 const DropdownRequiredMixins = CommonFunctionality(PolymerElement);
 
@@ -23,7 +22,6 @@ const DropdownRequiredMixins = CommonFunctionality(PolymerElement);
  *
  * @customElement
  * @polymer
- * @appliesMixin DropdownRequiredMixins
  * @demo demo/index.html
  */
 class EtoolsDropdown extends DropdownRequiredMixins {

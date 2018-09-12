@@ -1,3 +1,8 @@
+/**
+ *
+ * @polymer
+ * @mixinFunction
+ */
 const DateMixin = baseClass => class extends baseClass {
   prettyDate(dateString, format, placeholder) {
     let date = this._convertDate(dateString);

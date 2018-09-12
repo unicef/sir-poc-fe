@@ -8,6 +8,7 @@ const defaultStaticData = {
     crashTypes: [],
     countries: [],
     agencies: [],
+    impacts: {},
     regions: [],
     factors: [],
     targets: [],
@@ -31,6 +32,30 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         criticalities: action.criticalities
+      };
+    case ACTIONS.RECEIVE_PROGRAMME_IMPACTS:
+      return {
+        ...state,
+        impacts: {
+          ...state.impacts,
+          programme: action.programmeImpacts
+        }
+      };
+    case ACTIONS.RECEIVE_PROPERTY_IMPACTS:
+      return {
+        ...state,
+        impacts: {
+          ...state.impacts,
+          property: action.propertyImpacts
+        }
+      };
+    case ACTIONS.RECEIVE_PERSON_IMPACTS:
+      return {
+        ...state,
+        impacts: {
+          ...state.impacts,
+          person: action.personImpacts
+        }
       };
     case ACTIONS.RECEIVE_VEHICLE_TYPES:
       return {
@@ -81,6 +106,26 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         teams: action.teams
+      };
+    case ACTIONS.RECEIVE_UN_LOCATIONS:
+      return {
+        ...state,
+        unLocations: action.unLocations
+      };
+    case ACTIONS.RECEIVE_PROPERTY_TYPES:
+      return {
+        ...state,
+        propertyTypes: action.propertyTypes
+      };
+    case ACTIONS.RECEIVE_PERSONNEL_CATEGORIES:
+      return {
+        ...state,
+        personnelCategories: action.personnelCategories
+      };
+    case ACTIONS.RECEIVE_NATIONALITIES:
+      return {
+        ...state,
+        nationalities: action.nationalities
       };
     default:
       return state;

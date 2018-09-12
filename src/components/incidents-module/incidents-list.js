@@ -331,6 +331,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _queryParamsChanged(params) {
+    console.log(params);
     if (params && this.visible ) {
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
@@ -341,7 +342,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       }
 
       if (params.country && params.country !== this.filters.country) {
-        this.filters.country = params.country;
+        this.set('filters.country', params.country);
       }
 
       if (params.start) {
@@ -522,7 +523,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       q: this.filters.q,
       event: this.filters.event,
       target: this.filters.target,
-      thereat_category: this.filters.threatCategory
+      threat_category: this.filters.threatCategory
     });
   }
 
@@ -536,7 +537,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       event: this.filters.event,
       format: docType,
       target: this.filters.target,
-      thereat_category: this.filters.threatCategory
+      threat_category: this.filters.threatCategory
     });
   }
 

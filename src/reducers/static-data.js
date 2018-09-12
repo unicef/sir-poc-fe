@@ -19,7 +19,11 @@ const defaultStaticData = {
     weapons: [],
     cities: [],
     users: [],
-    teams: []
+    teams: [],
+    genders: [
+      {id: 'male', name: 'Male'},
+      {id: 'female', name: 'Female'}
+    ]
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {

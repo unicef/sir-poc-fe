@@ -107,7 +107,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                         id="gender"
                         label="Gender"
                         readonly="[[readonly]]"
-                        options="[[genders]]"
+                        options="[[staticData.genders]]"
                         selected="{{data.gender}}">
               </etools-dropdown-lite>
             </div>
@@ -255,15 +255,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
           {id: 'On mission', name: 'On mission'},
           {id: 'On leave', name: 'On leave'}
         ]
-      },
-      genders: {
-        type: Array,
-        value: [
-          {id: 'male', name: 'Male'},
-          {id: 'female', name: 'Female'}
-        ]
       }
-
     };
   }
 

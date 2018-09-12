@@ -92,7 +92,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                 readonly="[[readonly]]"
                                 label="Incident date"
                                 required auto-validate
-                                error-message="Incident date is required"></datepicker-lite>
+                                error-message="Incident date is required">
+                </datepicker-lite>
               </div>
               <div class="col col-3">
                 <paper-input id="incidentTime"
@@ -521,12 +522,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
     this.events = state.events.list.map((elem) => {
       elem.name = elem.description;
-      return elem;
-    });
-
-    // TODO: this is TEMPORARY! user data should be more properly displayed
-    this.staticData.users = state.staticData.users.map((elem) => {
-      elem.name = elem.first_name + ' ' + elem.last_name;
       return elem;
     });
   }

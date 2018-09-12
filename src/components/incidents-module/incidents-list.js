@@ -99,7 +99,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                               label="Incident Category"
                               enable-none-option
                               options="[[staticData.incidentCategories]]"
-                              selected="{{filters.incidentCategory}}" 
+                              selected="{{filters.incidentCategory}}"
                               selected-item="{{selectedIncidentCategory}}">
         </etools-dropdown-lite>
 
@@ -143,7 +143,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
               <paper-item doc-type="xlsx">XLSX</paper-item>
           </paper-listbox>
         </paper-menu-button>
-        
+
       </div>
 
       <div class="card list">
@@ -188,7 +188,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when 
+                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when
                                           online to submit it.</span>
                   </etools-info-tooltip>
                 </template>

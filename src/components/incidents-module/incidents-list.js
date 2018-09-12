@@ -331,7 +331,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _queryParamsChanged(params) {
-    console.log(params);
     if (params && this.visible ) {
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);

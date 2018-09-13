@@ -2,13 +2,15 @@
 @license
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../../../../redux/store.js';
 import '@polymer/iron-icons/image-icons.js';
 import 'etools-data-table';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
 
-export class EvacuationsList extends PolymerElement {
+export class EvacuationsList extends connect(store)(PolymerElement) {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
@@ -63,6 +65,11 @@ export class EvacuationsList extends PolymerElement {
         value: []
       }
     };
+  }
+
+  _stateChanged(state) {
+    let incidentId = Number(state.app.locationInfo.incidentId);
+    this.evacuationsList = state.incidents.evacuations.filter(elem => elem.incident_id === incidentId);
   }
 }
 

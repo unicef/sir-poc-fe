@@ -137,10 +137,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
     return id;
   }
 
-  _stateChanged(state) {
-    this.set('state', state);
-  }
-
   _idChanged(newId) {
     // TODO: add checks so we don't fetch this info except when this section is active
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));

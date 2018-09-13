@@ -110,7 +110,7 @@ const addCommentOnline = comment => (dispatch, getState) => {
   });
 };
 
-export const addEvacuationOnline = evacuation => (dispatch, getState) => {
+const addEvacuationOnline = evacuation => (dispatch, getState) => {
   return makeRequest(Endpoints.addIncidentEvacuation, evacuation).then((result) => {
     dispatch(addEvacuationSuccess(result));
     return true;
@@ -118,6 +118,13 @@ export const addEvacuationOnline = evacuation => (dispatch, getState) => {
     dispatch(serverError(error.response));
     return false;
   });
+};
+
+const addEvacuationOffline = (newEvacuation, dispatch) => {
+  newEvacuation.id = generateRandomHash();
+  newEvacuation.unsynced = true;
+  dispatch(addEvacuationSuccess(newEvacuation));
+  return true;
 };
 
 export const fetchIncidentEvacuations = () => (dispatch, getState) => {
@@ -154,6 +161,14 @@ const editIncidentOffline = (incident, dispatch) => {
   incident.unsynced = true;
   updatePath('/incidents/list/');
   dispatch(editIncidentSuccess(incident, incident.id));
+};
+
+export const addEvacuation = newEvacuation => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return addEvacuationOffline(newEvacuation, dispatch);
+  } else {
+    return addEvacuationOnline(newEvacuation, dispatch);
+  }
 };
 
 export const addIncident = newIncident => (dispatch, getState) => {

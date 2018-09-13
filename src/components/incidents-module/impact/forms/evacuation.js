@@ -7,7 +7,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 
-import { addEvacuationOnline } from '../../../../actions/incidents.js';
+import { addEvacuation } from '../../../../actions/incidents.js';
 import { store } from '../../../../redux/store.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/datepicker-lite.js';
@@ -193,7 +193,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
   }
 
   saveEvacuation() {
-    store.dispatch(addEvacuationOnline(this.data));
+    store.dispatch(addEvacuation(this.data));
   }
 }
 

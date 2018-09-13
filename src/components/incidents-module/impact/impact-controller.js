@@ -54,28 +54,14 @@ export class ImpactController extends connect(store)(PolymerElement) {
         pattern="/:id"
         data="{{subrouteData}}">
       </app-route>
-      <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
-        <div name="un-personel">
-          <un-personnel-form impact-id="[[subrouteData.id]]"></un-personnel-form>
-        </div>
-        <div name="non-un">
-          <non-un-personnel-form impact-id="[[subrouteData.id]]"></non-un-personnel-form>
-        </div>
-        <div name="evacuation">
-          <evacuation-form impact-id="[[subrouteData.id]]"></evacuation-form>
-        </div>
-        <div name="property">
-          <property-form impact-id="[[subrouteData.id]]"></property-form>
-        </div>
-        <div name="premise">
-          <premise-form impact-id="[[subrouteData.id]]"></premise-form>
-        </div>
-        <div name="programme">
-          <programme-form impact-id="[[subrouteData.id]]"></programme-form>
-        </div>
-        <div name="list">
-          <impacts-view impact-id="[[subrouteData.id]]"></impacts-view>
-        </div>
+      <iron-pages selected="[[routeData.section]]" attr-for-selected="name" selected-attribute="visible" role="main">
+        <un-personnel-form name="un-personel" impact-id="[[subrouteData.id]]"></un-personnel-form>
+        <non-un-personnel-form name="non-un" impact-id="[[subrouteData.id]]"></non-un-personnel-form>
+        <evacuation-form name="evacuation" impact-id="[[subrouteData.id]]"></evacuation-form>
+        <property-form name="property" impact-id="[[subrouteData.id]]"></property-form>
+        <premise-form name="premise" impact-id="[[subrouteData.id]]"></premise-form>
+        <programme-form name="programme" impact-id="[[subrouteData.id]]"></programme-form>
+        <impacts-view name="list" impact-id="[[subrouteData.id]]"></impacts-view>
       </iron-pages>
     `;
   }

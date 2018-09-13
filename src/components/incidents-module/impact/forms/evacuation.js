@@ -10,6 +10,10 @@ import '@polymer/paper-input/paper-textarea.js';
 import { addEvacuation, editEvacuation } from '../../../../actions/incidents.js';
 import { store } from '../../../../redux/store.js';
 import { updatePath } from '../../../common/navigation-helper.js';
+import {
+    resetFieldsValidations,
+    validateFields
+  } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/datepicker-lite.js';
 import '../../../styles/shared-styles.js';
@@ -178,6 +182,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     return {
       staticData: Array,
       impactId: String,
+      visible: Boolean,
       readonly: {
         type: Boolean,
         value: false
@@ -188,7 +193,24 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
       },
       isNew: {
         type: Boolean,
-        computed: '_computeIsNew(id)'
+        computed: '_computeIsNew(impactId)'
+      },
+      fieldsToValidateSelectors: {
+        type: Array,
+        value: [
+          '#agency',
+          '#date',
+          '#noPersInternational',
+          '#noDepInternational',
+          '#fromCountry',
+          '#fromCity',
+          '#noPersNational',
+          '#noDepNational',
+          '#toCountry',
+          '#toCity',
+          '#category',
+          '#description'
+        ]
       }
     };
   }
@@ -218,17 +240,26 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     }
   }
 
+  resetValidations() {
+    if(this.visible) {
+      resetFieldsValidations(this, this.fieldsToValidateSelectors);
+    }
+  }
+
   _computeIsNew(id) {
     return id === 'new';
   }
 
   _idChanged(id) {
     if (!id || this.isNew) {
+      this.data = {};
+      this.resetValidations();
       return;
     }
 
     let currentEvacuation = this.evacuations.find(ev => ev.id === Number(id));
     this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
+    this.resetValidations();
   }
 
 }

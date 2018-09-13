@@ -119,7 +119,7 @@ const addCommentOnline = comment => (dispatch, getState) => {
   });
 };
 
-const addEvacuationOnline = evacuation => (dispatch, getState) => {
+const addEvacuationOnline = (evacuation, dispatch) => {
   return makeRequest(Endpoints.addIncidentEvacuation, evacuation).then((result) => {
     dispatch(addEvacuationSuccess(result));
     return true;

@@ -13,7 +13,7 @@ export const IncidentModel = {
   last_modify_user: 1,
   primary_person: {
     date_of_birth: '1970-01-01',
-    nationality: '-',
+    nationality: 1,
     gender: 'male',
     job_title: '-',
     type_of_contract: '-',

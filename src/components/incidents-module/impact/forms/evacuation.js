@@ -7,14 +7,16 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 
-import { addEvacuation, editEvacuation } from '../../../../actions/incidents.js';
+import { addEvacuation, editEvacuation } from '../../../../actions/incident-impacts.js';
 import { store } from '../../../../redux/store.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
 import {
     resetFieldsValidations,
     validateFields
   } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
+import '../../../common/errors-box.js';
 import '../../../common/datepicker-lite.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -29,11 +31,15 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
   static get is() {
     return 'evacuation-form';
   }
+
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles form-fields-styles">
         :host {
           @apply --layout-vertical;
+        }
+        errors-box {
+          margin: 0 24px;
         }
       </style>
 
@@ -237,6 +243,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
 
     if (result === true) {
       updatePath(`incidents/impact/${this.data.incident_id}/`);
+    }
+    if (result === false) {
+      scrollToTop();
     }
   }
 

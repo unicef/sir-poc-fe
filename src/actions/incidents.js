@@ -8,11 +8,8 @@ import { serverError, PLAIN_ERROR } from './errors.js';
 
 export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
 export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
-export const EDIT_EVACUATION_SUCCESS = 'EDIT_EVACUATION_SUCCESS';
-export const ADD_EVACUATION_SUCCESS = 'ADD_EVACUATION_SUCCESS';
 export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
 export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
-export const RECEIVE_EVACUATIONS = 'RECEIVE_EVACUATIONS';
 export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
 export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
 export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
@@ -37,28 +34,6 @@ const addCommentSuccess = (comment) => {
   return {
     type: ADD_INCIDENT_COMMENT_SUCCESS,
     comment
-  };
-};
-
-const receiveIncidentEvacuations = (evacuations) => {
-  return {
-    type: RECEIVE_EVACUATIONS,
-    evacuations
-  };
-};
-
-const addEvacuationSuccess = (evacuation) => {
-  return {
-    type: ADD_EVACUATION_SUCCESS,
-    evacuation
-  };
-};
-
-const editEvacuationSuccess = (evacuation, id) => {
-  return {
-    type: EDIT_EVACUATION_SUCCESS,
-    evacuation,
-    id
   };
 };
 
@@ -117,68 +92,6 @@ const addCommentOnline = comment => (dispatch, getState) => {
     dispatch(serverError(error.response));
     return false;
   });
-};
-
-const addEvacuationOnline = (evacuation, dispatch) => {
-  return makeRequest(Endpoints.addIncidentEvacuation, evacuation).then((result) => {
-    dispatch(addEvacuationSuccess(result));
-    return true;
-  }).catch((error) => {
-    dispatch(serverError(error.response));
-    return false;
-  });
-};
-
-const addEvacuationOffline = (newEvacuation, dispatch) => {
-  newEvacuation.id = generateRandomHash();
-  newEvacuation.unsynced = true;
-  dispatch(addEvacuationSuccess(newEvacuation));
-  return true;
-};
-
-export const addEvacuation = newEvacuation => (dispatch, getState) => {
-  if (getState().app.offline === true) {
-    return addEvacuationOffline(newEvacuation, dispatch);
-  } else {
-    return addEvacuationOnline(newEvacuation, dispatch);
-  }
-};
-
-const editEvacuationOnline = (evacuation, dispatch, state) => {
-  let origEvacuation = state.incidents.evacuations.find(elem => elem.id === evacuation.id);
-  let modifiedFields = objDiff(origEvacuation, evacuation);
-  let endpoint = prepareEndpoint(Endpoints.editIncidentEvacuation, {id: evacuation.id});
-
-  return makeRequest(endpoint, modifiedFields).then((result) => {
-    dispatch(fetchIncidentEvacuations());
-    return true;
-  }).catch((error) => {
-    dispatch(serverError(error.response));
-    scrollToTop();
-    return false;
-  });
-};
-
-const editEvacuationOffline = (evacuation, dispatch) => {
-  evacuation.unsynced = true;
-  dispatch(editEvacuationSuccess(evacuation, evacuation.id));
-  return true;
-};
-
-export const editEvacuation = evacuation => (dispatch, getState) => {
-  if (getState().app.offline === true || evacuation.unsynced) {
-    return editEvacuationOffline(evacuation, dispatch);
-  } else {
-    return editEvacuationOnline(evacuation, dispatch, getState());
-  }
-};
-
-export const fetchIncidentEvacuations = () => (dispatch, getState) => {
-  if (getState().app.offline !== true) {
-    makeRequest(Endpoints.incidentEvacuationsList).then((result) => {
-      dispatch(receiveIncidentEvacuations(result));
-    });
-  }
 };
 
 const addIncidentOffline = (newIncident, dispatch) => {

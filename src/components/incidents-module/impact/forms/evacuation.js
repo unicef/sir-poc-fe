@@ -176,6 +176,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
   static get properties() {
     return {
       staticData: Array,
+      impactId: String,
       readonly: {
         type: Boolean,
         value: false
@@ -184,17 +185,45 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
         type: Object,
         value: {}
       },
+      isNew: {
+        type: Boolean,
+        computed: '_computeIsNew(id)'
+      }
     };
   }
 
+  static get observers() {
+    return [
+      '_idChanged(impactId, evacuations)'
+    ];
+  }
   _stateChanged(state) {
     this.staticData = state.staticData;
+    this.evacuations = state.incidents.evacuations;
     this.data.incident_id = state.app.locationInfo.incidentId;
   }
 
   saveEvacuation() {
-    store.dispatch(addEvacuation(this.data));
+    if (this.isNew) {
+      store.dispatch(addEvacuation(this.data));
+    } else {
+      console.log('Edit Evacuation pending implementation');
+    }
   }
+
+  _computeIsNew(id) {
+    return id === 'new';
+  }
+
+  _idChanged(id) {
+    if (!id || this.isNew) {
+      return;
+    }
+
+    let currentEvacuation = this.evacuations.find(ev => ev.id === Number(id));
+    this.data = currentEvacuation || {};
+  }
+
 }
 
 window.customElements.define(EvacuationForm.is, EvacuationForm);

@@ -143,27 +143,27 @@ export class ImpactsView extends connect(store)(PolymerElement) {
   }
 
   _addUnPersonnel() {
-    updatePath(`incidents/impact/${this.incidentId}/un-personel`);
+    updatePath(`incidents/impact/${this.incidentId}/un-personel/new/`);
   }
 
   _addEvacuation() {
-    updatePath(`incidents/impact/${this.incidentId}/evacuation`);
+    updatePath(`incidents/impact/${this.incidentId}/evacuation/new/`);
   }
 
   _addProgramme() {
-    updatePath(`incidents/impact/${this.incidentId}/programme`);
+    updatePath(`incidents/impact/${this.incidentId}/programme/new/`);
   }
 
   _addProperty() {
-    updatePath(`incidents/impact/${this.incidentId}/property`);
+    updatePath(`incidents/impact/${this.incidentId}/property/new/`);
   }
 
   _addPremise() {
-    updatePath(`incidents/impact/${this.incidentId}/premise`);
+    updatePath(`incidents/impact/${this.incidentId}/premise/new/`);
   }
 
   _addNonUn() {
-    updatePath(`incidents/impact/${this.incidentId}/non-un`);
+    updatePath(`incidents/impact/${this.incidentId}/non-un/new/`);
   }
 
   _stateChanged(state) {

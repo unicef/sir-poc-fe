@@ -46,29 +46,35 @@ export class ImpactController extends connect(store)(PolymerElement) {
       <app-route
         route="{{route}}"
         pattern="/:section"
-        data="{{routeData}}">
+        data="{{routeData}}"
+        tail="{{subroute}}">
+      </app-route>
+      <app-route
+        route="{{subroute}}"
+        pattern="/:id"
+        data="{{subrouteData}}">
       </app-route>
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
         <div name="un-personel">
-          <un-personnel-form></un-personnel-form>
+          <un-personnel-form impact-id="[[subrouteData.id]]"></un-personnel-form>
         </div>
         <div name="non-un">
-          <non-un-personnel-form></non-un-personnel-form>
+          <non-un-personnel-form impact-id="[[subrouteData.id]]"></non-un-personnel-form>
         </div>
         <div name="evacuation">
-          <evacuation-form></evacuation-form>
+          <evacuation-form impact-id="[[subrouteData.id]]"></evacuation-form>
         </div>
         <div name="property">
-          <property-form></property-form>
+          <property-form impact-id="[[subrouteData.id]]"></property-form>
         </div>
         <div name="premise">
-          <premise-form></premise-form>
+          <premise-form impact-id="[[subrouteData.id]]"></premise-form>
         </div>
         <div name="programme">
-          <programme-form></programme-form>
+          <programme-form impact-id="[[subrouteData.id]]"></programme-form>
         </div>
         <div name="list">
-          <impacts-view></impacts-view>
+          <impacts-view impact-id="[[subrouteData.id]]"></impacts-view>
         </div>
       </iron-pages>
     `;
@@ -76,7 +82,9 @@ export class ImpactController extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      subroute: Object,
       routeData: Object,
+      subrouteData: Object,
       incidentId: {
         type: Number,
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',

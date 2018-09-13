@@ -3,7 +3,8 @@
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import '@polymer/iron-icons/image-icons.js';
+import '@polymer/iron-icons/editor-icons.js';
+
 import 'etools-data-table';
 import { getNameFromId } from '../../../common/utils.js';
 import { store } from '../../../../redux/store.js';
@@ -83,9 +84,11 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
                 </span>
               </span>
               <span class="col-data col-3" data-col-header-label="Actions">
-                <span>
-                <!-- TODO -->
-                </span>
+                  <a href="/incidents/impact/1/evacuation/[[item.id]]/"
+                      title="Edit evacuation"
+                      hidden$="[[_notEditable(item, offline)]]">
+                    <iron-icon icon="editor:mode-edit"></iron-icon>
+                  </a>
               </span>
             </div>
           </etools-data-table-row>
@@ -101,6 +104,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      offline: Boolean,
       evacuationsList: {
         type: Array,
         value: []
@@ -116,6 +120,11 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     let incidentId = Number(state.app.locationInfo.incidentId);
     this.evacuationsList = state.incidents.evacuations.filter(elem => elem.incident_id === incidentId);
+    this.offline = state.app.offline;
+  }
+
+  _notEditable(item, offline) {
+    return offline && !item.unsynced;
   }
 }
 

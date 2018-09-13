@@ -27,7 +27,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
 
       <div hidden$="[[!evacuationsList.length]]">
         <etools-data-table-header id="listHeader" no-title>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-3">
             Impact
           </etools-data-table-column>
           <etools-data-table-column class="col-4">
@@ -45,7 +45,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
           <etools-data-table-column class="col-1">
             D(N)
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-2">
             Actions
           </etools-data-table-column>
         </etools-data-table-header>
@@ -53,7 +53,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
         <template id="rows" is="dom-repeat" items="[[evacuationsList]]">
           <etools-data-table-row no-collapse>
             <div slot="row-data">
-              <span class="col-data col-2" data-col-header-label="Impact">
+              <span class="col-data col-3" data-col-header-label="Impact">
                 <span class="truncate">
                   [[getNameFromId(item.impact, 'impacts.evacuation')]]
                 </span>
@@ -83,7 +83,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
                   [[item.number_national_dependants]]
                 </span>
               </span>
-              <span class="col-data col-3" data-col-header-label="Actions">
+              <span class="col-data col-2" data-col-header-label="Actions">
                   <a href="/incidents/impact/1/evacuation/[[item.id]]/"
                       title="Edit evacuation"
                       hidden$="[[_notEditable(item, offline)]]">

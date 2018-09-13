@@ -60,14 +60,16 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                         options="[[staticData.agencies]]"
                         selected="{{data.agency}}"
                         required auto-validate
-                        error-message="Agency is required">
+                        error-message="This is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-6">
               <datepicker-lite id="date"
                               value="{{data.date}}"
                               readonly="[[readonly]]"
-                              label="Date">
+                              label="Date"
+                              required auto-validate
+                              error-message="This is required">
               </datepicker-lite>
             </div>
           </div>
@@ -79,7 +81,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="No. of persons international"
-                          value="{{data.number_international}}">
+                          value="{{data.number_international}}"
+                          required auto-validate
+                          error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
@@ -89,7 +93,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="No. of dependants international"
-                          value="{{data.number_international_dependants}}">
+                          value="{{data.number_international_dependants}}"
+                          required auto-validate
+                          error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
@@ -97,7 +103,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                                     label="From country"
                                     readonly="[[readonly]]"
                                     options="[[staticData.countries]]"
-                                    selected="{{data.from_country}}">
+                                    selected="{{data.from_country}}"
+                                    required auto-validate
+                                    error-message="This is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
@@ -105,7 +113,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                                     label="From city"
                                     readonly="[[readonly]]"
                                     options="[[staticData.cities]]"
-                                    selected="{{data.from_city}}">
+                                    selected="{{data.from_city}}"
+                                    required auto-validate
+                                    error-message="This is required">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -117,7 +127,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="No. of persons national"
-                          value="{{data.number_national}}">
+                          value="{{data.number_national}}"
+                          required auto-validate
+                          error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
@@ -127,7 +139,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="No. of dependants national"
-                          value="{{data.number_national_dependants}}">
+                          value="{{data.number_national_dependants}}"
+                          required auto-validate
+                          error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
@@ -135,7 +149,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                                     label="To country"
                                     readonly="[[readonly]]"
                                     options="[[staticData.countries]]"
-                                    selected="{{data.to_country}}">
+                                    selected="{{data.to_country}}"
+                                    required auto-validate
+                                    error-message="This is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
@@ -143,7 +159,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
                                     label="To city"
                                     readonly="[[readonly]]"
                                     options="[[staticData.cities]]"
-                                    selected="{{data.to_city}}">
+                                    selected="{{data.to_city}}"
+                                    required auto-validate
+                                    error-message="This is required">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -234,7 +252,9 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
 
   async saveEvacuation() {
     let result;
-
+    if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      return;
+    }
     if (this.isNew) {
       result = await store.dispatch(addEvacuation(this.data));
     } else {

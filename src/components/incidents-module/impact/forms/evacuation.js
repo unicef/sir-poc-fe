@@ -7,8 +7,9 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 
-import { addEvacuation } from '../../../../actions/incidents.js';
+import { addEvacuation, editEvacuation } from '../../../../actions/incidents.js';
 import { store } from '../../../../redux/store.js';
+import { updatePath } from '../../../common/navigation-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/datepicker-lite.js';
 import '../../../styles/shared-styles.js';
@@ -203,11 +204,17 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     this.data.incident_id = state.app.locationInfo.incidentId;
   }
 
-  saveEvacuation() {
+  async saveEvacuation() {
+    let result;
+
     if (this.isNew) {
-      store.dispatch(addEvacuation(this.data));
+      result = await store.dispatch(addEvacuation(this.data));
     } else {
-      console.log('Edit Evacuation pending implementation');
+      result = await store.dispatch(editEvacuation(this.data));
+    }
+
+    if (result === true) {
+      updatePath(`incidents/impact/${this.data.incident_id}/`);
     }
   }
 
@@ -221,7 +228,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     }
 
     let currentEvacuation = this.evacuations.find(ev => ev.id === Number(id));
-    this.data = currentEvacuation || {};
+    this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
   }
 
 }

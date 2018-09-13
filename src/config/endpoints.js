@@ -53,6 +53,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_evacuations/',
     method: 'POST'
   },
+  editIncidentEvacuation: {
+    url: baseUrl + '/api/incident_evacuations/<%=id%>/',
+    method: 'PATCH'
+  },
   incidentEvacuationsList: {
     url: baseUrl + '/api/incident_evacuations/',
     method: 'GET'

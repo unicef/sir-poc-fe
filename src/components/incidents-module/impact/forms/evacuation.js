@@ -7,7 +7,11 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 
-import { addEvacuation, editEvacuation } from '../../../../actions/incident-impacts.js';
+import {
+    addEvacuation,
+    editEvacuation,
+    syncEvacuation
+  } from '../../../../actions/incident-impacts.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -207,6 +211,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
       staticData: Array,
       impactId: String,
       visible: Boolean,
+      offline: Boolean,
       readonly: {
         type: Boolean,
         value: false
@@ -241,10 +246,11 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
 
   static get observers() {
     return [
-      '_idChanged(impactId, evacuations)'
+      '_idChanged(impactId)'
     ];
   }
   _stateChanged(state) {
+    this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.evacuations = state.incidents.evacuations;
     this.data.incident_id = state.app.locationInfo.incidentId;
@@ -257,7 +263,11 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     }
     if (this.isNew) {
       result = await store.dispatch(addEvacuation(this.data));
-    } else {
+    }
+    else if (this.data.unsynced && !this.offline) {
+      result = await store.dispatch(syncEvacuation(this.data));
+    }
+    else {
       result = await store.dispatch(editEvacuation(this.data));
     }
 
@@ -286,7 +296,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
       return;
     }
 
-    let currentEvacuation = this.evacuations.find(ev => ev.id === Number(id));
+    let currentEvacuation = this.evacuations.find(ev => '' + ev.id === id);
     this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
     this.resetValidations();
   }

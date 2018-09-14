@@ -9,6 +9,7 @@ import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 
+import '../../common/errors-box.js';
 import './lists/non-un-personnel.js';
 import './lists/un-personnel.js';
 import './lists/evacuations.js';
@@ -45,6 +46,10 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
+        <div class="layout-horizontal">
+          <errors-box></errors-box>
+        </div>
+
         <h3>Personnel</h3>
         <hr>
         <div class="right">

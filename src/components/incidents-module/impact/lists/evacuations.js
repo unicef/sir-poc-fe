@@ -84,7 +84,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
                 </span>
               </span>
               <span class="col-data col-2" data-col-header-label="Actions">
-                  <a href="/incidents/impact/1/evacuation/[[item.id]]/"
+                  <a href="/incidents/impact/[[item.incident_id]]/evacuation/[[item.id]]/"
                       title="Edit evacuation"
                       hidden$="[[_notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>

@@ -11,7 +11,7 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import '../common/datepicker-lite.js';
+import 'calendar-lite/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import { validateFields, resetFieldsValidations } from '../common/validations-helper.js';
@@ -89,7 +89,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <div class="col col-3">
                 <datepicker-lite id="incidentDate"
                                 value="{{incident.incident_date}}"
-                                readonly="[[readonly]]"
                                 label="Incident date"
                                 required auto-validate
                                 error-message="Incident date is required"></datepicker-lite>

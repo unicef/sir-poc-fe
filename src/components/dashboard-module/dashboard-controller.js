@@ -1,33 +1,38 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../redux/store.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {store} from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
-import '../common/datepicker-lite.js';
+import 'calendar-lite/datepicker-lite.js';
 import './dashboard-list.js';
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
         :host {
           @apply --layout-vertical;
         }
+
         .label {
           padding-top: 28px;
         }
+
         .large-text {
           width: 100%;
           font-size: 72px;
         }
+
         .center-text {
           text-align: center;
         }
+
         datepicker-lite {
-          --paper-input-container-shared-input-style: {
-            text-align: center;
-            width: calc(100% + 32px);
+          --paper-input-container: {
+            margin: 0 auto;
+            max-width: 160px;
           }
         }
       </style>
@@ -35,17 +40,17 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       <div class="card">
         <div class="row-h">
           <div class="col col-6 center-text">
-            <div class="large-text"> [[filteredEvents.length]] </div>
+            <div class="large-text"> [[filteredEvents.length]]</div>
             Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
           <div class="col col-6 center-text">
-            <div class="large-text"> [[filteredIncidents.length]] </div>
+            <div class="large-text"> [[filteredIncidents.length]]</div>
             Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
         </div>
 
         <div class="row-h">
-          <div class="col col-4"> </div>
+          <div class="col col-4"></div>
           <div class="col col-4">
             <div class="center-text">
               <p> Show stastistics between </p>
@@ -65,7 +70,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
               </datepicker-lite>
             </div>
           </div>
-          <div class="col col-4"> </div>
+          <div class="col col-4"></div>
         </div>
 
         <div class="row-h">

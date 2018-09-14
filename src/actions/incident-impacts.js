@@ -31,6 +31,9 @@ const editEvacuationSuccess = (evacuation, id) => {
   };
 };
 
+export const syncIncidentImpacts = (newId, oldId) => (dispatch, getState) =>  {
+  dispatch(syncEvacuations(newId, oldId));
+}
 
 const addEvacuationOnline = (evacuation, dispatch) => {
   return makeRequest(Endpoints.addIncidentEvacuation, evacuation).then((result) => {
@@ -50,7 +53,7 @@ const addEvacuationOffline = (newEvacuation, dispatch) => {
 };
 
 export const addEvacuation = newEvacuation => (dispatch, getState) => {
-  if (getState().app.offline === true) {
+  if (getState().app.offline || isNaN(newEvacuation.incident_id)) {
     return addEvacuationOffline(newEvacuation, dispatch);
   } else {
     return addEvacuationOnline(newEvacuation, dispatch);
@@ -92,3 +95,24 @@ export const fetchIncidentEvacuations = () => (dispatch, getState) => {
     });
   }
 };
+const syncEvacuation = (evacuation) => {
+  return makeRequest(Endpoints.addIncidentEvacuation, evacuation).then((result) => {
+    // dispatch(addEvacuationSuccess(result));
+    return true;
+  }).catch((error) => {
+    // dispatch(serverError(error.response));
+    return false;
+  });
+}
+const syncEvacuations = (newId, oldId) => (dispatch, getState) =>  {
+  let evacuations = getState().incidents.evacuations.filter(ev => ev.incident_id == oldId);
+  let operations = [];
+  evacuations.forEach(evacuation => {
+    evacuation.incident_id = newId;
+    operations.push(syncEvacuation(evacuation));
+  });
+
+  Promise.all(operations).then((results) => {
+    console.log('sync results', results);
+  });
+}

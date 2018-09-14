@@ -5,7 +5,7 @@ import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { serverError, PLAIN_ERROR } from './errors.js';
-
+import { syncIncidentImpacts } from './incident-impacts.js';
 export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
 export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
 export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
@@ -149,6 +149,7 @@ export const editIncident = incident => (dispatch, getState) => {
 export const syncIncidentOnList = newIncident => (dispatch, getState) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(editIncidentSuccess(result, newIncident.id));
+    dispatch(syncIncidentImpacts(result.id, newIncident.id));
     return true;
   }).catch((error) => {
     dispatch(syncIncidentFail());
@@ -161,6 +162,7 @@ export const syncIncident = newIncident => (dispatch, getState) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     updatePath('/incidents/list/');
     dispatch(editIncidentSuccess(result, newIncident.id));
+    dispatch(syncIncidentImpacts(result.id, newIncident.id));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));

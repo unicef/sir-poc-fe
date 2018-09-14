@@ -51,7 +51,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[evacuationsList]]">
-          <etools-data-table-row no-collapse>
+          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]">
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Impact">
                 <span class="truncate">
@@ -118,8 +118,8 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    let incidentId = Number(state.app.locationInfo.incidentId);
-    this.evacuationsList = state.incidents.evacuations.filter(elem => elem.incident_id === incidentId);
+    let incidentId = state.app.locationInfo.incidentId;
+    this.evacuationsList = state.incidents.evacuations.filter(elem => '' + elem.incident_id === incidentId);
     this.offline = state.app.offline;
   }
 

@@ -45,7 +45,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
           <etools-data-table-column class="col-1">
             D(N)
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
             Actions
           </etools-data-table-column>
         </etools-data-table-header>
@@ -83,7 +83,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
                   [[item.number_national_dependants]]
                 </span>
               </span>
-              <span class="col-data col-2" data-col-header-label="Actions">
+              <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/incidents/impact/[[item.incident_id]]/evacuation/[[item.id]]/"
                       title="Edit evacuation"
                       hidden$="[[_notEditable(item, offline)]]">

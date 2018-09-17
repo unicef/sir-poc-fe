@@ -21,7 +21,6 @@ import {
   } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
-import '../../../common/datepicker-lite.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
@@ -94,7 +93,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
             </div>
 
           </div>
-        <filedset>
+        </filedset>
         <fieldset>
           <legend><h3>Impact details</h3></legend>
           <div>
@@ -215,8 +214,10 @@ export class PropertyForm extends connect(store)(PolymerElement) {
     }
 
     let workingItem = this.propertiesList.find(item => '' + item.id === id);
-    this.data = JSON.parse(JSON.stringify(workingItem)) || {};
-    this.resetValidations();
+    if (workingItem) {
+      this.data = JSON.parse(JSON.stringify(workingItem)) || {};
+      this.resetValidations();
+    }
   }
 
 }

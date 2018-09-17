@@ -297,8 +297,10 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     }
 
     let currentEvacuation = this.evacuations.find(ev => '' + ev.id === id);
-    this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
-    this.resetValidations();
+    if(currentEvacuation) {
+      this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
+      this.resetValidations();
+    }
   }
 
 }

@@ -201,7 +201,7 @@ export const addProperty = newProperty => (dispatch, getState) => {
   }
 };
 
-const editPropertyOnline = (Property, dispatch, state) => {
+const editPropertyOnline = (property, dispatch, state) => {
   let origProperty = state.incidents.properties.find(elem => elem.id === property.id);
   let modifiedFields = objDiff(origProperty, property);
   let endpoint = prepareEndpoint(Endpoints.editIncidentProperty, {id: property.id});

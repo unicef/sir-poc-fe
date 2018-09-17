@@ -33,7 +33,24 @@ const editEvacuationSuccess = (evacuation, id) => {
 };
 
 export const syncIncidentImpacts = (newId, oldId) => (dispatch, getState) =>  {
-  dispatch(syncEvacuations(newId, oldId));
+  let state = getState();
+  let operations = [
+    ...syncEvacuations(newId, oldId, state),
+    ...syncProperties(newId, oldId, state),
+  ];
+
+  Promise.all(operations).then((results) => {
+    let allSuccessful = true;
+
+    results.forEach((res) => {
+      allSuccessful = allSuccessful && res.success;
+    });
+
+    if (!allSuccessful) {
+      dispatch(plainErrors(['Some impacts could not be synced. Please review them individually and try again.']));
+      updatePath(`/incidents/impact/${newId}/list/`);
+    }
+  });
 }
 
 const addEvacuationOnline = (evacuation, dispatch) => {
@@ -115,8 +132,8 @@ const _syncEvacuation = (evacuation, dispatch) => {
   });
 }
 
-const syncEvacuations = (newId, oldId) => (dispatch, getState) =>  {
-  let evacuations = getState().incidents.evacuations.filter(ev => ev.incident_id == oldId);
+const syncEvacuations = (newId, oldId, state) => {
+  let evacuations = state.incidents.evacuations.filter(ev => ev.incident_id == oldId);
   let operations = [];
 
   evacuations.forEach(evacuation => {
@@ -124,16 +141,128 @@ const syncEvacuations = (newId, oldId) => (dispatch, getState) =>  {
     operations.push(_syncEvacuation(evacuation, dispatch));
   });
 
-  Promise.all(operations).then((results) => {
-    let allSuccessful = true;
+  return operations;
+}
 
-    results.forEach((res) => {
-      allSuccessful = allSuccessful && res.success;
-    });
+////////////////////////////////// Impacts on properties ///////////////////////////////////////////////////////////////
 
-    if (!allSuccessful) {
-      dispatch(plainErrors(['Some impacts could not be synced. Please review them individually and try again.']));
-      updatePath(`/incidents/impact/${newId}/list/`);
-    }
+
+export const EDIT_PROPERTY_SUCCESS = 'EDIT_PROPERTY_SUCCESS';
+export const ADD_PROPERTY_SUCCESS = 'ADD_PROPERTY_SUCCESS';
+export const RECEIVE_PROPERTIES = 'RECEIVE_PROPERTIES';
+
+
+const receiveIncidentProperties = (properties) => {
+  return {
+    type: RECEIVE_PROPERTIES,
+    properties
+  };
+};
+
+const addPropertySuccess = (property) => {
+  return {
+    type: ADD_PROPERTY_SUCCESS,
+    property
+  };
+};
+
+const editPropertySuccess = (property, id) => {
+  return {
+    type: EDIT_PROPERTY_SUCCESS,
+    property,
+    id
+  };
+};
+
+
+const addPropertyOnline = (property, dispatch) => {
+  return makeRequest(Endpoints.addIncidentProperty, property).then((result) => {
+    dispatch(addPropertySuccess(result));
+    return true;
+  }).catch((error) => {
+    console.log(error);
+    dispatch(serverError(error.response));
+    return false;
   });
+};
+
+const addPropertyOffline = (newProperty, dispatch) => {
+  newProperty.id = generateRandomHash();
+  newProperty.unsynced = true;
+  dispatch(addPropertySuccess(newProperty));
+  return true;
+};
+
+export const addProperty = newProperty => (dispatch, getState) => {
+  if (getState().app.offline || isNaN(newProperty.incident_id)) {
+    return addPropertyOffline(newProperty, dispatch);
+  } else {
+    return addPropertyOnline(newProperty, dispatch);
+  }
+};
+
+const editPropertyOnline = (Property, dispatch, state) => {
+  let origProperty = state.incidents.properties.find(elem => elem.id === property.id);
+  let modifiedFields = objDiff(origProperty, property);
+  let endpoint = prepareEndpoint(Endpoints.editIncidentProperty, {id: property.id});
+
+  return makeRequest(endpoint, modifiedFields).then((result) => {
+    dispatch(fetchIncidentProperties());
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const editPropertyOffline = (property, dispatch) => {
+  property.unsynced = true;
+  dispatch(editPropertySuccess(property, property.id));
+  return true;
+};
+
+export const editProperty = property => (dispatch, getState) => {
+  if (getState().app.offline === true || property.unsynced) {
+    return editPropertyOffline(property, dispatch);
+  } else {
+    return editPropertyOnline(property, dispatch, getState());
+  }
+};
+
+export const fetchIncidentProperties = () => (dispatch, getState) => {
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentPropertiesList).then((result) => {
+      dispatch(receiveIncidentProperties(result));
+    });
+  }
+};
+
+export const syncProperty = (property) => (dispatch, getState) => {
+  return _syncProperty(property, dispatch).then((result) => {
+    if (!result.success) {
+      dispatch(serverError(result.error));
+    }
+    return result.success;
+  });
+}
+
+const _syncProperty = (property, dispatch) => {
+  return makeRequest(Endpoints.addIncidentProperty, property).then((result) => {
+    dispatch(editPropertySuccess(result, property.id));
+    return {success: true};
+  }).catch((error) => {
+    return {success: false, error: error.response};
+  });
+}
+
+const syncProperties = (newId, oldId, state) =>  {
+  let properties = state.incidents.properties.filter(ev => ev.incident_id == oldId);
+  let operations = [];
+
+  properties.forEach(property => {
+    property.incident_id = newId;
+    operations.push(_syncProperty(property, dispatch));
+  });
+
+  return operations;
 }

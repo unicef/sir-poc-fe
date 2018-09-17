@@ -1,10 +1,17 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
 
+export const RECEIVE_PERSONNEL_CATEGORIES = 'RECEIVE_PERSONNEL_CATEGORIES';
 export const RECEIVE_INCIDENT_CATEGORIES = 'RECEIVE_INCIDENT_CATEGORIES';
 export const RECEIVE_THREAT_CATEGORIES = 'RECEIVE_THREAT_CATEGORIES';
+export const RECEIVE_PROGRAMME_IMPACTS = 'RECEIVE_PROGRAMME_IMPACTS';
+export const RECEIVE_PROPERTY_IMPACTS = 'RECEIVE_PROPERTY_IMPACTS';
+export const RECEIVE_PERSON_IMPACTS = 'RECEIVE_PERSON_IMPACTS';
+export const RECEIVE_PROPERTY_TYPES = 'RECEIVE_PROPERTY_TYPES';
 export const RECEIVE_CRITICALITIES = 'RECEIVE_CRITICALITIES';
 export const RECEIVE_VEHICLE_TYPES = 'RECEIVE_VEHICLE_TYPES';
+export const RECEIVE_NATIONALITIES = 'RECEIVE_NATIONALITIES';
+export const RECEIVE_UN_LOCATIONS = 'RECEIVE_UN_LOCATIONS';
 export const RECEIVE_CRASH_TYPES = 'RECEIVE_CRASH_TYPES';
 export const RECEIVE_COUNTRIES = 'RECEIVE_COUNTRIES';
 export const RECEIVE_AGENCIES = 'RECEIVE_AGENCIES';
@@ -16,10 +23,17 @@ export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const RECEIVE_TEAMS = 'RECEIVE_TEAMS';
 
 export const loadAllStaticData = () => (dispatch) => {
+  dispatch(fetchAndStorePersonnelCategories());
   dispatch(fetchAndStoreIncidentCategories());
   dispatch(fetchAndStoreThreatCategories());
+  dispatch(fetchAndStoreProgrammeImpacts());
+  dispatch(fetchAndStorePropertyImpacts());
+  dispatch(fetchAndStorePersonImpacts());
   dispatch(fetchAndStoreCriticalities());
+  dispatch(fetchAndStorePropertyTypes());
+  dispatch(fetchAndStoreNationalities());
   dispatch(fetchAndStoreVehicleTypes());
+  dispatch(fetchAndStoreUnLocations());
   dispatch(fetchAndStoreCrashTypes());
   dispatch(fetchAndStoreCountries());
   dispatch(fetchAndStoreAgencies());
@@ -168,6 +182,11 @@ export const fetchAndStoreUsers = () => (dispatch, getState) => {
 };
 
 const receiveUsers = (users) => {
+  users = users.map((elem) => {
+    elem.name = elem.first_name + ' ' + elem.last_name;
+    return elem;
+  });
+
   return {
     type: RECEIVE_USERS,
     users
@@ -197,5 +216,96 @@ const receiveCrashTypes = (crashTypes) => {
   return {
     type: RECEIVE_CRASH_TYPES,
     crashTypes
+  };
+};
+
+export const fetchAndStoreProgrammeImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.programmeImpacts).then((result) => {
+    dispatch(receiveProgrammeImpacts(result));
+  });
+};
+
+const receiveProgrammeImpacts = (programmeImpacts) => {
+  return {
+    type: RECEIVE_PROGRAMME_IMPACTS,
+    programmeImpacts
+  };
+};
+
+export const fetchAndStorePropertyImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.propertyImpacts).then((result) => {
+    dispatch(receivePropertyImpacts(result));
+  });
+};
+
+const receivePropertyImpacts = (propertyImpacts) => {
+  return {
+    type: RECEIVE_PROPERTY_IMPACTS,
+    propertyImpacts
+  };
+};
+
+export const fetchAndStorePersonImpacts = () => (dispatch, getState) => {
+  makeRequest(Endpoints.personImpacts).then((result) => {
+    dispatch(receivePersonImpacts(result));
+  });
+};
+
+const receivePersonImpacts = (personImpacts) => {
+  return {
+    type: RECEIVE_PERSON_IMPACTS,
+    personImpacts
+  };
+};
+
+export const fetchAndStoreUnLocations = () => (dispatch, getState) => {
+  makeRequest(Endpoints.unLocations).then((result) => {
+    dispatch(receiveUnLocations(result));
+  });
+};
+
+const receiveUnLocations = (unLocations) => {
+  return {
+    type: RECEIVE_UN_LOCATIONS,
+    unLocations
+  };
+};
+
+export const fetchAndStorePropertyTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.propertyTypes).then((result) => {
+    dispatch(receivePropertyTypes(result));
+  });
+};
+
+const receivePropertyTypes = (propertyTypes) => {
+  return {
+    type: RECEIVE_PROPERTY_TYPES,
+    propertyTypes
+  };
+};
+
+export const fetchAndStorePersonnelCategories = () => (dispatch, getState) => {
+  makeRequest(Endpoints.personnelCategories).then((result) => {
+    dispatch(receivePersonnelCategories(result));
+  });
+};
+
+const receivePersonnelCategories = (personnelCategories) => {
+  return {
+    type: RECEIVE_PERSONNEL_CATEGORIES,
+    personnelCategories
+  };
+};
+
+export const fetchAndStoreNationalities = () => (dispatch, getState) => {
+  makeRequest(Endpoints.nationalities).then((result) => {
+    dispatch(receiveNationalities(result));
+  });
+};
+
+const receiveNationalities = (nationalities) => {
+  return {
+    type: RECEIVE_NATIONALITIES,
+    nationalities
   };
 };

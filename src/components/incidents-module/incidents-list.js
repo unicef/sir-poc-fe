@@ -470,15 +470,15 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _applyCountryFilter(incident, selectedCountry) {
-    return selectedCountry ? incident.country === selectedCountry : true;
+    return selectedCountry ? incident.country === Number(selectedCountry) : true;
   }
 
   _applyIncidentCategoryFilter(incident, selectedIncidentCategory) {
-    return selectedIncidentCategory ? incident.incident_category === selectedIncidentCategory : true;
+    return selectedIncidentCategory ? incident.incident_category === Number(selectedIncidentCategory) : true;
   }
 
   _applyIncidentSubcategoryFilter(incident, selectedSubCategory) {
-    return selectedSubCategory ? incident.incident_subcategory === selectedSubCategory : true;
+    return selectedSubCategory ? incident.incident_subcategory === Number(selectedSubCategory) : true;
   }
 
   _applyEventFilter(incident, selectedEvent) {
@@ -486,11 +486,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _applyTargetFilter(incident, selectedTarget) {
-    return selectedTarget ? incident.target === selectedTarget : true;
+    return selectedTarget ? incident.target === Number(selectedTarget) : true;
   }
 
   _applyThreatCategoryFilter(incident, selectedThreatCategory) {
-    return selectedThreatCategory ? incident.threat_category === selectedThreatCategory : true;
+    return selectedThreatCategory ? incident.threat_category === Number(selectedThreatCategory) : true;
   }
 
   _showSyncButton(unsynced, offline) {

@@ -61,9 +61,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
                         label="Owner"
                         readonly="[[readonly]]"
                         options="[[staticData.agencies]]"
-                        selected="{{data.agency}}"
-                        required auto-validate
-                        error-message="This is required">
+                        selected="{{data.agency}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -74,9 +72,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
                         label="Property type"
                         readonly="[[readonly]]"
                         options="[[staticData.propertyTypes]]"
-                        selected="{{data.property_type}}"
-                        required auto-validate
-                        error-message="This is required">
+                        selected="{{data.property_type}}">
               </etools-dropdown-lite>
             </div>
 
@@ -86,9 +82,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
                               label="Value"
                               type="number"
                               placeholder="&#8212;"
-                              value="{{data.value}}"
-                              required auto-validate
-                              error-message="This is required">
+                              value="{{data.value}}">
               </paper-input>
             </div>
 
@@ -151,9 +145,6 @@ export class PropertyForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
-          '#agency',
-          '#property_type',
-          '#value',
           '#category',
           '#description'
         ]

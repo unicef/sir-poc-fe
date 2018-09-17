@@ -48,15 +48,13 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <datepicker-lite id="startDate"
                              label="Start date"
                              value="{{event.start_date}}"
-                             required auto-validate
-                             error-message="Start date is required"></datepicker-lite>
+                             required></datepicker-lite>
           </div>
           <div class="col">
             <datepicker-lite id="endDate"
                              label="End date"
                              value="{{event.end_date}}"
-                             required auto-validate
-                             error-message="End date is required"></datepicker-lite>
+                             required></datepicker-lite>
           </div>
           <div class="col">
             <paper-input id="location"

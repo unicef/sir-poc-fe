@@ -87,14 +87,14 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                                       hide-search>
           </etools-dropdown-multi-lite>
 
-          <div class="col col-3">
+          <div class="col">
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
                              label="From">
             </datepicker-lite>
           </div>
 
-          <div class="col col-3">
+          <div class="col">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To">

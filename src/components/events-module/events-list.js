@@ -73,7 +73,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       </style>
 
       <div class="card filters">
-        <div class="row-h row-flex">
           <paper-input class="filter search-input"
                        placeholder="Search by Description or Location"
                        value="{{filters.q}}">
@@ -87,21 +86,20 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                                       hide-search>
           </etools-dropdown-multi-lite>
 
-          <div class="col col-3">
+          <div class="col col-3 filter">
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
                              label="From">
             </datepicker-lite>
           </div>
 
-          <div class="col col-3">
+          <div class="col col-3 filter">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To">
             </datepicker-lite>
           </div>
 
-        </div>
       </div>
 
       <div class="card list">

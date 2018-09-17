@@ -90,7 +90,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <datepicker-lite id="incidentDate"
                                 value="{{incident.incident_date}}"
                                 label="Incident date"
-                                required auto-validate
+                                required
                                 error-message="Incident date is required">
                 </datepicker-lite>
               </div>

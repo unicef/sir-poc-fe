@@ -72,6 +72,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
                                     readonly="[[readonly]]"
                                     options="[[staticData.programmeScopes]]"
                                     selected="{{data.scope}}"
+                                    selected-item="{{selectedScope}}"
                                     required auto-validate
                                     error-message="This is required">
               </etools-dropdown-lite>
@@ -80,6 +81,27 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
 
           <div class="row-h flex-c">
             <div class="col col-6">
+              <template is="dom-if" if="[[scopeIsCity(selectedScope)]]">
+                <etools-dropdown-lite label="Area impacted"
+                                      readonly="[[readonly]]"
+                                      options="[[selectableCities]]"
+                                      selected="{{data.area}}">
+                </etools-dropdown-lite>
+              </template>
+              <template is="dom-if" if="[[scopeIsCountry(selectedScope)]]">
+                <etools-dropdown-lite label="Area impacted"
+                                      readonly="[[readonly]]"
+                                      options="[[staticData.countries]]"
+                                      selected="{{data.area}}">
+                </etools-dropdown-lite>
+              </template>
+              <template is="dom-if" if="[[scopeIsOther(selectedScope)]]">
+                <etools-dropdown-lite label="Area impacted"
+                                      readonly="[[readonly]]"
+                                      options="[[staticData.programmeAreas]]"
+                                      selected="{{data.area}}">
+                </etools-dropdown-lite>
+              </template>
             </div>
             <div class="col col-3">
               <datepicker-lite id="startDate"
@@ -158,6 +180,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      selectedScope: Object,
       staticData: Array,
       impactId: String,
       visible: Boolean,
@@ -184,14 +207,20 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
 
   static get observers() {
     return [
-      '_idChanged(impactId)'
+      '_idChanged(impactId)',
+      '_updateSelectableCities(data.country)'
     ];
   }
+
   _stateChanged(state) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.programmesList = state.incidents.programmes;
     this.data.incident_id = state.app.locationInfo.incidentId;
+  }
+
+  _updateSelectableCities(country) {
+    this.selectableCities = this.staticData.cities.filter(elem => elem.country === country);
   }
 
   async save() {
@@ -239,6 +268,16 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
       this.data = JSON.parse(JSON.stringify(workingItem)) || {};
       this.resetValidations();
     }
+  }
+
+  scopeIsCity(scope) {
+    return scope.name === 'City';
+  }
+  scopeIsCountry(scope) {
+    return scope.name === 'Security level area';
+  }
+  scopeIsOther(scope) {
+    return !this.scopeIsCity(scope) && !this.scopeIsCountry(scope);
   }
 
 }

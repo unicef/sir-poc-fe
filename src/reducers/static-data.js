@@ -6,6 +6,7 @@ const defaultStaticData = {
     threatCategories: [],
     programmeScopes: [],
     programmeAreas: [],
+    programmeTypes: [],
     propertyTypes: [],
     premisesTypes: [],
     nationalities: [],
@@ -156,6 +157,11 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         programmeAreas: action.programmeAreas
+      };
+    case ACTIONS.RECEIVE_PROGRAMME_TYPES:
+      return {
+        ...state,
+        programmeTypes: action.programmeTypes
       };
     case ACTIONS.RECEIVE_PERSONNEL_CATEGORIES:
       return {

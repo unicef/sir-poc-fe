@@ -22,7 +22,7 @@ export class NonUnPersonnelList extends PolymerElement {
       </style>
 
       <div hidden$="[[!personnelList.length]]">
-        <etools-data-table-header id="listHeader" no-title>
+        <etools-data-table-header id="listHeader" no-title no-collapse>
           <etools-data-table-column class="col-6">
             Name
           </etools-data-table-column>

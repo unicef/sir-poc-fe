@@ -9,6 +9,7 @@ export const RECEIVE_PROGRAMME_IMPACTS = 'RECEIVE_PROGRAMME_IMPACTS';
 export const RECEIVE_PROPERTY_IMPACTS = 'RECEIVE_PROPERTY_IMPACTS';
 export const RECEIVE_PROGRAMME_SCOPES = 'RECEIVE_PROGRAMME_SCOPES';
 export const RECEIVE_PROGRAMME_AREAS = 'RECEIVE_PROGRAMME_AREAS';
+export const RECEIVE_PROGRAMME_TYPES = 'RECEIVE_PROGRAMME_TYPES';
 export const RECEIVE_PERSON_IMPACTS = 'RECEIVE_PERSON_IMPACTS';
 export const RECEIVE_PROPERTY_TYPES = 'RECEIVE_PROPERTY_TYPES';
 export const RECEIVE_PREMISES_TYPES = 'RECEIVE_PREMISES_TYPES';
@@ -36,6 +37,7 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStorePropertyImpacts());
   dispatch(fetchAndStoreProgrammeScopes());
   dispatch(fetchAndStoreProgrammeAreas());
+  dispatch(fetchAndStoreProgrammeTypes());
   dispatch(fetchAndStorePersonImpacts());
   dispatch(fetchAndStoreCriticalities());
   dispatch(fetchAndStorePropertyTypes());
@@ -356,6 +358,19 @@ const receiveProgrammeAreas = (programmeAreas) => {
   return {
     type: RECEIVE_PROGRAMME_AREAS,
     programmeAreas
+  };
+};
+
+export const fetchAndStoreProgrammeTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.programmeTypes).then((result) => {
+    dispatch(receiveProgrammeTypes(result));
+  });
+};
+
+const receiveProgrammeTypes = (programmeTypes) => {
+  return {
+    type: RECEIVE_PROGRAMME_TYPES,
+    programmeTypes
   };
 };
 

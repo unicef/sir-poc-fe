@@ -528,7 +528,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   selIncidentCategChanged(incidentCategory) {
-    if (!this.incident.incident_subcategory) {
+    if (!this.incident || !this.incident.incident_subcategory) {
       return;
     }
     let selSubcategIsValid = incidentCategory.subcategories.find(s => s.id == this.incident.incident_subcategory);

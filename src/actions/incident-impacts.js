@@ -32,11 +32,11 @@ const editEvacuationSuccess = (evacuation, id) => {
   };
 };
 
-export const syncIncidentImpacts = (newId, oldId) => (dispatch, getState) =>  {
+export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) =>  {
   let state = getState();
   let operations = [
-    ...syncEvacuations(newId, oldId, state),
-    ...syncProperties(newId, oldId, state),
+    ...await dispatch(syncEvacuations(newId, oldId)),
+    ...await dispatch(syncProperties(newId, oldId)),
   ];
 
   Promise.all(operations).then((results) => {
@@ -128,18 +128,21 @@ const _syncEvacuation = (evacuation, dispatch) => {
     dispatch(editEvacuationSuccess(result, evacuation.id));
     return {success: true};
   }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editEvacuationSuccess(evacuation, evacuation.id));
     return {success: false, error: error.response};
   });
 }
 
-const syncEvacuations = (newId, oldId, state) => {
-  let evacuations = state.incidents.evacuations.filter(ev => ev.incident_id == oldId);
+const syncEvacuations = (newId, oldId) => (dispatch, getState) => {
+  let evacuations = getState().incidents.evacuations.filter(ev => ev.incident_id == oldId);
   let operations = [];
 
-  evacuations.forEach(evacuation => {
+  for(let index = 0; index < evacuations.length; index++) {
+    let evacuation = JSON.parse(JSON.stringify(evacuations[index]));
     evacuation.incident_id = newId;
     operations.push(_syncEvacuation(evacuation, dispatch));
-  });
+  };
 
   return operations;
 }
@@ -180,7 +183,6 @@ const addPropertyOnline = (property, dispatch) => {
     dispatch(addPropertySuccess(result));
     return true;
   }).catch((error) => {
-    console.log(error);
     dispatch(serverError(error.response));
     return false;
   });
@@ -251,12 +253,14 @@ const _syncProperty = (property, dispatch) => {
     dispatch(editPropertySuccess(result, property.id));
     return {success: true};
   }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editPropertySuccess(property, property.id));
     return {success: false, error: error.response};
   });
 }
 
-const syncProperties = (newId, oldId, state) =>  {
-  let properties = state.incidents.properties.filter(ev => ev.incident_id == oldId);
+const syncProperties = (newId, oldId) => (dispatch, getState) =>  {
+  let properties = getState().incidents.properties.filter(ev => ev.incident_id == oldId);
   let operations = [];
 
   properties.forEach(property => {

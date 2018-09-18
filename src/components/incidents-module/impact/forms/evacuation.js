@@ -273,6 +273,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
 
     if (result === true) {
       updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this.data = {};
     }
     if (result === false) {
       scrollToTop();

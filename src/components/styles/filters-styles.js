@@ -9,19 +9,27 @@
  */
 
 import '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import './button-styles.js';
 
 const documentContainer = document.createElement('template');
 documentContainer.innerHTML = `<dom-module id="filters-styles">
   <template>
     <style>
-      .filters .filter:not(:last-child) {
+      .filters {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --layout-wrap;
+      }
+      
+      .filters > *:not(:last-child) {
         margin-right: 24px;
       }
-      .sync-filter {
-        min-width: 125px;
-        width: auto;
+      
+      .filters .filter {
+        margin-bottom: 16px;
       }
+      
       .search-input {
         max-width: 400px;
         @apply --layout-horizontal;
@@ -31,21 +39,45 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         --paper-input-prefix: {
           margin-right: 8px;
         };
-        flex: 0 0 20%;
-        max-width: 100%;
+        flex: 0 0 25%;
+      }
+      
+      .sync-filter {
+        min-width: 160px;
+        width: auto;
+      }
+      
+      .date {
+        width: 160px;
+      }
+     
+      .select {
+        min-width: 220px;
+        width: auto;
+      }
+      
+      .export {
+        padding: 0;
+      }
+      
+      .export, 
+      .export paper-listbox {
+        width: 110px;
       }
       
       @media screen and (max-width: 768px) {
+        .filter{
+          width: 100%;
+        }
+        
         .search-input {
           display: block;
           max-width: 100%;
+          flex: 0 0 100%;
         }
+        
         .filters .filter:not(:last-child) {
-          margin-right: 0;
-        }
-        .sync-filter {
-          min-width: 0;
-          max-width: 100%;
+          margin-right: 0px;
         }
       }
     </style>

@@ -176,5 +176,13 @@ export const Endpoints = {
   premisesTypes: {
     url: baseUrl + '/api/premise_types/',
     method: 'GET'
-  }
+  },
+  programmeScopes: {
+    url: baseUrl + '/api/scope/',
+    method: 'GET'
+  },
+  programmeAreas: {
+    url: baseUrl + '/api/area/',
+    method: 'GET'
+  },
 };

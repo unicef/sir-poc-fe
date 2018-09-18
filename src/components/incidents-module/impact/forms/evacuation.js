@@ -281,7 +281,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if(this.visible) {
+    if (this.visible) {
       resetFieldsValidations(this, this.fieldsToValidateSelectors);
     }
   }
@@ -298,7 +298,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     }
 
     let currentEvacuation = this.evacuations.find(ev => '' + ev.id === id);
-    if(currentEvacuation) {
+    if (currentEvacuation) {
       this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
       this.resetValidations();
     }

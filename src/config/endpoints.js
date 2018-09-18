@@ -53,6 +53,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'
   },
+  cities: {
+    url: baseUrl + '/api/cities/',
+    method: 'GET'
+  },
   regions: {
     url: baseUrl + '/api/regions/',
     method: 'GET'
@@ -115,6 +119,10 @@ export const Endpoints = {
   },
   programmeImpacts: {
     url: baseUrl + '/api/impacts/programme/',
+    method: 'GET'
+  },
+  evacuationImpacts: {
+    url: baseUrl + '/api/impacts/evacuation/',
     method: 'GET'
   },
   personnelCategories: {

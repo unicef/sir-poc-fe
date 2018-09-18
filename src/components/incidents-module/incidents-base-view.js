@@ -253,7 +253,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                 placeholder="&#8212;"
                                 value="{{incident.description}}"
                                 required auto-validate
-                                error-message="Description is required"></paper-textarea>
+                                error-message="Description is required">
+                </paper-textarea>
               </div>
             </div>
 

@@ -19,10 +19,6 @@ export class PropertiesList extends connect(store)(PolymerElement) {
         :host {
           @apply --layout-vertical;
         }
-
-        etools-data-table-row[no-collapse] {
-          padding-left: 32px;
-        }
       </style>
 
       <div hidden$="[[!propertiesList.length]]">

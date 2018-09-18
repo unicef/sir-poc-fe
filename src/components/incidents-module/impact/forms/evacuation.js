@@ -273,6 +273,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
 
     if (result === true) {
       updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this.data = {};
     }
     if (result === false) {
       scrollToTop();
@@ -297,8 +298,10 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     }
 
     let currentEvacuation = this.evacuations.find(ev => '' + ev.id === id);
-    this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
-    this.resetValidations();
+    if (currentEvacuation) {
+      this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
+      this.resetValidations();
+    }
   }
 
 }

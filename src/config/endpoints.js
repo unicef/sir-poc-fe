@@ -21,6 +21,10 @@ export const Endpoints = {
     url: baseUrl + '/api/events/<%=id%>/history/',
     method: 'GET'
   },
+  incidents: {
+    url: baseUrl + '/api/incidents/',
+    method: 'GET'
+  },
   incidentsList: {
     url: baseUrl + '/api/incidents/',
     method: 'GET'

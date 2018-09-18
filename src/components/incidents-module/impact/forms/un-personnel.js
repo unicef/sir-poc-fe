@@ -23,6 +23,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   static get is() {
     return 'un-personnel-form';
   }
+
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles  form-fields-styles">

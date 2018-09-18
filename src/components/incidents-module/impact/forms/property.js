@@ -47,7 +47,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
-        <h3> Evacuation </h3>
+        <h3> UN Property </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>

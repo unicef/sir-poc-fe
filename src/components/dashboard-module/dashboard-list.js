@@ -9,6 +9,7 @@ import '@polymer/iron-icons/notification-icons.js';
 import { store } from '../../redux/store.js';
 import { syncEventOnList } from '../../actions/events.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
+import { getNameFromId } from '../common/utils.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -150,6 +151,11 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     };
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.getNameFromId = getNameFromId;
+  }
+
   _stateChanged(state) {
     if (!state) {
       return;
@@ -171,11 +177,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     this.cases = [...this.events, ...this.incidents].sort((left, right) => {
       return moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date));
     });
-  }
-
-  getNameFromId(id, staticDataKey) {
-    let result = this.staticData[staticDataKey].find(v => v.id === Number(id));
-    return result.name || '';
   }
 
   _syncItem(item) {

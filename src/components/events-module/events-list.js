@@ -73,7 +73,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       </style>
 
       <div class="card filters">
-        <div class="row-h row-flex">
           <paper-input class="filter search-input"
                        placeholder="Search by Description or Location"
                        value="{{filters.q}}">
@@ -101,7 +100,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
             </datepicker-lite>
           </div>
 
-        </div>
       </div>
 
       <div class="card list">

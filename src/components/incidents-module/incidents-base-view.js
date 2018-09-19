@@ -267,11 +267,19 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
               <div class="col col-3">
                 <etools-dropdown-lite readonly="[[readonly]]"
+                                      hidden="[[isCrashTypeOther(incident.crash_type)]]"
                                       label="Crash Subtype"
-                                      options="[[staticData.crashSubTypes]]"
+                                      options="[[showSubType(incident.crash_type)]]"
+                                      option-value="name"
                                       required auto-validate
                                       selected="{{incident.crash_subtype}}">
                 </etools-dropdown-lite>
+                <paper-input readonly="[[readonly]]"
+                             hidden="[[!isCrashTypeOther(incident.crash_type)]]"
+                             label="Crash Subtype" type="text"
+                             placeholder="&#8212;" value="{{incident.crash_subtype}}"
+                             required auto-validate>
+                </paper-input>
               </div>
               <div class="col col-3">
                 <paper-checkbox checked="{{incident.near_miss}}"
@@ -566,6 +574,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     let incident = this.staticData.incidentCategories[0].subcategories.find(elem => elem.id === incidentSubcategory.id);
 
     return incident && incident.name === 'Road Traffic Accidents';
+  }
+
+  showSubType(crashType) {
+    return this.staticData.crashSubTypes.filter(subType => crashType === subType.crash_type);
+  }
+
+  isCrashTypeOther(crashType) {
+    return crashType === 5;
   }
 
   isSafetyIncident(incidentCategory) {

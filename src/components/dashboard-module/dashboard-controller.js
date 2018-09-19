@@ -19,7 +19,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
         }
         .large-text {
           width: 100%;
-          font-size: 72px;
+          font-size: 36px;
         }
         .center-text {
           text-align: center;
@@ -34,39 +34,40 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
       <div class="card">
         <div class="row-h">
-          <div class="col col-6 center-text">
+          <div class="col col-5 center-text">
             <div class="large-text"> [[filteredEvents.length]] </div>
             Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
-          <div class="col col-6 center-text">
+          <div class="col col-2"></div>
+          <div class="col col-5 center-text">
             <div class="large-text"> [[filteredIncidents.length]] </div>
             Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
         </div>
 
         <div class="row-h">
-          <div class="col col-4"> </div>
-          <div class="col col-4">
-            <div class="center-text">
-              <p> Show stastistics between </p>
-            </div>
-
-            <div class="center-text">
-              <datepicker-lite value="{{selectedStartDate}}">
-              </datepicker-lite>
-            </div>
-
-            <div class="center-text">
-              <p> and </p>
-            </div>
-
-            <div class="center-text">
-              <datepicker-lite value="{{selectedEndDate}}">
-              </datepicker-lite>
-            </div>
+          <div class="col col-12 center-text">
+            <p> Show stastistics between </p>
           </div>
-          <div class="col col-4"> </div>
         </div>
+            
+        <div class="row-h">
+
+          <div class="col col-5">
+            <datepicker-lite value="{{selectedStartDate}}">
+            </datepicker-lite>
+          </div>
+
+          <div class="col col-2 center-text">
+            <p> and </p>
+          </div>
+
+          <div class="col col-5">
+            <datepicker-lite value="{{selectedEndDate}}">
+            </datepicker-lite>
+          </div>
+        </div>
+      </div>
 
         <div class="row-h">
           <div class="col col-12">

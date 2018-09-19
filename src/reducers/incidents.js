@@ -147,7 +147,7 @@ const incidents = (state = defaultState, action) => {
     case ADD_PERSONNEL_SUCCESS:
       return {
         ...state,
-        personnel: [...state.personnel, action.programme]
+        personnel: [...state.personnel, action.personnel]
       };
     case RECEIVE_PERSONNEL:
       return {

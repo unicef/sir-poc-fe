@@ -35,10 +35,11 @@ const editEvacuationSuccess = (evacuation, id) => {
 export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) =>  {
   let state = getState();
   let operations = [
+    ...await dispatch(syncPersonnelList(newId, oldId)),
     ...await dispatch(syncEvacuations(newId, oldId)),
     ...await dispatch(syncProperties(newId, oldId)),
     ...await dispatch(syncProgrammes(newId, oldId)),
-    ...await dispatch(syncPremises(newId, oldId)),
+    ...await dispatch(syncPremises(newId, oldId))
   ];
 
   Promise.all(operations).then((results) => {
@@ -515,6 +516,129 @@ const syncProgrammes = (newId, oldId) => (dispatch, getState) =>  {
   programmes.forEach(programme => {
     programme.incident_id = newId;
     operations.push(_syncProgramme(programme, dispatch));
+  });
+
+  return operations;
+}
+
+
+////////////////////////////////// Persons impacted ///////////////////////////////////////////////////////////
+
+export const EDIT_PERSONNEL_SUCCESS = 'EDIT_PERSONNEL_SUCCESS';
+export const ADD_PERSONNEL_SUCCESS = 'ADD_PERSONNEL_SUCCESS';
+export const RECEIVE_PERSONNEL = 'RECEIVE_PERSONNEL';
+
+const receiveIncidentPersonnel = (personnel) => {
+  return {
+    type: RECEIVE_PERSONNEL,
+    personnel
+  };
+};
+
+const addPersonnelSuccess = (personnel) => {
+  return {
+    type: ADD_PERSONNEL_SUCCESS,
+    personnel
+  };
+};
+
+const editPersonnelSuccess = (personnel, id) => {
+  return {
+    type: EDIT_PERSONNEL_SUCCESS,
+    personnel,
+    id
+  };
+};
+
+
+const addPersonnelOnline = (personnel, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPersonnel, personnel).then((result) => {
+    dispatch(addPersonnelSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const addPersonnelOffline = (newPersonnel, dispatch) => {
+  newPersonnel.id = generateRandomHash();
+  newPersonnel.unsynced = true;
+  dispatch(addPersonnelSuccess(newPersonnel));
+  return true;
+};
+
+export const addPersonnel = newPersonnel => (dispatch, getState) => {
+  if (getState().app.offline || isNaN(newPersonnel.incident_id)) {
+    return addPersonnelOffline(newPersonnel, dispatch);
+  } else {
+    return addPersonnelOnline(newPersonnel, dispatch);
+  }
+};
+
+const editPersonnelOnline = (personnel, dispatch, state) => {
+  let origPersonnel = state.incidents.personnel.find(elem => elem.id === personnel.id);
+  let modifiedFields = objDiff(origPersonnel, personnel);
+  let endpoint = prepareEndpoint(Endpoints.editIncidentPersonnel, {id: personnel.id});
+
+  return makeRequest(endpoint, modifiedFields).then((result) => {
+    dispatch(fetchIncidentPersonnel());
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const editPersonnelOffline = (personnel, dispatch) => {
+  personnel.unsynced = true;
+  dispatch(editPersonnelSuccess(personnel, personnel.id));
+  return true;
+};
+
+export const editPersonnel = personnel => (dispatch, getState) => {
+  if (getState().app.offline === true || personnel.unsynced) {
+    return editPersonnelOffline(personnel, dispatch);
+  } else {
+    return editPersonnelOnline(personnel, dispatch, getState());
+  }
+};
+
+export const fetchIncidentPersonnel = () => (dispatch, getState) => {
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentPersonnelList).then((result) => {
+      dispatch(receiveIncidentPersonnel(result));
+    });
+  }
+};
+
+export const syncPersonnel = (personnel) => (dispatch, getState) => {
+  return _syncPersonnel(personnel, dispatch).then((result) => {
+    if (!result.success) {
+      dispatch(serverError(result.error));
+    }
+    return result.success;
+  });
+}
+
+const _syncPersonnel = (personnel, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPersonnel, personnel).then((result) => {
+    dispatch(editPersonnelSuccess(result, personnel.id));
+    return {success: true};
+  }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editPersonnelSuccess(personnel, personnel.id));
+    return {success: false, error: error.response};
+  });
+}
+
+const syncPersonnelList = (newId, oldId) => (dispatch, getState) =>  {
+  let personnel = getState().incidents.personnel.filter(ev => ev.incident_id == oldId);
+  let operations = [];
+
+  personnel.forEach(personnel => {
+    personnel.incident_id = newId;
+    operations.push(_syncPersonnel(personnel, dispatch));
   });
 
   return operations;

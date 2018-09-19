@@ -97,6 +97,18 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_programmes/',
     method: 'GET'
   },
+  addIncidentPersonnel: {
+    url: baseUrl + '/api/incident_involved/',
+    method: 'POST'
+  },
+  editIncidentPersonnel: {
+    url: baseUrl + '/api/incident_involved/<%=id%>/',
+    method: 'PATCH'
+  },
+  incidentPersonnelList: {
+    url: baseUrl + '/api/incident_involved/',
+    method: 'GET'
+  },
   cities: {
     url: baseUrl + '/api/cities/',
     method: 'GET'

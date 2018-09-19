@@ -4,9 +4,21 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 
+import {
+    addPersonnel,
+    editPersonnel,
+    syncPersonnel
+  } from '../../../../actions/incident-impacts.js';
 import { store } from '../../../../redux/store.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
+import { updatePath } from '../../../common/navigation-helper.js';
+import {
+    resetFieldsValidations,
+    validateFields
+  } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/datepicker-lite.js';
 
@@ -195,7 +207,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
-                            selected="{{data.impact_type}}"
+                            selected="{{data.impact}}"
                             selected-item="{{selectedImpactType}}"
                             required auto-validate
                             error-message="Impact is required">
@@ -232,14 +244,18 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
             </div>
           </div>
         </fieldset>
+        <paper-button on-click="save">Save</button>
       </div>
     `;
   }
 
   static get properties() {
     return {
-      staticData: Array,
       selectedImpactType: Object,
+      staticData: Array,
+      impactId: String,
+      visible: Boolean,
+      offline: Boolean,
       readonly: {
         type: Boolean,
         value: false
@@ -247,6 +263,10 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       data: {
         type: Object,
         value: {}
+      },
+      isNew: {
+        type: Boolean,
+        computed: '_computeIsNew(impactId)'
       },
       statuses: {
         type: Array,
@@ -256,12 +276,76 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
           {id: 'On mission', name: 'On mission'},
           {id: 'On leave', name: 'On leave'}
         ]
+      },
+      fieldsToValidateSelectors: {
+        type: Array,
+        value: [
+          '#personnelType',
+          '#agency',
+          '#impact'
+        ]
       }
     };
   }
 
+  static get observers() {
+    return [
+      '_idChanged(impactId)'
+    ];
+  }
   _stateChanged(state) {
+    this.offline = state.app.offline;
     this.staticData = state.staticData;
+    this.personnelList = state.incidents.personnel;
+    this.data.incident_id = state.app.locationInfo.incidentId;
+  }
+
+  async save() {
+    let result;
+    if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      return;
+    }
+    this.data.un = true;
+    if (this.isNew) {
+      result = await store.dispatch(addPersonnel(this.data));
+    }
+    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+      result = await store.dispatch(syncPersonnel(this.data));
+    }
+    else {
+      result = await store.dispatch(editPersonnel(this.data));
+    }
+
+    if (result === true) {
+      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this.data = {};
+    }
+    if (result === false) {
+      scrollToTop();
+    }
+  }
+
+  resetValidations() {
+    if(this.visible) {
+      resetFieldsValidations(this, this.fieldsToValidateSelectors);
+    }
+  }
+
+  _computeIsNew(id) {
+    return id === 'new';
+  }
+
+  _idChanged(id) {
+    if (!id || this.isNew) {
+      this.data = {};
+      this.resetValidations();
+      return;
+    }
+    let workingItem = this.personnelList.find(item => '' + item.id === id);
+    if (workingItem) {
+      this.data = JSON.parse(JSON.stringify(workingItem)) || {};
+      this.resetValidations();
+    }
   }
 
   _userSelected(event) {

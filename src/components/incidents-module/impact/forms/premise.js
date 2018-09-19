@@ -198,7 +198,7 @@ export class PremiseForm extends connect(store)(PolymerElement) {
     if (this.isNew) {
       result = await store.dispatch(addPremise(this.data));
     }
-    else if (this.data.unsynced && !this.offline) {
+    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncPremise(this.data));
     }
     else {

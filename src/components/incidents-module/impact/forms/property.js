@@ -172,7 +172,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
     if (this.isNew) {
       result = await store.dispatch(addProperty(this.data));
     }
-    else if (this.data.unsynced && !this.offline) {
+    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncProperty(this.data));
     }
     else {

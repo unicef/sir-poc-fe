@@ -281,7 +281,7 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if(this.visible) {
+    if (this.visible) {
       resetFieldsValidations(this, this.fieldsToValidateSelectors);
     }
   }

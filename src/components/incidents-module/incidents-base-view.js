@@ -340,24 +340,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-dropdown-multi-lite>
               </div>
             </div>
-
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <paper-checkbox checked="{{incident.reported}}" disabled="[[readonly]]">
-                  Reported to police
-                </paper-checkbox>
-              </div>
-              <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
-                <paper-input readonly$="[[readonly]]" label="Reported to"
-                            type="text" value="{{incident.reported_to}}"
-                            placeholder="&#8212;"></paper-input>
-              </div>
-              <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
-                <paper-input readonly$="[[readonly]]"
-                            label="Responsible party" type="text" value="{{incident.responsible}}"
-                            placeholder="&#8212;"></paper-input>
-              </div>
-            </div>
           </div>
         </fieldset>
 
@@ -558,6 +540,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
+<<<<<<< HEAD
   isNotReported(reported) {
     return reported === false;
   }
@@ -567,6 +550,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
 
+=======
+  isAccident(incidentCategoryId) {
+>>>>>>> eaf75a78fb3d3b04653a3432c4213ce125c47074
     if (!this.staticData) {
       return false;
     }

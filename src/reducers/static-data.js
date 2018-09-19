@@ -1,10 +1,14 @@
 import * as ACTIONS from '../actions/static-data.js';
 
 const defaultStaticData = {
+    personnelCategories: [],
     incidentCategories: [],
     threatCategories: [],
+    propertyTypes: [],
+    nationalities: [],
     criticalities: [],
     vehicleTypes: [],
+    unLocations: [],
     crashTypes: [],
     countries: [],
     agencies: [],
@@ -13,8 +17,13 @@ const defaultStaticData = {
     factors: [],
     targets: [],
     weapons: [],
+    cities: [],
     users: [],
-    teams: []
+    teams: [],
+    genders: [
+      {id: 'male', name: 'Male'},
+      {id: 'female', name: 'Female'}
+    ]
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
@@ -39,6 +48,14 @@ const staticData = (state = defaultStaticData, action) => {
         impacts: {
           ...state.impacts,
           programme: action.programmeImpacts
+        }
+      };
+    case ACTIONS.RECEIVE_EVACUATION_IMPACTS:
+      return {
+        ...state,
+        impacts: {
+          ...state.impacts,
+          evacuation: action.evacuationImpact
         }
       };
     case ACTIONS.RECEIVE_PROPERTY_IMPACTS:
@@ -76,6 +93,11 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         agencies: action.agencies
+      };
+    case ACTIONS.RECEIVE_CITIES:
+      return {
+        ...state,
+        cities: action.cities
       };
     case ACTIONS.RECEIVE_REGIONS:
       return {

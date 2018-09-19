@@ -46,37 +46,31 @@ export class ImpactController extends connect(store)(PolymerElement) {
       <app-route
         route="{{route}}"
         pattern="/:section"
-        data="{{routeData}}">
+        data="{{routeData}}"
+        tail="{{subroute}}">
       </app-route>
-      <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
-        <div name="un-personel">
-          <un-personnel-form></un-personnel-form>
-        </div>
-        <div name="non-un">
-          <non-un-personnel-form></non-un-personnel-form>
-        </div>
-        <div name="evacuation">
-          <evacuation-form></evacuation-form>
-        </div>
-        <div name="property">
-          <property-form></property-form>
-        </div>
-        <div name="premise">
-          <premise-form></premise-form>
-        </div>
-        <div name="programme">
-          <programme-form></programme-form>
-        </div>
-        <div name="list">
-          <impacts-view></impacts-view>
-        </div>
+      <app-route
+        route="{{subroute}}"
+        pattern="/:id"
+        data="{{subrouteData}}">
+      </app-route>
+      <iron-pages selected="[[routeData.section]]" attr-for-selected="name" selected-attribute="visible" role="main">
+        <un-personnel-form name="un-personel" impact-id="[[subrouteData.id]]"></un-personnel-form>
+        <non-un-personnel-form name="non-un" impact-id="[[subrouteData.id]]"></non-un-personnel-form>
+        <evacuation-form name="evacuation" impact-id="[[subrouteData.id]]"></evacuation-form>
+        <property-form name="property" impact-id="[[subrouteData.id]]"></property-form>
+        <premise-form name="premise" impact-id="[[subrouteData.id]]"></premise-form>
+        <programme-form name="programme" impact-id="[[subrouteData.id]]"></programme-form>
+        <impacts-view name="list" impact-id="[[subrouteData.id]]"></impacts-view>
       </iron-pages>
     `;
   }
 
   static get properties() {
     return {
+      subroute: Object,
       routeData: Object,
+      subrouteData: Object,
       incidentId: {
         type: Number,
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',

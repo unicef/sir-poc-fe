@@ -9,6 +9,7 @@ import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 
+import '../../common/errors-box.js';
 import './lists/non-un-personnel.js';
 import './lists/un-personnel.js';
 import './lists/evacuations.js';
@@ -45,6 +46,10 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
+        <div class="layout-horizontal">
+          <errors-box></errors-box>
+        </div>
+
         <h3>Personnel</h3>
         <hr>
         <div class="right">
@@ -137,37 +142,33 @@ export class ImpactsView extends connect(store)(PolymerElement) {
     return id;
   }
 
-  _stateChanged(state) {
-    this.set('state', state);
-  }
-
   _idChanged(newId) {
     // TODO: add checks so we don't fetch this info except when this section is active
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
   }
 
   _addUnPersonnel() {
-    updatePath(`incidents/impact/${this.incidentId}/un-personel`);
+    updatePath(`incidents/impact/${this.incidentId}/un-personel/new/`);
   }
 
   _addEvacuation() {
-    updatePath(`incidents/impact/${this.incidentId}/evacuation`);
+    updatePath(`incidents/impact/${this.incidentId}/evacuation/new/`);
   }
 
   _addProgramme() {
-    updatePath(`incidents/impact/${this.incidentId}/programme`);
+    updatePath(`incidents/impact/${this.incidentId}/programme/new/`);
   }
 
   _addProperty() {
-    updatePath(`incidents/impact/${this.incidentId}/property`);
+    updatePath(`incidents/impact/${this.incidentId}/property/new/`);
   }
 
   _addPremise() {
-    updatePath(`incidents/impact/${this.incidentId}/premise`);
+    updatePath(`incidents/impact/${this.incidentId}/premise/new/`);
   }
 
   _addNonUn() {
-    updatePath(`incidents/impact/${this.incidentId}/non-un`);
+    updatePath(`incidents/impact/${this.incidentId}/non-un/new/`);
   }
 
   _stateChanged(state) {

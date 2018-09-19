@@ -252,7 +252,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                 placeholder="&#8212;"
                                 value="{{incident.description}}"
                                 required auto-validate
-                                error-message="Description is required"></paper-textarea>
+                                error-message="Description is required">
+                </paper-textarea>
               </div>
             </div>
 
@@ -526,7 +527,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   selIncidentCategChanged(incidentCategory) {
-    if (!this.incident.incident_subcategory) {
+    if (!this.incident || !this.incident.incident_subcategory) {
       return;
     }
     let selSubcategIsValid = incidentCategory.subcategories.find(s => s.id == this.incident.incident_subcategory);

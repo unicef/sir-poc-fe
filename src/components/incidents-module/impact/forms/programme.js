@@ -83,6 +83,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
             <div class="col col-6">
               <template is="dom-if" if="[[scopeIsCity(selectedScope)]]">
                 <etools-dropdown-lite label="Area impacted"
+                                      enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[selectableCities]]"
                                       selected="{{data.area}}">
@@ -90,6 +91,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
               </template>
               <template is="dom-if" if="[[scopeIsCountry(selectedScope)]]">
                 <etools-dropdown-lite label="Area impacted"
+                                      enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[staticData.countries]]"
                                       selected="{{data.area}}">
@@ -97,6 +99,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
               </template>
               <template is="dom-if" if="[[scopeIsOther(selectedScope)]]">
                 <etools-dropdown-lite label="Area impacted"
+                                      enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[staticData.programmeAreas]]"
                                       selected="{{data.area}}">
@@ -271,10 +274,10 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
   }
 
   scopeIsCity(scope) {
-    return scope.name === 'City';
+    return scope && scope.name === 'City';
   }
   scopeIsCountry(scope) {
-    return scope.name === 'Security level area';
+    return scope && scope.name === 'Security level area';
   }
   scopeIsOther(scope) {
     return !this.scopeIsCity(scope) && !this.scopeIsCountry(scope);

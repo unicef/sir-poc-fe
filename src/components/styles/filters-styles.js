@@ -65,6 +65,10 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         width: 110px;
       }
       
+      .filters .filter:not(:first-of-type) {
+          padding-left: 0;
+        }
+      
       @media screen and (max-width: 768px) {
         .filter{
           width: 100%;

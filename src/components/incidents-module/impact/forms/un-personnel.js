@@ -23,6 +23,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   static get is() {
     return 'un-personnel-form';
   }
+
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles  form-fields-styles">
@@ -103,12 +104,13 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
               </datepicker-lite>
             </div>
             <div class="col col-3">
-              <paper-input id="gender"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="Gender"
-                          value="{{data.gender}}">
-               </paper-input>
+              <etools-dropdown-lite
+                        id="gender"
+                        label="Gender"
+                        readonly="[[readonly]]"
+                        options="[[staticData.genders]]"
+                        selected="{{data.gender}}">
+              </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <paper-input id="email"
@@ -194,10 +196,27 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
                             selected="{{data.impact_type}}"
+                            selected-item="{{selectedImpactType}}"
                             required auto-validate
                             error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
+              <template is="dom-if" if="[[_shouldShowCaptureForm(selectedImpactType.name)]]">
+                <div class="col col-3">
+                  <datepicker-lite id="captureDate"
+                              value="{{data.capture_date}}"
+                              readonly="[[readonly]]"
+                              label="Captured on">
+                  </datepicker-lite>
+                </div>
+                <div class="col col-3">
+                  <datepicker-lite id="releaseDate"
+                              value="{{data.release_date}}"
+                              readonly="[[readonly]]"
+                              label="Released on">
+                  </datepicker-lite>
+                </div>
+              </template>
             </div>
             <div class="row-h flex-c">
               <div class="col col-12">
@@ -220,6 +239,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   static get properties() {
     return {
       staticData: Array,
+      selectedImpactType: Object,
       readonly: {
         type: Boolean,
         value: false
@@ -234,10 +254,9 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
           {id: 'On duty', name: 'On duty'},
           {id: 'Off duty', name: 'Off duty'},
           {id: 'On mission', name: 'On mission'},
-          {id: 'On leave', name: 'On leave'},
+          {id: 'On leave', name: 'On leave'}
         ]
       }
-
     };
   }
 
@@ -253,6 +272,24 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
     this.set('data.first_name', event.detail.selectedItem.first_name);
     this.set('data.last_name', event.detail.selectedItem.last_name);
     this.set('data.email', event.detail.selectedItem.email);
+  }
+
+  _shouldShowCaptureForm(impactName) {
+    let name = impactName.toLowerCase();
+    let keyWords = [
+      'abducted',
+      'hostage',
+      'arrested',
+      'detained'
+    ];
+
+    for (let index = 0; index < keyWords.length; index ++) {
+      if (name.search(keyWords[index]) > -1) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 

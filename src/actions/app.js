@@ -13,10 +13,9 @@ import { loadAllStaticData } from './static-data.js';
 import { fetchAndStoreEvents } from './events.js';
 import { fetchIncidents, fetchIncidentComments } from './incidents.js';
 import { fetchIncidentEvacuations,
-         fetchIncidentProgrammes,
          fetchIncidentProperties,
-         fetchIncidentPersonnel,
-         fetchIncidentPremises } from './incident-impacts.js';
+         fetchIncidentPremises,
+         fetchIncidentProgrammes } from './incident-impacts.js';
 
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
@@ -40,7 +39,6 @@ export const storeReady = () => (dispatch, getState) => {
   dispatch(fetchAndStoreEvents());
   dispatch(fetchIncidentComments());
   dispatch(fetchIncidentPremises());
-  dispatch(fetchIncidentPersonnel());
   dispatch(fetchIncidentProgrammes());
   dispatch(fetchIncidentProperties());
   dispatch(fetchIncidentEvacuations());

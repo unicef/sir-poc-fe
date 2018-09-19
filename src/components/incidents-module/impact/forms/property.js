@@ -87,7 +87,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
             </div>
 
           </div>
-        </filedset>
+        </fieldset>
         <fieldset>
           <legend><h3>Impact details</h3></legend>
           <div>

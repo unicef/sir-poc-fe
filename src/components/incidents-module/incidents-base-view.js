@@ -319,24 +319,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-checkbox>
               </div>
             </div>
-
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <paper-checkbox checked="{{incident.reported}}" disabled="[[readonly]]">
-                  Reported to police
-                </paper-checkbox>
-              </div>
-              <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
-                <paper-input readonly$="[[readonly]]" label="Reported to"
-                            type="text" value="{{incident.reported_to}}"
-                            placeholder="&#8212;"></paper-input>
-              </div>
-              <div class="col col-3" hidden$="[[isNotReported(incident.reported)]]">
-                <paper-input readonly$="[[readonly]]"
-                            label="Responsible party" type="text" value="{{incident.responsible}}"
-                            placeholder="&#8212;"></paper-input>
-              </div>
-            </div>
           </div>
         </fieldset>
 
@@ -535,10 +517,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!selSubcategIsValid) {
       this.set('incident.incident_subcategory', null);
     }
-  }
-
-  isNotReported(reported) {
-    return reported === false;
   }
 
   isAccident(incidentCategoryId) {

@@ -6,8 +6,6 @@ export const IncidentModel = {
   note: '',
   on_duty: false,
   region: '',
-  reported_to: '',
-  responsible: '',
   street: '',
   weapons_used: [],
   last_modify_user: 1,
@@ -19,7 +17,6 @@ export const IncidentModel = {
     type_of_contract: '-',
     contact: '-'
   },
-  reported: false,
   submitted_by: 1,
   status: 'submitted'
 };

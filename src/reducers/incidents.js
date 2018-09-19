@@ -10,12 +10,22 @@ import {
 import {
   EDIT_EVACUATION_SUCCESS,
   ADD_EVACUATION_SUCCESS,
-  RECEIVE_EVACUATIONS
+  RECEIVE_EVACUATIONS,
+  EDIT_PROPERTY_SUCCESS,
+  ADD_PROPERTY_SUCCESS,
+  RECEIVE_PROPERTIES,
 } from '../actions/incident-impacts.js';
 
 import { createSelector } from 'reselect';
 
-const incidents = (state = {list: [], comments: []}, action) => {
+let defaultState = {
+  list: [],
+  comments: [],
+  evacuations:[],
+  properties: []
+};
+
+const incidents = (state = defaultState, action) => {
   switch (action.type) {
     case RECEIVE_INCIDENTS:
       return {
@@ -32,11 +42,6 @@ const incidents = (state = {list: [], comments: []}, action) => {
         ...state,
         list: getListWithEditedItem(state.list, action)
       };
-    case RECEIVE_EVACUATIONS:
-      return {
-        ...state,
-        evacuations: getRefreshedData(state.evacuations, action.evacuations)
-      };
     case ADD_INCIDENT_SUCCESS:
       return {
         ...state,
@@ -47,25 +52,47 @@ const incidents = (state = {list: [], comments: []}, action) => {
         ...state,
         comments: [...state.comments, action.comment]
       };
-    case ADD_EVACUATION_SUCCESS:
-      return {
-        ...state,
-        evacuations: [...state.evacuations, action.evacuation]
-      };
     case EDIT_INCIDENT_SUCCESS:
       return {
         ...state,
         list: getListWithEditedItem(state.list, action)
       };
+    case UPDATE_EVENT_IDS:
+      return {
+        ...state,
+        list: updateEventIds(state.list, action.oldId, action.newId)
+      };
+   ///////////////////////////////
     case EDIT_EVACUATION_SUCCESS:
       return {
         ...state,
         evacuations: getListWithEditedItem(state.evacuations, action, 'evacuation')
       };
-    case UPDATE_EVENT_IDS:
+    case ADD_EVACUATION_SUCCESS:
       return {
         ...state,
-        list: updateEventIds(state.list, action.oldId, action.newId)
+        evacuations: [...state.evacuations, action.evacuation]
+      };
+    case RECEIVE_EVACUATIONS:
+      return {
+        ...state,
+        evacuations: getRefreshedData(state.evacuations, action.evacuations)
+      };
+   ///////////////////////////////
+    case EDIT_PROPERTY_SUCCESS:
+      return {
+        ...state,
+        properties: getListWithEditedItem(state.properties, action, 'property')
+      };
+    case ADD_PROPERTY_SUCCESS:
+      return {
+        ...state,
+        properties: [...state.properties, action.property]
+      };
+    case RECEIVE_PROPERTIES:
+      return {
+        ...state,
+        properties: getRefreshedData(state.properties, action.properties)
       };
     default:
       return state;
@@ -74,13 +101,13 @@ const incidents = (state = {list: [], comments: []}, action) => {
 
 export default incidents;
 
-const getListWithEditedItem = (list, action, key) => {
-  key = key || 'incident';
+const getListWithEditedItem = (list, action, actionKey) => {
+  actionKey = actionKey || 'incident';
   return list.map((element) => {
     if (action.id !== element.id) {
       return element;
     }
-    return action[key];
+    return action[actionKey];
   });
 };
 

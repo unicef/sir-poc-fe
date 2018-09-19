@@ -61,6 +61,18 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_evacuations/',
     method: 'GET'
   },
+  addIncidentProperty: {
+    url: baseUrl + '/api/incident_properties/',
+    method: 'POST'
+  },
+  editIncidentProperty: {
+    url: baseUrl + '/api/incident_properties/<%=id%>/',
+    method: 'PATCH'
+  },
+  incidentPropertiesList: {
+    url: baseUrl + '/api/incident_properties/',
+    method: 'GET'
+  },
   cities: {
     url: baseUrl + '/api/cities/',
     method: 'GET'

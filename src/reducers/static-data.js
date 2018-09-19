@@ -10,6 +10,7 @@ const defaultStaticData = {
     vehicleTypes: [],
     unLocations: [],
     crashTypes: [],
+    crashSubTypes: [],
     countries: [],
     agencies: [],
     impacts: {},
@@ -83,6 +84,11 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         crashTypes: action.crashTypes
+      };
+    case ACTIONS.RECEIVE_CRASH_SUB_TYPES:
+      return {
+        ...state,
+        crashSubTypes: action.crashSubTypes
       };
     case ACTIONS.RECEIVE_COUNTRIES:
       return {

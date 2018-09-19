@@ -14,6 +14,7 @@ export const RECEIVE_VEHICLE_TYPES = 'RECEIVE_VEHICLE_TYPES';
 export const RECEIVE_NATIONALITIES = 'RECEIVE_NATIONALITIES';
 export const RECEIVE_UN_LOCATIONS = 'RECEIVE_UN_LOCATIONS';
 export const RECEIVE_CRASH_TYPES = 'RECEIVE_CRASH_TYPES';
+export const RECEIVE_CRASH_SUB_TYPES = 'RECEIVE_CRASH_SUB_TYPES';
 export const RECEIVE_COUNTRIES = 'RECEIVE_COUNTRIES';
 export const RECEIVE_AGENCIES = 'RECEIVE_AGENCIES';
 export const RECEIVE_REGIONS = 'RECEIVE_REGIONS';
@@ -38,6 +39,7 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreVehicleTypes());
   dispatch(fetchAndStoreUnLocations());
   dispatch(fetchAndStoreCrashTypes());
+  dispatch(fetchAndStoreCrashSubTypes());
   dispatch(fetchAndStoreCountries());
   dispatch(fetchAndStoreAgencies());
   dispatch(fetchAndStoreRegions());
@@ -233,6 +235,19 @@ const receiveCrashTypes = (crashTypes) => {
   return {
     type: RECEIVE_CRASH_TYPES,
     crashTypes
+  };
+};
+
+export const fetchAndStoreCrashSubTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.crashSubTypes).then((result) => {
+    dispatch(receiveCrashSubTypes(result));
+  });
+};
+
+const receiveCrashSubTypes = (crashSubTypes) => {
+  return {
+    type: RECEIVE_CRASH_SUB_TYPES,
+    crashSubTypes
   };
 };
 

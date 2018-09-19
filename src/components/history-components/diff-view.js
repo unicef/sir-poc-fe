@@ -4,10 +4,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
 
+import { getNameFromId } from '../common/utils.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
-import '@polymer/paper-button/paper-button.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import './styles.js';
@@ -71,7 +72,6 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
         type: Object,
         observer: 'itemChanged'
       },
-      staticData: Object,
       changes: Array,
       module: String,
       events: Array
@@ -79,7 +79,6 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
   }
 
   _stateChanged(state) {
-    this.set('staticData', state.staticData);
     this.set('events', state.events.list);
   }
 
@@ -99,12 +98,6 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
     this.set('changes', changes);
   }
 
-  getNameFromId(id, staticDataKey) {
-    let result = this.staticData[staticDataKey].find(v => v.id === Number(id));
-
-    return result.name || '';
-  }
-
   getReadableValue(key, value) {
     if (value === 'None') {
       return value;
@@ -116,23 +109,23 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
         result = this.events.find(e => e.id === value);
         return result.description;
       case 'contributing_factor':
-        return this.getNameFromId(value, 'factors');
+        return getNameFromId(value, 'factors');
       case 'incident_category':
-        return this.getNameFromId(value, 'incidentCategories');
+        return getNameFromId(value, 'incidentCategories');
       case 'threat_category':
-        return this.getNameFromId(value, 'threatCategories');
+        return getNameFromId(value, 'threatCategories');
       case 'vehicle_type':
-        return this.getNameFromId(value, 'vehicleTypes');
+        return getNameFromId(value, 'vehicleTypes');
       case 'criticality':
-        return this.getNameFromId(value, 'criticalities');
+        return getNameFromId(value, 'criticalities');
       case 'crash_type':
-        return this.getNameFromId(value, 'crashTypes');
+        return getNameFromId(value, 'crashTypes');
       case 'region':
-        return this.getNameFromId(value, 'regions');
+        return getNameFromId(value, 'regions');
       case 'target':
-        return this.getNameFromId(value, 'targets');
+        return getNameFromId(value, 'targets');
       case 'country':
-        return this.getNameFromId(value, 'countries');
+        return getNameFromId(value, 'countries');
       case 'incident_date':
         return this.prettyDate(value);
       default:

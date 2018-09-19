@@ -519,10 +519,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
-  isNotReported(reported) {
-    return reported === false;
-  }
-
   isAccident(incidentCategoryId) {
     if (!this.staticData) {
       return false;

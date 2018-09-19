@@ -293,6 +293,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       '_idChanged(impactId)'
     ];
   }
+
   _stateChanged(state) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;
@@ -305,7 +306,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
       return;
     }
-    this.data.un = true;
+    this.data.un_official = true;
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
     }

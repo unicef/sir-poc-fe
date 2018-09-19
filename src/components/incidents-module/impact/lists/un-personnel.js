@@ -88,7 +88,7 @@ export class UnPersonnelList extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.offline = state.app.offline;
     let incidentId = state.app.locationInfo.incidentId;
-    this.personnelList = state.incidents.personnel.filter(elem => '' + elem.incident_id === incidentId && elem.un);
+    this.personnelList = state.incidents.personnel.filter(elem => '' + elem.incident_id === incidentId && elem.un_official);
   }
 
   _notEditable(item, offline) {

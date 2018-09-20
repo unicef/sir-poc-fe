@@ -37,6 +37,7 @@ export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) 
   let operations = [
     ...await dispatch(syncEvacuations(newId, oldId)),
     ...await dispatch(syncProperties(newId, oldId)),
+    ...await dispatch(syncPremises(newId, oldId)),
   ];
 
   Promise.all(operations).then((results) => {
@@ -266,6 +267,130 @@ const syncProperties = (newId, oldId) => (dispatch, getState) =>  {
   properties.forEach(property => {
     property.incident_id = newId;
     operations.push(_syncProperty(property, dispatch));
+  });
+
+  return operations;
+}
+
+////////////////////////////////// Impacts on premises ///////////////////////////////////////////////////////////////
+
+
+export const EDIT_PREMISE_SUCCESS = 'EDIT_PREMISE_SUCCESS';
+export const ADD_PREMISE_SUCCESS = 'ADD_PREMISE_SUCCESS';
+export const RECEIVE_PREMISES = 'RECEIVE_PREMISES';
+
+
+const receiveIncidentPremises = (premises) => {
+  return {
+    type: RECEIVE_PREMISES,
+    premises
+  };
+};
+
+const addPremiseSuccess = (premise) => {
+  return {
+    type: ADD_PREMISE_SUCCESS,
+    premise
+  };
+};
+
+const editPremiseSuccess = (premise, id) => {
+  return {
+    type: EDIT_PREMISE_SUCCESS,
+    premise,
+    id
+  };
+};
+
+
+const addPremiseOnline = (premise, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPremise, premise).then((result) => {
+    dispatch(addPremiseSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const addPremiseOffline = (newPremise, dispatch) => {
+  newPremise.id = generateRandomHash();
+  newPremise.unsynced = true;
+  dispatch(addPremiseSuccess(newPremise));
+  return true;
+};
+
+export const addPremise = newPremise => (dispatch, getState) => {
+  if (getState().app.offline || isNaN(newPremise.incident_id)) {
+    return addPremiseOffline(newPremise, dispatch);
+  } else {
+    return addPremiseOnline(newPremise, dispatch);
+  }
+};
+
+const editPremiseOnline = (premise, dispatch, state) => {
+  let origPremise = state.incidents.premises.find(elem => elem.id === premise.id);
+  let modifiedFields = objDiff(origPremise, premise);
+  let endpoint = prepareEndpoint(Endpoints.editIncidentPremise, {id: premise.id});
+
+  return makeRequest(endpoint, modifiedFields).then((result) => {
+    dispatch(fetchIncidentPremises());
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const editPremiseOffline = (premise, dispatch) => {
+  premise.unsynced = true;
+  dispatch(editPremiseSuccess(premise, premise.id));
+  return true;
+};
+
+export const editPremise = premise => (dispatch, getState) => {
+  if (getState().app.offline === true || premise.unsynced) {
+    return editPremiseOffline(premise, dispatch);
+  } else {
+    return editPremiseOnline(premise, dispatch, getState());
+  }
+};
+
+export const fetchIncidentPremises = () => (dispatch, getState) => {
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentPremisesList).then((result) => {
+      dispatch(receiveIncidentPremises(result));
+    });
+  }
+};
+
+export const syncPremise = (premise) => (dispatch, getState) => {
+  return _syncPremise(premise, dispatch).then((result) => {
+    if (!result.success) {
+      dispatch(serverError(result.error));
+    }
+    return result.success;
+  });
+}
+
+const _syncPremise = (premise, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPremise, premise).then((result) => {
+    dispatch(editPremiseSuccess(result, premise.id));
+    return {success: true};
+  }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editPremiseSuccess(premise, premise.id));
+    return {success: false, error: error.response};
+  });
+}
+
+const syncPremises = (newId, oldId) => (dispatch, getState) =>  {
+  let premises = getState().incidents.premises.filter(ev => ev.incident_id == oldId);
+  let operations = [];
+
+  premises.forEach(premise => {
+    premise.incident_id = newId;
+    operations.push(_syncPremise(premise, dispatch));
   });
 
   return operations;

@@ -61,7 +61,8 @@ const receiveIncidentComments = (comments) => {
 const receiveIncident = (incident) => {
   return {
     type: RECEIVE_INCIDENT,
-    incident
+    incident,
+    id: incident.id
   };
 };
 

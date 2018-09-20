@@ -73,6 +73,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_properties/',
     method: 'GET'
   },
+  incidentAttachments: {
+    url: baseUrl + '/api/incident_attachments/',
+    method: 'POST'
+  },
   cities: {
     url: baseUrl + '/api/cities/',
     method: 'GET'

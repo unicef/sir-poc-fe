@@ -359,7 +359,10 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
     this.set('data.email', event.detail.selectedItem.email);
   }
 
-  _shouldShowCaptureForm(impactName) {
+   _shouldShowCaptureForm(impactName) {
+    if (!impactName) {
+      return false;
+    }
     let name = impactName.toLowerCase();
     let keyWords = [
       'abducted',

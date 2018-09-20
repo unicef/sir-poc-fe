@@ -624,7 +624,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   getAttachmentInfo(incidentId) {
     return {
-      endpoint: Endpoints.incidentAttachments.url,
+      endpoint: Endpoints.addIncidentAttachments.url,
       extraInfo: {
         incident: incidentId
       },

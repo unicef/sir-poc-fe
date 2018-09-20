@@ -3,10 +3,29 @@
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-input/paper-textarea.js';
+
+import {
+    addPersonnel,
+    editPersonnel,
+    syncPersonnel
+  } from '../../../../actions/incident-impacts.js';
 import { store } from '../../../../redux/store.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
+import { updatePath } from '../../../common/navigation-helper.js';
+import {
+    resetFieldsValidations,
+    validateFields
+  } from '../../../common/validations-helper.js';
+import '../../../common/etools-dropdown/etools-dropdown-lite.js';
+import '../../../common/datepicker-lite.js';
+
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
+import '../../../styles/form-fields-styles.js';
 
 /**
  * @polymer
@@ -38,7 +57,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                             placeholder="&#8212;"
                             readonly$="[[readonly]]"
                             label="First name"
-                            value="{{data.first_name}}"
+                            value="{{data.person.first_name}}"
                             required auto-validate
                             error-message="First name is required">
                 </paper-input>
@@ -48,7 +67,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                             placeholder="&#8212;"
                             readonly$="[[readonly]]"
                             label="Last name"
-                            value="{{data.last_name}}"
+                            value="{{data.person.last_name}}"
                             required auto-validate
                             error-message="Last name is required">
                 </paper-input>
@@ -59,7 +78,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                         label="Gender"
                         readonly="[[readonly]]"
                         options="[[staticData.genders]]"
-                        selected="{{data.gender}}"
+                        selected="{{data.person.gender}}"
                         required auto-validate
                         error-message="Gender is required">
               </etools-dropdown-lite>
@@ -69,7 +88,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
           <div class="row-h flex-c">
             <div class="col col-4">
               <datepicker-lite id="birthDate"
-                              value="{{data.date_of_birth}}"
+                              value="{{data.person.date_of_birth}}"
                               readonly="[[readonly]]"
                               label="Date of birth">
               </datepicker-lite>
@@ -80,7 +99,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                         label="Nationality"
                         readonly="[[readonly]]"
                         options="[[staticData.nationalities]]"
-                        selected="{{data.nationality}}">
+                        selected="{{data.person.nationality}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -91,36 +110,27 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="Address"
-                          value="{{data.address}}">
+                          value="{{data.person.address}}">
               </paper-input>
             </div>
           </div>
           <div class="row-h flex-c">
-            <div class="col col-4">
+            <div class="col col-6">
               <etools-dropdown-lite
                           id="country"
                           label="Country"
                           readonly="[[readonly]]"
                           options="[[staticData.countries]]"
-                          selected="{{data.country}}">
+                          selected="{{data.person.country}}">
               </etools-dropdown-lite>
             </div>
-            <div class="col col-4">
-              <etools-dropdown-lite
-                          id="region"
-                          label="Region"
-                          readonly="[[readonly]]"
-                          options="[[staticData.regions]]"
-                          selected="{{data.region}}">
-              </etools-dropdown-lite>
-            </div>
-            <div class="col col-4">
+            <div class="col col-6">
               <etools-dropdown-lite
                           id="city"
                           label="City"
                           readonly="[[readonly]]"
                           options="[[staticData.cities]]"
-                          selected="{{data.city}}">
+                          selected="{{data.person.city}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -130,7 +140,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="Email"
-                          value="{{data.email}}">
+                          value="{{data.person.email}}">
               </paper-input>
             </div>
           </div>
@@ -140,7 +150,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="Contact"
-                          value="{{data.conctact}}">
+                          value="{{data.person.contact}}">
               </paper-textarea>
             </div>
           </div>
@@ -156,7 +166,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
-                            selected="{{data.impact_type}}"
+                            selected="{{data.impact}}"
                             required auto-validate
                             error-message="Impact is required">
                 </etools-dropdown-lite>
@@ -174,27 +184,124 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
             </div>
           </div>
         </fieldset>
+        <paper-button on-click="save">Save</paper-button>
       </div>
     `;
   }
 
   static get properties() {
     return {
+      selectedImpactType: Object,
       staticData: Array,
+      impactId: String,
+      visible: Boolean,
+      offline: Boolean,
       readonly: {
         type: Boolean,
         value: false
       },
       data: {
         type: Object,
-        value: {}
+        value: {
+          person: {}
+        }
       },
+      modelForNew: {
+        type: Object,
+        value: {
+          person: {}
+        }
+      },
+      isNew: {
+        type: Boolean,
+        computed: '_computeIsNew(impactId)'
+      },
+      statuses: {
+        type: Array,
+        value: [
+          {id: 'On duty', name: 'On duty'},
+          {id: 'Off duty', name: 'Off duty'},
+          {id: 'On mission', name: 'On mission'},
+          {id: 'On leave', name: 'On leave'}
+        ]
+      },
+      fieldsToValidateSelectors: {
+        type: Array,
+        value: [
+          '#personnelType',
+          '#agency',
+          '#impact'
+        ]
+      }
     };
   }
 
-  _stateChanged(state) {
-    this.staticData = state.staticData;
+  static get observers() {
+    return [
+      '_idChanged(impactId)'
+    ];
   }
+
+  _stateChanged(state) {
+    this.offline = state.app.offline;
+    this.staticData = state.staticData;
+    this.personnelList = state.incidents.personnel;
+    this.data.incident = state.app.locationInfo.incidentId;
+  }
+
+  async save() {
+    let result;
+    if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      return;
+    }
+    this.data.person.un_official = false;
+
+    if (this.isNew) {
+      result = await store.dispatch(addPersonnel(this.data));
+    }
+    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
+      result = await store.dispatch(syncPersonnel(this.data));
+    }
+    else {
+      result = await store.dispatch(editPersonnel(this.data));
+    }
+
+    if (result === true) {
+      updatePath(`incidents/impact/${this.data.incident}/`);
+      this.resetData();
+    }
+    if (result === false) {
+      scrollToTop();
+    }
+  }
+
+  resetValidations() {
+    if(this.visible) {
+      resetFieldsValidations(this, this.fieldsToValidateSelectors);
+    }
+  }
+
+  resetData() {
+    this.data = JSON.parse(JSON.stringify(this.modelForNew));
+  }
+
+  _computeIsNew(id) {
+    return id === 'new';
+  }
+
+  _idChanged(id) {
+    if (!id || this.isNew) {
+      this.resetData();
+      this.resetValidations();
+      return;
+    }
+    let workingItem = this.personnelList.find(item => '' + item.id === id);
+    if (workingItem) {
+      this.data = JSON.parse(JSON.stringify(workingItem));
+      this.resetValidations();
+    }
+  }
+
 }
 
 window.customElements.define(NonUnPersonnelForm.is, NonUnPersonnelForm);

@@ -119,7 +119,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="save">Save</button>
+        <paper-button on-click="save">Save</paper-button>
       </div>
     `;
   }

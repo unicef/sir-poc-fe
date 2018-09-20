@@ -50,7 +50,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
             <p> Show stastistics between </p>
           </div>
         </div>
-            
+
         <div class="row-h">
 
           <div class="col col-5">
@@ -69,6 +69,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
         </div>
       </div>
 
+      <div class="card">
         <div class="row-h">
           <div class="col col-12">
             <dashboard-list></dashboard-list>

@@ -52,7 +52,7 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
                   [[item.address]]
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                  <a href="/incidents/impact/[[item.incident_id]]/non-un/[[item.id]]/"
+                  <a href="/incidents/impact/[[item.incident]]/non-un/[[item.id]]/"
                       title="Edit non-UN Personnel impact"
                       hidden$="[[_notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
@@ -88,7 +88,8 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.offline = state.app.offline;
     let incidentId = state.app.locationInfo.incidentId;
-    this.personnelList = state.incidents.personnel.filter(elem => '' + elem.incident_id === incidentId && !elem.un_official);
+    this.personnelList = state.incidents.personnel.filter(
+        elem => '' + elem.incident === incidentId && !elem.person.un_official);
   }
 
   _notEditable(item, offline) {

@@ -57,7 +57,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                             placeholder="&#8212;"
                             readonly$="[[readonly]]"
                             label="First name"
-                            value="{{data.first_name}}"
+                            value="{{data.person.first_name}}"
                             required auto-validate
                             error-message="First name is required">
                 </paper-input>
@@ -67,7 +67,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                             placeholder="&#8212;"
                             readonly$="[[readonly]]"
                             label="Last name"
-                            value="{{data.last_name}}"
+                            value="{{data.person.last_name}}"
                             required auto-validate
                             error-message="Last name is required">
                 </paper-input>
@@ -78,7 +78,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                         label="Gender"
                         readonly="[[readonly]]"
                         options="[[staticData.genders]]"
-                        selected="{{data.gender}}"
+                        selected="{{data.person.gender}}"
                         required auto-validate
                         error-message="Gender is required">
               </etools-dropdown-lite>
@@ -88,7 +88,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
           <div class="row-h flex-c">
             <div class="col col-4">
               <datepicker-lite id="birthDate"
-                              value="{{data.date_of_birth}}"
+                              value="{{data.person.date_of_birth}}"
                               readonly="[[readonly]]"
                               label="Date of birth">
               </datepicker-lite>
@@ -99,7 +99,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                         label="Nationality"
                         readonly="[[readonly]]"
                         options="[[staticData.nationalities]]"
-                        selected="{{data.nationality}}">
+                        selected="{{data.person.nationality}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -110,7 +110,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="Address"
-                          value="{{data.address}}">
+                          value="{{data.person.address}}">
               </paper-input>
             </div>
           </div>
@@ -121,7 +121,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           label="Country"
                           readonly="[[readonly]]"
                           options="[[staticData.countries]]"
-                          selected="{{data.country}}">
+                          selected="{{data.person.country}}">
               </etools-dropdown-lite>
             </div>
             <div class="col col-6">
@@ -130,7 +130,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           label="City"
                           readonly="[[readonly]]"
                           options="[[staticData.cities]]"
-                          selected="{{data.city}}">
+                          selected="{{data.person.city}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -140,7 +140,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="Email"
-                          value="{{data.email}}">
+                          value="{{data.person.email}}">
               </paper-input>
             </div>
           </div>
@@ -150,7 +150,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           label="Contact"
-                          value="{{data.conctact}}">
+                          value="{{data.person.contact}}">
               </paper-textarea>
             </div>
           </div>
@@ -202,7 +202,15 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       },
       data: {
         type: Object,
-        value: {}
+        value: {
+          person: {}
+        }
+      },
+      modelForNew: {
+        type: Object,
+        value: {
+          person: {}
+        }
       },
       isNew: {
         type: Boolean,
@@ -238,7 +246,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
-    this.data.incident_id = state.app.locationInfo.incidentId;
+    this.data.incident = state.app.locationInfo.incidentId;
   }
 
   async save() {
@@ -246,11 +254,12 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
       return;
     }
-    this.data.un_official = false;
+    this.data.person.un_official = false;
+
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
     }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
     }
     else {
@@ -258,8 +267,8 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
-      this.data = {};
+      updatePath(`incidents/impact/${this.data.incident}/`);
+      this.resetData();
     }
     if (result === false) {
       scrollToTop();
@@ -272,19 +281,23 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
     }
   }
 
+  resetData() {
+    this.data = JSON.parse(JSON.stringify(this.modelForNew));
+  }
+
   _computeIsNew(id) {
     return id === 'new';
   }
 
   _idChanged(id) {
     if (!id || this.isNew) {
-      this.data = {};
+      this.resetData();
       this.resetValidations();
       return;
     }
     let workingItem = this.personnelList.find(item => '' + item.id === id);
     if (workingItem) {
-      this.data = JSON.parse(JSON.stringify(workingItem)) || {};
+      this.data = JSON.parse(JSON.stringify(workingItem));
       this.resetValidations();
     }
   }

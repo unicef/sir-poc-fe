@@ -569,7 +569,7 @@ const addPersonnelOffline = (newPersonnel, dispatch) => {
 };
 
 export const addPersonnel = newPersonnel => (dispatch, getState) => {
-  if (getState().app.offline || isNaN(newPersonnel.incident_id)) {
+  if (getState().app.offline || isNaN(newPersonnel.incident)) {
     return addPersonnelOffline(newPersonnel, dispatch);
   } else {
     return addPersonnelOnline(newPersonnel, dispatch);
@@ -633,11 +633,11 @@ const _syncPersonnel = (personnel, dispatch) => {
 }
 
 const syncPersonnelList = (newId, oldId) => (dispatch, getState) =>  {
-  let personnel = getState().incidents.personnel.filter(ev => ev.incident_id == oldId);
+  let personnel = getState().incidents.personnel.filter(ev => ev.incident == oldId);
   let operations = [];
 
   personnel.forEach(personnel => {
-    personnel.incident_id = newId;
+    personnel.incident = newId;
     operations.push(_syncPersonnel(personnel, dispatch));
   });
 

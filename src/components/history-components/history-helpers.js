@@ -22,6 +22,7 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'location': 'Location',
           'start_date': 'Start Date',
           'crash_type': 'Crash Type',
+          'crash_sub_type': 'Crash Subtype',
           'criticality': 'Criticality',
           'description': 'Description',
           'vehicle_type': 'Vehicle Type',

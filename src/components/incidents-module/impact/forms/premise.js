@@ -111,7 +111,7 @@ export class PremiseForm extends connect(store)(PolymerElement) {
               </etools-dropdown-lite>
             </div>
           </div>
-        </filedset>
+        </fieldset>
 
         <fieldset>
           <legend><h3>Impact details</h3></legend>

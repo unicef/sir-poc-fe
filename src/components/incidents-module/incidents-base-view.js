@@ -14,7 +14,7 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import { validateFields, resetFieldsValidations } from '../common/validations-helper.js';
+import { validateAllRequired, resetFieldsValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
@@ -142,57 +142,61 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
             </div>
 
-            <div class="row-h flex-c" hidden$="[[!isTrafficAccident(selectedIncidentSubcategory, staticData)]]">
-              <div class="col col-4">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Vehicle Type"
-                                      options="[[staticData.vehicleTypes]]"
-                                      required auto-validate
-                                      selected="{{incident.vehicle_type}}">
-                </etools-dropdown-lite>
+            <template is="dom-if" if="[[isTrafficAccident(selectedIncidentSubcategory, staticData)]]" restamp>
+              <div class="row-h flex-c">
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        label="Vehicle Type"
+                                        options="[[staticData.vehicleTypes]]"
+                                        required auto-validate
+                                        selected="{{incident.vehicle_type}}">
+                  </etools-dropdown-lite>
+                </div>
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        label="Crash Type"
+                                        options="[[staticData.crashTypes]]"
+                                        required auto-validate
+                                        selected="{{incident.crash_type}}">
+                  </etools-dropdown-lite>
+                </div>
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        hidden$="[[isCrashTypeOther(incident.crash_type)]]"
+                                        label="Crash Subtype"
+                                        options="[[showSubType(incident.crash_type)]]"
+                                        option-value="name"
+                                        required auto-validate
+                                        selected="{{incident.crash_sub_type}}">
+                  </etools-dropdown-lite>
+                  <paper-input readonly="[[readonly]]"
+                              label="Crash Subtype"
+                              type="text"
+                              placeholder="&#8212;"
+                              value="{{incident.crash_sub_type}}"
+                              hidden$="[[!isCrashTypeOther(incident.crash_type)]]"
+                              required$="[[isCrashTypeOther(incident.crash_type)]]"
+                              auto-validate>
+                  </paper-input>
+                </div>
               </div>
-              <div class="col col-4">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Crash Type"
-                                      options="[[staticData.crashTypes]]"
-                                      required auto-validate
-                                      selected="{{incident.crash_type}}">
-                </etools-dropdown-lite>
+              <div class="row-h flex-c">
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        label="Contributing factor"
+                                        options="[[staticData.factors]]"
+                                        required auto-validate
+                                        selected="{{incident.contributing_factor}}">
+                  </etools-dropdown-lite>
+                </div>
+                <div class="col col-3">
+                  <paper-checkbox checked="{{incident.near_miss}}"
+                                  disabled="[[readonly]]">
+                    Near miss
+                  </paper-checkbox>
+                </div>
               </div>
-              <div class="col col-4">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      hidden="[[isCrashTypeOther(incident.crash_type)]]"
-                                      label="Crash Subtype"
-                                      options="[[showSubType(incident.crash_type)]]"
-                                      option-value="name"
-                                      required auto-validate
-                                      selected="{{incident.crash_sub_type}}">
-                </etools-dropdown-lite>
-                <paper-input readonly="[[readonly]]"
-                             hidden="[[!isCrashTypeOther(incident.crash_type)]]"
-                             label="Crash Subtype" type="text"
-                             placeholder="&#8212;" value="{{incident.crash_sub_type}}"
-                             required auto-validate>
-                </paper-input>
-              </div>
-            </div>
-
-            <div class="row-h flex-c" hidden$="[[!isTrafficAccident(selectedIncidentSubcategory, staticData)]]">
-              <div class="col col-4">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Contributing factor"
-                                      options="[[staticData.factors]]"
-                                      required auto-validate
-                                      selected="{{incident.contributing_factor}}">
-                </etools-dropdown-lite>
-              </div>
-              <div class="col col-3">
-                <paper-checkbox checked="{{incident.near_miss}}"
-                                disabled="[[readonly]]">
-                  Near miss
-                </paper-checkbox>
-              </div>
-            </div>
+            </template>
 
             <div class="row-h flex-c">
               <div class="col col-12">
@@ -598,7 +602,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   validate() {
-    return validateFields(this, this.fieldsToValidateSelectors);
+    return validateAllRequired(this);
   }
 
   resetValidations() {

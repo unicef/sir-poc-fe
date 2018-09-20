@@ -91,7 +91,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         options="[[staticData.targets]]"
                                         selected="{{incident.target}}"
                                         selected-item="{{selectedTarget}}"
-                                        required="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                        required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                                         error-message="Target is required">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedTarget.description]]</span>
@@ -176,7 +176,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
             </div>
-              
+
             <div class="row-h flex-c" hidden$="[[!isTrafficAccident(selectedIncidentSubcategory, staticData)]]">
               <div class="col col-4">
                 <etools-dropdown-lite readonly="[[readonly]]"
@@ -199,7 +199,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <paper-textarea id="injuries" readonly$="[[readonly]]" label="Injuries"
                                 placeholder="&#8212;"
                                 value="{{incident.injuries}}"
-                                required="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                                 error-message="Injuries details are required"></paper-textarea>
               </div>
             </div>
@@ -260,7 +260,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
                                       selected="{{incident.primary_person.id}}"
-                                      required="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                      required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
               </div>
@@ -329,7 +329,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <paper-input id="city"
                           readonly$="[[readonly]]" label="City" type="text"
                           placeholder="&#8212;" value="{{incident.city}}"
-                          required="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                           error-message="City is required"></paper-input>
             </div>
 
@@ -337,7 +337,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <paper-input id="street"
                           readonly$="[[readonly]]" label="Street" type="text"
                           placeholder="&#8212;" value="{{incident.street}}"
-                          required="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                           error-message="Street is required"></paper-input>
             </div>
           </div>

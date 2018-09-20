@@ -1,4 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store} from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
@@ -29,12 +30,32 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           text-align: center;
         }
 
-        datepicker-lite {
-          --paper-input-container: {
-            margin: 0 auto;
-            max-width: 160px;
-          }
+        .statistics-between {
+          @apply --layout-end;
+          @apply --layout-center-justified;
         }
+        
+        .statistics-between span {
+          margin: 0 24px 11px 24px;
+        }
+        
+        .statistics-between span:first-child {
+          margin-left: 0;
+        }
+
+        @media only screen and (max-width: 1024px) {
+          .statistics-between {
+            @apply --layout-vertical;
+            @apply --layout-start-justified;
+            @apply --layout-center;
+          }
+
+          .statistics-between span {
+          margin: 20px 0 -10px 0;
+          }
+          
+        }
+        
       </style>
 
       <div class="card">
@@ -49,28 +70,16 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           </div>
         </div>
 
-        <div class="row-h">
-          <div class="col col-4"></div>
-          <div class="col col-4">
-            <div class="center-text">
-              <p> Show stastistics between </p>
-            </div>
+        <div class="row-h statistics-between">
+          <span>Show stastistics between</span>
 
-            <div class="center-text">
-              <datepicker-lite value="{{selectedStartDate}}">
-              </datepicker-lite>
-            </div>
+          <datepicker-lite label="From" value="{{selectedStartDate}}">
+          </datepicker-lite>
 
-            <div class="center-text">
-              <p> and </p>
-            </div>
+          <span> and </span>
 
-            <div class="center-text">
-              <datepicker-lite value="{{selectedEndDate}}">
-              </datepicker-lite>
-            </div>
-          </div>
-          <div class="col col-4"></div>
+          <datepicker-lite label="To" value="{{selectedEndDate}}">
+          </datepicker-lite>
         </div>
 
         <div class="row-h">

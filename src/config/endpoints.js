@@ -145,6 +145,10 @@ export const Endpoints = {
     url: baseUrl + '/api/crash_types/',
     method: 'GET'
   },
+  crashSubTypes: {
+    url: baseUrl + '/api/crash_subtypes/',
+    method: 'GET'
+  },
   agencies: {
     url: baseUrl + '/api/agencies/',
     method: 'GET'

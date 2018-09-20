@@ -35,8 +35,11 @@ const editEvacuationSuccess = (evacuation, id) => {
 export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) =>  {
   let state = getState();
   let operations = [
+    ...await dispatch(syncPersonnelList(newId, oldId)),
     ...await dispatch(syncEvacuations(newId, oldId)),
     ...await dispatch(syncProperties(newId, oldId)),
+    ...await dispatch(syncProgrammes(newId, oldId)),
+    ...await dispatch(syncPremises(newId, oldId))
   ];
 
   Promise.all(operations).then((results) => {
@@ -266,6 +269,376 @@ const syncProperties = (newId, oldId) => (dispatch, getState) =>  {
   properties.forEach(property => {
     property.incident_id = newId;
     operations.push(_syncProperty(property, dispatch));
+  });
+
+  return operations;
+}
+
+////////////////////////////////// Impacts on premises ///////////////////////////////////////////////////////////////
+
+
+export const EDIT_PREMISE_SUCCESS = 'EDIT_PREMISE_SUCCESS';
+export const ADD_PREMISE_SUCCESS = 'ADD_PREMISE_SUCCESS';
+export const RECEIVE_PREMISES = 'RECEIVE_PREMISES';
+
+
+const receiveIncidentPremises = (premises) => {
+  return {
+    type: RECEIVE_PREMISES,
+    premises
+  };
+};
+
+const addPremiseSuccess = (premise) => {
+  return {
+    type: ADD_PREMISE_SUCCESS,
+    premise
+  };
+};
+
+const editPremiseSuccess = (premise, id) => {
+  return {
+    type: EDIT_PREMISE_SUCCESS,
+    premise,
+    id
+  };
+};
+
+
+const addPremiseOnline = (premise, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPremise, premise).then((result) => {
+    dispatch(addPremiseSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const addPremiseOffline = (newPremise, dispatch) => {
+  newPremise.id = generateRandomHash();
+  newPremise.unsynced = true;
+  dispatch(addPremiseSuccess(newPremise));
+  return true;
+};
+
+export const addPremise = newPremise => (dispatch, getState) => {
+  if (getState().app.offline || isNaN(newPremise.incident_id)) {
+    return addPremiseOffline(newPremise, dispatch);
+  } else {
+    return addPremiseOnline(newPremise, dispatch);
+  }
+};
+
+const editPremiseOnline = (premise, dispatch, state) => {
+  let origPremise = state.incidents.premises.find(elem => elem.id === premise.id);
+  let modifiedFields = objDiff(origPremise, premise);
+  let endpoint = prepareEndpoint(Endpoints.editIncidentPremise, {id: premise.id});
+
+  return makeRequest(endpoint, modifiedFields).then((result) => {
+    dispatch(fetchIncidentPremises());
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const editPremiseOffline = (premise, dispatch) => {
+  premise.unsynced = true;
+  dispatch(editPremiseSuccess(premise, premise.id));
+  return true;
+};
+
+export const editPremise = premise => (dispatch, getState) => {
+  if (getState().app.offline === true || premise.unsynced) {
+    return editPremiseOffline(premise, dispatch);
+  } else {
+    return editPremiseOnline(premise, dispatch, getState());
+  }
+};
+
+export const fetchIncidentPremises = () => (dispatch, getState) => {
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentPremisesList).then((result) => {
+      dispatch(receiveIncidentPremises(result));
+    });
+  }
+};
+
+export const syncPremise = (premise) => (dispatch, getState) => {
+  return _syncPremise(premise, dispatch).then((result) => {
+    if (!result.success) {
+      dispatch(serverError(result.error));
+    }
+    return result.success;
+  });
+}
+
+const _syncPremise = (premise, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPremise, premise).then((result) => {
+    dispatch(editPremiseSuccess(result, premise.id));
+    return {success: true};
+  }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editPremiseSuccess(premise, premise.id));
+    return {success: false, error: error.response};
+  });
+}
+
+const syncPremises = (newId, oldId) => (dispatch, getState) =>  {
+  let premises = getState().incidents.premises.filter(ev => ev.incident_id == oldId);
+  let operations = [];
+
+  premises.forEach(premise => {
+    premise.incident_id = newId;
+    operations.push(_syncPremise(premise, dispatch));
+  });
+
+  return operations;
+}
+
+////////////////////////////////// Impacts on programmes ///////////////////////////////////////////////////////////////
+
+
+export const EDIT_PROGRAMME_SUCCESS = 'EDIT_PROGRAMME_SUCCESS';
+export const ADD_PROGRAMME_SUCCESS = 'ADD_PROGRAMME_SUCCESS';
+export const RECEIVE_PROGRAMMES = 'RECEIVE_PROGRAMMES';
+
+const receiveIncidentProgrammes = (programmes) => {
+  return {
+    type: RECEIVE_PROGRAMMES,
+    programmes
+  };
+};
+
+const addProgrammeSuccess = (programme) => {
+  return {
+    type: ADD_PROGRAMME_SUCCESS,
+    programme
+  };
+};
+
+const editProgrammeSuccess = (programme, id) => {
+  return {
+    type: EDIT_PROGRAMME_SUCCESS,
+    programme,
+    id
+  };
+};
+
+
+const addProgrammeOnline = (programme, dispatch) => {
+  return makeRequest(Endpoints.addIncidentProgramme, programme).then((result) => {
+    dispatch(addProgrammeSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const addProgrammeOffline = (newProgramme, dispatch) => {
+  newProgramme.id = generateRandomHash();
+  newProgramme.unsynced = true;
+  dispatch(addProgrammeSuccess(newProgramme));
+  return true;
+};
+
+export const addProgramme = newProgramme => (dispatch, getState) => {
+  if (getState().app.offline || isNaN(newProgramme.incident_id)) {
+    return addProgrammeOffline(newProgramme, dispatch);
+  } else {
+    return addProgrammeOnline(newProgramme, dispatch);
+  }
+};
+
+const editProgrammeOnline = (programme, dispatch, state) => {
+  let origProgramme = state.incidents.programmes.find(elem => elem.id === programme.id);
+  let modifiedFields = objDiff(origProgramme, programme);
+  let endpoint = prepareEndpoint(Endpoints.editIncidentProgramme, {id: programme.id});
+
+  return makeRequest(endpoint, modifiedFields).then((result) => {
+    dispatch(fetchIncidentProgrammes());
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const editProgrammeOffline = (programme, dispatch) => {
+  programme.unsynced = true;
+  dispatch(editProgrammeSuccess(programme, programme.id));
+  return true;
+};
+
+export const editProgramme = programme => (dispatch, getState) => {
+  if (getState().app.offline === true || programme.unsynced) {
+    return editProgrammeOffline(programme, dispatch);
+  } else {
+    return editProgrammeOnline(programme, dispatch, getState());
+  }
+};
+
+export const fetchIncidentProgrammes = () => (dispatch, getState) => {
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentProgrammesList).then((result) => {
+      dispatch(receiveIncidentProgrammes(result));
+    });
+  }
+};
+
+export const syncProgramme = (programme) => (dispatch, getState) => {
+  return _syncProgramme(programme, dispatch).then((result) => {
+    if (!result.success) {
+      dispatch(serverError(result.error));
+    }
+    return result.success;
+  });
+}
+
+const _syncProgramme = (programme, dispatch) => {
+  return makeRequest(Endpoints.addIncidentProgramme, programme).then((result) => {
+    dispatch(editProgrammeSuccess(result, programme.id));
+    return {success: true};
+  }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editProgrammeSuccess(programme, programme.id));
+    return {success: false, error: error.response};
+  });
+}
+
+const syncProgrammes = (newId, oldId) => (dispatch, getState) =>  {
+  let programmes = getState().incidents.programmes.filter(ev => ev.incident_id == oldId);
+  let operations = [];
+
+  programmes.forEach(programme => {
+    programme.incident_id = newId;
+    operations.push(_syncProgramme(programme, dispatch));
+  });
+
+  return operations;
+}
+
+
+////////////////////////////////// Persons impacted ///////////////////////////////////////////////////////////
+
+export const EDIT_PERSONNEL_SUCCESS = 'EDIT_PERSONNEL_SUCCESS';
+export const ADD_PERSONNEL_SUCCESS = 'ADD_PERSONNEL_SUCCESS';
+export const RECEIVE_PERSONNEL = 'RECEIVE_PERSONNEL';
+
+const receiveIncidentPersonnel = (personnel) => {
+  return {
+    type: RECEIVE_PERSONNEL,
+    personnel
+  };
+};
+
+const addPersonnelSuccess = (personnel) => {
+  return {
+    type: ADD_PERSONNEL_SUCCESS,
+    personnel
+  };
+};
+
+const editPersonnelSuccess = (personnel, id) => {
+  return {
+    type: EDIT_PERSONNEL_SUCCESS,
+    personnel,
+    id
+  };
+};
+
+
+const addPersonnelOnline = (personnel, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPersonnel, personnel).then((result) => {
+    dispatch(addPersonnelSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const addPersonnelOffline = (newPersonnel, dispatch) => {
+  newPersonnel.id = generateRandomHash();
+  newPersonnel.unsynced = true;
+  dispatch(addPersonnelSuccess(newPersonnel));
+  return true;
+};
+
+export const addPersonnel = newPersonnel => (dispatch, getState) => {
+  if (getState().app.offline || isNaN(newPersonnel.incident)) {
+    return addPersonnelOffline(newPersonnel, dispatch);
+  } else {
+    return addPersonnelOnline(newPersonnel, dispatch);
+  }
+};
+
+const editPersonnelOnline = (personnel, dispatch, state) => {
+  let origPersonnel = state.incidents.personnel.find(elem => elem.id === personnel.id);
+  let modifiedFields = objDiff(origPersonnel, personnel);
+  let endpoint = prepareEndpoint(Endpoints.editIncidentPersonnel, {id: personnel.id});
+
+  return makeRequest(endpoint, modifiedFields).then((result) => {
+    dispatch(fetchIncidentPersonnel());
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const editPersonnelOffline = (personnel, dispatch) => {
+  personnel.unsynced = true;
+  dispatch(editPersonnelSuccess(personnel, personnel.id));
+  return true;
+};
+
+export const editPersonnel = personnel => (dispatch, getState) => {
+  if (getState().app.offline === true || personnel.unsynced) {
+    return editPersonnelOffline(personnel, dispatch);
+  } else {
+    return editPersonnelOnline(personnel, dispatch, getState());
+  }
+};
+
+export const fetchIncidentPersonnel = () => (dispatch, getState) => {
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentPersonnelList).then((result) => {
+      dispatch(receiveIncidentPersonnel(result));
+    });
+  }
+};
+
+export const syncPersonnel = (personnel) => (dispatch, getState) => {
+  return _syncPersonnel(personnel, dispatch).then((result) => {
+    if (!result.success) {
+      dispatch(serverError(result.error));
+    }
+    return result.success;
+  });
+}
+
+const _syncPersonnel = (personnel, dispatch) => {
+  return makeRequest(Endpoints.addIncidentPersonnel, personnel).then((result) => {
+    dispatch(editPersonnelSuccess(result, personnel.id));
+    return {success: true};
+  }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editPersonnelSuccess(personnel, personnel.id));
+    return {success: false, error: error.response};
+  });
+}
+
+const syncPersonnelList = (newId, oldId) => (dispatch, getState) =>  {
+  let personnel = getState().incidents.personnel.filter(ev => ev.incident == oldId);
+  let operations = [];
+
+  personnel.forEach(personnel => {
+    personnel.incident = newId;
+    operations.push(_syncPersonnel(personnel, dispatch));
   });
 
   return operations;

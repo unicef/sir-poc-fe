@@ -37,22 +37,31 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       </style>
 
       <etools-data-table-header id="listHeader" no-title>
-        <etools-data-table-column class="col-2">
-          Case number
+        <etools-data-table-column class="col-1">
+          Case Number
         </etools-data-table-column>
-        <etools-data-table-column class="col-2">
-          Case type
+        <etools-data-table-column class="col-3">
+          Description
         </etools-data-table-column>
-        <etools-data-table-column class="col-2">
+        <etools-data-table-column class="col-1">
+          Case Type
+        </etools-data-table-column>
+        <etools-data-table-column class="col-1">
+          Country
+        </etools-data-table-column>
+        <etools-data-table-column class="col-1">
           Status
         </etools-data-table-column>
         <etools-data-table-column class="col-2">
           Date created
         </etools-data-table-column>
-        <etools-data-table-column class="col-2">
-          Date edited
+        <etools-data-table-column class="col-1">
+          Category
         </etools-data-table-column>
-        <etools-data-table-column class="col-2">
+        <etools-data-table-column class="col-1">
+          Subcategory
+        </etools-data-table-column>
+        <etools-data-table-column class="col-1">
           Actions
         </etools-data-table-column>
       </etools-data-table-header>
@@ -60,47 +69,65 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       <template id="rows" is="dom-repeat" items="[[cases]]">
         <etools-data-table-row unsynced$="[[item.unsynced]]">
           <div slot="row-data">
-            <span class="col-data col-2" data-col-header-label="Case number">
-              <a href="/[[item.case_type]]s/view/[[item.id]]"> N/A </a>
+            <span class="col-data col-1" data-col-header-label="Case Number">
+              <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
             </span>
-            <span class="col-data col-2" data-col-header-label="Case type">
+            <span class="col-data col-3" data-col-header-label="Description">
+              [[briefDescription(item.description)]]
+            </span>
+            <span class="col-data col-1" data-col-header-label="Case type">
               [[item.case_type]]
             </span>
-            <span class="col-data col-2" data-col-header-label="Status">
-              <template is="dom-if" if="[[!item.unsynced]]">
-                Synced
+            <span class="col-data col-1" data-col-header-label="Country">
+              <template is="dom-if" if="[[!!item.location]]">
+                [[item.location]]
               </template>
-              <template is="dom-if" if="[[item.unsynced]]">
-                <etools-info-tooltip class="info" open-on-click>
-                  <span slot="field">Not Synced</span>
-                  <span slot="message">This [[item.case_type]] has not been sumitted to the server. Go to its edit page
-                    and save it when an internet connection is availale.</span>
-                </etools-info-tooltip>
+              <template is="dom-if" if="[[!!item.country]]">
+                [[getNameFromId(item.country, 'countries')]]
+              </template>
+            </span>
+            <span class="col-data col-1" data-col-header-label="Status">
+              <template is="dom-if" if="[[!!item.status]]">
+                [[item.status]]
+              </template>
+              <template is="dom-if" if="[[!item.status]]">
+                N/A
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
               [[prettyDate(item.submitted_date)]]
             </span>
-            <span class="col-data col-2" data-col-header-label="Date edited">
-              [[prettyDate(item.last_modify_date)]]
+            <span class="col-data col-1" data-col-header-label="Category">
+              <template is="dom-if" if="[[!item.location]]">
+                [[getNameFromId(item.incident_category, 'incidentCategories')]]
+              </template>
             </span>
-            <span class="col-data col-2" data-col-header-label="Actions">
-              <a href="/[[item.case_type]]s/view/[[item.id]]">
-                <iron-icon icon="assignment" title="View [[item.case_type]]"></iron-icon>
-              </a>
-              <a href="/[[item.case_type]]s/edit/[[item.id]]"
-                  title="Edit [[item.case_type]]"
-                  hidden$="[[_notEditable(item, offline)]]">
-                <iron-icon icon="editor:mode-edit"></iron-icon>
-              </a>
+            <span class="col-data col-1" data-col-header-label="Subcategory">
+              <template is="dom-if" if="[[!item.location]]">
+                [[getIncidentSubcategory(item.incident_subcategory)]]
+              </template>
+            </span>
+            <span class="col-data col-1" data-col-header-label="Actions">
+              <template is="dom-if" if="[[checkStatus(item.status)]]">
+                <a href="/[[item.case_type]]s/view/[[item.id]]">
+                  <iron-icon icon="assignment" title="View [[item.case_type]]"></iron-icon>
+                </a>
+              </template>
+              <template is="dom-if" if="[[!checkStatus(item.status)]]">
+                <a href="/[[item.case_type]]s/edit/[[item.id]]"
+                    title="Edit [[item.case_type]]"
+                    hidden$="[[_notEditable(item, offline)]]">
+                  <iron-icon icon="editor:mode-edit"></iron-icon>
+                </a>
+              </template>
               <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                <div> <!-- this div prevents resizing of the icon on low resolutions -->
-                  <iron-icon icon="notification:sync"
-                             title="Sync [[item.case_type]]"
-                             class="sync-btn"
-                             on-click="_syncItem">
-                  </iron-icon>
-                </div>
+                <etools-info-tooltip class="info" icon="notification:sync" open-on-click
+                            title="Sync [[item.case_type]]"
+                            class="sync-btn"
+                            on-click="_syncItem">
+                  <span slot="message">This [[item.case_type]] has not been sumitted to the server.
+                                       Click to submit when an internet connection is availale.</span>
+                </etools-info-tooltip>
               </template>
             </span>
           </div>
@@ -177,6 +204,20 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     this.cases = [...this.events, ...this.incidents].sort((left, right) => {
       return moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date));
     });
+  }
+
+  briefDescription(description) {
+    return description.slice(0, 140) + '...';
+  }
+
+  getIncidentSubcategory(id) {
+    let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
+    let selectedDatum = allSubCategories.find(item => item.id === id);
+    return selectedDatum.name;
+  }
+
+  checkStatus(status) {
+    return status === 'approved';
   }
 
   _syncItem(item) {

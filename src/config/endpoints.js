@@ -73,6 +73,18 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_properties/',
     method: 'GET'
   },
+  addIncidentPremise: {
+    url: baseUrl + '/api/incident_premises/',
+    method: 'POST'
+  },
+  editIncidentPremise: {
+    url: baseUrl + '/api/incident_premises/<%=id%>/',
+    method: 'PATCH'
+  },
+  incidentPremisesList: {
+    url: baseUrl + '/api/incident_premises/',
+    method: 'GET'
+  },
   cities: {
     url: baseUrl + '/api/cities/',
     method: 'GET'
@@ -161,5 +173,8 @@ export const Endpoints = {
     url: baseUrl + '/api/nationalities/',
     method: 'GET'
   },
-
+  premisesTypes: {
+    url: baseUrl + '/api/premise_types/',
+    method: 'GET'
+  }
 };

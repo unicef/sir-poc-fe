@@ -177,12 +177,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       options="[[showSubType(incident.crash_type)]]"
                                       option-value="name"
                                       required auto-validate
-                                      selected="{{incident.crash_subtype}}">
+                                      selected="{{incident.crash_sub_type}}">
                 </etools-dropdown-lite>
                 <paper-input readonly="[[readonly]]"
                              hidden="[[!isCrashTypeOther(incident.crash_type)]]"
                              label="Crash Subtype" type="text"
-                             placeholder="&#8212;" value="{{incident.crash_subtype}}"
+                             placeholder="&#8212;" value="{{incident.crash_sub_type}}"
                              required auto-validate>
                 </paper-input>
               </div>

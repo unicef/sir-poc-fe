@@ -120,7 +120,7 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
         return getNameFromId(value, 'criticalities');
       case 'crash_type':
         return getNameFromId(value, 'crashTypes');
-      case 'crash_subtype':
+      case 'crash_sub_type':
         return getNameFromId(value, 'crashSubTypes');
       case 'region':
         return getNameFromId(value, 'regions');

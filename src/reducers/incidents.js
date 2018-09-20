@@ -14,12 +14,16 @@ import {
   EDIT_PROPERTY_SUCCESS,
   ADD_PROPERTY_SUCCESS,
   RECEIVE_PROPERTIES,
+  EDIT_PREMISE_SUCCESS,
+  ADD_PREMISE_SUCCESS,
+  RECEIVE_PREMISES,
 } from '../actions/incident-impacts.js';
 
 import { createSelector } from 'reselect';
 
 let defaultState = {
   list: [],
+  premises:[],
   comments: [],
   evacuations:[],
   properties: []
@@ -93,6 +97,22 @@ const incidents = (state = defaultState, action) => {
       return {
         ...state,
         properties: getRefreshedData(state.properties, action.properties)
+      };
+   ///////////////////////////////
+    case EDIT_PREMISE_SUCCESS:
+      return {
+        ...state,
+        premises: getListWithEditedItem(state.premises, action, 'premise')
+      };
+    case ADD_PREMISE_SUCCESS:
+      return {
+        ...state,
+        premises: [...state.premises, action.premise]
+      };
+    case RECEIVE_PREMISES:
+      return {
+        ...state,
+        premises: getRefreshedData(state.premises, action.premises)
       };
     default:
       return state;

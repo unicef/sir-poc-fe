@@ -62,8 +62,8 @@ export const getNameFromId = (id, staticDataPath) => {
   }
   let staticData = store.getState().staticData;
   let result = getStaticDataByPath(staticDataPath, staticData).find(v => v.id === Number(id));
-  return result.name || '';
-}
+  return result ? result.name || '' : '';
+};
 
 const getStaticDataByPath = (path, data) => {
   if (path.indexOf('.') === -1) {
@@ -73,4 +73,4 @@ const getStaticDataByPath = (path, data) => {
   let pathPieces = path.split('.');
   let newData = data[pathPieces.shift()];
   return getStaticDataByPath(pathPieces.join('.'), newData);
-}
+};

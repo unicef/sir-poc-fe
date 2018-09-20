@@ -22,7 +22,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
       </style>
 
       <div hidden$="[[!evacuationsList.length]]">
-        <etools-data-table-header id="listHeader" no-title>
+        <etools-data-table-header id="listHeader" no-title no-collapse>
           <etools-data-table-column class="col-3">
             Impact
           </etools-data-table-column>

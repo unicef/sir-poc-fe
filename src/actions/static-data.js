@@ -7,6 +7,9 @@ export const RECEIVE_EVACUATION_IMPACTS = 'RECEIVE_EVACUATION_IMPACTS';
 export const RECEIVE_THREAT_CATEGORIES = 'RECEIVE_THREAT_CATEGORIES';
 export const RECEIVE_PROGRAMME_IMPACTS = 'RECEIVE_PROGRAMME_IMPACTS';
 export const RECEIVE_PROPERTY_IMPACTS = 'RECEIVE_PROPERTY_IMPACTS';
+export const RECEIVE_PROGRAMME_SCOPES = 'RECEIVE_PROGRAMME_SCOPES';
+export const RECEIVE_PROGRAMME_AREAS = 'RECEIVE_PROGRAMME_AREAS';
+export const RECEIVE_PROGRAMME_TYPES = 'RECEIVE_PROGRAMME_TYPES';
 export const RECEIVE_PERSON_IMPACTS = 'RECEIVE_PERSON_IMPACTS';
 export const RECEIVE_PROPERTY_TYPES = 'RECEIVE_PROPERTY_TYPES';
 export const RECEIVE_PREMISES_TYPES = 'RECEIVE_PREMISES_TYPES';
@@ -33,6 +36,9 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreThreatCategories());
   dispatch(fetchAndStoreProgrammeImpacts());
   dispatch(fetchAndStorePropertyImpacts());
+  dispatch(fetchAndStoreProgrammeScopes());
+  dispatch(fetchAndStoreProgrammeAreas());
+  dispatch(fetchAndStoreProgrammeTypes());
   dispatch(fetchAndStorePersonImpacts());
   dispatch(fetchAndStoreCriticalities());
   dispatch(fetchAndStorePropertyTypes());
@@ -341,6 +347,45 @@ const receivePremisesTypes = (premisesTypes) => {
   return {
     type: RECEIVE_PREMISES_TYPES,
     premisesTypes
+  };
+};
+
+export const fetchAndStoreProgrammeScopes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.programmeScopes).then((result) => {
+    dispatch(receiveProgrammeScopes(result));
+  });
+};
+
+const receiveProgrammeScopes = (programmeScopes) => {
+  return {
+    type: RECEIVE_PROGRAMME_SCOPES,
+    programmeScopes
+  };
+};
+
+export const fetchAndStoreProgrammeAreas = () => (dispatch, getState) => {
+  makeRequest(Endpoints.programmeAreas).then((result) => {
+    dispatch(receiveProgrammeAreas(result));
+  });
+};
+
+const receiveProgrammeAreas = (programmeAreas) => {
+  return {
+    type: RECEIVE_PROGRAMME_AREAS,
+    programmeAreas
+  };
+};
+
+export const fetchAndStoreProgrammeTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.programmeTypes).then((result) => {
+    dispatch(receiveProgrammeTypes(result));
+  });
+};
+
+const receiveProgrammeTypes = (programmeTypes) => {
+  return {
+    type: RECEIVE_PROGRAMME_TYPES,
+    programmeTypes
   };
 };
 

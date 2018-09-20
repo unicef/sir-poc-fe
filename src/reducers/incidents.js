@@ -1,21 +1,36 @@
 import {
+  ADD_INCIDENT_COMMENT_SUCCESS,
+  RECEIVE_INCIDENT_COMMENTS,
   EDIT_INCIDENT_SUCCESS,
   ADD_INCIDENT_SUCCESS,
   RECEIVE_INCIDENTS,
   RECEIVE_INCIDENT,
-  UPDATE_EVENT_IDS,
-  RECEIVE_INCIDENT_COMMENTS,
-  ADD_INCIDENT_COMMENT_SUCCESS
+  UPDATE_EVENT_IDS
 } from '../actions/incidents.js';
+import {
+  EDIT_EVACUATION_SUCCESS,
+  ADD_EVACUATION_SUCCESS,
+  RECEIVE_EVACUATIONS,
+  EDIT_PROPERTY_SUCCESS,
+  ADD_PROPERTY_SUCCESS,
+  RECEIVE_PROPERTIES,
+} from '../actions/incident-impacts.js';
 
 import { createSelector } from 'reselect';
 
-const incidents = (state = {list: [], comments: []}, action) => {
+let defaultState = {
+  list: [],
+  comments: [],
+  evacuations:[],
+  properties: []
+};
+
+const incidents = (state = defaultState, action) => {
   switch (action.type) {
     case RECEIVE_INCIDENTS:
       return {
         ...state,
-        list: getRefreshedIncidents(state.list, action.incidents)
+        list: getRefreshedData(state.list, action.incidents)
       };
     case RECEIVE_INCIDENT_COMMENTS:
       return {
@@ -25,7 +40,7 @@ const incidents = (state = {list: [], comments: []}, action) => {
     case RECEIVE_INCIDENT:
       return {
         ...state,
-        list: getEditedList(state.list, action)
+        list: getListWithEditedItem(state.list, action)
       };
     case ADD_INCIDENT_SUCCESS:
       return {
@@ -40,12 +55,44 @@ const incidents = (state = {list: [], comments: []}, action) => {
     case EDIT_INCIDENT_SUCCESS:
       return {
         ...state,
-        list: getEditedList(state.list, action)
+        list: getListWithEditedItem(state.list, action)
       };
     case UPDATE_EVENT_IDS:
       return {
         ...state,
         list: updateEventIds(state.list, action.oldId, action.newId)
+      };
+   ///////////////////////////////
+    case EDIT_EVACUATION_SUCCESS:
+      return {
+        ...state,
+        evacuations: getListWithEditedItem(state.evacuations, action, 'evacuation')
+      };
+    case ADD_EVACUATION_SUCCESS:
+      return {
+        ...state,
+        evacuations: [...state.evacuations, action.evacuation]
+      };
+    case RECEIVE_EVACUATIONS:
+      return {
+        ...state,
+        evacuations: getRefreshedData(state.evacuations, action.evacuations)
+      };
+   ///////////////////////////////
+    case EDIT_PROPERTY_SUCCESS:
+      return {
+        ...state,
+        properties: getListWithEditedItem(state.properties, action, 'property')
+      };
+    case ADD_PROPERTY_SUCCESS:
+      return {
+        ...state,
+        properties: [...state.properties, action.property]
+      };
+    case RECEIVE_PROPERTIES:
+      return {
+        ...state,
+        properties: getRefreshedData(state.properties, action.properties)
       };
     default:
       return state;
@@ -54,20 +101,21 @@ const incidents = (state = {list: [], comments: []}, action) => {
 
 export default incidents;
 
-const getEditedList = (list, action) => {
-  return list.map((incident) => {
-    if (action.id !== incident.id) {
-      return incident;
+const getListWithEditedItem = (list, action, actionKey) => {
+  actionKey = actionKey || 'incident';
+  return list.map((element) => {
+    if (action.id !== element.id) {
+      return element;
     }
-    return action.incident;
+    return action[actionKey];
   });
 };
 
-const getRefreshedIncidents = (oldIncidents, newIncidents) => {
-  oldIncidents = oldIncidents instanceof Array ? oldIncidents : [];
-  newIncidents = newIncidents instanceof Array ? newIncidents : [];
-  let unsynced = oldIncidents.filter(elem => elem.unsynced && isNaN(elem.id));
-  return [...newIncidents, ...unsynced];
+const getRefreshedData = (oldElements, newElements) => {
+  oldElements = oldElements instanceof Array ? oldElements : [];
+  newElements = newElements instanceof Array ? newElements : [];
+  let unsynced = oldElements.filter(elem => elem.unsynced && isNaN(elem.id));
+  return [...newElements, ...unsynced];
 };
 
 const updateEventIds = (list, oldId, newId) => {

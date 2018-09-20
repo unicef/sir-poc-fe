@@ -121,11 +121,11 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                 </a>
               </template>
               <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                <etools-info-tooltip class="info" icon=notification:sync open-on-click
+                <etools-info-tooltip class="info" icon="notification:sync" open-on-click
                             title="Sync [[item.case_type]]"
                             class="sync-btn"
                             on-click="_syncItem">
-                  <span slot="message">This [[item.case_type]] has not been sumitted to the server. 
+                  <span slot="message">This [[item.case_type]] has not been sumitted to the server.
                                        Click to submit when an internet connection is availale.</span>
                 </etools-info-tooltip>
               </template>

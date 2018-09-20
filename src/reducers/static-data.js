@@ -5,6 +5,7 @@ const defaultStaticData = {
     incidentCategories: [],
     threatCategories: [],
     propertyTypes: [],
+    premisesTypes: [],
     nationalities: [],
     criticalities: [],
     vehicleTypes: [],
@@ -144,6 +145,11 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         propertyTypes: action.propertyTypes
+      };
+    case ACTIONS.RECEIVE_PREMISES_TYPES:
+      return {
+        ...state,
+        premisesTypes: action.premisesTypes
       };
     case ACTIONS.RECEIVE_PERSONNEL_CATEGORIES:
       return {

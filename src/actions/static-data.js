@@ -9,6 +9,7 @@ export const RECEIVE_PROGRAMME_IMPACTS = 'RECEIVE_PROGRAMME_IMPACTS';
 export const RECEIVE_PROPERTY_IMPACTS = 'RECEIVE_PROPERTY_IMPACTS';
 export const RECEIVE_PERSON_IMPACTS = 'RECEIVE_PERSON_IMPACTS';
 export const RECEIVE_PROPERTY_TYPES = 'RECEIVE_PROPERTY_TYPES';
+export const RECEIVE_PREMISES_TYPES = 'RECEIVE_PREMISES_TYPES';
 export const RECEIVE_CRITICALITIES = 'RECEIVE_CRITICALITIES';
 export const RECEIVE_VEHICLE_TYPES = 'RECEIVE_VEHICLE_TYPES';
 export const RECEIVE_NATIONALITIES = 'RECEIVE_NATIONALITIES';
@@ -35,6 +36,7 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStorePersonImpacts());
   dispatch(fetchAndStoreCriticalities());
   dispatch(fetchAndStorePropertyTypes());
+  dispatch(fetchAndStorePremisesTypes());
   dispatch(fetchAndStoreNationalities());
   dispatch(fetchAndStoreVehicleTypes());
   dispatch(fetchAndStoreUnLocations());
@@ -326,6 +328,19 @@ const receivePropertyTypes = (propertyTypes) => {
   return {
     type: RECEIVE_PROPERTY_TYPES,
     propertyTypes
+  };
+};
+
+export const fetchAndStorePremisesTypes = () => (dispatch, getState) => {
+  makeRequest(Endpoints.premisesTypes).then((result) => {
+    dispatch(receivePremisesTypes(result));
+  });
+};
+
+const receivePremisesTypes = (premisesTypes) => {
+  return {
+    type: RECEIVE_PREMISES_TYPES,
+    premisesTypes
   };
 };
 

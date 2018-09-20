@@ -17,6 +17,9 @@ import {
   EDIT_PREMISE_SUCCESS,
   ADD_PREMISE_SUCCESS,
   RECEIVE_PREMISES,
+  EDIT_PROGRAMME_SUCCESS,
+  ADD_PROGRAMME_SUCCESS,
+  RECEIVE_PROGRAMMES,
 } from '../actions/incident-impacts.js';
 
 import { createSelector } from 'reselect';
@@ -26,6 +29,7 @@ let defaultState = {
   premises:[],
   comments: [],
   evacuations:[],
+  programmes: [],
   properties: []
 };
 
@@ -113,6 +117,22 @@ const incidents = (state = defaultState, action) => {
       return {
         ...state,
         premises: getRefreshedData(state.premises, action.premises)
+      };
+   ///////////////////////////////
+    case EDIT_PROGRAMME_SUCCESS:
+      return {
+        ...state,
+        programmes: getListWithEditedItem(state.programmes, action, 'programme')
+      };
+    case ADD_PROGRAMME_SUCCESS:
+      return {
+        ...state,
+        programmes: [...state.programmes, action.programme]
+      };
+    case RECEIVE_PROGRAMMES:
+      return {
+        ...state,
+        programmes: getRefreshedData(state.programmes, action.programmes)
       };
     default:
       return state;

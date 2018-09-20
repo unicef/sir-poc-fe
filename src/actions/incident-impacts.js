@@ -37,6 +37,7 @@ export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) 
   let operations = [
     ...await dispatch(syncEvacuations(newId, oldId)),
     ...await dispatch(syncProperties(newId, oldId)),
+    ...await dispatch(syncProgrammes(newId, oldId)),
     ...await dispatch(syncPremises(newId, oldId)),
   ];
 
@@ -391,6 +392,129 @@ const syncPremises = (newId, oldId) => (dispatch, getState) =>  {
   premises.forEach(premise => {
     premise.incident_id = newId;
     operations.push(_syncPremise(premise, dispatch));
+  });
+
+  return operations;
+}
+
+////////////////////////////////// Impacts on programmes ///////////////////////////////////////////////////////////////
+
+
+export const EDIT_PROGRAMME_SUCCESS = 'EDIT_PROGRAMME_SUCCESS';
+export const ADD_PROGRAMME_SUCCESS = 'ADD_PROGRAMME_SUCCESS';
+export const RECEIVE_PROGRAMMES = 'RECEIVE_PROGRAMMES';
+
+const receiveIncidentProgrammes = (programmes) => {
+  return {
+    type: RECEIVE_PROGRAMMES,
+    programmes
+  };
+};
+
+const addProgrammeSuccess = (programme) => {
+  return {
+    type: ADD_PROGRAMME_SUCCESS,
+    programme
+  };
+};
+
+const editProgrammeSuccess = (programme, id) => {
+  return {
+    type: EDIT_PROGRAMME_SUCCESS,
+    programme,
+    id
+  };
+};
+
+
+const addProgrammeOnline = (programme, dispatch) => {
+  return makeRequest(Endpoints.addIncidentProgramme, programme).then((result) => {
+    dispatch(addProgrammeSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const addProgrammeOffline = (newProgramme, dispatch) => {
+  newProgramme.id = generateRandomHash();
+  newProgramme.unsynced = true;
+  dispatch(addProgrammeSuccess(newProgramme));
+  return true;
+};
+
+export const addProgramme = newProgramme => (dispatch, getState) => {
+  if (getState().app.offline || isNaN(newProgramme.incident_id)) {
+    return addProgrammeOffline(newProgramme, dispatch);
+  } else {
+    return addProgrammeOnline(newProgramme, dispatch);
+  }
+};
+
+const editProgrammeOnline = (programme, dispatch, state) => {
+  let origProgramme = state.incidents.programmes.find(elem => elem.id === programme.id);
+  let modifiedFields = objDiff(origProgramme, programme);
+  let endpoint = prepareEndpoint(Endpoints.editIncidentProgramme, {id: programme.id});
+
+  return makeRequest(endpoint, modifiedFields).then((result) => {
+    dispatch(fetchIncidentProgrammes());
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+const editProgrammeOffline = (programme, dispatch) => {
+  programme.unsynced = true;
+  dispatch(editProgrammeSuccess(programme, programme.id));
+  return true;
+};
+
+export const editProgramme = programme => (dispatch, getState) => {
+  if (getState().app.offline === true || programme.unsynced) {
+    return editProgrammeOffline(programme, dispatch);
+  } else {
+    return editProgrammeOnline(programme, dispatch, getState());
+  }
+};
+
+export const fetchIncidentProgrammes = () => (dispatch, getState) => {
+  if (getState().app.offline !== true) {
+    makeRequest(Endpoints.incidentProgrammesList).then((result) => {
+      dispatch(receiveIncidentProgrammes(result));
+    });
+  }
+};
+
+export const syncProgramme = (programme) => (dispatch, getState) => {
+  return _syncProgramme(programme, dispatch).then((result) => {
+    if (!result.success) {
+      dispatch(serverError(result.error));
+    }
+    return result.success;
+  });
+}
+
+const _syncProgramme = (programme, dispatch) => {
+  return makeRequest(Endpoints.addIncidentProgramme, programme).then((result) => {
+    dispatch(editProgrammeSuccess(result, programme.id));
+    return {success: true};
+  }).catch((error) => {
+    // we still need to update the incident_id in redux
+    dispatch(editProgrammeSuccess(programme, programme.id));
+    return {success: false, error: error.response};
+  });
+}
+
+const syncProgrammes = (newId, oldId) => (dispatch, getState) =>  {
+  let programmes = getState().incidents.programmes.filter(ev => ev.incident_id == oldId);
+  let operations = [];
+
+  programmes.forEach(programme => {
+    programme.incident_id = newId;
+    operations.push(_syncProgramme(programme, dispatch));
   });
 
   return operations;

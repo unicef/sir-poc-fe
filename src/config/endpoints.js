@@ -85,6 +85,18 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_premises/',
     method: 'GET'
   },
+  addIncidentProgramme: {
+    url: baseUrl + '/api/incident_programmes/',
+    method: 'POST'
+  },
+  editIncidentProgramme: {
+    url: baseUrl + '/api/incident_programmes/<%=id%>/',
+    method: 'PATCH'
+  },
+  incidentProgrammesList: {
+    url: baseUrl + '/api/incident_programmes/',
+    method: 'GET'
+  },
   cities: {
     url: baseUrl + '/api/cities/',
     method: 'GET'
@@ -176,5 +188,17 @@ export const Endpoints = {
   premisesTypes: {
     url: baseUrl + '/api/premise_types/',
     method: 'GET'
-  }
+  },
+  programmeScopes: {
+    url: baseUrl + '/api/scope/',
+    method: 'GET'
+  },
+  programmeAreas: {
+    url: baseUrl + '/api/area/',
+    method: 'GET'
+  },
+  programmeTypes: {
+    url: baseUrl + '/api/programme_types/',
+    method: 'GET'
+  },
 };

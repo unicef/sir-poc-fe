@@ -31,21 +31,27 @@ class IncidentReview extends connect(store)(PolymerElement) {
     return {
       incidentId: {
         type: String,
-        computed: '_setIncidentId(state.app.locationInfo.incidentId)'
+        computed: '_setIncidentId(state.app.locationInfo.incidentId)',
+        observer: '_idChanged'
       },
-      isOffline: {
+      offline: {
         type: Boolean,
         computed: '_setIsOffline(state.app.offline)'
       },
       state: {
         type: Object
-      }
+      },
+      incident: Object
     };
   }
 
   static get observers() {
     return [
     ];
+  }
+
+  _idChanged() {
+    this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
   }
 
   _stateChanged(state) {

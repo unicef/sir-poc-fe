@@ -77,6 +77,7 @@ class IncidentsController extends connect(store)(BaseController) {
         <edit-incident name="edit"></edit-incident>
 
         <view-incident name="view"></view-incident>
+        <incident-review name="review"></incident-review>
         <impact-controller name="impact" route="{{subRoute}}"></impact-controller>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
@@ -160,6 +161,11 @@ class IncidentsController extends connect(store)(BaseController) {
       {
         name: 'impact',
         tabLabel: 'IMPACT'
+      },
+      {
+        name: 'review',
+        tabLabel: 'REVIEW',
+        hidden: showEditTab || offline
       },
       {
         name: 'comments',

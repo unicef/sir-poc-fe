@@ -60,6 +60,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         label="Event"
                                         options="[[events]]"
                                         selected="{{incident.event}}"
+                                        enable-none-option
                                         selected-item="{{selectedEvent}}">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedEvent.note]]</span>
@@ -235,6 +236,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         label="Criticality"
                                         options="[[staticData.criticalities]]"
                                         selected="{{incident.criticality}}"
+                                        enable-none-option
                                         selected-item="{{selectedCriticality}}">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedCriticality.description]]</span>
@@ -264,23 +266,100 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
                                       selected="{{incident.primary_person.id}}"
-                                      required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                      enable-none-option
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
+              </div>
+
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="primaryPersonFirstName"
+                             label="First Name"
+                             value="{{selectedPrimaryPerson.first_name}}"
+                             placeholder="&#8212;"
+                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
+                </paper-input>
+              </div>
+
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="primaryPersonLastName"
+                             label="Last Name"
+                             value="{{selectedPrimaryPerson.last_name}}"
+                             placeholder="&#8212;"
+                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
+                </paper-input>
               </div>
 
               <div class="col col-3">
                 <etools-dropdown-lite readonly="[[readonly]]"
                                       label="Agency"
                                       options="[[staticData.agencies]]"
-                                      selected="{{incident.primary_person.agency}}">
+                                      enable-none-option
+                                      selected="{{selectedPrimaryPerson.agency}}">
                 </etools-dropdown-lite>
               </div>
 
-              <div class="col col-6">
+            </div>
+
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-dropdown-lite readonly="[[readonly]]"
+                                      id="gender"
+                                      label="Gender"
+                                      options="[[genderOptions]]"
+                                      placeholder="&#8212;">
+                </etools-dropdown-lite>
+              </div>
+              <div class="col col-3">
+                <etools-dropdown-lite readonly="[[readonly]]"
+                                      id="nationality"
+                                      label="Nationality"
+                                      options="[[staticData.nationalities]]"
+                                      selected="{{selectedPrimaryPerson.nationality}}"
+                                      enable-none-option
+                                      placeholder="&#8212;">
+                </etools-dropdown-lite>
+              </div>
+              <div class="col col-3">
+                <datepicker-lite id="dateOfBirth"
+                                readonly="[[readonly]]"
+                                prettyDate="{{selectedPrimaryPerson.date_of_birth}}"
+                                label="Date of Birth">
+                </datepicker-lite>
+              </div>
+              <div class="col col-3">
                 <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
               </div>
-
+            </div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="jobTitle"
+                             label="Job Title"
+                             value="{{selectedPrimaryPerson.job_title}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="typeOfContract"
+                             label="Type of Contract"
+                             value="{{selectedPrimaryPerson.type_of_contract}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="contact"
+                             label="Contact"
+                             value="{{selectedPrimaryPerson.contact}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-checkbox checked="{{selectedPrimaryPerson.un_official}}" disabled="[[readonly]]">UN Official</paper-checkbox>
+              </div>
             </div>
           </div>
         </fieldset>
@@ -410,6 +489,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           {id: false, name: 'Not Reported'}
         ]
       },
+      genderOptions: {
+        type: Array,
+        value: [
+          {name: 'Male', id: '1'},
+          {name: 'Female', id: '2'},
+          {name: 'Other', id: '3'}
+        ]
+      },
       events: {
         type: Array,
         value: []
@@ -422,6 +509,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Boolean,
         value: false,
         observer: '_visibilityChanged'
+      },
+      selectedPrimaryPerson: {
+        type: Object,
+        value: {}
       },
       selectedEvent: {
         type: Object,
@@ -465,6 +556,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+    // debugger
+    // this.staticData.users.push({id: 0, name: 'Custom'});
   }
 
   _setIncidentId(id) {
@@ -514,6 +607,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
+    this.set('selectedPrimaryPerson', event.detail.selectedItem);
     this.incident.primary_person.id = event.detail.selectedItem.id;
     this.incident.primary_person.first_name = event.detail.selectedItem.first_name;
     this.incident.primary_person.last_name = event.detail.selectedItem.last_name;

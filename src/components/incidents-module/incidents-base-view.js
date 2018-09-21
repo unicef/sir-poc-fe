@@ -14,12 +14,7 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-<<<<<<< HEAD
-
-import { validateFields, resetFieldsValidations } from '../common/validations-helper.js';
-=======
 import { validateAllRequired, resetFieldsValidations } from '../common/validations-helper.js';
->>>>>>> develop
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import 'etools-upload/etools-upload-multi.js';

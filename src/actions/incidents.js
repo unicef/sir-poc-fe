@@ -132,7 +132,7 @@ export const addIncident = newIncident => (dispatch, getState) => {
 };
 
 export const addComment = comment => (dispatch, getState) => {
-  return addCommentOnline(comment, dispatch);
+  return dispatch(addCommentOnline(comment));
 };
 
 export const editIncident = incident => (dispatch, getState) => {

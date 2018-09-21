@@ -14,7 +14,7 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import 'calendar-lite/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import { validateFields, resetFieldsValidations } from '../common/validations-helper.js';
+import { validateAllRequired, resetFieldsValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
@@ -147,7 +147,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <legend><h3>Incident details</h3></legend>
           <div>
             <div class="row-h flex-c">
-              <div class="col col-3">
+              <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
                   <etools-dropdown-lite slot="field" readonly="[[readonly]]"
@@ -159,7 +159,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <span slot="message">[[selectedEvent.note]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-3">
+              <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedThreatCategory.description]]">
                   <etools-dropdown-lite id="threatCategory"
@@ -175,7 +175,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <span slot="message">[[selectedThreatCategory.description]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-3">
+              <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedTarget.description]]">
                   <etools-dropdown-lite id="target"
@@ -185,7 +185,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         options="[[staticData.targets]]"
                                         selected="{{incident.target}}"
                                         selected-item="{{selectedTarget}}"
-                                        required auto-validate
+                                        required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                                         error-message="Target is required">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedTarget.description]]</span>
@@ -194,7 +194,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="row-h flex-c">
-              <div class="col col-3">
+              <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
                                       selectedIncidentCategory.comment)]]">
@@ -213,7 +213,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-info-tooltip>
               </div>
 
-              <div class="col col-3">
+              <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
                                       selectedIncidentSubcategory.comment)]]">
@@ -236,12 +236,68 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
             </div>
 
+            <template is="dom-if" if="[[isTrafficAccident(selectedIncidentSubcategory, staticData)]]" restamp>
+              <div class="row-h flex-c">
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        label="Vehicle Type"
+                                        options="[[staticData.vehicleTypes]]"
+                                        required auto-validate
+                                        selected="{{incident.vehicle_type}}">
+                  </etools-dropdown-lite>
+                </div>
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        label="Crash Type"
+                                        options="[[staticData.crashTypes]]"
+                                        required auto-validate
+                                        selected="{{incident.crash_type}}">
+                  </etools-dropdown-lite>
+                </div>
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        hidden$="[[isCrashTypeOther(incident.crash_type)]]"
+                                        label="Crash Subtype"
+                                        options="[[showSubType(incident.crash_type)]]"
+                                        option-value="name"
+                                        required auto-validate
+                                        selected="{{incident.crash_sub_type}}">
+                  </etools-dropdown-lite>
+                  <paper-input readonly="[[readonly]]"
+                              label="Crash Subtype"
+                              type="text"
+                              placeholder="&#8212;"
+                              value="{{incident.crash_sub_type}}"
+                              hidden$="[[!isCrashTypeOther(incident.crash_type)]]"
+                              required$="[[isCrashTypeOther(incident.crash_type)]]"
+                              auto-validate>
+                  </paper-input>
+                </div>
+              </div>
+              <div class="row-h flex-c">
+                <div class="col col-4">
+                  <etools-dropdown-lite readonly="[[readonly]]"
+                                        label="Contributing factor"
+                                        options="[[staticData.factors]]"
+                                        required auto-validate
+                                        selected="{{incident.contributing_factor}}">
+                  </etools-dropdown-lite>
+                </div>
+                <div class="col col-3">
+                  <paper-checkbox checked="{{incident.near_miss}}"
+                                  disabled="[[readonly]]">
+                    Near miss
+                  </paper-checkbox>
+                </div>
+              </div>
+            </template>
+
             <div class="row-h flex-c">
               <div class="col col-12">
                 <paper-textarea id="injuries" readonly$="[[readonly]]" label="Injuries"
                                 placeholder="&#8212;"
                                 value="{{incident.injuries}}"
-                                required auto-validate
+                                required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                                 error-message="Injuries details are required"></paper-textarea>
               </div>
             </div>
@@ -279,7 +335,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-info-tooltip>
               </div>
               <div class="col col-9" hidden$="[[!incident.incident_category]]">
-                <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category, staticData)]]"
+                <etools-dropdown-multi-lite hidden$="[[isSafetyIncident(selectedIncidentCategory)]]"
                                             readonly="[[readonly]]"
                                             label="Weapons used"
                                             options="[[staticData.weapons]]"
@@ -287,36 +343,100 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-dropdown-multi-lite>
               </div>
             </div>
+          </div>
+        </fieldset>
 
-            <div class="row-h flex-c" hidden$="[[!isAccident(incident.incident_category, staticData)]]">
+        <fieldset>
+          <legend><h3>Primary Person data</h3></legend>
+          <div>
+            <div class="row-h flex-c">
               <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Vehicle Type"
-                                      options="[[staticData.vehicleTypes]]"
-                                      selected="{{incident.vehicle_type}}">
+                <etools-dropdown-lite id="primaryPerson"
+                                      readonly="[[readonly]]"
+                                      label="Primary person"
+                                      trigger-value-change-event
+                                      on-etools-selected-item-changed="_userSelected"
+                                      options="[[staticData.users]]"
+                                      selected="{{incident.primary_person.id}}"
+                                      required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                      error-message="Primary person is required">
                 </etools-dropdown-lite>
               </div>
+
               <div class="col col-3">
                 <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Contributing factor"
-                                      options="[[staticData.factors]]"
-                                      selected="{{incident.contributing_factor}}">
+                                      label="Agency"
+                                      options="[[staticData.agencies]]"
+                                      selected="{{incident.primary_person.agency}}">
                 </etools-dropdown-lite>
               </div>
+
+              <div class="col col-6">
+                <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
+              </div>
+
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><h3>When & Where</h3></legend>
+          <div>
+            <div class="row-h flex-c">
               <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Crash Type"
-                                      options="[[staticData.crashTypes]]"
-                                      selected="{{incident.crash_type}}">
-                </etools-dropdown-lite>
+                <datepicker-lite id="incidentDate"
+                                value="{{incident.incident_date}}"
+                                readonly="[[readonly]]"
+                                label="Incident date"
+                                required auto-validate
+                                error-message="Incident date is required">
+                </datepicker-lite>
               </div>
               <div class="col col-3">
-                <paper-checkbox hidden$="[[!isAccident(incident.incident_category)]]"
-                                checked="{{incident.near_miss}}"
-                                disabled="[[readonly]]">
-                  Near miss
-                </paper-checkbox>
+                <paper-input id="incidentTime"
+                            readonly$="[[readonly]]"
+                            label="Incident time"
+                            type="time"
+                            value="{{incident.incident_time}}"
+                            required auto-validate
+                            error-message="Incident time is required">
+                </paper-input>
               </div>
+            </div>
+
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <etools-dropdown-lite id="country"
+                                    readonly="[[readonly]]"
+                                    label="Country"
+                                    options="[[staticData.countries]]"
+                                    selected="{{incident.country}}"
+                                    required auto-validate
+                                    error-message="Country is required">
+              </etools-dropdown-lite>
+            </div>
+            <div class="col col-3">
+              <etools-dropdown-lite readonly="[[readonly]]"
+                                    label="Region"
+                                    options="[[staticData.regions]]"
+                                    selected="{{incident.region}}">
+              </etools-dropdown-lite>
+            </div>
+
+            <div class="col col-3">
+              <paper-input id="city"
+                          readonly$="[[readonly]]" label="City" type="text"
+                          placeholder="&#8212;" value="{{incident.city}}"
+                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                          error-message="City is required"></paper-input>
+            </div>
+
+            <div class="col col-3">
+              <paper-input id="street"
+                          readonly$="[[readonly]]" label="Street" type="text"
+                          placeholder="&#8212;" value="{{incident.street}}"
+                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                          error-message="Street is required"></paper-input>
             </div>
           </div>
         </fieldset>
@@ -518,16 +638,40 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
-  isAccident(incidentCategoryId) {
+  isTrafficAccident(incidentSubcategory) {
+    if (!incidentSubcategory) {
+      return false;
+    }
+
     if (!this.staticData) {
       return false;
     }
 
-    let incident = this.staticData.incidentCategories.find((elem) => {
-      return elem.id === incidentCategoryId;
-    });
+    let incident = this.staticData.incidentCategories[0].subcategories.find(elem => elem.id === incidentSubcategory.id);
 
-    return incident && incident.name.startsWith('Accident');
+    return incident && incident.name === 'Road Traffic Accidents';
+  }
+
+  showSubType(crashType) {
+    return this.staticData.crashSubTypes.filter(subType => crashType === subType.crash_type);
+  }
+
+  isCrashTypeOther(crashType) {
+    return crashType === 5;
+  }
+
+  isSafetyIncident(incidentCategory) {
+    if (!incidentCategory) {
+      return;
+    }
+
+    return incidentCategory.name === 'Safety';
+  }
+
+  isSexualAssault(selectedIncidentSubcategory) {
+    if (this.selectedIncidentSubcategory) {
+      return selectedIncidentSubcategory.name === 'Sexual assault' ? true : false;
+    }
   }
 
   eventNotOk(eventId, offline) {
@@ -552,7 +696,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   validate() {
-    return validateFields(this, this.fieldsToValidateSelectors);
+    return validateAllRequired(this);
   }
 
   resetValidations() {

@@ -61,7 +61,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
                                       selected="{{incident.primary_person.id}}"
-                                      required auto-validate
+                                      required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
               </div>
@@ -343,39 +343,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                             selected-values="{{incident.weapons_used}}">
                 </etools-dropdown-multi-lite>
               </div>
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend><h3>Primary Person data</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <etools-dropdown-lite id="primaryPerson"
-                                      readonly="[[readonly]]"
-                                      label="Primary person"
-                                      trigger-value-change-event
-                                      on-etools-selected-item-changed="_userSelected"
-                                      options="[[staticData.users]]"
-                                      selected="{{incident.primary_person.id}}"
-                                      required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
-                                      error-message="Primary person is required">
-                </etools-dropdown-lite>
-              </div>
-
-              <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Agency"
-                                      options="[[staticData.agencies]]"
-                                      selected="{{incident.primary_person.agency}}">
-                </etools-dropdown-lite>
-              </div>
-
-              <div class="col col-6">
-                <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
-              </div>
-
             </div>
           </div>
         </fieldset>

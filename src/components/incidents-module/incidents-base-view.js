@@ -14,7 +14,7 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import { validateAllRequired, resetFieldsValidations } from '../common/validations-helper.js';
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
@@ -369,6 +369,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                             disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
                 Save
               </paper-button>
+              ${this.actionButtonsTemplate}
             </div>
           </div>
         </template>
@@ -378,6 +379,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   static get goToEditBtnTmpl() {
+    return html``;
+  }
+
+  static get actionButtonsTemplate() {
     return html``;
   }
 
@@ -447,11 +452,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
-      },
-      fieldsToValidateSelectors: {
-        type: Array,
-        value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
-          '#city', '#incidentCat', '#incidentSubcat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }
@@ -606,7 +606,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    resetFieldsValidations(this, this.fieldsToValidateSelectors);
+    resetRequiredValidations(this);
   }
 
 }

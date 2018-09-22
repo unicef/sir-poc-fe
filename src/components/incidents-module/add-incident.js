@@ -18,6 +18,16 @@ class AddIncident extends IncidentsBaseView {
     this.title = 'Add new incident';
   }
 
+  static get actionButtonsTemplate() {
+    return html`
+      <paper-button raised
+                    on-click="saveAndAddImpact"
+                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+        Save and add impact
+      </paper-button>
+    `;
+  }
+
   async save() {
     if (!this.validate()) {
       return;
@@ -27,14 +37,6 @@ class AddIncident extends IncidentsBaseView {
       this.resetForm();
       updatePath('/incidents/list/');
     }
-  }
-
-  isOnExpectedPage() {
-    return isOnNewIncident(this.state);
-  }
-
-  resetForm() {
-    this.incident = JSON.parse(JSON.stringify(IncidentModel));
   }
 
   async saveAndAddImpact() {
@@ -48,15 +50,14 @@ class AddIncident extends IncidentsBaseView {
     }
   }
 
-  static get actionButtonsTemplate() {
-    return html`
-      <paper-button raised
-                    on-click="saveAndAddImpact"
-                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-        Save and add impact
-      </paper-button>
-    `;
+  isOnExpectedPage() {
+    return isOnNewIncident(this.state);
   }
+
+  resetForm() {
+    this.incident = JSON.parse(JSON.stringify(IncidentModel));
+  }
+
 }
 
 window.customElements.define('add-incident', AddIncident);

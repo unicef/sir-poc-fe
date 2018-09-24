@@ -325,6 +325,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                              required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
                 </paper-input>
               </div>
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="indexNumber"
+                             label="Index Number"
+                             value="{{incident.primary_person.index_number}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
 
               <div class="col col-3">
                 <etools-dropdown-lite readonly="[[readonly]]"
@@ -344,7 +352,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       label="Gender"
                                       options="[[staticData.genders]]"
                                       selected="{{incident.primary_person.gender}}"
-                                      placeholder="&#8212;">
+                                      placeholder="&#8212;"
+                                      required auto-validate>
                 </etools-dropdown-lite>
               </div>
               <div class="col col-3">
@@ -360,7 +369,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <div class="col col-3">
                 <datepicker-lite id="dateOfBirth"
                                 readonly="[[readonly]]"
-                                selected="{{incident.primary_person.date_of_birth}}"
+                                value="{{incident.primary_person.date_of_birth}}"
                                 label="Date of Birth">
                 </datepicker-lite>
               </div>
@@ -382,7 +391,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                              id="typeOfContract"
                              label="Type of Contract"
                              value="{{incident.primary_person.type_of_contract}}"
-                             placeholder="&#8212;">
+                             placeholder="&#8212;"
+                             required auto-validate>
                 </paper-input>
               </div>
               <div class="col col-3">

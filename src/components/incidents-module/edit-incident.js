@@ -32,6 +32,7 @@ class EditIncident extends IncidentsBaseView {
    // });
   }
 
+  // TODO - update after endpoint changes
   saveAttachmentsNotes() {
     if (this.state.app.offline || this.incident.unsynced) {
       return Promise.resolve();
@@ -50,7 +51,7 @@ class EditIncident extends IncidentsBaseView {
 
     for (let i = 0; i < origAtt.length; i++) {
       if (origAtt[i].note !== currAtt[i].note) {
-        attChanges = {
+        attChanges = { // TODO
           id: currAtt[i].id,
           note: currAtt[i].note
         };
@@ -63,7 +64,7 @@ class EditIncident extends IncidentsBaseView {
 
     return makeRequest(Endpoints.addIncidentAttachments, attChanges).catch((err) => {
            this.store.dispatch(serverError(err));
-           return Promise.resolve(); // the Incident will be saved despite attachments error
+           return Promise.resolve(); // the rest of the Incident changes will be saved despite attachments error
           });
   }
 

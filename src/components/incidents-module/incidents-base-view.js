@@ -6,6 +6,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
+import '@polymer/iron-icons/device-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 
@@ -14,7 +15,7 @@ import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import { validateAllRequired, resetFieldsValidations } from '../common/validations-helper.js';
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
 import 'etools-upload/etools-upload-multi.js';
@@ -54,8 +55,25 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         .margin-b {
           margin-bottom: 16px;
         }
+
         paper-input {
           width: 100%;
+        }
+
+        .button-container {
+          @apply --layout-vertical;
+          justify-content: center;
+          height: 100%;
+        }
+
+        .col-6 + .col-5, .col-6 + .col-6 {
+          padding-left: 24px;
+        }
+
+        .coordinates-container {
+          @apply --layout-horizontal;
+          width: calc(100% - 24px);
+          padding: 0;
         }
 
       </style>
@@ -387,29 +405,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <fieldset>
           <legend><h3>When & Where</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <datepicker-lite id="incidentDate"
-                                value="{{incident.incident_date}}"
-                                readonly="[[readonly]]"
-                                label="Incident date"
-                                required auto-validate
-                                error-message="Incident date is required">
-                </datepicker-lite>
-              </div>
-              <div class="col col-3">
-                <paper-input id="incidentTime"
-                            readonly$="[[readonly]]"
-                            label="Incident time"
-                            type="time"
-                            value="{{incident.incident_time}}"
-                            required auto-validate
-                            error-message="Incident time is required">
-                </paper-input>
-              </div>
-            </div>
-
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite id="country"
@@ -445,6 +440,73 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                           error-message="Street is required"></paper-input>
             </div>
           </div>
+
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <datepicker-lite id="incidentDate"
+                              value="{{incident.incident_date}}"
+                              readonly="[[readonly]]"
+                              label="Incident date"
+                              required auto-validate
+                              error-message="Incident date is required">
+              </datepicker-lite>
+            </div>
+
+            <div class="col col-3">
+              <paper-input id="incidentTime"
+                          readonly$="[[readonly]]"
+                          label="Incident time"
+                          type="time"
+                          value="{{incident.incident_time}}"
+                          required auto-validate
+                          error-message="Incident time is required">
+              </paper-input>
+            </div>
+
+            <div class="col col-6">
+              <div class="coordinates-container">
+                <template is="dom-if" if="[[readonly]]">
+                  <div class="col-6">
+                    <paper-input label="Latitude"
+                                readonly
+                                value="[[incident.latitude]]"
+                                placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col-6">
+                    <paper-input label="Longitude"
+                                readonly
+                                value="[[incident.longitude]]"
+                                placeholder="&#8212;" >
+                    </paper-input>
+                  </div>
+                </template>
+
+                <template is="dom-if" if="[[!readonly]]">
+                  <div class="col-6">
+                    <paper-input label="Latitude"
+                                value="{{incident.latitude}}"
+                                placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+                  <div class="col-5">
+                    <paper-input label="Longitude"
+                                value="{{incident.longitude}}"
+                                placeholder="&#8212;">
+                    </paper-input>
+                  </div>
+
+                  <div class="col-1">
+                    <div class="button-container">
+                      <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
+                      </paper-icon-button>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+
         </fieldset>
 
         <template is="dom-if" if="[[incidentId]]">
@@ -506,6 +568,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                             disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
                 Save
               </paper-button>
+              ${this.actionButtonsTemplate}
             </div>
           </div>
         </template>
@@ -515,6 +578,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   static get goToEditBtnTmpl() {
+    return html``;
+  }
+
+  static get actionButtonsTemplate() {
     return html``;
   }
 
@@ -584,11 +651,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
-      },
-      fieldsToValidateSelectors: {
-        type: Array,
-        value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
-          '#city', '#incidentCat', '#incidentSubcat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }
@@ -653,7 +715,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
-    console.log(event.detail.selectedItem);
     let {
       agency,
       contact,
@@ -772,7 +833,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    resetFieldsValidations(this, this.fieldsToValidateSelectors);
+    resetRequiredValidations(this);
   }
 
   getFilenameFromURL(url) {
@@ -824,6 +885,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
 
     this.store.dispatch(fetchIncident(this.incidentId));
+  }
+
+  getLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.set('incident.latitude', String(position.coords.latitude));
+      this.set('incident.longitude', String(position.coords.longitude));
+    }, (error) => {
+      console.warn('location fetch error:', error);
+    });
   }
 
 }

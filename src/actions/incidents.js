@@ -76,13 +76,27 @@ const updateEventIds = (newId, oldId) => {
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(addIncidentSuccess(result));
-    updatePath('/incidents/list/');
-    return true;
+    return result.id;
   }).catch((error) => {
     dispatch(serverError(error.response));
     scrollToTop();
     return false;
   });
+};
+
+const addIncidentOffline = (newIncident, dispatch) => {
+  newIncident.id = generateRandomHash();
+  newIncident.unsynced = true;
+  dispatch(addIncidentSuccess(newIncident));
+  return newIncident.id;
+};
+
+export const addIncident = newIncident => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return addIncidentOffline(newIncident, dispatch);
+  } else {
+    return addIncidentOnline(newIncident, dispatch);
+  }
 };
 
 const addCommentOnline = comment => (dispatch, getState) => {
@@ -95,12 +109,8 @@ const addCommentOnline = comment => (dispatch, getState) => {
   });
 };
 
-const addIncidentOffline = (newIncident, dispatch) => {
-  newIncident.id = generateRandomHash();
-  newIncident.unsynced = true;
-  updatePath('/incidents/list/');
-  dispatch(addIncidentSuccess(newIncident));
-  return true;
+export const addComment = comment => (dispatch, getState) => {
+  return dispatch(addCommentOnline(comment));
 };
 
 const editIncidentOnline = (incident, dispatch, state) => {
@@ -121,18 +131,6 @@ const editIncidentOffline = (incident, dispatch) => {
   incident.unsynced = true;
   updatePath('/incidents/list/');
   dispatch(editIncidentSuccess(incident, incident.id));
-};
-
-export const addIncident = newIncident => (dispatch, getState) => {
-  if (getState().app.offline === true) {
-    return addIncidentOffline(newIncident, dispatch);
-  } else {
-    return addIncidentOnline(newIncident, dispatch);
-  }
-};
-
-export const addComment = comment => (dispatch, getState) => {
-  return dispatch(addCommentOnline(comment));
 };
 
 export const editIncident = incident => (dispatch, getState) => {

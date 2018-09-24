@@ -469,14 +469,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <div class="col-6">
                     <paper-input label="Latitude"
                                 readonly
-                                value="{{incident.latitude}}"
+                                value="[[incident.latitude]]"
                                 placeholder="&#8212;">
                     </paper-input>
                   </div>
                   <div class="col-6">
                     <paper-input label="Longitude"
                                 readonly
-                                value="{{incident.longitude}}"
+                                value="[[incident.longitude]]"
                                 placeholder="&#8212;" >
                     </paper-input>
                   </div>
@@ -498,7 +498,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
                   <div class="col-1">
                     <div class="button-container">
-                      <paper-icon-button on-click="" title="Use device location" icon="device:gps-fixed">
+                      <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
                       </paper-icon-button>
                     </div>
                   </div>
@@ -715,7 +715,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
-    console.log(event.detail.selectedItem);
     let {
       agency,
       contact,
@@ -886,6 +885,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
 
     this.store.dispatch(fetchIncident(this.incidentId));
+  }
+
+  getLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.set('incident.latitude', String(position.coords.latitude));
+      this.set('incident.longitude', String(position.coords.longitude));
+    }, (error) => {
+      console.warn('location fetch error:', error);
+    });
   }
 
 }

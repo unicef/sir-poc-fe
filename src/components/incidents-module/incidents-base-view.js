@@ -257,11 +257,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <fieldset>
           <legend><h3>Primary Person data</h3></legend>
           <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
+            <div class="row-h flex-c" hidden$="[[readonly]]">
+              <div class="col col-6">
                 <etools-dropdown-lite id="primaryPerson"
-                                      readonly="[[readonly]]"
-                                      label="Primary person"
+                                      label="Auto complete primary person"
                                       trigger-value-change-event
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
@@ -269,7 +268,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
               </div>
+            </div>
 
+            <div class="row-h flex-c">
               <div class="col col-3">
                 <paper-input readonly="[[readonly]]"
                              id="primaryPersonFirstName"
@@ -598,7 +599,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
-
+    console.log(event.detail.selectedItem);
     let {
       agency,
       contact,

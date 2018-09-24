@@ -7,7 +7,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -17,19 +17,24 @@ import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
+import 'etools-upload/etools-upload-multi.js';
+import 'etools-data-table/etools-data-table.js';
 import { selectIncident } from '../../reducers/incidents.js';
+
+import 'etools-info-tooltip/etools-info-tooltip.js';
 import { fetchIncident } from '../../actions/incidents.js';
-import { clearErrors } from '../../actions/errors.js';
+import { clearErrors, serverError } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
+import { Endpoints } from '../../config/endpoints';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles form-fields-styles grid-layout-styles required-fields-styles">
+      <style include="shared-styles form-fields-styles grid-layout-styles required-fields-styles data-table-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -41,6 +46,18 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         fieldset .row-h:first-of-type {
           padding-top: 0px !important;
         }
+
+        .padd-top {
+          padding-top: 24px;
+        }
+
+        .margin-b {
+          margin-bottom: 16px;
+        }
+        paper-input {
+          width: 100%;
+        }
+
       </style>
 
       <div class="card">
@@ -60,6 +77,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         label="Event"
                                         options="[[events]]"
                                         selected="{{incident.event}}"
+                                        enable-none-option
                                         selected-item="{{selectedEvent}}">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedEvent.note]]</span>
@@ -235,6 +253,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         label="Criticality"
                                         options="[[staticData.criticalities]]"
                                         selected="{{incident.criticality}}"
+                                        enable-none-option
                                         selected-item="{{selectedCriticality}}">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedCriticality.description]]</span>
@@ -255,32 +274,113 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <fieldset>
           <legend><h3>Primary Person data</h3></legend>
           <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
+            <div class="row-h flex-c" hidden$="[[readonly]]">
+              <div class="col col-6">
                 <etools-dropdown-lite id="primaryPerson"
-                                      readonly="[[readonly]]"
-                                      label="Primary person"
+                                      label="Auto complete primary person"
                                       trigger-value-change-event
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
-                                      selected="{{incident.primary_person.id}}"
-                                      required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                      enable-none-option
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
+              </div>
+            </div>
+
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="primaryPersonFirstName"
+                             label="First Name"
+                             value="{{incident.primary_person.first_name}}"
+                             placeholder="&#8212;"
+                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
+                </paper-input>
+              </div>
+
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="primaryPersonLastName"
+                             label="Last Name"
+                             value="{{incident.primary_person.last_name}}"
+                             placeholder="&#8212;"
+                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
+                </paper-input>
               </div>
 
               <div class="col col-3">
                 <etools-dropdown-lite readonly="[[readonly]]"
                                       label="Agency"
                                       options="[[staticData.agencies]]"
+                                      enable-none-option
                                       selected="{{incident.primary_person.agency}}">
                 </etools-dropdown-lite>
               </div>
 
-              <div class="col col-6">
+            </div>
+
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-dropdown-lite readonly="[[readonly]]"
+                                      id="gender"
+                                      label="Gender"
+                                      options="[[staticData.genders]]"
+                                      selected="{{incident.primary_person.gender}}"
+                                      placeholder="&#8212;">
+                </etools-dropdown-lite>
+              </div>
+              <div class="col col-3">
+                <etools-dropdown-lite readonly="[[readonly]]"
+                                      id="nationality"
+                                      label="Nationality"
+                                      options="[[staticData.nationalities]]"
+                                      selected="{{incident.primary_person.nationality}}"
+                                      enable-none-option
+                                      placeholder="&#8212;">
+                </etools-dropdown-lite>
+              </div>
+              <div class="col col-3">
+                <datepicker-lite id="dateOfBirth"
+                                readonly="[[readonly]]"
+                                selected="{{incident.primary_person.date_of_birth}}"
+                                label="Date of Birth">
+                </datepicker-lite>
+              </div>
+              <div class="col col-3">
                 <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
               </div>
-
+            </div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="jobTitle"
+                             label="Job Title"
+                             value="{{incident.primary_person.job_title}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="typeOfContract"
+                             label="Type of Contract"
+                             value="{{incident.primary_person.type_of_contract}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="contact"
+                             label="Contact"
+                             value="{{incident.primary_person.contact}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-checkbox checked="{{incident.primary_person.un_official}}"
+                                disabled="[[readonly]]">
+                  UN Official
+                </paper-checkbox>
+              </div>
             </div>
           </div>
         </fieldset>
@@ -347,6 +447,43 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </fieldset>
 
+        <template is="dom-if" if="[[incidentId]]">
+          <fieldset>
+            <legend><h3>Related documents</h3></legend>
+            <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
+              <etools-upload-multi
+                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles">
+              </etools-upload-multi>
+            </div>
+            <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
+              <etools-data-table-header no-collapse no-title>
+
+                <etools-data-table-column class="col-4">
+                  File
+                </etools-data-table-column>
+                <etools-data-table-column class="col-7">
+                  Note
+                </etools-data-table-column>
+
+              </etools-data-table-header>
+
+              <template is="dom-repeat" items="[[incident.attachments]]">
+                <etools-data-table-row no-collapse>
+                  <div slot="row-data">
+                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" data-col-header-label="File">
+                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a></span>
+                    </span>
+                    <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
+                      <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
+                      </paper-input>
+                    </span>
+                  </div>
+                </etools-data-table-row>
+              </template>
+            </div>
+          </fieldset>
+        </template>
+
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
             <warn-message hidden$="[[!_incidentHasTempIdOrNew(incidentId)]]"
@@ -362,7 +499,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <warn-message message="Can't save, selected event must be synced first"></warn-message>
           </div>
 
-          <div class="row-h flex-c">
+          <div class="row-h flex-c padd-top">
             <div class="col col-12">
               <paper-button raised
                             on-click="save"
@@ -465,6 +602,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+    // debugger
+    // this.staticData.users.push({id: 0, name: 'Custom'});
   }
 
   _setIncidentId(id) {
@@ -514,9 +653,36 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
-    this.incident.primary_person.id = event.detail.selectedItem.id;
-    this.incident.primary_person.first_name = event.detail.selectedItem.first_name;
-    this.incident.primary_person.last_name = event.detail.selectedItem.last_name;
+    console.log(event.detail.selectedItem);
+    let {
+      agency,
+      contact,
+      date_of_birth,
+      first_name,
+      gender,
+      index_number,
+      job_title,
+      last_name,
+      nationality,
+      title,
+      type_of_contract,
+      un_official
+    } = event.detail.selectedItem;
+
+    this.set('incident.primary_person', {
+      agency,
+      contact,
+      date_of_birth,
+      first_name,
+      gender,
+      index_number,
+      job_title,
+      last_name,
+      nationality,
+      title,
+      type_of_contract,
+      un_official
+    });
   }
 
   _stateChanged(state) {
@@ -607,6 +773,57 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   resetValidations() {
     resetRequiredValidations(this);
+  }
+
+  getFilenameFromURL(url) {
+    if (!url) {
+      return '';
+    }
+    return url.split('?')[0].split('/').pop();
+  }
+
+  getAttachmentInfo(incidentId) {
+    return {
+      endpoint: Endpoints.addIncidentAttachments.url,
+      extraInfo: {
+        incident: incidentId
+      },
+      rawFilePropertyName: 'attachment'
+    };
+  }
+
+  hideUploadBtn(readonly, offline, unsynced) {
+    return readonly || offline || unsynced;
+  }
+  hideAttachmentsList(incident, att, attLenght) {
+    if (!incident) {
+      return true;
+    }
+
+    if (!att || !att.length) {
+      return true;
+    }
+    return false;
+  }
+  handleUploadedFiles(ev) {
+    if (!ev.detail) {
+      return;
+    }
+    if (ev.detail.error) {
+      this.store.dispatch(serverError(ev.detail.error));
+    }
+    if (!ev.detail.success || !ev.detail.success.length) {
+      return;
+    }
+    let uploadedFiles = ev.detail.success;
+    if (!this.incident.attachments) {
+      this.incident.attachments = [];
+    }
+    uploadedFiles.forEach((fileinfo) => {
+      this.push('incident.attachments', JSON.parse(fileinfo));
+    });
+
+    this.store.dispatch(fetchIncident(this.incidentId));
   }
 
 }

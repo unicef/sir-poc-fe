@@ -7,7 +7,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -17,19 +17,24 @@ import '../common/warn-message.js';
 import { validateAllRequired, resetFieldsValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
+import 'etools-upload/etools-upload-multi.js';
+import 'etools-data-table/etools-data-table.js';
 import { selectIncident } from '../../reducers/incidents.js';
+
+import 'etools-info-tooltip/etools-info-tooltip.js';
 import { fetchIncident } from '../../actions/incidents.js';
-import { clearErrors } from '../../actions/errors.js';
+import { clearErrors, serverError } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
+import { Endpoints } from '../../config/endpoints';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles form-fields-styles grid-layout-styles required-fields-styles">
+      <style include="shared-styles form-fields-styles grid-layout-styles required-fields-styles data-table-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -41,6 +46,18 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         fieldset .row-h:first-of-type {
           padding-top: 0px !important;
         }
+
+        .padd-top {
+          padding-top: 24px;
+        }
+
+        .margin-b {
+          margin-bottom: 16px;
+        }
+        paper-input {
+          width: 100%;
+        }
+
       </style>
 
       <div class="card">
@@ -430,6 +447,43 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </fieldset>
 
+        <template is="dom-if" if="[[incidentId]]">
+          <fieldset>
+            <legend><h3>Related documents</h3></legend>
+            <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
+              <etools-upload-multi
+                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles">
+              </etools-upload-multi>
+            </div>
+            <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
+              <etools-data-table-header no-collapse no-title>
+
+                <etools-data-table-column class="col-4">
+                  File
+                </etools-data-table-column>
+                <etools-data-table-column class="col-7">
+                  Note
+                </etools-data-table-column>
+
+              </etools-data-table-header>
+
+              <template is="dom-repeat" items="[[incident.attachments]]">
+                <etools-data-table-row no-collapse>
+                  <div slot="row-data">
+                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" data-col-header-label="File">
+                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a></span>
+                    </span>
+                    <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
+                      <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
+                      </paper-input>
+                    </span>
+                  </div>
+                </etools-data-table-row>
+              </template>
+            </div>
+          </fieldset>
+        </template>
+
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
             <warn-message hidden$="[[!_incidentHasTempIdOrNew(incidentId)]]"
@@ -445,7 +499,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <warn-message message="Can't save, selected event must be synced first"></warn-message>
           </div>
 
-          <div class="row-h flex-c">
+          <div class="row-h flex-c padd-top">
             <div class="col col-12">
               <paper-button raised
                             on-click="save"
@@ -719,6 +773,57 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   resetValidations() {
     resetFieldsValidations(this, this.fieldsToValidateSelectors);
+  }
+
+  getFilenameFromURL(url) {
+    if (!url) {
+      return '';
+    }
+    return url.split('?')[0].split('/').pop();
+  }
+
+  getAttachmentInfo(incidentId) {
+    return {
+      endpoint: Endpoints.addIncidentAttachments.url,
+      extraInfo: {
+        incident: incidentId
+      },
+      rawFilePropertyName: 'attachment'
+    };
+  }
+
+  hideUploadBtn(readonly, offline, unsynced) {
+    return readonly || offline || unsynced;
+  }
+  hideAttachmentsList(incident, att, attLenght) {
+    if (!incident) {
+      return true;
+    }
+
+    if (!att || !att.length) {
+      return true;
+    }
+    return false;
+  }
+  handleUploadedFiles(ev) {
+    if (!ev.detail) {
+      return;
+    }
+    if (ev.detail.error) {
+      this.store.dispatch(serverError(ev.detail.error));
+    }
+    if (!ev.detail.success || !ev.detail.success.length) {
+      return;
+    }
+    let uploadedFiles = ev.detail.success;
+    if (!this.incident.attachments) {
+      this.incident.attachments = [];
+    }
+    uploadedFiles.forEach((fileinfo) => {
+      this.push('incident.attachments', JSON.parse(fileinfo));
+    });
+
+    this.store.dispatch(fetchIncident(this.incidentId));
   }
 
 }

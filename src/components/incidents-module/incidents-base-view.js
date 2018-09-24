@@ -485,12 +485,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <template is="dom-if" if="[[!readonly]]">
                   <div class="col-6">
                     <paper-input label="Latitude"
+                                type="number"
                                 value="{{incident.latitude}}"
                                 placeholder="&#8212;">
                     </paper-input>
                   </div>
                   <div class="col-5">
                     <paper-input label="Longitude"
+                                type="number"
                                 value="{{incident.longitude}}"
                                 placeholder="&#8212;">
                     </paper-input>
@@ -889,8 +891,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   getLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
-      this.set('incident.latitude', String(position.coords.latitude));
-      this.set('incident.longitude', String(position.coords.longitude));
+      let latitude = Math.round(position.coords.latitude * 1000000) / 1000000;
+      let longitude = Math.round(position.coords.longitude * 1000000) / 1000000;
+
+      this.set('incident.latitude', String(latitude));
+      this.set('incident.longitude', String(longitude));
     }, (error) => {
       console.warn('location fetch error:', error);
     });

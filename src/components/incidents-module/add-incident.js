@@ -33,7 +33,7 @@ class AddIncident extends IncidentsBaseView {
       return;
     }
     let successfull = await this.store.dispatch(addIncident(this.incident));
-    if (typeof successfull === 'boolean' && successfull) {
+    if (successfull) {
       this.resetForm();
       updatePath('/incidents/list/');
     }

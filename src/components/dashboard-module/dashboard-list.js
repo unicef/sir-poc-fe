@@ -76,7 +76,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               [[briefDescription(item.description)]]
             </span>
             <span class="col-data col-1" data-col-header-label="Case type">
-              [[item.case_type]]
+              [[_capitalizeString(item.case_type)]]
             </span>
             <span class="col-data col-1" data-col-header-label="Country">
               <template is="dom-if" if="[[!!item.location]]">
@@ -88,23 +88,34 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
             </span>
             <span class="col-data col-1" data-col-header-label="Status">
               <template is="dom-if" if="[[!!item.status]]">
-                [[item.status]]
+                [[_capitalizeString(item.status)]]
               </template>
               <template is="dom-if" if="[[!item.status]]">
                 N/A
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
-              [[prettyDate(item.submitted_date)]]
+              <template is="dom-if" if="[[!!item.creation_date]]">
+                [[prettyDate(item.creation_date)]]
+              </template>
+              <template is="dom-if" if="[[!item.creation_date]]">
+                N/A
+              </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Category">
-              <template is="dom-if" if="[[!item.location]]">
+              <template is="dom-if" if="[[!!item.incident_category]]">
                 [[getNameFromId(item.incident_category, 'incidentCategories')]]
+              </template>
+              <template is="dom-if" if="[[!item.incident_category]]">
+                N/A
               </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Subcategory">
-              <template is="dom-if" if="[[!item.location]]">
+              <template is="dom-if" if="[[!!item.incident_subcategory]]">
                 [[getIncidentSubcategory(item.incident_subcategory)]]
+              </template>
+              <template is="dom-if" if="[[!item.incident_subcategory]]">
+                N/A
               </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Actions">
@@ -174,7 +185,8 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     return {
       events: Array,
       incidents: Array,
-      offline: Boolean
+      offline: Boolean,
+      cases: Array
     };
   }
 
@@ -202,18 +214,20 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     });
 
     this.cases = [...this.events, ...this.incidents].sort((left, right) => {
-      return moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date));
+      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
     });
   }
 
   briefDescription(description) {
-    return description.slice(0, 140) + '...';
+    return description.length > 100 ? description.slice(0, 100) + '...' : description;
   }
 
   getIncidentSubcategory(id) {
-    let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
-    let selectedDatum = allSubCategories.find(item => item.id === id);
-    return selectedDatum.name;
+    if (id) {
+      let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
+      let selectedDatum = allSubCategories.find(item => item.id === id);
+      return selectedDatum.name;
+    }
   }
 
   checkStatus(status) {
@@ -233,6 +247,12 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
 
     if (element.case_type === 'event') {
       store.dispatch(syncEventOnList(element));
+    }
+  }
+
+  _capitalizeString(string) {
+    if (string) {
+      return string.charAt(0).toUpperCase() + string.substr(1);
     }
   }
 

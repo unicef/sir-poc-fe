@@ -9,13 +9,9 @@ export const IncidentModel = {
   street: '',
   weapons_used: [],
   last_modify_user: 1,
+  latitude: null,
+  longitude: null,
   primary_person: {
-    date_of_birth: '1970-01-01',
-    nationality: 1,
-    gender: 'male',
-    job_title: '-',
-    type_of_contract: '-',
-    contact: '-'
   },
   submitted_by: 1,
   status: 'submitted'

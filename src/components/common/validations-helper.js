@@ -22,30 +22,6 @@ export function validateFields(host, fieldSelectors, useShadowRoot) {
   return valid;
 }
 
-export function validateAllRequired(host, selector, useShadowRoot) {
-
-  if (host instanceof HTMLElement === false) {
-    throw new Error('[validateFields] Invalid host element provided for validation.');
-  }
-
-  selector = selector || '*[required]';
-
-  useShadowRoot = useShadowRoot || true;
-  const queryDom = useShadowRoot ? host.shadowRoot : host;
-
-  let valid = true;
-
-  const fields = queryDom.querySelectorAll(selector);
-
-  if (fields && fields.length) {
-    fields.forEach((elem) => {
-      valid = valid && elem.validate();
-    });
-  }
-
-  return valid;
-}
-
 export function resetFieldsValidations(host, fieldSelectors, useShadowRoot) {
   if (host instanceof HTMLElement === false) {
     throw new Error('[validateFields] Invalid host element provided for validation reset.');
@@ -64,4 +40,48 @@ export function resetFieldsValidations(host, fieldSelectors, useShadowRoot) {
       field.set('invalid', false);
     }
   });
+}
+
+export function validateAllRequired(host, selector, useShadowRoot) {
+  if (host instanceof HTMLElement === false) {
+    throw new Error('[validateFields] Invalid host element provided for validation.');
+  }
+
+  selector = selector || '*[required]';
+
+  useShadowRoot = useShadowRoot || true;
+  const queryDom = useShadowRoot ? host.shadowRoot : host;
+
+  let valid = true;
+
+  const fields = queryDom.querySelectorAll(selector);
+
+  if (fields && fields.length) {
+    fields.forEach((elem) => {
+      valid = elem.validate() && valid;
+    });
+  }
+
+  return valid;
+}
+
+export function resetRequiredValidations(host, selector, useShadowRoot) {
+
+  if (host instanceof HTMLElement === false) {
+    throw new Error('[validateFields] Invalid host element provided for validation.');
+  }
+
+  selector = selector || '*[required]';
+
+  useShadowRoot = useShadowRoot || true;
+  const queryDom = useShadowRoot ? host.shadowRoot : host;
+
+  const fields = queryDom.querySelectorAll(selector);
+
+  if (fields && fields.length) {
+    fields.forEach((elem) => {
+      elem.set('invalid', false);
+    });
+  }
+
 }

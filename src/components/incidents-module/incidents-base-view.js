@@ -89,7 +89,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <legend><h3>Incident details</h3></legend>
           <div>
             <div class="row-h flex-c">
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
                   <etools-dropdown-lite slot="field" readonly="[[readonly]]"
@@ -102,7 +102,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <span slot="message">[[selectedEvent.note]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedThreatCategory.description]]">
                   <etools-dropdown-lite id="threatCategory"
@@ -118,7 +118,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <span slot="message">[[selectedThreatCategory.description]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedTarget.description]]">
                   <etools-dropdown-lite id="target"
@@ -128,7 +128,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         options="[[staticData.targets]]"
                                         selected="{{incident.target}}"
                                         selected-item="{{selectedTarget}}"
-                                        required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                        required auto-validate
                                         error-message="Target is required">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedTarget.description]]</span>
@@ -137,7 +137,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="row-h flex-c">
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
                                       selectedIncidentCategory.comment)]]">
@@ -156,7 +156,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-info-tooltip>
               </div>
 
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
                                       selectedIncidentSubcategory.comment)]]">
@@ -240,7 +240,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <paper-textarea id="injuries" readonly$="[[readonly]]" label="Injuries"
                                 placeholder="&#8212;"
                                 value="{{incident.injuries}}"
-                                required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                required auto-validate
                                 error-message="Injuries details are required"></paper-textarea>
               </div>
             </div>
@@ -279,7 +279,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-info-tooltip>
               </div>
               <div class="col col-9" hidden$="[[!incident.incident_category]]">
-                <etools-dropdown-multi-lite hidden$="[[isSafetyIncident(selectedIncidentCategory)]]"
+                <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category, staticData)]]"
                                             readonly="[[readonly]]"
                                             label="Weapons used"
                                             options="[[staticData.weapons]]"
@@ -784,40 +784,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
-  isTrafficAccident(incidentSubcategory) {
-    if (!incidentSubcategory) {
-      return false;
-    }
-
+  isAccident(incidentCategoryId) {
     if (!this.staticData) {
       return false;
     }
 
-    let incident = this.staticData.incidentCategories[0].subcategories.find(elem => elem.id === incidentSubcategory.id);
+    let incident = this.staticData.incidentCategories.find((elem) => {
+      return elem.id === incidentCategoryId;
+    });
 
-    return incident && incident.name === 'Road Traffic Accidents';
-  }
-
-  showSubType(crashType) {
-    return this.staticData.crashSubTypes.filter(subType => crashType === subType.crash_type);
-  }
-
-  isCrashTypeOther(crashType) {
-    return crashType === 5;
-  }
-
-  isSafetyIncident(incidentCategory) {
-    if (!incidentCategory) {
-      return;
-    }
-
-    return incidentCategory.name === 'Safety';
-  }
-
-  isSexualAssault(selectedIncidentSubcategory) {
-    if (this.selectedIncidentSubcategory) {
-      return selectedIncidentSubcategory.name === 'Sexual assault' ? true : false;
-    }
+    return incident && incident.name.startsWith('Accident');
   }
 
   eventNotOk(eventId, offline) {
@@ -842,7 +818,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   validate() {
-    return validateAllRequired(this);
+    return validateFields(this, this.fieldsToValidateSelectors);
   }
 
   resetValidations() {

@@ -41,7 +41,7 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
           <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]">
             <div slot="row-data">
               <span class="col-data col-4" data-col-header-label="Name">
-                [[item.first_name]] [[item.last_name]]
+                [[item.person.first_name]] [[item.person.last_name]]
               </span>
               <span class="col-data col-3" data-col-header-label="Impact">
                 <span class="truncate">
@@ -49,7 +49,7 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Address">
-                  [[item.address]]
+                  [[item.contact_address]]
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/incidents/impact/[[item.incident]]/non-un/[[item.id]]/"

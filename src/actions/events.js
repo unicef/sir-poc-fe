@@ -53,7 +53,8 @@ const receiveEvents = (events) => {
 const receiveEvent = (event) => {
   return {
     type: RECEIVE_EVENT,
-    event
+    event,
+    id: event.id
   };
 };
 // ------------------------------

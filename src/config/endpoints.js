@@ -73,6 +73,14 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_properties/',
     method: 'GET'
   },
+  addIncidentAttachments: {
+    url: baseUrl + '/api/incident_attachments/',
+    method: 'POST'
+  },
+  editIncidentAttachments: {
+    url: baseUrl + '/api/incident_attachments/',
+    method: 'PATCH'
+  },
   addIncidentPremise: {
     url: baseUrl + '/api/incident_premises/',
     method: 'POST'
@@ -83,6 +91,30 @@ export const Endpoints = {
   },
   incidentPremisesList: {
     url: baseUrl + '/api/incident_premises/',
+    method: 'GET'
+  },
+  addIncidentProgramme: {
+    url: baseUrl + '/api/incident_programmes/',
+    method: 'POST'
+  },
+  editIncidentProgramme: {
+    url: baseUrl + '/api/incident_programmes/<%=id%>/',
+    method: 'PATCH'
+  },
+  incidentProgrammesList: {
+    url: baseUrl + '/api/incident_programmes/',
+    method: 'GET'
+  },
+  addIncidentPersonnel: {
+    url: baseUrl + '/api/incident_involved/',
+    method: 'POST'
+  },
+  editIncidentPersonnel: {
+    url: baseUrl + '/api/incident_involved/<%=id%>/',
+    method: 'PATCH'
+  },
+  incidentPersonnelList: {
+    url: baseUrl + '/api/incident_involved/',
     method: 'GET'
   },
   cities: {
@@ -119,6 +151,10 @@ export const Endpoints = {
   },
   crashTypes: {
     url: baseUrl + '/api/crash_types/',
+    method: 'GET'
+  },
+  crashSubTypes: {
+    url: baseUrl + '/api/crash_subtypes/',
     method: 'GET'
   },
   agencies: {
@@ -176,5 +212,17 @@ export const Endpoints = {
   premisesTypes: {
     url: baseUrl + '/api/premise_types/',
     method: 'GET'
-  }
+  },
+  programmeScopes: {
+    url: baseUrl + '/api/scope/',
+    method: 'GET'
+  },
+  programmeAreas: {
+    url: baseUrl + '/api/area/',
+    method: 'GET'
+  },
+  programmeTypes: {
+    url: baseUrl + '/api/programme_types/',
+    method: 'GET'
+  },
 };

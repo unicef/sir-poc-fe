@@ -7,6 +7,8 @@ export const IncidentModel = {
   on_duty: false,
   region: null,
   street: '',
+  note: '',
+  reported: false,
   weapons_used: [],
   latitude: null,
   longitude: null,

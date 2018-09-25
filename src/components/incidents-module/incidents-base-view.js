@@ -83,7 +83,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
-
+          <warn-message message="[[topWarnMessage]]" hidden$="[[!topWarnMessage.length]]"></warn-message>
         <fieldset>
           <legend><h3>Incident details</h3></legend>
           <div>
@@ -428,6 +428,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite readonly="[[readonly]]"
+                                    required auto-validate
                                     label="Region"
                                     options="[[staticData.regions]]"
                                     selected="{{incident.region}}">
@@ -435,11 +436,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="col col-3">
-              <paper-input id="city"
-                          readonly$="[[readonly]]" label="City" type="text"
-                          placeholder="&#8212;" value="{{incident.city}}"
-                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
-                          error-message="City is required"></paper-input>
+              <etools-dropdown-lite
+                          id="city"
+                          label="City"
+                          auto-validate
+                          readonly="[[readonly]]"
+                          options="[[staticData.cities]]"
+                          selected="{{incident.city}}"
+                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
+                          error-message="City is required">
+              </etools-dropdown-lite>
             </div>
 
             <div class="col col-3">
@@ -603,6 +609,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
+      topWarnMessage: {
+        type: String,
+        value: ''
+      },
       incident: {
         type: Object,
         value: () => JSON.parse(JSON.stringify(IncidentModel))

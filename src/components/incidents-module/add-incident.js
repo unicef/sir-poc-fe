@@ -2,6 +2,7 @@
 @license
 */
 import { html } from '@polymer/polymer/polymer-element.js';
+import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { isOnNewIncident } from '../../reducers/app.js';
 import { IncidentModel } from './models/incident-model';
@@ -32,10 +33,12 @@ class AddIncident extends IncidentsBaseView {
     if (!this.validate()) {
       return;
     }
-    let successfull = await this.store.dispatch(addIncident(this.incident));
-    if (successfull) {
+    let createdId = await this.store.dispatch(addIncident(this.incident));
+    if (createdId) {
+      scrollToTop();
       this.resetForm();
-      updatePath('/incidents/list/');
+      this.resetValidations();
+      this.showSuccessMessage();
     }
   }
 
@@ -56,6 +59,13 @@ class AddIncident extends IncidentsBaseView {
 
   resetForm() {
     this.incident = JSON.parse(JSON.stringify(IncidentModel));
+  }
+
+  showSuccessMessage() {
+    this.topWarnMessage = 'Incident saved';
+    setTimeout(() => {
+      this.topWarnMessage = '';
+    }, 4000);
   }
 
 }

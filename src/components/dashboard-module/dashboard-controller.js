@@ -1,75 +1,87 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../redux/store.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {store} from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
-import '../common/datepicker-lite.js';
+import 'calendar-lite/datepicker-lite.js';
 import './dashboard-list.js';
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
         :host {
           @apply --layout-vertical;
         }
+
         .label {
           padding-top: 28px;
         }
+
         .large-text {
           width: 100%;
-          font-size: 36px;
+          font-size: 72px;
         }
+
         .center-text {
           text-align: center;
         }
-        datepicker-lite {
-          --paper-input-container-shared-input-style: {
-            text-align: center;
-            width: calc(100% + 32px);
-          }
+
+        .statistics-between {
+          @apply --layout-end;
+          @apply --layout-center-justified;
         }
+        
+        .statistics-between span {
+          margin: 0 24px 11px 24px;
+        }
+        
+        .statistics-between span:first-child {
+          margin-left: 0;
+        }
+
+        @media only screen and (max-width: 1024px) {
+          .statistics-between {
+            @apply --layout-vertical;
+            @apply --layout-start-justified;
+            @apply --layout-center;
+          }
+
+          .statistics-between span {
+          margin: 20px 0 -10px 0;
+          }
+          
+        }
+        
       </style>
 
       <div class="card">
         <div class="row-h">
-          <div class="col col-5 center-text">
-            <div class="large-text"> [[filteredEvents.length]] </div>
+          <div class="col col-6 center-text">
+            <div class="large-text"> [[filteredEvents.length]]</div>
             Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
-          <div class="col col-2"></div>
-          <div class="col col-5 center-text">
-            <div class="large-text"> [[filteredIncidents.length]] </div>
+          <div class="col col-6 center-text">
+            <div class="large-text"> [[filteredIncidents.length]]</div>
             Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
         </div>
 
-        <div class="row-h">
-          <div class="col col-12 center-text">
-            <p> Show stastistics between </p>
-          </div>
+        <div class="row-h statistics-between">
+          <span>Show stastistics between</span>
+
+          <datepicker-lite label="From" value="{{selectedStartDate}}">
+          </datepicker-lite>
+
+          <span> and </span>
+
+          <datepicker-lite label="To" value="{{selectedEndDate}}">
+          </datepicker-lite>
         </div>
 
-        <div class="row-h">
-
-          <div class="col col-5">
-            <datepicker-lite value="{{selectedStartDate}}">
-            </datepicker-lite>
-          </div>
-
-          <div class="col col-2 center-text">
-            <p> and </p>
-          </div>
-
-          <div class="col col-5">
-            <datepicker-lite value="{{selectedEndDate}}">
-            </datepicker-lite>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
         <div class="row-h">
           <div class="col col-12">
             <dashboard-list></dashboard-list>

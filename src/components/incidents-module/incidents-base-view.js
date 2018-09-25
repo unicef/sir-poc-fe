@@ -79,6 +79,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
+      
         ${this.getTitleTemplate}
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -544,8 +545,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <template is="dom-repeat" items="[[incident.attachments]]">
                 <etools-data-table-row no-collapse>
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" data-col-header-label="File">
-                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a></span>
+                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" 
+                    data-col-header-label="File">
+                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a>
+                      </span>
                     </span>
                     <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
                       <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">

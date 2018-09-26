@@ -4,7 +4,6 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { isOnNewIncident } from '../../reducers/app.js';
 import { IncidentModel } from './models/incident-model';
 import { addIncident } from '../../actions/incidents.js';
 import { updatePath } from '../common/navigation-helper.js';
@@ -51,10 +50,6 @@ class AddIncident extends IncidentsBaseView {
       this.resetForm();
       updatePath(`/incidents/impact/${incidentId}/list`);
     }
-  }
-
-  isOnExpectedPage() {
-    return isOnNewIncident(this.state);
   }
 
   resetForm() {

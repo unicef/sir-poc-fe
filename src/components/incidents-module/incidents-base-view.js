@@ -527,7 +527,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         </fieldset>
 
-        <template is="dom-if" if="[[incidentId]]">
+        <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly)]]">
           <fieldset>
             <legend><h3>Related documents</h3></legend>
             <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
@@ -695,10 +695,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   _idChanged(newId) {
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
-
     if (!newId) {
       this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
@@ -706,8 +702,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
 
-
-    if (!this.isOfflineOrUnsynced()) {
+    if (!this.isOfflineOrUnsynced() && this.visible) {
       this.store.dispatch(fetchIncident(this.incidentId));
     }
   }
@@ -770,10 +765,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
-
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
 
     this.staticData = state.staticData;
 
@@ -919,6 +910,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }, (error) => {
       console.warn('location fetch error:', error);
     });
+  }
+
+  _showRelatedDocsSection(incidentId, readonly) {
+    if (!incidentId) {
+      return false;
+    }
+    if (readonly && (!this.incident.attachments || !this.incident.attachments.length)) {
+      return false;
+    }
+    return true;
   }
 
 }

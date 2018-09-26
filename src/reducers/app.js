@@ -61,37 +61,3 @@ const app = (state = defaultState, action) => {
 };
 
 export default app;
-
-const locationInfoSelector = state => state.app.locationInfo;
-export const isOnNewEvent = createSelector(
-  locationInfoSelector,
-  locInfo => (locInfo.page === 'new' && locInfo.selectedModule === 'events')
-);
-
-export const isOnViewEvent = createSelector(
-  locationInfoSelector,
-  locInfo => (locInfo.page === 'view' && locInfo.selectedModule === 'events')
-);
-
-export const isOnEditEvent = createSelector(
-  locationInfoSelector,
-  locInfo => (locInfo.page === 'edit' && locInfo.selectedModule === 'events'
-    && locInfo.eventId)
-);
-
-export const isOnNewIncident = createSelector(
-  locationInfoSelector,
-  locInfo => (locInfo.page === 'new' && locInfo.selectedModule === 'incidents')
-);
-
-export const isOnViewIncident = createSelector(
-  locationInfoSelector,
-  locInfo => (locInfo.page === 'view' && locInfo.selectedModule === 'incidents')
-);
-
-export const isOnEditIncident = createSelector(
-  locationInfoSelector,
-  locInfo => (locInfo.page === 'edit' && locInfo.selectedModule === 'incidents'
-    && locInfo.incidentId)
-);
-

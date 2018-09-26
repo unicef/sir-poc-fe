@@ -46,9 +46,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
-        <div class="layout-horizontal">
-          <errors-box></errors-box>
-        </div>
+        <errors-box></errors-box>
 
         <h3>Personnel</h3>
         <hr>

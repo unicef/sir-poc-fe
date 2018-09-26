@@ -163,17 +163,13 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   }
 
   _idChanged(newId) {
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
-
     if (!newId) {
       this.event = JSON.parse(JSON.stringify(EventModel));
       return;
     }
 
     this.set('event', JSON.parse(JSON.stringify(selectEvent(this.state))));
-    if (!this.isOfflineOrUnsynced()) {
+    if (!this.isOfflineOrUnsynced() && this.visible) {
       this.store.dispatch(fetchEvent(this.eventId));
     }
   }

@@ -3,7 +3,8 @@
 */
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
-import { editIncident } from '../../actions/incidents.js';
+import { scrollToTop } from '../common/content-container-helper.js';
+import { submitIncident } from '../../actions/incidents.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { isOnViewIncident } from '../../reducers/app';
 
@@ -42,13 +43,16 @@ class ViewIncident extends IncidentsBaseView {
     return isOnViewIncident(this.state);
   }
 
-  submit() {
+  async submit() {
     if (!this.validate()) {
       return;
     }
 
-    this.incident.status = 'submitted';
-    this.store.dispatch(editIncident(this.incident));
+    let result = await this.store.dispatch(submitIncident(this.incident));
+    if (result) {
+      scrollToTop();
+      this.showSuccessMessage();
+    }
   }
 
   canEdit(offline, unsynced, itemId) {
@@ -67,6 +71,13 @@ class ViewIncident extends IncidentsBaseView {
     }
 
     return status !== 'created';
+  }
+
+  showSuccessMessage() {
+    this.topWarnMessage = 'Incident submitted';
+    setTimeout(() => {
+      this.topWarnMessage = '';
+    }, 4000);
   }
 }
 

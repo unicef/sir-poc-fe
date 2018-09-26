@@ -41,6 +41,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'
   },
+  submitIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/submit/',
+    method: 'PUT'
+  },
   incidentsCommentsList: {
     url: baseUrl + '/api/comments/',
     method: 'GET'

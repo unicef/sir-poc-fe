@@ -9,7 +9,6 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import 'calendar-lite/datepicker-lite.js';
@@ -95,6 +94,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         label="Event"
                                         options="[[events]]"
                                         selected="{{incident.event}}"
+                                        enable-none-option
                                         selected-item="{{selectedEvent}}">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedEvent.note]]</span>
@@ -277,7 +277,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-info-tooltip>
               </div>
               <div class="col col-9" hidden$="[[!incident.incident_category]]">
-                <etools-dropdown-multi-lite hidden$="[[isAccident(incident.incident_category, staticData)]]"
+                <etools-dropdown-multi-lite hidden$="[[isSafetyIncident(selectedIncidentCategory)]]"
                                             readonly="[[readonly]]"
                                             label="Weapons used"
                                             options="[[staticData.weapons]]"
@@ -302,7 +302,34 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
               </div>
-
+            </div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="primaryPersonFirstName"
+                             label="First Name"
+                             value="{{incident.primary_person.first_name}}"
+                             placeholder="&#8212;"
+                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="primaryPersonLastName"
+                             label="Last Name"
+                             value="{{incident.primary_person.last_name}}"
+                             placeholder="&#8212;"
+                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
+                </paper-input>
+              </div>
+              <div class="col col-3">
+                <paper-input readonly="[[readonly]]"
+                             id="indexNumber"
+                             label="Index Number"
+                             value="{{incident.primary_person.index_number}}"
+                             placeholder="&#8212;">
+                </paper-input>
+              </div>
               <div class="col col-3">
                 <etools-dropdown-lite readonly="[[readonly]]"
                                       label="Agency"
@@ -513,8 +540,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <template is="dom-repeat" items="[[incident.attachments]]">
                 <etools-data-table-row no-collapse>
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" data-col-header-label="File">
-                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a></span>
+                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" 
+                    data-col-header-label="File">
+                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a>
+                      </span>
                     </span>
                     <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
                       <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
@@ -559,6 +588,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   static get goToEditBtnTmpl() {
+    return html``;
+  }
+
+  static get actionButtonsTemplate() {
     return html``;
   }
 
@@ -628,11 +661,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
-      },
-      fieldsToValidateSelectors: {
-        type: Array,
-        value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
-          '#city', '#incidentCat', '#incidentSubcat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }

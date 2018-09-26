@@ -112,6 +112,9 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
       break;
+    case 'review':
+      import('../components/incidents-module/incident-review.js');
+      break;
     case 'impact':
       import('../components/incidents-module/impact/impact-controller.js');
       break;

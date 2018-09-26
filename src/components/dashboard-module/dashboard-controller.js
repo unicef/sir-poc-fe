@@ -66,11 +66,12 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
 
       <div class="card">
         <div class="row-h">
-          <div class="col col-6 center-text">
+          <div class="col col-5 center-text">
             <div class="large-text"> [[filteredEvents.length]]</div>
             Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
-          <div class="col col-6 center-text">
+          <div class="col col-2"></div>
+          <div class="col col-5 center-text">
             <div class="large-text"> [[filteredIncidents.length]]</div>
             Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>

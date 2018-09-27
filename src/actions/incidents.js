@@ -6,6 +6,12 @@ import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { serverError, PLAIN_ERROR } from './errors.js';
 import { syncIncidentImpacts } from './incident-impacts.js';
+import { fetchIncidentEvacuations,
+         fetchIncidentProgrammes,
+         fetchIncidentProperties,
+         fetchIncidentPersonnel,
+         fetchIncidentPremises } from './incident-impacts.js';
+
 export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
 export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
 export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
@@ -73,6 +79,16 @@ const updateEventIds = (newId, oldId) => {
   };
 };
 
+export const fetchAllIncidentData = () => (dispatch, getState) => {
+  dispatch(fetchIncidents());
+  dispatch(fetchIncidentComments());
+  dispatch(fetchIncidentPremises());
+  dispatch(fetchIncidentPersonnel());
+  dispatch(fetchIncidentProgrammes());
+  dispatch(fetchIncidentProperties());
+  dispatch(fetchIncidentEvacuations());
+}
+
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(addIncidentSuccess(result));
@@ -90,6 +106,7 @@ const addIncidentOffline = (newIncident, dispatch) => {
   dispatch(addIncidentSuccess(newIncident));
   return newIncident.id;
 };
+
 
 export const addIncident = newIncident => (dispatch, getState) => {
   if (getState().app.offline === true) {

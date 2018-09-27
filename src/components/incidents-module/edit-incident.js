@@ -3,7 +3,6 @@
 */
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident } from '../../actions/incidents.js';
-import { isOnEditIncident } from '../../reducers/app.js';
 import { makeRequest } from '../../components/common/request-helper.js';
 import { Endpoints } from '../../config/endpoints.js';
 import { serverError } from '../../actions/errors';
@@ -68,9 +67,6 @@ class EditIncident extends IncidentsBaseView {
           });
   }
 
-  isOnExpectedPage() {
-    return isOnEditIncident(this.state);
-  }
 }
 
 window.customElements.define(EditIncident.is, EditIncident);

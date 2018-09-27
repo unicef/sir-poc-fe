@@ -51,10 +51,6 @@ class IncidentRevisionView extends IncidentsBaseView {
   _setIncidentId() {
   }
 
-  isOnExpectedPage() {
-    return true;
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

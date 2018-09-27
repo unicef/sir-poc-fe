@@ -5,7 +5,6 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
 import { editIncident } from '../../actions/incidents.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { isOnViewIncident } from '../../reducers/app';
 
 /**
  * @polymer
@@ -18,7 +17,7 @@ class ViewIncident extends IncidentsBaseView {
     return html`
       <div class="row-h flex-c padd-top" hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
         <div class="col col-12">
-          <a href="/incidents/edit/[[incidentId]]">
+          <a href="/incidents/edit/[[incidentId]]/">
             <paper-button raised>
               Edit
             </paper-button>
@@ -36,10 +35,6 @@ class ViewIncident extends IncidentsBaseView {
     super.connectedCallback();
     this.readonly = true;
     this.title = 'View incident';
-  }
-
-  isOnExpectedPage() {
-    return isOnViewIncident(this.state);
   }
 
   submit() {

@@ -34,6 +34,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         .row-details {
           display: block;
         }
+
+        .capitalize {
+          text-transform: capitalize;
+        }
       </style>
 
       <etools-data-table-header id="listHeader" no-title>
@@ -72,11 +76,11 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
             </span>
-            <span class="col-data col-3" data-col-header-label="Description">
+            <span class="col-data col-3 truncate" data-col-header-label="Description">
               [[briefDescription(item.description)]]
             </span>
-            <span class="col-data col-1" data-col-header-label="Case type">
-              [[_capitalizeString(item.case_type)]]
+            <span class="col-data col-1 capitalize" data-col-header-label="Case type">
+              [[item.case_type]]
             </span>
             <span class="col-data col-1" data-col-header-label="Country">
               <template is="dom-if" if="[[!!item.location]]">
@@ -86,9 +90,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                 [[getNameFromId(item.country, 'countries')]]
               </template>
             </span>
-            <span class="col-data col-1" data-col-header-label="Status">
+            <span class="col-data col-1 capitalize" data-col-header-label="Status">
               <template is="dom-if" if="[[!!item.status]]">
-                [[_capitalizeString(item.status)]]
+                [[item.status]]
               </template>
               <template is="dom-if" if="[[!item.status]]">
                 N/A
@@ -247,12 +251,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
 
     if (element.case_type === 'event') {
       store.dispatch(syncEventOnList(element));
-    }
-  }
-
-  _capitalizeString(string) {
-    if (string) {
-      return string.charAt(0).toUpperCase() + string.substr(1);
     }
   }
 

@@ -544,8 +544,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <template is="dom-repeat" items="[[incident.attachments]]">
                 <etools-data-table-row no-collapse>
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" data-col-header-label="File">
-                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a></span>
+                    <span class="col-data col-4 break-word" 
+                          title="[[getFilenameFromURL(item.attachment)]]"
+                          data-col-header-label="File">
+                      <span>
+                        <a href="[[item.attachment]]" target="_blank">
+                           [[getFilenameFromURL(item.attachment)]]
+                        </a>
+                      </span>
                     </span>
                     <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
                       <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
@@ -676,8 +682,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
-    // debugger
-    // this.staticData.users.push({id: 0, name: 'Custom'});
   }
 
   _setIncidentId(id) {

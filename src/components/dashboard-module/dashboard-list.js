@@ -77,7 +77,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
             </span>
             <span class="col-data col-3 truncate" data-col-header-label="Description">
-              [[briefDescription(item.description)]]
+              [[item.description]]
             </span>
             <span class="col-data col-1 capitalize" data-col-header-label="Case type">
               [[item.case_type]]
@@ -220,10 +220,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     this.cases = [...this.events, ...this.incidents].sort((left, right) => {
       return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
     });
-  }
-
-  briefDescription(description) {
-    return description.length > 100 ? description.slice(0, 100) + '...' : description;
   }
 
   getIncidentSubcategory(id) {

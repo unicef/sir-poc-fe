@@ -169,9 +169,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     }
 
     this.set('event', JSON.parse(JSON.stringify(selectEvent(this.state))));
-    if (!this.isOfflineOrUnsynced() && this.visible) {
-      this.store.dispatch(fetchEvent(this.eventId));
-    }
   }
 
   // It was created offline and not yet saved on server or new

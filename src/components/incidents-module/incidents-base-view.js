@@ -701,10 +701,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
 
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
-
-    if (!this.isOfflineOrUnsynced() && this.visible) {
-      this.store.dispatch(fetchIncident(this.incidentId));
-    }
   }
 
   // It was created offline and not yet saved on server or new
@@ -913,7 +909,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   _showRelatedDocsSection(incidentId, readonly) {
-    if (!incidentId) {
+    if (!incidentId || isNaN(incidentId)) {
       return false;
     }
     if (readonly && (!this.incident.attachments || !this.incident.attachments.length)) {

@@ -10,8 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
-import { fetchAndStoreEvents } from './events.js';
-import { fetchIncidents, fetchIncidentComments } from './incidents.js';
+import { fetchEvent, fetchAndStoreEvents } from './events.js';
+import { fetchIncident, fetchIncidents, fetchIncidentComments } from './incidents.js';
 import { fetchIncidentEvacuations,
          fetchIncidentProgrammes,
          fetchIncidentProperties,
@@ -145,11 +145,23 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
   }
 };
 
-export const updateLocationInfo = (path, queryParams) => {
+export const updateLocationInfo = (path, queryParams) => (dispatch, getState) => {
 
   let [selectedModule, page, eventId, incidentId] = extractInfoFromPath(path);
 
-  return {
+  if (!getState().app.offline) {
+    if (eventId && !isNaN(eventId) && getState().app.locationInfo.eventId !== eventId) {
+      // refresh event
+      dispatch(fetchEvent(eventId));
+    }
+
+    if (incidentId && !isNaN(incidentId) && getState().app.locationInfo.incidentId !== incidentId) {
+      // refresh incident
+      dispatch(fetchIncident(incidentId));
+    }
+  }
+
+  dispatch({
     type: UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
@@ -158,7 +170,7 @@ export const updateLocationInfo = (path, queryParams) => {
       eventId,
       incidentId
     }
-  };
+  });
 };
 
 const extractInfoFromPath = (path) => {

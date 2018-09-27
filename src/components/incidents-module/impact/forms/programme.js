@@ -13,6 +13,7 @@ import {
     editProgramme,
     syncProgramme
   } from '../../../../actions/incident-impacts.js';
+import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -251,7 +252,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if(this.visible) {
+    if (this.visible) {
       resetFieldsValidations(this, this.fieldsToValidateSelectors);
     }
   }
@@ -281,6 +282,12 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
   }
   scopeIsOther(scope) {
     return !this.scopeIsCity(scope) && !this.scopeIsCountry(scope);
+  }
+
+  _visibilityChanged(visible) {
+    if (visible === false) {
+      store.dispatch(clearErrors());
+    }
   }
 
 }

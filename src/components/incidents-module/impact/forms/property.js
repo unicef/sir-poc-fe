@@ -12,6 +12,7 @@ import {
     editProperty,
     syncProperty
   } from '../../../../actions/incident-impacts.js';
+import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -209,6 +210,12 @@ export class PropertyForm extends connect(store)(PolymerElement) {
     if (workingItem) {
       this.data = JSON.parse(JSON.stringify(workingItem)) || {};
       this.resetValidations();
+    }
+  }
+
+  _visibilityChanged(visible) {
+    if (visible === false) {
+      store.dispatch(clearErrors());
     }
   }
 

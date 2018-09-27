@@ -527,7 +527,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         </fieldset>
 
-        <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly)]]">
+        <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly, incident)]]">
           <fieldset>
             <legend><h3>Related documents</h3></legend>
             <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
@@ -904,11 +904,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
   }
 
-  _showRelatedDocsSection(incidentId, readonly) {
+  _showRelatedDocsSection(incidentId, readonly, incident) {
     if (!incidentId || isNaN(incidentId)) {
       return false;
     }
-    if (readonly && (!this.incident.attachments || !this.incident.attachments.length)) {
+    if (readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length)) {
       return false;
     }
     return true;

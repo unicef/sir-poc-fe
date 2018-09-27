@@ -12,6 +12,7 @@ import {
     editEvacuation,
     syncEvacuation
   } from '../../../../actions/incident-impacts.js';
+import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -301,6 +302,12 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     if (currentEvacuation) {
       this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
       this.resetValidations();
+    }
+  }
+
+  _visibilityChanged(visible) {
+    if (visible === false) {
+      store.dispatch(clearErrors());
     }
   }
 

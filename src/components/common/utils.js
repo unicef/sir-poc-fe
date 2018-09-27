@@ -1,3 +1,24 @@
+import { store } from '../../redux/store.js';
+
+const arraysAreSame = (array1, array2) => {
+  return array1.length === array2.length &&
+         array1.length === array1.filter((elem, index) => {
+           return array1[index] === array2[index];
+         }).length;
+};
+
+const isObject = (a) => {
+  return a && a.constructor === Object;
+};
+
+const isArray = (a) => {
+  return a && a.constructor === Array;
+};
+
+const isEmptyObject = (a) => {
+  return isObject(a) && Object.keys(a).length === 0;
+};
+
 export const objDiff = (object1, object2) => {
   return Object.keys(object2).reduce((diff, key) => {
     let elem1 = object1[key];
@@ -35,21 +56,21 @@ export const objDiff = (object1, object2) => {
   }, {});
 };
 
-const arraysAreSame = (array1, array2) => {
-  return array1.length === array1.length &&
-         array1.length === array1.filter((elem, index) => {
-           return array1[index] === array2[index];
-         }).length;
+export const getNameFromId = (id, staticDataPath) => {
+  if (!id) {
+    return '';
+  }
+  let staticData = store.getState().staticData;
+  let result = getStaticDataByPath(staticDataPath, staticData).find(v => v.id === Number(id));
+  return result ? result.name || '' : '';
 };
 
-const isObject = (a) => {
-  return a && a.constructor === Object;
-};
+const getStaticDataByPath = (path, data) => {
+  if (path.indexOf('.') === -1) {
+    return data[path];
+  }
 
-const isArray = (a) => {
-  return a && a.constructor === Array;
-};
-
-const isEmptyObject = (a) => {
-  return isObject(a) && Object.keys(a).length === 0;
+  let pathPieces = path.split('.');
+  let newData = data[pathPieces.shift()];
+  return getStaticDataByPath(pathPieces.join('.'), newData);
 };

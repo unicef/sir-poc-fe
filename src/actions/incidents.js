@@ -5,15 +5,15 @@ import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { serverError, PLAIN_ERROR } from './errors.js';
-
+import { syncIncidentImpacts } from './incident-impacts.js';
+export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
+export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
 export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
 export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
 export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
 export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
 export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
 export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
-export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
-export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
 
 const editIncidentSuccess = (incident, id) => {
   return {
@@ -61,7 +61,8 @@ const receiveIncidentComments = (comments) => {
 const receiveIncident = (incident) => {
   return {
     type: RECEIVE_INCIDENT,
-    incident
+    incident,
+    id: incident.id
   };
 };
 
@@ -75,8 +76,7 @@ const updateEventIds = (newId, oldId) => {
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(addIncidentSuccess(result));
-    updatePath('/incidents/list/');
-    return true;
+    return result.id;
   }).catch((error) => {
     dispatch(serverError(error.response));
     scrollToTop();
@@ -84,7 +84,22 @@ const addIncidentOnline = (newIncident, dispatch) => {
   });
 };
 
-const addCommentOnline = (comment, dispatch) => {
+const addIncidentOffline = (newIncident, dispatch) => {
+  newIncident.id = generateRandomHash();
+  newIncident.unsynced = true;
+  dispatch(addIncidentSuccess(newIncident));
+  return newIncident.id;
+};
+
+export const addIncident = newIncident => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return addIncidentOffline(newIncident, dispatch);
+  } else {
+    return addIncidentOnline(newIncident, dispatch);
+  }
+};
+
+const addCommentOnline = comment => (dispatch, getState) => {
   return makeRequest(Endpoints.addIncidentComment, comment).then((result) => {
     dispatch(addCommentSuccess(result));
     return true;
@@ -94,12 +109,8 @@ const addCommentOnline = (comment, dispatch) => {
   });
 };
 
-const addIncidentOffline = (newIncident, dispatch) => {
-  newIncident.id = generateRandomHash();
-  newIncident.unsynced = true;
-  updatePath('/incidents/list/');
-  dispatch(addIncidentSuccess(newIncident));
-  return true;
+export const addComment = comment => (dispatch, getState) => {
+  return dispatch(addCommentOnline(comment));
 };
 
 const editIncidentOnline = (incident, dispatch, state) => {
@@ -122,18 +133,6 @@ const editIncidentOffline = (incident, dispatch) => {
   dispatch(editIncidentSuccess(incident, incident.id));
 };
 
-export const addIncident = newIncident => (dispatch, getState) => {
-  if (getState().app.offline === true) {
-    return addIncidentOffline(newIncident, dispatch);
-  } else {
-    return addIncidentOnline(newIncident, dispatch);
-  }
-};
-
-export const addComment = comment => (dispatch, getState) => {
-  return addCommentOnline(comment, dispatch);
-};
-
 export const editIncident = incident => (dispatch, getState) => {
   if (getState().app.offline === true) {
     editIncidentOffline(incident, dispatch);
@@ -149,6 +148,7 @@ export const editIncident = incident => (dispatch, getState) => {
 export const syncIncidentOnList = newIncident => (dispatch, getState) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(editIncidentSuccess(result, newIncident.id));
+    dispatch(syncIncidentImpacts(result.id, newIncident.id));
     return true;
   }).catch((error) => {
     dispatch(syncIncidentFail());
@@ -161,10 +161,23 @@ export const syncIncident = newIncident => (dispatch, getState) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     updatePath('/incidents/list/');
     dispatch(editIncidentSuccess(result, newIncident.id));
+    dispatch(syncIncidentImpacts(result.id, newIncident.id));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));
     scrollToTop();
+    return false;
+  });
+};
+
+export const submitIncident = (incident) => (dispatch, state) => {
+  let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
+
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(result, result.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
     return false;
   });
 };

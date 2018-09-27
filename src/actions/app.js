@@ -10,8 +10,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
-import { fetchAndStoreEvents } from './events.js';
-import { fetchIncidents, fetchIncidentComments } from './incidents.js';
+import { fetchEvent, fetchAndStoreEvents } from './events.js';
+import { fetchIncident, fetchIncidents, fetchIncidentComments } from './incidents.js';
+import { fetchIncidentEvacuations,
+         fetchIncidentProgrammes,
+         fetchIncidentProperties,
+         fetchIncidentPersonnel,
+         fetchIncidentPremises } from './incident-impacts.js';
 
 export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
@@ -34,6 +39,11 @@ export const storeReady = () => (dispatch, getState) => {
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchIncidentComments());
+  dispatch(fetchIncidentPremises());
+  dispatch(fetchIncidentPersonnel());
+  dispatch(fetchIncidentProgrammes());
+  dispatch(fetchIncidentProperties());
+  dispatch(fetchIncidentEvacuations());
 };
 
 export const showSnackbar = () => (dispatch) => {
@@ -102,6 +112,9 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
       break;
+    case 'review':
+      import('../components/incidents-module/incident-review.js');
+      break;
     case 'impact':
       import('../components/incidents-module/impact/impact-controller.js');
       break;
@@ -132,11 +145,23 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
   }
 };
 
-export const updateLocationInfo = (path, queryParams) => {
+export const updateLocationInfo = (path, queryParams) => (dispatch, getState) => {
 
   let [selectedModule, page, eventId, incidentId] = extractInfoFromPath(path);
 
-  return {
+  if (!getState().app.offline) {
+    if (eventId && !isNaN(eventId) && getState().app.locationInfo.eventId !== eventId) {
+      // refresh event
+      dispatch(fetchEvent(eventId));
+    }
+
+    if (incidentId && !isNaN(incidentId) && getState().app.locationInfo.incidentId !== incidentId) {
+      // refresh incident
+      dispatch(fetchIncident(incidentId));
+    }
+  }
+
+  dispatch({
     type: UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
@@ -145,7 +170,7 @@ export const updateLocationInfo = (path, queryParams) => {
       eventId,
       incidentId
     }
-  };
+  });
 };
 
 const extractInfoFromPath = (path) => {

@@ -2,8 +2,7 @@
 @license
 */
 import { EventsBaseView } from './events-base-view.js';
-import { editEvent, syncEvent } from '../../actions/events.js';
-import { isOnEditEvent } from '../../reducers/app.js';
+import { editEvent } from '../../actions/events.js';
 
 /**
  * @polymer
@@ -25,10 +24,6 @@ class EditEvent extends EventsBaseView {
     }
 
     this.store.dispatch(editEvent(this.event));
-  }
-
-  isOnExpectedPage() {
-    return isOnEditEvent(this.state);
   }
 
 }

@@ -74,10 +74,11 @@ class IncidentsController extends connect(store)(BaseController) {
       <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
         <incidents-list name="list"></incidents-list>
         <add-incident name="new"></add-incident>
-        <edit-incident name="edit" hidden$="[[!showEditTab]]"></edit-incident>
+        <edit-incident name="edit"></edit-incident>
 
-        <view-incident name="view" hidden$="[[showEditTab]]"></view-incident>
-        <impact-controller name="impact"></impact-controller>
+        <view-incident name="view"></view-incident>
+        <incident-review name="review"></incident-review>
+        <impact-controller name="impact" route="{{subRoute}}"></impact-controller>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
@@ -108,17 +109,23 @@ class IncidentsController extends connect(store)(BaseController) {
     if (this.page === 'history') {
       this.navigateToHistoryList();
     }
+    if (this.page === 'impact') {
+      this.navigateToImpactDetail();
+    }
   }
 
   navigateToHistoryList() {
-    // triggers history-controller to change to the list view
-    this.set('subrouteData.subsection', null);
+    updatePath(`incidents/history/${this.incidentId}/list`);
+  }
+
+  navigateToImpactDetail() {
+    updatePath(`incidents/impact/${this.incidentId}/list`);
   }
 
   _stateChanged(state) {
     if (state && state.app) {
-      this.isOffline = state.app.offline;
       this.incidentId = state.app.locationInfo.incidentId;
+      this.isOffline = state.app.offline;
     }
   }
 
@@ -138,6 +145,7 @@ class IncidentsController extends connect(store)(BaseController) {
   getTabs(offline, showEditTab, incidentId) {
     let hideHistory = this._unsyncedAndCreatedOffline(incidentId);
     let hideComments = this._unsyncedAndCreatedOffline(incidentId);
+    let hideReview = this.hideReviewTab();
     hideHistory = hideHistory || offline;
 
     return [
@@ -154,6 +162,11 @@ class IncidentsController extends connect(store)(BaseController) {
       {
         name: 'impact',
         tabLabel: 'IMPACT'
+      },
+      {
+        name: 'review',
+        tabLabel: 'REVIEW',
+        hidden: hideReview
       },
       {
         name: 'comments',
@@ -174,6 +187,19 @@ class IncidentsController extends connect(store)(BaseController) {
 
   _showTabs(page) {
     return !!this.viewPageTabs.find(pt => pt.name === page);
+  }
+
+  hideReviewTab() {
+    if (this.showEditTab){
+      return true;
+    }
+    if (this.isOffline) {
+      return true;
+    }
+    if (this._unsyncedAndCreatedOffline(this.incidentId)) {
+      return true;
+    }
+    return false;
   }
 
 }

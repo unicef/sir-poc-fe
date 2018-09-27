@@ -1,3 +1,8 @@
+/**
+ *
+ * @polymer
+ * @mixinFunction
+ */
 const HistoryHelpers = baseClass => class extends baseClass {
   static get properties() {
     return {
@@ -18,6 +23,7 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'location': 'Location',
           'start_date': 'Start Date',
           'crash_type': 'Crash Type',
+          'crash_sub_type': 'Crash Subtype',
           'criticality': 'Criticality',
           'description': 'Description',
           'reported_to': 'Reported To',

@@ -1,10 +1,12 @@
 /**
 @license
 */
-import { addIncident } from '../../actions/incidents.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { isOnNewIncident } from '../../reducers/app.js';
 import { IncidentModel } from './models/incident-model';
+import { addIncident } from '../../actions/incidents.js';
+import { updatePath } from '../common/navigation-helper.js';
 /**
  * @polymer
  * @customElement
@@ -16,23 +18,51 @@ class AddIncident extends IncidentsBaseView {
     this.title = 'Add new incident';
   }
 
+  static get actionButtonsTemplate() {
+    return html`
+      <paper-button raised
+                    on-click="saveAndAddImpact"
+                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+        Save and add impact
+      </paper-button>
+    `;
+  }
+
   async save() {
     if (!this.validate()) {
       return;
     }
-    let successfull = await this.store.dispatch(addIncident(this.incident));
-    if (typeof successfull === 'boolean' && successfull) {
+    let createdId = await this.store.dispatch(addIncident(this.incident));
+    if (createdId) {
+      scrollToTop();
       this.resetForm();
+      this.resetValidations();
+      this.showSuccessMessage();
     }
   }
 
-  isOnExpectedPage() {
-    return isOnNewIncident(this.state);
+  async saveAndAddImpact() {
+    if (!this.validate()) {
+      return;
+    }
+    let incidentId = await this.store.dispatch(addIncident(this.incident));
+    if (incidentId) {
+      this.resetForm();
+      updatePath(`/incidents/impact/${incidentId}/list`);
+    }
   }
 
   resetForm() {
     this.incident = JSON.parse(JSON.stringify(IncidentModel));
   }
+
+  showSuccessMessage() {
+    this.topWarnMessage = 'Incident saved';
+    setTimeout(() => {
+      this.topWarnMessage = '';
+    }, 4000);
+  }
+
 }
 
 window.customElements.define('add-incident', AddIncident);

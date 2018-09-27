@@ -22,6 +22,7 @@ import DateMixin from '../common/date-mixin.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
+import { updateAppState } from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/datepicker-lite.js';
@@ -72,7 +73,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       </style>
 
       <div class="card filters">
-        <div class="row-h row-flex">
           <paper-input class="filter search-input"
                        placeholder="Search by Description or Location"
                        value="{{filters.q}}">
@@ -86,21 +86,20 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                                       hide-search>
           </etools-dropdown-multi-lite>
 
-          <div class="col col-3">
+          <div class="col col-3 filter">
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
                              label="From">
             </datepicker-lite>
           </div>
 
-          <div class="col col-3">
+          <div class="col col-3 filter">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To">
             </datepicker-lite>
           </div>
 
-        </div>
       </div>
 
       <div class="card list">
@@ -143,7 +142,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   <template is="dom-if" if="[[item.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
-                      <span slot="message">This event has not been sumitted to the server. Click the sync button when online to submit it. </span>
+                      <span slot="message">This event has not been sumitted to the server. Click the sync button when
+                                            online to submit it. </span>
                     </etools-info-tooltip>
                   </template>
                 </span>
@@ -156,7 +156,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   </a>
                   <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                     <div> <!-- this div prevents resizing of the icon on low resolutions -->
-                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem"></iron-icon>
+                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem">
+                      </iron-icon>
                     </div>
                   </template>
                 </span>
@@ -237,10 +238,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         type: Boolean,
         value: false,
         observer: '_visibilityChanged'
-      },
-      _moduleNavigatedFrom: {
-        type: String,
-        value: ''
       }
     };
   }
@@ -249,8 +246,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
     if (!state) {
       return;
     }
-
-    this.set('_moduleNavigatedFrom', state.app.locationInfo.selectedModule);
 
     if (typeof state.app.locationInfo.queryParams !== 'undefined') {
       this._queryParams = state.app.locationInfo.queryParams;
@@ -266,12 +261,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   }
 
   _queryParamsChanged(params) {
-    if (params && this._moduleNavigatedFrom === 'events') {
-
+    if (params && this.visible) {
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
-
       if (params.start) {
         this.set('filters.startDate', params.start);
       }
@@ -279,7 +272,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         this.set('filters.endDate', params.end);
       }
       if (params.synced) {
-
         if (params.synced.indexOf('|') > -1) {
           this.set('filters.syncStatus', params.synced.split('|'));
         } else {
@@ -291,18 +283,18 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
     }
   }
 
-  _updateUrlQs() {
+  _updateUrlQuery() {
     if (!this.visible) {
       return false;
     }
     this.set('_lastQueryString', this._buildQueryString());
-    this.updateAppState('/events/list', this._lastQueryString, false);
+    updateAppState('/events/list', this._lastQueryString, false);
   }
 
   _visibilityChanged(visible) {
     if (this._queryParamsInitComplete) {
       if (visible && this._lastQueryString !== '') {
-        this.updateAppState('/events/list', this._lastQueryString, false);
+        updateAppState('/events/list', this._lastQueryString, false);
       }
     }
   }
@@ -312,7 +304,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       return [];
     }
 
-    this._updateUrlQs();
+    this._updateUrlQuery();
 
     let filteredEvents = JSON.parse(JSON.stringify(events));
 

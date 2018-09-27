@@ -12,7 +12,7 @@ import { ListItemUtils } from '../mixins/list-item-utils-mixin.js';
 /**
  * @customElement
  * @polymer
- * @appliesMixin EsmmMixins.ListItemUtils
+ * @appliesMixin ListItemUtils
  */
 class EsmmOptionsList extends ListItemUtils(PolymerElement) {
   static get template() {

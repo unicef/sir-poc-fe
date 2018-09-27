@@ -38,7 +38,8 @@ class IncidentRevisionView extends IncidentsBaseView {
         </div>
 
         <div class="nav-buttons">
-          <history-navigation-links page="view" module="incidents" working-item="[[workingItem]]"></history-navigation-links>
+          <history-navigation-links page="view" module="incidents" working-item="[[workingItem]]">
+          </history-navigation-links>
         </div>
       </div>
     `;
@@ -48,10 +49,6 @@ class IncidentRevisionView extends IncidentsBaseView {
   }
 
   _setIncidentId() {
-  }
-
-  isOnExpectedPage() {
-    return true;
   }
 
   _itemChanged(workingItem) {

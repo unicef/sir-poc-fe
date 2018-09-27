@@ -1,25 +1,21 @@
 export const IncidentModel = {
-  description: '',
-  incident_date: '',
-  incident_time: '',
-  injuries: '',
-  note: '',
+  description: null,
+  incident_date: null,
+  incident_time: null,
+  injuries: null,
+  note: null,
   on_duty: false,
-  region: '',
-  reported_to: '',
-  responsible: '',
+  region: null,
   street: '',
-  weapons_used: [],
-  last_modify_user: 1,
-  primary_person: {
-    date_of_birth: '1970-01-01',
-    nationality: '-',
-    gender: 'male',
-    job_title: '-',
-    type_of_contract: '-',
-    contact: '-'
-  },
+  note: '',
   reported: false,
-  submitted_by: 1,
-  status: 'submitted'
+  weapons_used: [],
+  latitude: null,
+  longitude: null,
+  primary_person: {
+    first_name: '',
+    last_name: '',
+    gender: '',
+    type_of_contract: ''
+  }
 };

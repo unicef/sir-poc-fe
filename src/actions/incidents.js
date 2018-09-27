@@ -174,7 +174,7 @@ export const submitIncident = (incident) => (dispatch, state) => {
   let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
 
   return makeRequest(endpoint).then((result) => {
-    dispatch(fetchIncidents());
+    dispatch(editIncidentSuccess(result, result.id));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));

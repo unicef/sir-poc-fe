@@ -15,7 +15,7 @@ import {
   CLOSE_SNACKBAR,
   UPDATE_DRAWER_STATE,
   UPDATE_LOCATION_INFO
-} from '../actions/app.js';
+} from '../actions/constants.js';
 
 const defaultState = {
   offline: false,

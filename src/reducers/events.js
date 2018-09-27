@@ -4,7 +4,7 @@ import {
   ADD_EVENT_SUCCESS,
   RECEIVE_EVENTS,
   RECEIVE_EVENT
-} from '../actions/events.js';
+} from '../actions/constants.js';
 
 const events = (state = {list: []}, action) => {
   switch (action.type) {

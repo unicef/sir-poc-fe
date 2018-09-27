@@ -12,13 +12,11 @@ import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
 import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
-
-export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
-export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
-export const OPEN_SNACKBAR = 'OPEN_SNACKBAR';
-export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
-export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
-
+import { UPDATE_OFFLINE,
+         OPEN_SNACKBAR,
+         CLOSE_SNACKBAR,
+         UPDATE_DRAWER_STATE,
+         UPDATE_LOCATION_INFO } from './constants.js';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 

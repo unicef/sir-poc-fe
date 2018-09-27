@@ -6,7 +6,7 @@ import {
   RECEIVE_INCIDENTS,
   RECEIVE_INCIDENT,
   UPDATE_EVENT_IDS
-} from '../actions/incidents.js';
+} from '../actions/constants.js';
 import {
   EDIT_EVACUATION_SUCCESS,
   ADD_EVACUATION_SUCCESS,
@@ -23,7 +23,7 @@ import {
   EDIT_PERSONNEL_SUCCESS,
   ADD_PERSONNEL_SUCCESS,
   RECEIVE_PERSONNEL
-} from '../actions/incident-impacts.js';
+} from '../actions/constants.js';
 
 import { createSelector } from 'reselect';
 

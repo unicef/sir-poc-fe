@@ -4,11 +4,21 @@ import { objDiff } from '../components/common/utils.js';
 import { generateRandomHash } from './action-helpers.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { serverError, plainErrors } from './errors.js';
-
-export const EDIT_EVACUATION_SUCCESS = 'EDIT_EVACUATION_SUCCESS';
-export const ADD_EVACUATION_SUCCESS = 'ADD_EVACUATION_SUCCESS';
-export const RECEIVE_EVACUATIONS = 'RECEIVE_EVACUATIONS';
-
+import { EDIT_EVACUATION_SUCCESS,
+         ADD_EVACUATION_SUCCESS,
+         RECEIVE_EVACUATIONS,
+         EDIT_PROPERTY_SUCCESS,
+         ADD_PROPERTY_SUCCESS,
+         RECEIVE_PROPERTIES,
+         EDIT_PREMISE_SUCCESS,
+         ADD_PREMISE_SUCCESS,
+         RECEIVE_PREMISES,
+         EDIT_PROGRAMME_SUCCESS,
+         ADD_PROGRAMME_SUCCESS,
+         RECEIVE_PROGRAMMES,
+         EDIT_PERSONNEL_SUCCESS,
+         ADD_PERSONNEL_SUCCESS,
+         RECEIVE_PERSONNEL } from './constants.js';
 
 const receiveIncidentEvacuations = (evacuations) => {
   return {
@@ -152,12 +162,6 @@ const syncEvacuations = (newId, oldId) => (dispatch, getState) => {
 
 ////////////////////////////////// Impacts on properties ///////////////////////////////////////////////////////////////
 
-
-export const EDIT_PROPERTY_SUCCESS = 'EDIT_PROPERTY_SUCCESS';
-export const ADD_PROPERTY_SUCCESS = 'ADD_PROPERTY_SUCCESS';
-export const RECEIVE_PROPERTIES = 'RECEIVE_PROPERTIES';
-
-
 const receiveIncidentProperties = (properties) => {
   return {
     type: RECEIVE_PROPERTIES,
@@ -276,12 +280,6 @@ const syncProperties = (newId, oldId) => (dispatch, getState) =>  {
 
 ////////////////////////////////// Impacts on premises ///////////////////////////////////////////////////////////////
 
-
-export const EDIT_PREMISE_SUCCESS = 'EDIT_PREMISE_SUCCESS';
-export const ADD_PREMISE_SUCCESS = 'ADD_PREMISE_SUCCESS';
-export const RECEIVE_PREMISES = 'RECEIVE_PREMISES';
-
-
 const receiveIncidentPremises = (premises) => {
   return {
     type: RECEIVE_PREMISES,
@@ -303,7 +301,6 @@ const editPremiseSuccess = (premise, id) => {
     id
   };
 };
-
 
 const addPremiseOnline = (premise, dispatch) => {
   return makeRequest(Endpoints.addIncidentPremise, premise).then((result) => {
@@ -399,11 +396,6 @@ const syncPremises = (newId, oldId) => (dispatch, getState) =>  {
 }
 
 ////////////////////////////////// Impacts on programmes ///////////////////////////////////////////////////////////////
-
-
-export const EDIT_PROGRAMME_SUCCESS = 'EDIT_PROGRAMME_SUCCESS';
-export const ADD_PROGRAMME_SUCCESS = 'ADD_PROGRAMME_SUCCESS';
-export const RECEIVE_PROGRAMMES = 'RECEIVE_PROGRAMMES';
 
 const receiveIncidentProgrammes = (programmes) => {
   return {
@@ -521,12 +513,7 @@ const syncProgrammes = (newId, oldId) => (dispatch, getState) =>  {
   return operations;
 }
 
-
 ////////////////////////////////// Persons impacted ///////////////////////////////////////////////////////////
-
-export const EDIT_PERSONNEL_SUCCESS = 'EDIT_PERSONNEL_SUCCESS';
-export const ADD_PERSONNEL_SUCCESS = 'ADD_PERSONNEL_SUCCESS';
-export const RECEIVE_PERSONNEL = 'RECEIVE_PERSONNEL';
 
 const receiveIncidentPersonnel = (personnel) => {
   return {

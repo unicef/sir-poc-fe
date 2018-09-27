@@ -6,12 +6,10 @@ import { scrollToTop } from '../components/common/content-container-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { updateEventIdsInIncidents } from './incidents.js';
 import { PLAIN_ERROR } from './errors.js';
-export const EDIT_EVENT_SUCCESS = 'EDIT_EVENT_SUCCESS';
-export const ADD_EVENT_SUCCESS = 'ADD_EVENT_SUCCESS';
-export const ADD_EVENT_FAIL = 'ADD_EVENT_FAIL';
-export const RECEIVE_EVENTS = 'RECEIVE_EVENTS';
-export const RECEIVE_EVENT = 'RECEIVE_EVENT';
-
+import { EDIT_EVENT_SUCCESS,
+         ADD_EVENT_SUCCESS,
+         RECEIVE_EVENTS,
+         RECEIVE_EVENT } from './constants.js';
 
 // ----- BASIC ACTION CREATORS -----------
 const editEventSuccess = (event, id) => {

@@ -11,15 +11,13 @@ import { fetchIncidentEvacuations,
          fetchIncidentProperties,
          fetchIncidentPersonnel,
          fetchIncidentPremises } from './incident-impacts.js';
-
-export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
-export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
-export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
-export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
-export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
-export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
-export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
-export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
+import { ADD_INCIDENT_COMMENT_SUCCESS,
+         RECEIVE_INCIDENT_COMMENTS,
+         EDIT_INCIDENT_SUCCESS,
+         ADD_INCIDENT_SUCCESS,
+         RECEIVE_INCIDENTS,
+         RECEIVE_INCIDENT,
+         UPDATE_EVENT_IDS } from './constants.js';
 
 const editIncidentSuccess = (incident, id) => {
   return {

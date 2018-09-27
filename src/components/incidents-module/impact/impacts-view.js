@@ -7,7 +7,7 @@ import { updatePath } from '../../common/navigation-helper.js';
 import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
-import { clearErrors } from '../../../../actions/errors.js';
+import { clearErrors } from '../../../actions/errors.js';
 import '../../styles/shared-styles.js';
 
 import '../../common/errors-box.js';

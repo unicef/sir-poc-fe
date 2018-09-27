@@ -170,6 +170,18 @@ export const syncIncident = newIncident => (dispatch, getState) => {
   });
 };
 
+export const submitIncident = (incident) => (dispatch, state) => {
+  let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
+
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(result, result.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
 export const fetchIncidents = () => (dispatch, getState) => {
   if (getState().app.offline !== true) {
     makeRequest(Endpoints.incidentsList).then((result) => {

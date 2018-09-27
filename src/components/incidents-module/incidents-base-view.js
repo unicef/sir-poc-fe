@@ -720,10 +720,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
-  isOfflineOrUnsynced() {
-    return this.state.app.offline || (this.incident && this.incident.unsynced);
-  }
-
   _userSelected(event) {
     if (!event.detail.selectedItem) {
       return;

@@ -198,10 +198,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     this.state = state;
   }
 
-  isOfflineOrUnsynced() {
-    return this.state.app.offline || (this.event && this.event.unsynced);
-  }
-
   validate() {
     return validateFields(this, this.fieldsToValidateSelectors);
   }

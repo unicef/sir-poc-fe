@@ -1,0 +1,6 @@
+.circleci
+.git
+.local
+.venv
+node_modules
+Pipfile

@@ -10,9 +10,9 @@ jobs:
       - restore_cache:
           keys:
             - source-{{ .Branch }}-{{ .Revision }}
-#      - restore_cache:
-#          keys:
-#            - deps-v1-{{ checksum "package-lock.json" }}
+      - restore_cache:
+          keys:
+            - deps-v1-{{ checksum "package-lock.json" }}
 
       - checkout
       - run:
@@ -44,10 +44,10 @@ jobs:
           paths:
             - ".git"
 
-#      - save_cache:
-#          key: deps-v1-{{ checksum "package-lock.json" }}
-#          paths:
-#            - "./node_modules"
+      - save_cache:
+          key: deps-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - "./node_modules"
 
       - deploy:
           name: tag and release if release candidate
@@ -145,8 +145,76 @@ jobs:
                 curl --user ${CIRCLE_RELEASE_TOKEN}: \
                   --fail \
                   --data build_parameters[BUILD_TAG]=$TAG \
-                  --data build_parameters[CIRCLE_JOB]=frontend \
-                  https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/sir-releases/tree/frontend
+                  --data build_parameters[CIRCLE_JOB]=make_docker_image \
+                  https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH
               else
                 echo "Skipped as '$CIRCLE_BRANCH' does not match '$RELEASE_MATCH' branch"
               fi
+  make_docker_image:
+    working_directory: ~/code
+    docker:
+      - image: docker:17.05.0-ce-git
+        environment:
+          PGHOST: 127.0.0.1
+          PIPENV_VENV_IN_PROJECT: 1
+          DATABASE_URL: "postgres://postgres:postgres@127.0.0.1:5432/test_sir"
+      - image: circleci/postgres:9.6-alpine-postgis
+        environment:
+          POSTGRES_USER: postgres
+          PGUSER: postgres
+          POSTGRES_DB: test_sir
+          POSTGRES_PASSWORD: postgres
+
+    environment:
+      DOCKER_IMAGE: unicef/sir-fe
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "2b:6f:56:d6:6d:01:3d:81:44:3f:81:98:e9:ef:fe:ff"
+      - setup_remote_docker
+      - run:
+          name: Echo environment
+          command: |
+            env | sort
+      - checkout
+      - run:
+          name: Build Backend docker image 'unicef/sir-fe'
+          command: |
+            if [ -z "$BUILD_TAG" ];then
+              BUILD_TAG=$TAG
+            fi
+            if [ -z "$BUILD_TAG" ];then
+              echo "Tag not set. exit"
+              exit 1
+            fi
+            echo "export BUILD_TAG=$BUILD_TAG" >> $BASH_ENV
+            echo "Building ${DOCKER_IMAGE}:${BUILD_TAG}"
+            source $BASH_ENV
+
+            docker build ${BUILD_OPTIONS} \
+                    --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} \
+                    --build-arg VERSION=${BUILD_TAG} \
+                    -t ${DOCKER_IMAGE}:${BUILD_TAG} \
+                    -f docker/Dockerfile .
+            docker images | grep ${DOCKER_IMAGE}
+
+      - run:
+          name: Test Backend docker image
+          command: |
+            source $BASH_ENV
+            echo "Testing ${DOCKER_IMAGE}:${BUILD_TAG}"
+#            docker run -p 8000:8081 --rm \
+#                    -it ${DOCKER_IMAGE}:${TARGET} \
+#                    polymer lint
+
+      - deploy:
+          name: Push docker image
+          command: |
+              source $BASH_ENV
+              echo "Pushing ${DOCKER_IMAGE}:${BUILD_TAG}"
+              export TODAY=`date '+%d %B %Y at %H:%M'`
+
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker tag ${DOCKER_IMAGE}:${BUILD_TAG} ${DOCKER_IMAGE}:latest
+              docker push ${DOCKER_IMAGE}:latest
+              docker push ${DOCKER_IMAGE}:${BUILD_TAG}

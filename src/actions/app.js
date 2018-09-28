@@ -11,19 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
 import { fetchEvent, fetchAndStoreEvents } from './events.js';
-import { fetchIncident, fetchIncidents, fetchIncidentComments } from './incidents.js';
-import { fetchIncidentEvacuations,
-         fetchIncidentProgrammes,
-         fetchIncidentProperties,
-         fetchIncidentPersonnel,
-         fetchIncidentPremises } from './incident-impacts.js';
-
-export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
-export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
-export const OPEN_SNACKBAR = 'OPEN_SNACKBAR';
-export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
-export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
-
+import { fetchIncident, fetchAllIncidentData } from './incidents.js';
+import * as ACTIONS from './constants.js';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 
@@ -35,24 +24,18 @@ export const storeReady = () => (dispatch, getState) => {
     return;
   }
 
-  dispatch(fetchIncidents());
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
-  dispatch(fetchIncidentComments());
-  dispatch(fetchIncidentPremises());
-  dispatch(fetchIncidentPersonnel());
-  dispatch(fetchIncidentProgrammes());
-  dispatch(fetchIncidentProperties());
-  dispatch(fetchIncidentEvacuations());
+  dispatch(fetchAllIncidentData());
 };
 
 export const showSnackbar = () => (dispatch) => {
   dispatch({
-    type: OPEN_SNACKBAR
+    type: ACTIONS.OPEN_SNACKBAR
   });
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() =>
-    dispatch({ type: CLOSE_SNACKBAR }), 3000);
+    dispatch({ type: ACTIONS.CLOSE_SNACKBAR }), 3000);
 };
 
 export const updateOffline = offline => (dispatch, getState) => {
@@ -64,7 +47,7 @@ export const updateOffline = offline => (dispatch, getState) => {
     dispatch(showSnackbar());
   }
   dispatch({
-    type: UPDATE_OFFLINE,
+    type: ACTIONS.UPDATE_OFFLINE,
     offline
   });
 };
@@ -162,7 +145,7 @@ export const updateLocationInfo = (path, queryParams) => (dispatch, getState) =>
   }
 
   dispatch({
-    type: UPDATE_LOCATION_INFO,
+    type: ACTIONS.UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
       page,

@@ -39,5 +39,8 @@ app.use('/', (req, res, next) => {
   express.static(getSourcesPath(req))(req, res, next);
 });
 
+app.use((req, res) => {
+    res.sendFile(getSourcesPath(req) + 'index.html');
+});
 
 app.listen(8082);

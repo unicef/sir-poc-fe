@@ -4,39 +4,26 @@ import { objDiff } from '../components/common/utils.js';
 import { generateRandomHash } from './action-helpers.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { serverError, plainErrors } from './errors.js';
-import { EDIT_EVACUATION_SUCCESS,
-         ADD_EVACUATION_SUCCESS,
-         RECEIVE_EVACUATIONS,
-         EDIT_PROPERTY_SUCCESS,
-         ADD_PROPERTY_SUCCESS,
-         RECEIVE_PROPERTIES,
-         EDIT_PREMISE_SUCCESS,
-         ADD_PREMISE_SUCCESS,
-         RECEIVE_PREMISES,
-         EDIT_PROGRAMME_SUCCESS,
-         ADD_PROGRAMME_SUCCESS,
-         RECEIVE_PROGRAMMES,
-         EDIT_PERSONNEL_SUCCESS,
-         ADD_PERSONNEL_SUCCESS,
-         RECEIVE_PERSONNEL } from './constants.js';
+import * as ACTIONS from './constants.js';
+
 
 const receiveIncidentEvacuations = (evacuations) => {
   return {
-    type: RECEIVE_EVACUATIONS,
+    type: ACTIONS.RECEIVE_EVACUATIONS,
     evacuations
   };
 };
 
 const addEvacuationSuccess = (evacuation) => {
   return {
-    type: ADD_EVACUATION_SUCCESS,
+    type: ACTIONS.ADD_EVACUATION_SUCCESS,
     evacuation
   };
 };
 
 const editEvacuationSuccess = (evacuation, id) => {
   return {
-    type: EDIT_EVACUATION_SUCCESS,
+    type: ACTIONS.EDIT_EVACUATION_SUCCESS,
     evacuation,
     id
   };
@@ -164,21 +151,21 @@ const syncEvacuations = (newId, oldId) => (dispatch, getState) => {
 
 const receiveIncidentProperties = (properties) => {
   return {
-    type: RECEIVE_PROPERTIES,
+    type: ACTIONS.RECEIVE_PROPERTIES,
     properties
   };
 };
 
 const addPropertySuccess = (property) => {
   return {
-    type: ADD_PROPERTY_SUCCESS,
+    type: ACTIONS.ADD_PROPERTY_SUCCESS,
     property
   };
 };
 
 const editPropertySuccess = (property, id) => {
   return {
-    type: EDIT_PROPERTY_SUCCESS,
+    type: ACTIONS.EDIT_PROPERTY_SUCCESS,
     property,
     id
   };
@@ -282,21 +269,21 @@ const syncProperties = (newId, oldId) => (dispatch, getState) =>  {
 
 const receiveIncidentPremises = (premises) => {
   return {
-    type: RECEIVE_PREMISES,
+    type: ACTIONS.RECEIVE_PREMISES,
     premises
   };
 };
 
 const addPremiseSuccess = (premise) => {
   return {
-    type: ADD_PREMISE_SUCCESS,
+    type: ACTIONS.ADD_PREMISE_SUCCESS,
     premise
   };
 };
 
 const editPremiseSuccess = (premise, id) => {
   return {
-    type: EDIT_PREMISE_SUCCESS,
+    type: ACTIONS.EDIT_PREMISE_SUCCESS,
     premise,
     id
   };
@@ -399,21 +386,21 @@ const syncPremises = (newId, oldId) => (dispatch, getState) =>  {
 
 const receiveIncidentProgrammes = (programmes) => {
   return {
-    type: RECEIVE_PROGRAMMES,
+    type: ACTIONS.RECEIVE_PROGRAMMES,
     programmes
   };
 };
 
 const addProgrammeSuccess = (programme) => {
   return {
-    type: ADD_PROGRAMME_SUCCESS,
+    type: ACTIONS.ADD_PROGRAMME_SUCCESS,
     programme
   };
 };
 
 const editProgrammeSuccess = (programme, id) => {
   return {
-    type: EDIT_PROGRAMME_SUCCESS,
+    type: ACTIONS.EDIT_PROGRAMME_SUCCESS,
     programme,
     id
   };
@@ -517,21 +504,21 @@ const syncProgrammes = (newId, oldId) => (dispatch, getState) =>  {
 
 const receiveIncidentPersonnel = (personnel) => {
   return {
-    type: RECEIVE_PERSONNEL,
+    type: ACTIONS.RECEIVE_PERSONNEL,
     personnel
   };
 };
 
 const addPersonnelSuccess = (personnel) => {
   return {
-    type: ADD_PERSONNEL_SUCCESS,
+    type: ACTIONS.ADD_PERSONNEL_SUCCESS,
     personnel
   };
 };
 
 const editPersonnelSuccess = (personnel, id) => {
   return {
-    type: EDIT_PERSONNEL_SUCCESS,
+    type: ACTIONS.EDIT_PERSONNEL_SUCCESS,
     personnel,
     id
   };

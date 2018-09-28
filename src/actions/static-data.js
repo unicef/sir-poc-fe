@@ -1,32 +1,7 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
-import { RECEIVE_PERSONNEL_CATEGORIES,
-         RECEIVE_INCIDENT_CATEGORIES,
-         RECEIVE_EVACUATION_IMPACTS,
-         RECEIVE_THREAT_CATEGORIES,
-         RECEIVE_PROGRAMME_IMPACTS,
-         RECEIVE_PROPERTY_IMPACTS,
-         RECEIVE_PROGRAMME_SCOPES,
-         RECEIVE_PROGRAMME_AREAS,
-         RECEIVE_PROGRAMME_TYPES,
-         RECEIVE_CRASH_SUB_TYPES,
-         RECEIVE_PERSON_IMPACTS,
-         RECEIVE_PROPERTY_TYPES,
-         RECEIVE_PREMISES_TYPES,
-         RECEIVE_CRITICALITIES,
-         RECEIVE_VEHICLE_TYPES,
-         RECEIVE_NATIONALITIES,
-         RECEIVE_UN_LOCATIONS,
-         RECEIVE_CRASH_TYPES,
-         RECEIVE_COUNTRIES,
-         RECEIVE_AGENCIES,
-         RECEIVE_REGIONS,
-         RECEIVE_FACTORS,
-         RECEIVE_TARGETS,
-         RECEIVE_WEAPONS,
-         RECEIVE_CITIES,
-         RECEIVE_USERS,
-         RECEIVE_TEAMS } from './constants.js';
+import * as ACTIONS from './constants.js';
+
 export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStorePersonnelCategories());
   dispatch(fetchAndStoreIncidentCategories());
@@ -42,10 +17,10 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStorePropertyTypes());
   dispatch(fetchAndStorePremisesTypes());
   dispatch(fetchAndStoreNationalities());
+  dispatch(fetchAndStoreCrashSubTypes());
   dispatch(fetchAndStoreVehicleTypes());
   dispatch(fetchAndStoreUnLocations());
   dispatch(fetchAndStoreCrashTypes());
-  dispatch(fetchAndStoreCrashSubTypes());
   dispatch(fetchAndStoreCountries());
   dispatch(fetchAndStoreAgencies());
   dispatch(fetchAndStoreRegions());
@@ -65,7 +40,7 @@ export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
 
 const receiveIncidentCategories = (incidentCategories) => {
   return {
-    type: RECEIVE_INCIDENT_CATEGORIES,
+    type: ACTIONS.RECEIVE_INCIDENT_CATEGORIES,
     incidentCategories
   };
 };
@@ -78,7 +53,7 @@ export const fetchAndStoreThreatCategories = () => (dispatch, getState) => {
 
 const receiveThreatCategories = (threatCategories) => {
   return {
-    type: RECEIVE_THREAT_CATEGORIES,
+    type: ACTIONS.RECEIVE_THREAT_CATEGORIES,
     threatCategories
   };
 };
@@ -91,7 +66,7 @@ export const fetchAndStoreCriticalities = () => (dispatch, getState) => {
 
 const receiveCriticalities = (criticalities) => {
   return {
-    type: RECEIVE_CRITICALITIES,
+    type: ACTIONS.RECEIVE_CRITICALITIES,
     criticalities
   };
 };
@@ -104,7 +79,7 @@ export const fetchAndStoreVehicleTypes = () => (dispatch, getState) => {
 
 const receiveVehicleTypes = (vehicleTypes) => {
   return {
-    type: RECEIVE_VEHICLE_TYPES,
+    type: ACTIONS.RECEIVE_VEHICLE_TYPES,
     vehicleTypes
   };
 };
@@ -117,7 +92,7 @@ export const fetchAndStoreCountries = () => (dispatch, getState) => {
 
 const receiveCountries = (countries) => {
   return {
-    type: RECEIVE_COUNTRIES,
+    type: ACTIONS.RECEIVE_COUNTRIES,
     countries
   };
 };
@@ -130,7 +105,7 @@ export const fetchAndStoreAgencies = () => (dispatch, getState) => {
 
 const receiveAgencies = (agencies) => {
   return {
-    type: RECEIVE_AGENCIES,
+    type: ACTIONS.RECEIVE_AGENCIES,
     agencies
   };
 };
@@ -143,7 +118,7 @@ export const fetchAndStoreRegions = () => (dispatch, getState) => {
 
 const receiveRegions = (regions) => {
   return {
-    type: RECEIVE_REGIONS,
+    type: ACTIONS.RECEIVE_REGIONS,
     regions
   };
 };
@@ -156,7 +131,7 @@ export const fetchAndStoreCities = () => (dispatch, getState) => {
 
 const receiveCities = (cities) => {
   return {
-    type: RECEIVE_CITIES,
+    type: ACTIONS.RECEIVE_CITIES,
     cities
   };
 };
@@ -169,7 +144,7 @@ export const fetchAndStoreFactors = () => (dispatch, getState) => {
 
 const receiveFactors = (factors) => {
   return {
-    type: RECEIVE_FACTORS,
+    type: ACTIONS.RECEIVE_FACTORS,
     factors
   };
 };
@@ -182,7 +157,7 @@ export const fetchAndStoreTargets = () => (dispatch, getState) => {
 
 const receiveTargets = (targets) => {
   return {
-    type: RECEIVE_TARGETS,
+    type: ACTIONS.RECEIVE_TARGETS,
     targets
   };
 };
@@ -195,7 +170,7 @@ export const fetchAndStoreWeapons = () => (dispatch, getState) => {
 
 const receiveWeapons = (weapons) => {
   return {
-    type: RECEIVE_WEAPONS,
+    type: ACTIONS.RECEIVE_WEAPONS,
     weapons
   };
 };
@@ -213,7 +188,7 @@ const receiveUsers = (users) => {
   });
 
   return {
-    type: RECEIVE_USERS,
+    type: ACTIONS.RECEIVE_USERS,
     users
   };
 };
@@ -226,7 +201,7 @@ export const fetchAndStoreTeams = () => (dispatch, getState) => {
 
 const receiveTeams = (teams) => {
   return {
-    type: RECEIVE_TEAMS,
+    type: ACTIONS.RECEIVE_TEAMS,
     teams
   };
 };
@@ -239,7 +214,7 @@ export const fetchAndStoreCrashTypes = () => (dispatch, getState) => {
 
 const receiveCrashTypes = (crashTypes) => {
   return {
-    type: RECEIVE_CRASH_TYPES,
+    type: ACTIONS.RECEIVE_CRASH_TYPES,
     crashTypes
   };
 };
@@ -252,7 +227,7 @@ export const fetchAndStoreCrashSubTypes = () => (dispatch, getState) => {
 
 const receiveCrashSubTypes = (crashSubTypes) => {
   return {
-    type: RECEIVE_CRASH_SUB_TYPES,
+    type: ACTIONS.RECEIVE_CRASH_SUB_TYPES,
     crashSubTypes
   };
 };
@@ -265,7 +240,7 @@ export const fetchAndStoreProgrammeImpacts = () => (dispatch, getState) => {
 
 const receiveProgrammeImpacts = (programmeImpacts) => {
   return {
-    type: RECEIVE_PROGRAMME_IMPACTS,
+    type: ACTIONS.RECEIVE_PROGRAMME_IMPACTS,
     programmeImpacts
   };
 };
@@ -278,7 +253,7 @@ export const fetchAndStoreEvacuationImpacts = () => (dispatch, getState) => {
 
 const receiveEvacuationImpacts = (evacuationImpact) => {
   return {
-    type: RECEIVE_EVACUATION_IMPACTS,
+    type: ACTIONS.RECEIVE_EVACUATION_IMPACTS,
     evacuationImpact
   };
 };
@@ -291,7 +266,7 @@ export const fetchAndStorePropertyImpacts = () => (dispatch, getState) => {
 
 const receivePropertyImpacts = (propertyImpacts) => {
   return {
-    type: RECEIVE_PROPERTY_IMPACTS,
+    type: ACTIONS.RECEIVE_PROPERTY_IMPACTS,
     propertyImpacts
   };
 };
@@ -304,7 +279,7 @@ export const fetchAndStorePersonImpacts = () => (dispatch, getState) => {
 
 const receivePersonImpacts = (personImpacts) => {
   return {
-    type: RECEIVE_PERSON_IMPACTS,
+    type: ACTIONS.RECEIVE_PERSON_IMPACTS,
     personImpacts
   };
 };
@@ -317,7 +292,7 @@ export const fetchAndStoreUnLocations = () => (dispatch, getState) => {
 
 const receiveUnLocations = (unLocations) => {
   return {
-    type: RECEIVE_UN_LOCATIONS,
+    type: ACTIONS.RECEIVE_UN_LOCATIONS,
     unLocations
   };
 };
@@ -330,7 +305,7 @@ export const fetchAndStorePropertyTypes = () => (dispatch, getState) => {
 
 const receivePropertyTypes = (propertyTypes) => {
   return {
-    type: RECEIVE_PROPERTY_TYPES,
+    type: ACTIONS.RECEIVE_PROPERTY_TYPES,
     propertyTypes
   };
 };
@@ -343,7 +318,7 @@ export const fetchAndStorePremisesTypes = () => (dispatch, getState) => {
 
 const receivePremisesTypes = (premisesTypes) => {
   return {
-    type: RECEIVE_PREMISES_TYPES,
+    type: ACTIONS.RECEIVE_PREMISES_TYPES,
     premisesTypes
   };
 };
@@ -356,7 +331,7 @@ export const fetchAndStoreProgrammeScopes = () => (dispatch, getState) => {
 
 const receiveProgrammeScopes = (programmeScopes) => {
   return {
-    type: RECEIVE_PROGRAMME_SCOPES,
+    type: ACTIONS.RECEIVE_PROGRAMME_SCOPES,
     programmeScopes
   };
 };
@@ -369,7 +344,7 @@ export const fetchAndStoreProgrammeAreas = () => (dispatch, getState) => {
 
 const receiveProgrammeAreas = (programmeAreas) => {
   return {
-    type: RECEIVE_PROGRAMME_AREAS,
+    type: ACTIONS.RECEIVE_PROGRAMME_AREAS,
     programmeAreas
   };
 };
@@ -382,7 +357,7 @@ export const fetchAndStoreProgrammeTypes = () => (dispatch, getState) => {
 
 const receiveProgrammeTypes = (programmeTypes) => {
   return {
-    type: RECEIVE_PROGRAMME_TYPES,
+    type: ACTIONS.RECEIVE_PROGRAMME_TYPES,
     programmeTypes
   };
 };
@@ -395,7 +370,7 @@ export const fetchAndStorePersonnelCategories = () => (dispatch, getState) => {
 
 const receivePersonnelCategories = (personnelCategories) => {
   return {
-    type: RECEIVE_PERSONNEL_CATEGORIES,
+    type: ACTIONS.RECEIVE_PERSONNEL_CATEGORIES,
     personnelCategories
   };
 };
@@ -408,7 +383,7 @@ export const fetchAndStoreNationalities = () => (dispatch, getState) => {
 
 const receiveNationalities = (nationalities) => {
   return {
-    type: RECEIVE_NATIONALITIES,
+    type: ACTIONS.RECEIVE_NATIONALITIES,
     nationalities
   };
 };

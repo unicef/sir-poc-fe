@@ -12,11 +12,7 @@ import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
 import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
-import { UPDATE_OFFLINE,
-         OPEN_SNACKBAR,
-         CLOSE_SNACKBAR,
-         UPDATE_DRAWER_STATE,
-         UPDATE_LOCATION_INFO } from './constants.js';
+import * as ACTIONS from './constants.js';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 
@@ -35,11 +31,11 @@ export const storeReady = () => (dispatch, getState) => {
 
 export const showSnackbar = () => (dispatch) => {
   dispatch({
-    type: OPEN_SNACKBAR
+    type: ACTIONS.OPEN_SNACKBAR
   });
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() =>
-    dispatch({ type: CLOSE_SNACKBAR }), 3000);
+    dispatch({ type: ACTIONS.CLOSE_SNACKBAR }), 3000);
 };
 
 export const updateOffline = offline => (dispatch, getState) => {
@@ -51,7 +47,7 @@ export const updateOffline = offline => (dispatch, getState) => {
     dispatch(showSnackbar());
   }
   dispatch({
-    type: UPDATE_OFFLINE,
+    type: ACTIONS.UPDATE_OFFLINE,
     offline
   });
 };
@@ -149,7 +145,7 @@ export const updateLocationInfo = (path, queryParams) => (dispatch, getState) =>
   }
 
   dispatch({
-    type: UPDATE_LOCATION_INFO,
+    type: ACTIONS.UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
       page,

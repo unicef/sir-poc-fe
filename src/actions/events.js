@@ -6,15 +6,13 @@ import { scrollToTop } from '../components/common/content-container-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { updateEventIdsInIncidents } from './incidents.js';
 import { PLAIN_ERROR } from './errors.js';
-import { EDIT_EVENT_SUCCESS,
-         ADD_EVENT_SUCCESS,
-         RECEIVE_EVENTS,
-         RECEIVE_EVENT } from './constants.js';
+import * as ACTIONS from './constants.js';
+
 
 // ----- BASIC ACTION CREATORS -----------
 const editEventSuccess = (event, id) => {
   return {
-    type: EDIT_EVENT_SUCCESS,
+    type: ACTIONS.EDIT_EVENT_SUCCESS,
     event,
     id
   };
@@ -22,14 +20,14 @@ const editEventSuccess = (event, id) => {
 
 const addEventSuccess = (newEvent) => {
   return {
-    type: ADD_EVENT_SUCCESS,
+    type: ACTIONS.ADD_EVENT_SUCCESS,
     newEvent
   };
 };
 
 const addEventFail = (serverError) => {
   return {
-    type: ADD_EVENT_FAIL,
+    type: ACTIONS.ADD_EVENT_FAIL,
     serverError
   };
 };
@@ -43,14 +41,14 @@ const syncEventFail = () => {
 
 const receiveEvents = (events) => {
   return {
-    type: RECEIVE_EVENTS,
+    type: ACTIONS.RECEIVE_EVENTS,
     events
   };
 };
 
 const receiveEvent = (event) => {
   return {
-    type: RECEIVE_EVENT,
+    type: ACTIONS.RECEIVE_EVENT,
     event,
     id: event.id
   };

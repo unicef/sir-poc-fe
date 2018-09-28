@@ -30,10 +30,10 @@ RUN apk add --update git
 WORKDIR /code
 COPY --from=builder /code /code
 
-#RUN npm install polymer-cli \
-#    && npm install \
-#    && npm run build
-#
+RUN npm install polymer-cli \
+    && npm install \
+    && npm run build
+
 ENV PATH="/code/node_modules/.bin:${PATH}"
 
 CMD ["polymer", "serve", "-H", "0.0.0.0"]

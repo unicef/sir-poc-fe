@@ -192,7 +192,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
     if (!err1 && !err2) {
       return false;
     }
-    if (!Object.keys(errs) && err2.length) {
+    if ((err1 && !Object.keys(err1)) && (err2 && !err2.length)) {
       return false;
     }
     return true;

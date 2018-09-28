@@ -187,7 +187,10 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
       selectedScope: Object,
       staticData: Array,
       impactId: String,
-      visible: Boolean,
+      visible: {
+        type: Boolean,
+        observer: '_visibilityChanged'
+      },
       offline: Boolean,
       readonly: {
         type: Boolean,

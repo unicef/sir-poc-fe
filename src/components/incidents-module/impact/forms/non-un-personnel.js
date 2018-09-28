@@ -195,7 +195,10 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       selectedImpactType: Object,
       staticData: Array,
       impactId: String,
-      visible: Boolean,
+      visible: {
+        type: Boolean,
+        observer: '_visibilityChanged'
+      },
       offline: Boolean,
       readonly: {
         type: Boolean,

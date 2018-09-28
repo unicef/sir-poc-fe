@@ -154,7 +154,10 @@ export class PremiseForm extends connect(store)(PolymerElement) {
     return {
       staticData: Array,
       impactId: String,
-      visible: Boolean,
+      visible: {
+        type: Boolean,
+        observer: '_visibilityChanged'
+      },
       offline: Boolean,
       readonly: {
         type: Boolean,

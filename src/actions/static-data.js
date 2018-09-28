@@ -59,7 +59,7 @@ export const loadAllStaticData = () => (dispatch) => {
 
 export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.incidentCategories).then((result) => {
-    dispatch(receiveIncidentCategories(result));
+    dispatch(receiveIncidentCategories(result || []));
   });
 };
 
@@ -72,7 +72,7 @@ const receiveIncidentCategories = (incidentCategories) => {
 
 export const fetchAndStoreThreatCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.threatCategories).then((result) => {
-    dispatch(receiveThreatCategories(result));
+    dispatch(receiveThreatCategories(result || []));
   });
 };
 
@@ -85,7 +85,7 @@ const receiveThreatCategories = (threatCategories) => {
 
 export const fetchAndStoreCriticalities = () => (dispatch, getState) => {
   makeRequest(Endpoints.criticalities).then((result) => {
-    dispatch(receiveCriticalities(result));
+    dispatch(receiveCriticalities(result || []));
   });
 };
 
@@ -98,7 +98,7 @@ const receiveCriticalities = (criticalities) => {
 
 export const fetchAndStoreVehicleTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.vehicleTypes).then((result) => {
-    dispatch(receiveVehicleTypes(result));
+    dispatch(receiveVehicleTypes(result || []));
   });
 };
 
@@ -111,7 +111,7 @@ const receiveVehicleTypes = (vehicleTypes) => {
 
 export const fetchAndStoreCountries = () => (dispatch, getState) => {
   makeRequest(Endpoints.countries).then((result) => {
-    dispatch(receiveCountries(result));
+    dispatch(receiveCountries(result || []));
   });
 };
 
@@ -124,7 +124,7 @@ const receiveCountries = (countries) => {
 
 export const fetchAndStoreAgencies = () => (dispatch, getState) => {
   makeRequest(Endpoints.agencies).then((result) => {
-    dispatch(receiveAgencies(result));
+    dispatch(receiveAgencies(result || []));
   });
 };
 
@@ -137,7 +137,7 @@ const receiveAgencies = (agencies) => {
 
 export const fetchAndStoreRegions = () => (dispatch, getState) => {
   makeRequest(Endpoints.regions).then((result) => {
-    dispatch(receiveRegions(result));
+    dispatch(receiveRegions(result || []));
   });
 };
 
@@ -150,7 +150,7 @@ const receiveRegions = (regions) => {
 
 export const fetchAndStoreCities = () => (dispatch, getState) => {
   makeRequest(Endpoints.cities).then((result) => {
-    dispatch(receiveCities(result));
+    dispatch(receiveCities(result || []));
   });
 };
 
@@ -163,7 +163,7 @@ const receiveCities = (cities) => {
 
 export const fetchAndStoreFactors = () => (dispatch, getState) => {
   makeRequest(Endpoints.factors).then((result) => {
-    dispatch(receiveFactors(result));
+    dispatch(receiveFactors(result || []));
   });
 };
 
@@ -176,7 +176,7 @@ const receiveFactors = (factors) => {
 
 export const fetchAndStoreTargets = () => (dispatch, getState) => {
   makeRequest(Endpoints.targets).then((result) => {
-    dispatch(receiveTargets(result));
+    dispatch(receiveTargets(result || []));
   });
 };
 
@@ -189,7 +189,7 @@ const receiveTargets = (targets) => {
 
 export const fetchAndStoreWeapons = () => (dispatch, getState) => {
   makeRequest(Endpoints.weapons).then((result) => {
-    dispatch(receiveWeapons(result));
+    dispatch(receiveWeapons(result || []));
   });
 };
 
@@ -202,7 +202,7 @@ const receiveWeapons = (weapons) => {
 
 export const fetchAndStoreUsers = () => (dispatch, getState) => {
   makeRequest(Endpoints.users).then((result) => {
-    dispatch(receiveUsers(result));
+    dispatch(receiveUsers(result || []));
   });
 };
 
@@ -220,7 +220,7 @@ const receiveUsers = (users) => {
 
 export const fetchAndStoreTeams = () => (dispatch, getState) => {
   makeRequest(Endpoints.teams).then((result) => {
-    dispatch(receiveTeams(result));
+    dispatch(receiveTeams(result || []));
   });
 };
 
@@ -233,7 +233,7 @@ const receiveTeams = (teams) => {
 
 export const fetchAndStoreCrashTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.crashTypes).then((result) => {
-    dispatch(receiveCrashTypes(result));
+    dispatch(receiveCrashTypes(result || []));
   });
 };
 
@@ -246,7 +246,7 @@ const receiveCrashTypes = (crashTypes) => {
 
 export const fetchAndStoreCrashSubTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.crashSubTypes).then((result) => {
-    dispatch(receiveCrashSubTypes(result));
+    dispatch(receiveCrashSubTypes(result || []));
   });
 };
 
@@ -259,7 +259,7 @@ const receiveCrashSubTypes = (crashSubTypes) => {
 
 export const fetchAndStoreProgrammeImpacts = () => (dispatch, getState) => {
   makeRequest(Endpoints.programmeImpacts).then((result) => {
-    dispatch(receiveProgrammeImpacts(result));
+    dispatch(receiveProgrammeImpacts(result || []));
   });
 };
 
@@ -272,7 +272,7 @@ const receiveProgrammeImpacts = (programmeImpacts) => {
 
 export const fetchAndStoreEvacuationImpacts = () => (dispatch, getState) => {
   makeRequest(Endpoints.evacuationImpacts).then((result) => {
-    dispatch(receiveEvacuationImpacts(result));
+    dispatch(receiveEvacuationImpacts(result || []));
   });
 };
 
@@ -285,7 +285,7 @@ const receiveEvacuationImpacts = (evacuationImpact) => {
 
 export const fetchAndStorePropertyImpacts = () => (dispatch, getState) => {
   makeRequest(Endpoints.propertyImpacts).then((result) => {
-    dispatch(receivePropertyImpacts(result));
+    dispatch(receivePropertyImpacts(result || []));
   });
 };
 
@@ -298,7 +298,7 @@ const receivePropertyImpacts = (propertyImpacts) => {
 
 export const fetchAndStorePersonImpacts = () => (dispatch, getState) => {
   makeRequest(Endpoints.personImpacts).then((result) => {
-    dispatch(receivePersonImpacts(result));
+    dispatch(receivePersonImpacts(result || []));
   });
 };
 
@@ -311,7 +311,7 @@ const receivePersonImpacts = (personImpacts) => {
 
 export const fetchAndStoreUnLocations = () => (dispatch, getState) => {
   makeRequest(Endpoints.unLocations).then((result) => {
-    dispatch(receiveUnLocations(result));
+    dispatch(receiveUnLocations(result || []));
   });
 };
 
@@ -324,7 +324,7 @@ const receiveUnLocations = (unLocations) => {
 
 export const fetchAndStorePropertyTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.propertyTypes).then((result) => {
-    dispatch(receivePropertyTypes(result));
+    dispatch(receivePropertyTypes(result || []));
   });
 };
 
@@ -337,7 +337,7 @@ const receivePropertyTypes = (propertyTypes) => {
 
 export const fetchAndStorePremisesTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.premisesTypes).then((result) => {
-    dispatch(receivePremisesTypes(result));
+    dispatch(receivePremisesTypes(result || []));
   });
 };
 
@@ -350,7 +350,7 @@ const receivePremisesTypes = (premisesTypes) => {
 
 export const fetchAndStoreProgrammeScopes = () => (dispatch, getState) => {
   makeRequest(Endpoints.programmeScopes).then((result) => {
-    dispatch(receiveProgrammeScopes(result));
+    dispatch(receiveProgrammeScopes(result || []));
   });
 };
 
@@ -363,7 +363,7 @@ const receiveProgrammeScopes = (programmeScopes) => {
 
 export const fetchAndStoreProgrammeAreas = () => (dispatch, getState) => {
   makeRequest(Endpoints.programmeAreas).then((result) => {
-    dispatch(receiveProgrammeAreas(result));
+    dispatch(receiveProgrammeAreas(result || []));
   });
 };
 
@@ -376,7 +376,7 @@ const receiveProgrammeAreas = (programmeAreas) => {
 
 export const fetchAndStoreProgrammeTypes = () => (dispatch, getState) => {
   makeRequest(Endpoints.programmeTypes).then((result) => {
-    dispatch(receiveProgrammeTypes(result));
+    dispatch(receiveProgrammeTypes(result || []));
   });
 };
 
@@ -389,7 +389,7 @@ const receiveProgrammeTypes = (programmeTypes) => {
 
 export const fetchAndStorePersonnelCategories = () => (dispatch, getState) => {
   makeRequest(Endpoints.personnelCategories).then((result) => {
-    dispatch(receivePersonnelCategories(result));
+    dispatch(receivePersonnelCategories(result || []));
   });
 };
 
@@ -402,7 +402,7 @@ const receivePersonnelCategories = (personnelCategories) => {
 
 export const fetchAndStoreNationalities = () => (dispatch, getState) => {
   makeRequest(Endpoints.nationalities).then((result) => {
-    dispatch(receiveNationalities(result));
+    dispatch(receiveNationalities(result || []));
   });
 };
 

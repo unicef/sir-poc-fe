@@ -177,16 +177,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       store.dispatch(clearErrors());
     }
   }
-
-  showErrorBox(err1, err2) {
-    if (!err1 && !err2) {
-      return false;
-    }
-    if ((err1 && !Object.keys(err1)) && (err2 && !err2.length)) {
-      return false;
-    }
-    return true;
-  }
 }
 
 window.customElements.define(ImpactsView.is, ImpactsView);

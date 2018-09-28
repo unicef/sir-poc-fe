@@ -46,11 +46,9 @@ export class ImpactsView extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <div class="card" hidden$="[[!showErrorBox(state.errors.serverError, state.errors.plainErrors)]]">
-        <errors-box></errors-box>
-      </div>
-
       <div class="card">
+        <errors-box></errors-box>
+
         <h3>Personnel</h3>
         <hr>
         <div class="right">
@@ -72,9 +70,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           </paper-button>
         </div>
         <non-un-personnel-list></non-un-personnel-list>
-      </div>
 
-      <div class="card">
         <h3>Evacuations</h3>
         <hr>
         <div class="right">
@@ -86,9 +82,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           </paper-button>
         </div>
         <evacuations-list></evacuations-list>
-      </div>
 
-      <div class="card">
         <h3>UN Property(assets)</h3>
         <hr>
         <div class="right">
@@ -100,9 +94,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           </paper-button>
         </div>
         <properties-list></properties-list>
-      </div>
 
-      <div class="card">
         <h3>UN Premises(facilities)</h3>
         <hr>
         <div class="right">
@@ -114,9 +106,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           </paper-button>
         </div>
         <premises-list></premises-list>
-      </div>
 
-      <div class="card">
         <h3>UN Programme</h3>
         <hr>
         <div class="right">

@@ -13,6 +13,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/datepicker-lite.js';
+import 'calendar-lite/time-picker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
@@ -464,14 +465,21 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="col col-3">
-              <paper-input id="incidentTime"
-                          readonly$="[[readonly]]"
-                          label="Incident time"
-                          type="time"
-                          value="{{incident.incident_time}}"
-                          required auto-validate
-                          error-message="Incident time is required">
-              </paper-input>
+              <timepicker-lite id="incidentTime" 
+                               label="Incident time" 
+                               value="{{incident.incident_time}}" 
+                               readonly$="[[readonly]]" 
+                               required>
+
+              </timepicker-lite>
+              <!--<paper-input id="incidentTime"-->
+                          <!--readonly$="[[readonly]]"-->
+                          <!--label="Incident time"-->
+                          <!--type="time"-->
+                          <!--value="{{incident.incident_time}}"-->
+                          <!--required auto-validate-->
+                          <!--error-message="Incident time is required">-->
+              <!--</paper-input>-->
             </div>
 
             <div class="col col-6">

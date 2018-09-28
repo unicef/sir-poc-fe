@@ -1,29 +1,24 @@
 import { createSelector } from 'reselect';
-import {
-  EDIT_EVENT_SUCCESS,
-  ADD_EVENT_SUCCESS,
-  RECEIVE_EVENTS,
-  RECEIVE_EVENT
-} from '../actions/constants.js';
+import * as ACTIONS from '../actions/constants.js';
 
 const events = (state = {list: []}, action) => {
   switch (action.type) {
-    case RECEIVE_EVENTS:
+    case ACTIONS.RECEIVE_EVENTS:
       return {
         ...state,
         list: getRefreshedEvents(state.list, action.events)
       };
-    case RECEIVE_EVENT:
+    case ACTIONS.RECEIVE_EVENT:
       return {
         ...state,
         list: getEditedList(state.list, action)
       };
-    case ADD_EVENT_SUCCESS:
+    case ACTIONS.ADD_EVENT_SUCCESS:
       return {
         ...state,
         list: [...state.list, action.newEvent]
       };
-    case EDIT_EVENT_SUCCESS:
+    case ACTIONS.EDIT_EVENT_SUCCESS:
       return {
         ...state,
         list: getEditedList(state.list, action)

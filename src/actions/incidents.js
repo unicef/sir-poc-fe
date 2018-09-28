@@ -6,18 +6,16 @@ import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { serverError, PLAIN_ERROR } from './errors.js';
 import { syncIncidentImpacts } from './incident-impacts.js';
-export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
-export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
-export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
-export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
-export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
-export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
-export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
-export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
+import * as ACTIONS from './constants.js';
+import { fetchIncidentEvacuations,
+         fetchIncidentProgrammes,
+         fetchIncidentProperties,
+         fetchIncidentPersonnel,
+         fetchIncidentPremises } from './incident-impacts.js';
 
 const editIncidentSuccess = (incident, id) => {
   return {
-    type: EDIT_INCIDENT_SUCCESS,
+    type: ACTIONS.EDIT_INCIDENT_SUCCESS,
     incident,
     id
   };
@@ -25,42 +23,42 @@ const editIncidentSuccess = (incident, id) => {
 
 const addIncidentSuccess = (newIncident) => {
   return {
-    type: ADD_INCIDENT_SUCCESS,
+    type: ACTIONS.ADD_INCIDENT_SUCCESS,
     newIncident
   };
 };
 
 const addCommentSuccess = (comment) => {
   return {
-    type: ADD_INCIDENT_COMMENT_SUCCESS,
+    type: ACTIONS.ADD_INCIDENT_COMMENT_SUCCESS,
     comment
   };
 };
 
 const syncIncidentFail = () => {
   return {
-    type: PLAIN_ERROR,
+    type: ACTIONS.PLAIN_ERROR,
     plainErrors: ['There was an error syncing your incident. Please review the data and try again']
   };
 };
 
 const receiveIncidents = (incidents) => {
   return {
-    type: RECEIVE_INCIDENTS,
+    type: ACTIONS.RECEIVE_INCIDENTS,
     incidents
   };
 };
 
 const receiveIncidentComments = (comments) => {
   return {
-    type: RECEIVE_INCIDENT_COMMENTS,
+    type: ACTIONS.RECEIVE_INCIDENT_COMMENTS,
     comments
   };
 };
 
 const receiveIncident = (incident) => {
   return {
-    type: RECEIVE_INCIDENT,
+    type: ACTIONS.RECEIVE_INCIDENT,
     incident,
     id: incident.id
   };
@@ -68,10 +66,20 @@ const receiveIncident = (incident) => {
 
 const updateEventIds = (newId, oldId) => {
   return {
-    type: UPDATE_EVENT_IDS,
+    type: ACTIONS.UPDATE_EVENT_IDS,
     oldId, newId
   };
 };
+
+export const fetchAllIncidentData = () => (dispatch, getState) => {
+  dispatch(fetchIncidents());
+  dispatch(fetchIncidentComments());
+  dispatch(fetchIncidentPremises());
+  dispatch(fetchIncidentPersonnel());
+  dispatch(fetchIncidentProgrammes());
+  dispatch(fetchIncidentProperties());
+  dispatch(fetchIncidentEvacuations());
+}
 
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
@@ -90,6 +98,7 @@ const addIncidentOffline = (newIncident, dispatch) => {
   dispatch(addIncidentSuccess(newIncident));
   return newIncident.id;
 };
+
 
 export const addIncident = newIncident => (dispatch, getState) => {
   if (getState().app.offline === true) {

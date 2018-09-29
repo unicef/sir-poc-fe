@@ -83,7 +83,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
-          <warn-message message="[[topWarnMessage]]" hidden$="[[!topWarnMessage.length]]"></warn-message>
         <fieldset>
           <legend><h3>Incident details</h3></legend>
           <div>
@@ -609,10 +608,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
-      topWarnMessage: {
-        type: String,
-        value: ''
-      },
       incident: {
         type: Object,
         value: () => JSON.parse(JSON.stringify(IncidentModel))

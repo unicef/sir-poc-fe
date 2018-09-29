@@ -639,13 +639,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           {id: false, name: 'Off Duty'}
         ]
       },
-      reported: {
-        type: Array,
-        value: [
-          {id: true, name: 'Reported'},
-          {id: false, name: 'Not Reported'}
-        ]
-      },
       events: {
         type: Array,
         value: []

@@ -3,7 +3,6 @@ export const IncidentModel = {
   incident_date: null,
   incident_time: null,
   injuries: null,
-  note: null,
   on_duty: false,
   region: null,
   street: '',

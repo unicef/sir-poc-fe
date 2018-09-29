@@ -124,6 +124,8 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
         return getNameFromId(value, 'crashSubTypes');
       case 'region':
         return getNameFromId(value, 'regions');
+      case 'city':
+        return getNameFromId(value, 'cities');
       case 'target':
         return getNameFromId(value, 'targets');
       case 'country':

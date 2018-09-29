@@ -107,7 +107,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <etools-dropdown-lite class="filter select"
                               label="Incident Subcategory"
                               enable-none-option
-                              disabled={{!selectedIncidentCategory}}
+                              disabled="[[!selectedIncidentCategory]]"
                               options="[[selectedIncidentCategory.subcategories]]"
                               selected="{{filters.incidentSubcategory}}">
         </etools-dropdown-lite>
@@ -477,7 +477,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     return selectedIncidentCategory ? incident.incident_category === Number(selectedIncidentCategory) : true;
   }
 
-_applyIncidentSubcategoryFilter(incident, selectedSubCategory) {
+  _applyIncidentSubcategoryFilter(incident, selectedSubCategory) {
     return selectedSubCategory ? incident.incident_subcategory === Number(selectedSubCategory) : true;
   }
 

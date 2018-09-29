@@ -415,112 +415,116 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <fieldset>
           <legend><h3>When & Where</h3></legend>
-          <div class="row-h flex-c">
-            <div class="col col-3">
-              <etools-dropdown-lite id="country"
-                                    readonly="[[readonly]]"
-                                    label="Country"
-                                    options="[[staticData.countries]]"
-                                    selected="{{incident.country}}"
-                                    required auto-validate
-                                    error-message="Country is required">
-              </etools-dropdown-lite>
-            </div>
-            <div class="col col-3">
-              <etools-dropdown-lite readonly="[[readonly]]"
-                                    required auto-validate
-                                    label="Region"
-                                    options="[[staticData.regions]]"
-                                    selected="{{incident.region}}">
-              </etools-dropdown-lite>
-            </div>
+          <div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-dropdown-lite id="country"
+                                      readonly="[[readonly]]"
+                                      label="Country"
+                                      options="[[staticData.countries]]"
+                                      selected="{{incident.country}}"
+                                      required auto-validate
+                                      error-message="Country is required">
+                </etools-dropdown-lite>
+              </div>
+              <div class="col col-3">
+                <etools-dropdown-lite readonly="[[readonly]]"
+                                      required auto-validate
+                                      label="Region"
+                                      options="[[staticData.regions]]"
+                                      selected="{{incident.region}}">
+                </etools-dropdown-lite>
+              </div>
 
-            <div class="col col-3">
-              <etools-dropdown-lite
-                          id="city"
-                          label="City"
-                          auto-validate
-                          readonly="[[readonly]]"
-                          options="[[staticData.cities]]"
-                          selected="{{incident.city}}"
-                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
-                          error-message="City is required">
-              </etools-dropdown-lite>
-            </div>
+              <div class="col col-3">
+                <etools-dropdown-lite
+                            id="city"
+                            label="City"
+                            auto-validate
+                            readonly="[[readonly]]"
+                            options="[[staticData.cities]]"
+                            selected="{{incident.city}}"
+                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
+                            error-message="City is required">
+                </etools-dropdown-lite>
+              </div>
 
-            <div class="col col-3">
-              <paper-input id="street"
-                          readonly$="[[readonly]]" label="Street" type="text"
-                          placeholder="&#8212;" value="{{incident.street}}"
-                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
-                          error-message="Street is required"></paper-input>
+              <div class="col col-3">
+                <paper-input id="street"
+                            readonly$="[[readonly]]" label="Street" type="text"
+                            placeholder="&#8212;" value="{{incident.street}}"
+                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                            error-message="Street is required"></paper-input>
+              </div>
             </div>
           </div>
 
-          <div class="row-h flex-c">
-            <div class="col col-3">
-              <datepicker-lite id="incidentDate"
-                              value="{{incident.incident_date}}"
-                              readonly="[[readonly]]"
-                              label="Incident date"
-                              required auto-validate
-                              error-message="Incident date is required">
-              </datepicker-lite>
-            </div>
+          <div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <datepicker-lite id="incidentDate"
+                                value="{{incident.incident_date}}"
+                                readonly="[[readonly]]"
+                                label="Incident date"
+                                required auto-validate
+                                error-message="Incident date is required">
+                </datepicker-lite>
+              </div>
 
-            <div class="col col-3">
-              <paper-input id="incidentTime"
-                          readonly$="[[readonly]]"
-                          label="Incident time"
-                          type="time"
-                          value="{{incident.incident_time}}"
-                          required auto-validate
-                          error-message="Incident time is required">
-              </paper-input>
-            </div>
+              <div class="col col-3">
+                <paper-input id="incidentTime"
+                            readonly$="[[readonly]]"
+                            label="Incident time"
+                            type="time"
+                            value="{{incident.incident_time}}"
+                            required auto-validate
+                            error-message="Incident time is required">
+                </paper-input>
+              </div>
 
-            <div class="col col-6">
-              <div class="coordinates-container">
-                <template is="dom-if" if="[[readonly]]">
-                  <div class="col-6">
-                    <paper-input label="Latitude"
-                                readonly
-                                value="[[incident.latitude]]"
-                                placeholder="&#8212;">
-                    </paper-input>
-                  </div>
-                  <div class="col-6">
-                    <paper-input label="Longitude"
-                                readonly
-                                value="[[incident.longitude]]"
-                                placeholder="&#8212;" >
-                    </paper-input>
-                  </div>
-                </template>
-
-                <template is="dom-if" if="[[!readonly]]">
-                  <div class="col-6">
-                    <paper-input label="Latitude"
-                                type="number"
-                                value="{{incident.latitude}}"
-                                placeholder="&#8212;">
-                    </paper-input>
-                  </div>
-                  <div class="col-5">
-                    <paper-input label="Longitude"
-                                type="number"
-                                value="{{incident.longitude}}"
-                                placeholder="&#8212;">
-                    </paper-input>
-                  </div>
-
-                  <div class="col-1">
-                    <div class="button-container">
-                      <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
-                      </paper-icon-button>
+              <div class="col col-6">
+                <div class="coordinates-container">
+                  <template is="dom-if" if="[[readonly]]">
+                    <div class="col-6">
+                      <paper-input label="Latitude"
+                                  readonly
+                                  value="[[incident.latitude]]"
+                                  placeholder="&#8212;">
+                      </paper-input>
                     </div>
-                  </div>
-                </template>
+                    <div class="col-6">
+                      <paper-input label="Longitude"
+                                  readonly
+                                  value="[[incident.longitude]]"
+                                  placeholder="&#8212;" >
+                      </paper-input>
+                    </div>
+                  </template>
+
+                  <template is="dom-if" if="[[!readonly]]">
+                    <div class="col-6">
+                      <paper-input label="Latitude"
+                                  type="number"
+                                  value="{{incident.latitude}}"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </div>
+                    <div class="col-5">
+                      <paper-input label="Longitude"
+                                  type="number"
+                                  value="{{incident.longitude}}"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </div>
+
+                    <div class="col-1">
+                      <div class="button-container">
+                        <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
+                        </paper-icon-button>
+                      </div>
+                    </div>
+                  </template>
+                </div>
               </div>
             </div>
           </div>

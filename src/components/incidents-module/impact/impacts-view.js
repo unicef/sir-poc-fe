@@ -7,6 +7,7 @@ import { updatePath } from '../../common/navigation-helper.js';
 import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
 import { store } from '../../../redux/store.js';
+import { clearErrors } from '../../../actions/errors.js';
 import '../../styles/shared-styles.js';
 
 import '../../common/errors-box.js';
@@ -70,7 +71,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
         </div>
         <non-un-personnel-list></non-un-personnel-list>
 
-
         <h3>Evacuations</h3>
         <hr>
         <div class="right">
@@ -83,7 +83,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
         </div>
         <evacuations-list></evacuations-list>
 
-
         <h3>UN Property(assets)</h3>
         <hr>
         <div class="right">
@@ -95,7 +94,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           </paper-button>
         </div>
         <properties-list></properties-list>
-
 
         <h3>UN Premises(facilities)</h3>
         <hr>
@@ -128,6 +126,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
     return {
       state: Object,
       incident: Object,
+      visible: Boolean,
       incidentId: {
         type: Number,
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
@@ -171,6 +170,12 @@ export class ImpactsView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
+  }
+
+  _visibilityChanged(visible) {
+    if (visible === false) {
+      store.dispatch(clearErrors());
+    }
   }
 }
 

@@ -107,6 +107,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <etools-dropdown-lite class="filter select"
                               label="Incident Subcategory"
                               enable-none-option
+                              disabled="[[!selectedIncidentCategory]]"
                               options="[[selectedIncidentCategory.subcategories]]"
                               selected="{{filters.incidentSubcategory}}">
         </etools-dropdown-lite>
@@ -172,7 +173,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
-                  <a href="/incidents/view/[[item.id]]"> N/A </a>
+                  <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
                 </span>
               </span>
               <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">
@@ -306,7 +307,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         type: String,
         observer: '_export'
       },
-      selectedIncidentCategory: Object
+      selectedIncidentCategory: {
+        type: Object,
+        value: {}
+      }
     };
   }
 
@@ -540,7 +544,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!docType || docType === '') {
       return;
     }
-    const url = Endpoints['incidents'].url;
+    const url = Endpoints['incidentsList'].url;
     const csvQStr = this._buildExportQueryString(docType);
     const csvDownloadUrl = url + '?' + csvQStr;
     this.set('exportDocType', '');

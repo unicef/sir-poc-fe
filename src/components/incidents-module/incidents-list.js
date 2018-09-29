@@ -28,6 +28,7 @@ import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 import {updateAppState} from '../common/navigation-helper';
+import { getNameFromId } from '../common/utils.js';
 import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -106,6 +107,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <etools-dropdown-lite class="filter select"
                               label="Incident Subcategory"
                               enable-none-option
+                              disabled="[[!selectedIncidentCategory]]"
                               options="[[selectedIncidentCategory.subcategories]]"
                               selected="{{filters.incidentSubcategory}}">
         </etools-dropdown-lite>
@@ -171,15 +173,16 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
-                  <a href="/incidents/view/[[item.id]]"> N/A </a>
+                  <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
                 </span>
               </span>
               <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">
-                  <span>[[item.city]]</span>
+                  <span>[[getNameFromId(item.city, 'cities')]]</span>
               </span>
-              <span class="col-data col-3" title="[[_getIncidentCategoryName(item.incident_category)]]"
+              <span class="col-data col-3" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">
-              <span>[[_getIncidentCategoryName(item.incident_category)]]</span>
+                <span>[[getNameFromId(item.incident_category, 'incidentCategories')]]</span>
+
               </span>
               <span class="col-data col-2" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
@@ -254,7 +257,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         value: []
       },
       threatCategories: Array,
-      incidentCategories: Array,
       offline: Boolean,
       filteredIncidents: {
         type: Array,
@@ -305,12 +307,16 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         type: String,
         observer: '_export'
       },
-      selectedIncidentCategory: Object
+      selectedIncidentCategory: {
+        type: Object,
+        value: {}
+      }
     };
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.getNameFromId = getNameFromId;
     this.store = store;
   }
 
@@ -396,18 +402,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.incidents = state.incidents.list;
-    this.incidentCategories = state.staticData.incidentCategories;
     this.threatCategories = state.staticData.threatCategories;
 
     this.events = state.events.list.map((elem) => {
       elem.name = elem.description;
       return elem;
     });
-  }
-
-  _getIncidentCategoryName(incidentTypeId) {
-    let incident = this.incidentCategories.find(e => e.id === incidentTypeId) || {};
-    return incident.name || 'Not Specified';
   }
 
   _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country,
@@ -444,7 +444,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     q = q.toLowerCase();
     let person = (incident.primary_person.first_name + ' ' + incident.primary_person.last_name).trim();
     return person.toLowerCase().search(q) > -1 ||
-        String(incident.city).toLowerCase().search(q) > -1 ||
+        String(incident.city).search(q) > -1 ||
         String(incident.description).toLowerCase().search(q) > -1;
   }
 
@@ -544,7 +544,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!docType || docType === '') {
       return;
     }
-    const url = Endpoints['incidents'].url;
+    const url = Endpoints['incidentsList'].url;
     const csvQStr = this._buildExportQueryString(docType);
     const csvDownloadUrl = url + '?' + csvQStr;
     this.set('exportDocType', '');

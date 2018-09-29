@@ -2,12 +2,15 @@
  @license
  */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import 'etools-upload/etools-upload-multi.js';
+import 'etools-data-table/etools-data-table.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
 
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -18,11 +21,8 @@ import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
-import 'etools-upload/etools-upload-multi.js';
-import 'etools-data-table/etools-data-table.js';
 import { selectIncident } from '../../reducers/incidents.js';
 
-import 'etools-info-tooltip/etools-info-tooltip.js';
 import { fetchIncident } from '../../actions/incidents.js';
 import { clearErrors, serverError } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
@@ -789,9 +789,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
 
-    let incident = this.staticData.incidentCategories[0].subcategories.find(elem => elem.id === incidentSubcategory.id);
+    let incident = this.getSafetyCategory().subcategories.find(elem => elem.id === incidentSubcategory.id);
 
     return incident && incident.name === 'Road Traffic Accidents';
+  }
+
+  getSafetyCategory() {
+    return this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
   }
 
   showSubType(crashType) {

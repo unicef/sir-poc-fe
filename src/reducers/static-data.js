@@ -1,4 +1,4 @@
-import * as ACTIONS from '../actions/static-data.js';
+import * as ACTIONS from '../actions/constants.js';
 
 const defaultStaticData = {
     personnelCategories: [],
@@ -11,10 +11,10 @@ const defaultStaticData = {
     premisesTypes: [],
     nationalities: [],
     criticalities: [],
+    crashSubTypes: [],
     vehicleTypes: [],
     unLocations: [],
     crashTypes: [],
-    crashSubTypes: [],
     countries: [],
     agencies: [],
     impacts: {},

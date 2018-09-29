@@ -4,29 +4,26 @@ import { objDiff } from '../components/common/utils.js';
 import { generateRandomHash } from './action-helpers.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { serverError, plainErrors } from './errors.js';
-
-export const EDIT_EVACUATION_SUCCESS = 'EDIT_EVACUATION_SUCCESS';
-export const ADD_EVACUATION_SUCCESS = 'ADD_EVACUATION_SUCCESS';
-export const RECEIVE_EVACUATIONS = 'RECEIVE_EVACUATIONS';
+import * as ACTIONS from './constants.js';
 
 
 const receiveIncidentEvacuations = (evacuations) => {
   return {
-    type: RECEIVE_EVACUATIONS,
+    type: ACTIONS.RECEIVE_EVACUATIONS,
     evacuations
   };
 };
 
 const addEvacuationSuccess = (evacuation) => {
   return {
-    type: ADD_EVACUATION_SUCCESS,
+    type: ACTIONS.ADD_EVACUATION_SUCCESS,
     evacuation
   };
 };
 
 const editEvacuationSuccess = (evacuation, id) => {
   return {
-    type: EDIT_EVACUATION_SUCCESS,
+    type: ACTIONS.EDIT_EVACUATION_SUCCESS,
     evacuation,
     id
   };
@@ -152,29 +149,23 @@ const syncEvacuations = (newId, oldId) => (dispatch, getState) => {
 
 ////////////////////////////////// Impacts on properties ///////////////////////////////////////////////////////////////
 
-
-export const EDIT_PROPERTY_SUCCESS = 'EDIT_PROPERTY_SUCCESS';
-export const ADD_PROPERTY_SUCCESS = 'ADD_PROPERTY_SUCCESS';
-export const RECEIVE_PROPERTIES = 'RECEIVE_PROPERTIES';
-
-
 const receiveIncidentProperties = (properties) => {
   return {
-    type: RECEIVE_PROPERTIES,
+    type: ACTIONS.RECEIVE_PROPERTIES,
     properties
   };
 };
 
 const addPropertySuccess = (property) => {
   return {
-    type: ADD_PROPERTY_SUCCESS,
+    type: ACTIONS.ADD_PROPERTY_SUCCESS,
     property
   };
 };
 
 const editPropertySuccess = (property, id) => {
   return {
-    type: EDIT_PROPERTY_SUCCESS,
+    type: ACTIONS.EDIT_PROPERTY_SUCCESS,
     property,
     id
   };
@@ -276,34 +267,27 @@ const syncProperties = (newId, oldId) => (dispatch, getState) =>  {
 
 ////////////////////////////////// Impacts on premises ///////////////////////////////////////////////////////////////
 
-
-export const EDIT_PREMISE_SUCCESS = 'EDIT_PREMISE_SUCCESS';
-export const ADD_PREMISE_SUCCESS = 'ADD_PREMISE_SUCCESS';
-export const RECEIVE_PREMISES = 'RECEIVE_PREMISES';
-
-
 const receiveIncidentPremises = (premises) => {
   return {
-    type: RECEIVE_PREMISES,
+    type: ACTIONS.RECEIVE_PREMISES,
     premises
   };
 };
 
 const addPremiseSuccess = (premise) => {
   return {
-    type: ADD_PREMISE_SUCCESS,
+    type: ACTIONS.ADD_PREMISE_SUCCESS,
     premise
   };
 };
 
 const editPremiseSuccess = (premise, id) => {
   return {
-    type: EDIT_PREMISE_SUCCESS,
+    type: ACTIONS.EDIT_PREMISE_SUCCESS,
     premise,
     id
   };
 };
-
 
 const addPremiseOnline = (premise, dispatch) => {
   return makeRequest(Endpoints.addIncidentPremise, premise).then((result) => {
@@ -400,28 +384,23 @@ const syncPremises = (newId, oldId) => (dispatch, getState) =>  {
 
 ////////////////////////////////// Impacts on programmes ///////////////////////////////////////////////////////////////
 
-
-export const EDIT_PROGRAMME_SUCCESS = 'EDIT_PROGRAMME_SUCCESS';
-export const ADD_PROGRAMME_SUCCESS = 'ADD_PROGRAMME_SUCCESS';
-export const RECEIVE_PROGRAMMES = 'RECEIVE_PROGRAMMES';
-
 const receiveIncidentProgrammes = (programmes) => {
   return {
-    type: RECEIVE_PROGRAMMES,
+    type: ACTIONS.RECEIVE_PROGRAMMES,
     programmes
   };
 };
 
 const addProgrammeSuccess = (programme) => {
   return {
-    type: ADD_PROGRAMME_SUCCESS,
+    type: ACTIONS.ADD_PROGRAMME_SUCCESS,
     programme
   };
 };
 
 const editProgrammeSuccess = (programme, id) => {
   return {
-    type: EDIT_PROGRAMME_SUCCESS,
+    type: ACTIONS.EDIT_PROGRAMME_SUCCESS,
     programme,
     id
   };
@@ -521,30 +500,25 @@ const syncProgrammes = (newId, oldId) => (dispatch, getState) =>  {
   return operations;
 }
 
-
 ////////////////////////////////// Persons impacted ///////////////////////////////////////////////////////////
-
-export const EDIT_PERSONNEL_SUCCESS = 'EDIT_PERSONNEL_SUCCESS';
-export const ADD_PERSONNEL_SUCCESS = 'ADD_PERSONNEL_SUCCESS';
-export const RECEIVE_PERSONNEL = 'RECEIVE_PERSONNEL';
 
 const receiveIncidentPersonnel = (personnel) => {
   return {
-    type: RECEIVE_PERSONNEL,
+    type: ACTIONS.RECEIVE_PERSONNEL,
     personnel
   };
 };
 
 const addPersonnelSuccess = (personnel) => {
   return {
-    type: ADD_PERSONNEL_SUCCESS,
+    type: ACTIONS.ADD_PERSONNEL_SUCCESS,
     personnel
   };
 };
 
 const editPersonnelSuccess = (personnel, id) => {
   return {
-    type: EDIT_PERSONNEL_SUCCESS,
+    type: ACTIONS.EDIT_PERSONNEL_SUCCESS,
     personnel,
     id
   };

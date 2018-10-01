@@ -229,4 +229,8 @@ export const Endpoints = {
     url: baseUrl + '/api/programme_types/',
     method: 'GET'
   },
+  signOut: {
+    url: baseUrl + '/admin/logout/',
+    method: 'POST'
+  }
 };

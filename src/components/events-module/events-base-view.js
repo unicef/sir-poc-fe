@@ -55,6 +55,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <datepicker-lite id="endDate"
                              label="End date"
                              value="{{event.end_date}}"
+                             readonly="[[readonly]]"
                              required></datepicker-lite>
           </div>
           <div class="col flex-c">

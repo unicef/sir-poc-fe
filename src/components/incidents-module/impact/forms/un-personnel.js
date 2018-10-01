@@ -20,7 +20,8 @@ import {
     validateFields
   } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
-import '../../../common/datepicker-lite.js';
+// import '../../../common/datepicker-lite.js';
+import 'calendar-lite/datepicker-lite.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';

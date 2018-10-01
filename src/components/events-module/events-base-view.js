@@ -48,6 +48,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <datepicker-lite id="startDate"
                              label="Start date"
                              value="{{event.start_date}}"
+                             readonly="[[readonly]]"
                              required></datepicker-lite>
           </div>
           <div class="col">
@@ -56,7 +57,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
                              value="{{event.end_date}}"
                              required></datepicker-lite>
           </div>
-          <div class="col">
+          <div class="col flex-c">
             <paper-input id="location"
                          label="Location"
                          placeholder="&#8212;"

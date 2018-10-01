@@ -1,11 +1,11 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store} from '../../redux/store.js';
+import 'calendar-lite/datepicker-lite.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
-import 'calendar-lite/datepicker-lite.js';
 import './dashboard-list.js';
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
@@ -34,11 +34,11 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           @apply --layout-end;
           @apply --layout-center-justified;
         }
-        
+
         .statistics-between span {
           margin: 0 24px 11px 24px;
         }
-        
+
         .statistics-between span:first-child {
           margin-left: 0;
         }
@@ -51,35 +51,52 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           }
 
           .statistics-between span {
-          margin: 20px 0 -10px 0;
+            margin: 20px 0 -10px 0;
           }
-          
         }
-        
+
+        datepicker-lite {
+          --datepicker-lite-icon: {
+            padding-bottom: 4px;
+          }
+          text-align: center;
+        }
+
       </style>
 
       <div class="card">
         <div class="row-h">
-          <div class="col col-6 center-text">
+          <div class="col col-5 center-text">
             <div class="large-text"> [[filteredEvents.length]]</div>
             Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
-          <div class="col col-6 center-text">
+          <div class="col col-2"></div>
+          <div class="col col-5 center-text">
             <div class="large-text"> [[filteredIncidents.length]]</div>
             Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
         </div>
 
-        <div class="row-h statistics-between">
-          <span>Show stastistics between</span>
+        <div class="row-h">
+          <div class="col col-12 center-text">
+              <p> Show stastistics between </p>
+          </div>
+        </div>
 
-          <datepicker-lite label="From" value="{{selectedStartDate}}">
-          </datepicker-lite>
+        <div class="row-h">
+          <div class="col col-5">
+            <datepicker-lite value="{{selectedStartDate}}">
+            </datepicker-lite>
+          </div>
 
-          <span> and </span>
+          <div class="col col-2 center-text">
+            <p> and </p>
+          </div>
 
-          <datepicker-lite label="To" value="{{selectedEndDate}}">
-          </datepicker-lite>
+          <div class="col col-5">
+            <datepicker-lite value="{{selectedEndDate}}">
+            </datepicker-lite>
+          </div>
         </div>
 
         <div class="row-h">

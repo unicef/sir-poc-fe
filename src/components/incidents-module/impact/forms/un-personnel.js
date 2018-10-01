@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import 'calendar-lite/datepicker-lite.js';
 
 import {
     addPersonnel,
@@ -20,8 +21,6 @@ import {
     validateFields
   } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
-// import '../../../common/datepicker-lite.js';
-import 'calendar-lite/datepicker-lite.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';

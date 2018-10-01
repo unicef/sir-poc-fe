@@ -1,28 +1,29 @@
 /**
  @license
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import 'calendar-lite/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import {validateAllRequired, resetFieldsValidations} from '../common/validations-helper.js';
-import {store} from '../../redux/store.js';
-import {IncidentModel} from './models/incident-model.js';
-import {selectIncident} from '../../reducers/incidents.js';
-import {fetchIncident} from '../../actions/incidents.js';
-import {clearErrors, serverError} from '../../actions/errors.js';
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
+import { store } from '../../redux/store.js';
+import { IncidentModel } from './models/incident-model.js';
 import 'etools-upload/etools-upload-multi.js';
 import 'etools-data-table/etools-data-table.js';
+import { selectIncident } from '../../reducers/incidents.js';
+
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import { fetchIncident } from '../../actions/incidents.js';
+import { clearErrors, serverError } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -77,12 +78,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
-      
         ${this.getTitleTemplate}
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
-
+          <warn-message message="[[topWarnMessage]]" hidden$="[[!topWarnMessage.length]]"></warn-message>
         <fieldset>
           <legend><h3>Incident details</h3></legend>
           <div>
@@ -427,6 +427,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite readonly="[[readonly]]"
+                                    required auto-validate
                                     label="Region"
                                     options="[[staticData.regions]]"
                                     selected="{{incident.region}}">
@@ -434,11 +435,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="col col-3">
-              <paper-input id="city"
-                          readonly$="[[readonly]]" label="City" type="text"
-                          placeholder="&#8212;" value="{{incident.city}}"
-                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
-                          error-message="City is required"></paper-input>
+              <etools-dropdown-lite
+                          id="city"
+                          label="City"
+                          auto-validate
+                          readonly="[[readonly]]"
+                          options="[[staticData.cities]]"
+                          selected="{{incident.city}}"
+                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
+                          error-message="City is required">
+              </etools-dropdown-lite>
             </div>
 
             <div class="col col-3">
@@ -604,6 +610,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
+      topWarnMessage: {
+        type: String,
+        value: ''
+      },
       incident: {
         type: Object,
         value: () => JSON.parse(JSON.stringify(IncidentModel))
@@ -664,11 +674,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
-      },
-      fieldsToValidateSelectors: {
-        type: Array,
-        value: ['#primaryPerson', '#incidentDate', '#incidentTime', '#country', '#street',
-          '#city', '#incidentCat', '#incidentSubcat', '#description', '#injuries', '#target', '#threatCategory']
       }
     };
   }

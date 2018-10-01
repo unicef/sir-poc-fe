@@ -472,14 +472,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                required>
 
               </timepicker-lite>
-              <!--<paper-input id="incidentTime"-->
-                          <!--readonly$="[[readonly]]"-->
-                          <!--label="Incident time"-->
-                          <!--type="time"-->
-                          <!--value="{{incident.incident_time}}"-->
-                          <!--required auto-validate-->
-                          <!--error-message="Incident time is required">-->
-              <!--</paper-input>-->
             </div>
 
             <div class="col col-6">

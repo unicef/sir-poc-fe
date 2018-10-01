@@ -276,13 +276,27 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <span slot="message">[[selectedCriticality.description]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-9" hidden$="[[!incident.incident_category]]">
+              <div class="col col-3" hidden$="[[isSafetyIncident(selectedIncidentCategory)]]">
                 <etools-dropdown-multi-lite hidden$="[[isSafetyIncident(selectedIncidentCategory)]]"
                                             readonly="[[readonly]]"
                                             label="Weapons used"
                                             options="[[staticData.weapons]]"
                                             selected-values="{{incident.weapons_used}}">
                 </etools-dropdown-multi-lite>
+              </div>
+              <div class="col col-3">
+                <paper-checkbox checked="{{pressCoverageSelected}}" disabled="[[readonly]]">
+                  Press Coverage?
+                </paper-checkbox>
+              </div>
+              <div class="col col-3">
+                <paper-input value="{{incident.press_coverage}}"
+                             placeholder="&#8212"
+                             label="Press Coverage Description"
+                             hidden="{{!pressCoverageSelected}}"
+                             readonly="[[readonly]]"
+                             required$="[[pressCoverageSelected]]">
+                </paper-input>
               </div>
             </div>
           </div>
@@ -427,7 +441,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-dropdown-lite>
               </div>
               <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
+                <etools-dropdown-lite id="region"
+                                      readonly="[[readonly]]"
                                       required auto-validate
                                       label="Region"
                                       options="[[staticData.regions]]"
@@ -465,7 +480,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                 value="{{incident.incident_date}}"
                                 readonly="[[readonly]]"
                                 label="Incident date"
-                                required auto-validate
+                                required
                                 error-message="Incident date is required">
                 </datepicker-lite>
               </div>
@@ -675,6 +690,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
+      },
+      pressCoverageSelected: {
+        type: Boolean,
+        value: false,
+        observer: 'pressCoverageChanged'
       }
     };
   }
@@ -688,6 +708,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+    if (this.incident.press_coverage) {
+      this.set('pressCoverageSelected', true);
+    }
   }
 
   _setIncidentId(id) {
@@ -804,10 +827,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   isSafetyIncident(incidentCategory) {
     if (!incidentCategory) {
-      return;
+      return true;
     }
 
     return incidentCategory.name === 'Safety';
+  }
+
+  // clears press_coverage field if checkbox is unchecked
+  pressCoverageChanged() {
+    if (this.incident.press_coverage && !this.pressCoverageSelected) {
+      this.set('incident.press_coverage', '');
+    }
   }
 
   isSexualAssault(selectedIncidentSubcategory) {

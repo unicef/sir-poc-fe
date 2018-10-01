@@ -83,7 +83,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
         </div>
         <evacuations-list></evacuations-list>
 
-        <h3>UN Property(assets)</h3>
+        <h3>UN Property (Assets)</h3>
         <hr>
         <div class="right">
           <paper-button raised
@@ -95,7 +95,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
         </div>
         <properties-list></properties-list>
 
-        <h3>UN Premises(facilities)</h3>
+        <h3>UN Premises (Facilities)</h3>
         <hr>
         <div class="right">
           <paper-button raised

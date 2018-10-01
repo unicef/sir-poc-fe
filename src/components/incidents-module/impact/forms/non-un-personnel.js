@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'calendar-lite/datepicker-lite.js';
 
 import {
@@ -168,10 +169,16 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
                             selected="{{data.impact}}"
+                            selected-item="{{selectedImpactType}}"
                             required auto-validate
                             error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
+              <template is="dom-if" if="[[_shouldShowNextOfKinCheckbox(selectedImpactType.name)]]">
+                <div class="col col-3">
+                  <paper-checkbox checked="{{data.next_of_kin_notified}}">Next of Kin Notified?</paper-checkbox>
+                </div>
+              </template>
             </div>
             <div class="row-h flex-c">
               <div class="col col-12">
@@ -304,6 +311,10 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       this.data = JSON.parse(JSON.stringify(workingItem));
       this.resetValidations();
     }
+  }
+
+  _shouldShowNextOfKinCheckbox(impactName) {
+    return impactName === 'Death';
   }
 
   _visibilityChanged(visible) {

@@ -283,7 +283,7 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _signOut() {
-    makeRequest(Endpoints.signOut).then(() => window.location.reload(true));
+    makeRequest(Endpoints.signOut).then(() => window.location = this.rootPath);
   }
 }
 

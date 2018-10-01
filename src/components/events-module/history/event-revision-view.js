@@ -51,10 +51,6 @@ class EventRevisionView extends EventsBaseView {
   _setEventId() {
   }
 
-  isOnExpectedPage() {
-    return true;
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

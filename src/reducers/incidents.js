@@ -1,29 +1,4 @@
-import {
-  ADD_INCIDENT_COMMENT_SUCCESS,
-  RECEIVE_INCIDENT_COMMENTS,
-  EDIT_INCIDENT_SUCCESS,
-  ADD_INCIDENT_SUCCESS,
-  RECEIVE_INCIDENTS,
-  RECEIVE_INCIDENT,
-  UPDATE_EVENT_IDS
-} from '../actions/incidents.js';
-import {
-  EDIT_EVACUATION_SUCCESS,
-  ADD_EVACUATION_SUCCESS,
-  RECEIVE_EVACUATIONS,
-  EDIT_PROPERTY_SUCCESS,
-  ADD_PROPERTY_SUCCESS,
-  RECEIVE_PROPERTIES,
-  EDIT_PREMISE_SUCCESS,
-  ADD_PREMISE_SUCCESS,
-  RECEIVE_PREMISES,
-  EDIT_PROGRAMME_SUCCESS,
-  ADD_PROGRAMME_SUCCESS,
-  RECEIVE_PROGRAMMES,
-  EDIT_PERSONNEL_SUCCESS,
-  ADD_PERSONNEL_SUCCESS,
-  RECEIVE_PERSONNEL
-} from '../actions/incident-impacts.js';
+import * as ACTIONS from '../actions/constants.js';
 
 import { createSelector } from 'reselect';
 
@@ -39,117 +14,117 @@ let defaultState = {
 
 const incidents = (state = defaultState, action) => {
   switch (action.type) {
-    case RECEIVE_INCIDENTS:
+    case ACTIONS.RECEIVE_INCIDENTS:
       return {
         ...state,
         list: getRefreshedData(state.list, action.incidents)
       };
-    case RECEIVE_INCIDENT_COMMENTS:
+    case ACTIONS.RECEIVE_INCIDENT_COMMENTS:
       return {
         ...state,
         comments: action.comments
       };
-    case RECEIVE_INCIDENT:
+    case ACTIONS.RECEIVE_INCIDENT:
       return {
         ...state,
         list: getListWithEditedItem(state.list, action)
       };
-    case ADD_INCIDENT_SUCCESS:
+    case ACTIONS.ADD_INCIDENT_SUCCESS:
       return {
         ...state,
         list: [...state.list, action.newIncident]
       };
-    case ADD_INCIDENT_COMMENT_SUCCESS:
+    case ACTIONS.ADD_INCIDENT_COMMENT_SUCCESS:
       return {
         ...state,
         comments: [...state.comments, action.comment]
       };
-    case EDIT_INCIDENT_SUCCESS:
+    case ACTIONS.EDIT_INCIDENT_SUCCESS:
       return {
         ...state,
         list: getListWithEditedItem(state.list, action)
       };
-    case UPDATE_EVENT_IDS:
+    case ACTIONS.UPDATE_EVENT_IDS:
       return {
         ...state,
         list: updateEventIds(state.list, action.oldId, action.newId)
       };
    ///////////////////////////////
-    case EDIT_EVACUATION_SUCCESS:
+    case ACTIONS.EDIT_EVACUATION_SUCCESS:
       return {
         ...state,
         evacuations: getListWithEditedItem(state.evacuations, action, 'evacuation')
       };
-    case ADD_EVACUATION_SUCCESS:
+    case ACTIONS.ADD_EVACUATION_SUCCESS:
       return {
         ...state,
         evacuations: [...state.evacuations, action.evacuation]
       };
-    case RECEIVE_EVACUATIONS:
+    case ACTIONS.RECEIVE_EVACUATIONS:
       return {
         ...state,
         evacuations: getRefreshedData(state.evacuations, action.evacuations)
       };
    ///////////////////////////////
-    case EDIT_PROPERTY_SUCCESS:
+    case ACTIONS.EDIT_PROPERTY_SUCCESS:
       return {
         ...state,
         properties: getListWithEditedItem(state.properties, action, 'property')
       };
-    case ADD_PROPERTY_SUCCESS:
+    case ACTIONS.ADD_PROPERTY_SUCCESS:
       return {
         ...state,
         properties: [...state.properties, action.property]
       };
-    case RECEIVE_PROPERTIES:
+    case ACTIONS.RECEIVE_PROPERTIES:
       return {
         ...state,
         properties: getRefreshedData(state.properties, action.properties)
       };
    ///////////////////////////////
-    case EDIT_PREMISE_SUCCESS:
+    case ACTIONS.EDIT_PREMISE_SUCCESS:
       return {
         ...state,
         premises: getListWithEditedItem(state.premises, action, 'premise')
       };
-    case ADD_PREMISE_SUCCESS:
+    case ACTIONS.ADD_PREMISE_SUCCESS:
       return {
         ...state,
         premises: [...state.premises, action.premise]
       };
-    case RECEIVE_PREMISES:
+    case ACTIONS.RECEIVE_PREMISES:
       return {
         ...state,
         premises: getRefreshedData(state.premises, action.premises)
       };
    ///////////////////////////////
-    case EDIT_PROGRAMME_SUCCESS:
+    case ACTIONS.EDIT_PROGRAMME_SUCCESS:
       return {
         ...state,
         programmes: getListWithEditedItem(state.programmes, action, 'programme')
       };
-    case ADD_PROGRAMME_SUCCESS:
+    case ACTIONS.ADD_PROGRAMME_SUCCESS:
       return {
         ...state,
         programmes: [...state.programmes, action.programme]
       };
-    case RECEIVE_PROGRAMMES:
+    case ACTIONS.RECEIVE_PROGRAMMES:
       return {
         ...state,
         programmes: getRefreshedData(state.programmes, action.programmes)
       };
    ///////////////////////////////
-    case EDIT_PERSONNEL_SUCCESS:
+    case ACTIONS.EDIT_PERSONNEL_SUCCESS:
       return {
         ...state,
         personnel: getListWithEditedItem(state.personnel, action, 'personnel')
       };
-    case ADD_PERSONNEL_SUCCESS:
+    case ACTIONS.ADD_PERSONNEL_SUCCESS:
       return {
         ...state,
         personnel: [...state.personnel, action.personnel]
       };
-    case RECEIVE_PERSONNEL:
+    case ACTIONS.RECEIVE_PERSONNEL:
       return {
         ...state,
         personnel: getRefreshedData(state.personnel, action.personnel)

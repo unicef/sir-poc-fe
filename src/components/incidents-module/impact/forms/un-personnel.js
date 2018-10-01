@@ -13,6 +13,7 @@ import {
     editPersonnel,
     syncPersonnel
   } from '../../../../actions/incident-impacts.js';
+import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -254,7 +255,10 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       selectedImpactType: Object,
       staticData: Array,
       impactId: String,
-      visible: Boolean,
+      visible: {
+        type: Boolean,
+        observer: '_visibilityChanged'
+      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -336,7 +340,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if(this.visible) {
+    if (this.visible) {
       resetFieldsValidations(this, this.fieldsToValidateSelectors);
     }
   }
@@ -392,6 +396,13 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
 
     return false;
   }
+
+  _visibilityChanged(visible) {
+    if (visible === false) {
+      store.dispatch(clearErrors());
+    }
+  }
+
 }
 
 window.customElements.define(UnPersonnelForm.is, UnPersonnelForm);

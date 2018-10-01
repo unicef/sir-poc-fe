@@ -160,19 +160,12 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   }
 
   _idChanged(newId) {
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
-
     if (!newId) {
       this.event = JSON.parse(JSON.stringify(EventModel));
       return;
     }
 
     this.set('event', JSON.parse(JSON.stringify(selectEvent(this.state))));
-    if (!this.isOfflineOrUnsynced()) {
-      this.store.dispatch(fetchEvent(this.eventId));
-    }
   }
 
   // It was created offline and not yet saved on server or new
@@ -200,10 +193,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.state = state;
-  }
-
-  isOfflineOrUnsynced() {
-    return this.state.app.offline || (this.event && this.event.unsynced);
   }
 
   validate() {

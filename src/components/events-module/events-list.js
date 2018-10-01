@@ -126,7 +126,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
             <div slot="row-data">
                 <span class="col-data col-2" data-col-header-label="Case number">
                   <span class="truncate">
-                    <a href="/events/view/[[item.id]]"> N/A </a>
+                    <a href="/events/view/[[item.id]]"> [[item.id]] </a>
                   </span>
                 </span>
               <span class="col-data col-3" title="[[item.start_date]]" data-col-header-label="Start date">

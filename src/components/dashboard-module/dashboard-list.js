@@ -35,6 +35,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         .row-details {
           display: block;
         }
+
+        .capitalize {
+          text-transform: capitalize;
+        }
       </style>
 
       <etools-data-table-header id="listHeader" no-title>
@@ -73,10 +77,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
             </span>
-            <span class="col-data col-3" data-col-header-label="Description">
-              [[briefDescription(item.description)]]
+            <span class="col-data col-3 truncate" data-col-header-label="Description">
+              [[item.description]]
             </span>
-            <span class="col-data col-1" data-col-header-label="Case type">
+            <span class="col-data col-1 capitalize" data-col-header-label="Case type">
               [[item.case_type]]
             </span>
             <span class="col-data col-1" data-col-header-label="Country">
@@ -87,7 +91,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                 [[getNameFromId(item.country, 'countries')]]
               </template>
             </span>
-            <span class="col-data col-1" data-col-header-label="Status">
+            <span class="col-data col-1 capitalize" data-col-header-label="Status">
               <template is="dom-if" if="[[!!item.status]]">
                 [[item.status]]
               </template>
@@ -96,16 +100,27 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
-              [[prettyDate(item.submitted_date)]]
+              <template is="dom-if" if="[[!!item.creation_date]]">
+                [[prettyDate(item.creation_date)]]
+              </template>
+              <template is="dom-if" if="[[!item.creation_date]]">
+                N/A
+              </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Category">
-              <template is="dom-if" if="[[!item.location]]">
+              <template is="dom-if" if="[[!!item.incident_category]]">
                 [[getNameFromId(item.incident_category, 'incidentCategories')]]
+              </template>
+              <template is="dom-if" if="[[!item.incident_category]]">
+                N/A
               </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Subcategory">
-              <template is="dom-if" if="[[!item.location]]">
+              <template is="dom-if" if="[[!!item.incident_subcategory]]">
                 [[getIncidentSubcategory(item.incident_subcategory)]]
+              </template>
+              <template is="dom-if" if="[[!item.incident_subcategory]]">
+                N/A
               </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Actions">
@@ -175,7 +190,8 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     return {
       events: Array,
       incidents: Array,
-      offline: Boolean
+      offline: Boolean,
+      cases: Array
     };
   }
 
@@ -203,18 +219,16 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     });
 
     this.cases = [...this.events, ...this.incidents].sort((left, right) => {
-      return moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date));
+      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
     });
   }
 
-  briefDescription(description) {
-    return description.slice(0, 140) + '...';
-  }
-
   getIncidentSubcategory(id) {
-    let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
-    let selectedDatum = allSubCategories.find(item => item.id === id);
-    return selectedDatum.name;
+    if (id) {
+      let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
+      let selectedDatum = allSubCategories.find(item => item.id === id);
+      return selectedDatum.name;
+    }
   }
 
   checkStatus(status) {

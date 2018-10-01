@@ -2,12 +2,15 @@
  @license
  */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import 'etools-upload/etools-upload-multi.js';
+import 'etools-data-table/etools-data-table.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -17,11 +20,8 @@ import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
 import { IncidentModel } from './models/incident-model.js';
-import 'etools-upload/etools-upload-multi.js';
-import 'etools-data-table/etools-data-table.js';
 import { selectIncident } from '../../reducers/incidents.js';
 
-import 'etools-info-tooltip/etools-info-tooltip.js';
 import { fetchIncident } from '../../actions/incidents.js';
 import { clearErrors, serverError } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
@@ -414,119 +414,123 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         <fieldset>
           <legend><h3>When & Where</h3></legend>
-          <div class="row-h flex-c">
-            <div class="col col-3">
-              <etools-dropdown-lite id="country"
-                                    readonly="[[readonly]]"
-                                    label="Country"
-                                    options="[[staticData.countries]]"
-                                    selected="{{incident.country}}"
-                                    required auto-validate
-                                    error-message="Country is required">
-              </etools-dropdown-lite>
-            </div>
-            <div class="col col-3">
-              <etools-dropdown-lite readonly="[[readonly]]"
-                                    required auto-validate
-                                    label="Region"
-                                    options="[[staticData.regions]]"
-                                    selected="{{incident.region}}">
-              </etools-dropdown-lite>
-            </div>
+          <div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-dropdown-lite id="country"
+                                      readonly="[[readonly]]"
+                                      label="Country"
+                                      options="[[staticData.countries]]"
+                                      selected="{{incident.country}}"
+                                      required auto-validate
+                                      error-message="Country is required">
+                </etools-dropdown-lite>
+              </div>
+              <div class="col col-3">
+                <etools-dropdown-lite readonly="[[readonly]]"
+                                      required auto-validate
+                                      label="Region"
+                                      options="[[staticData.regions]]"
+                                      selected="{{incident.region}}">
+                </etools-dropdown-lite>
+              </div>
 
-            <div class="col col-3">
-              <etools-dropdown-lite
-                          id="city"
-                          label="City"
-                          auto-validate
-                          readonly="[[readonly]]"
-                          options="[[staticData.cities]]"
-                          selected="{{incident.city}}"
-                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
-                          error-message="City is required">
-              </etools-dropdown-lite>
-            </div>
+              <div class="col col-3">
+                <etools-dropdown-lite
+                            id="city"
+                            label="City"
+                            auto-validate
+                            readonly="[[readonly]]"
+                            options="[[staticData.cities]]"
+                            selected="{{incident.city}}"
+                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
+                            error-message="City is required">
+                </etools-dropdown-lite>
+              </div>
 
-            <div class="col col-3">
-              <paper-input id="street"
-                          readonly$="[[readonly]]" label="Street" type="text"
-                          placeholder="&#8212;" value="{{incident.street}}"
-                          required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
-                          error-message="Street is required"></paper-input>
+              <div class="col col-3">
+                <paper-input id="street"
+                            readonly$="[[readonly]]" label="Street" type="text"
+                            placeholder="&#8212;" value="{{incident.street}}"
+                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                            error-message="Street is required"></paper-input>
+              </div>
             </div>
           </div>
 
-          <div class="row-h flex-c">
-            <div class="col col-3">
-              <datepicker-lite id="incidentDate"
-                              value="{{incident.incident_date}}"
-                              readonly="[[readonly]]"
-                              label="Incident date"
-                              required auto-validate
-                              error-message="Incident date is required">
-              </datepicker-lite>
-            </div>
+          <div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <datepicker-lite id="incidentDate"
+                                value="{{incident.incident_date}}"
+                                readonly="[[readonly]]"
+                                label="Incident date"
+                                required auto-validate
+                                error-message="Incident date is required">
+                </datepicker-lite>
+              </div>
 
-            <div class="col col-3">
-              <paper-input id="incidentTime"
-                          readonly$="[[readonly]]"
-                          label="Incident time"
-                          type="time"
-                          value="{{incident.incident_time}}"
-                          required auto-validate
-                          error-message="Incident time is required">
-              </paper-input>
-            </div>
+              <div class="col col-3">
+                <paper-input id="incidentTime"
+                            readonly$="[[readonly]]"
+                            label="Incident time"
+                            type="time"
+                            value="{{incident.incident_time}}"
+                            required auto-validate
+                            error-message="Incident time is required">
+                </paper-input>
+              </div>
 
-            <div class="col col-6">
-              <div class="coordinates-container">
-                <template is="dom-if" if="[[readonly]]">
-                  <div class="col-6">
-                    <paper-input label="Latitude"
-                                readonly
-                                value="[[incident.latitude]]"
-                                placeholder="&#8212;">
-                    </paper-input>
-                  </div>
-                  <div class="col-6">
-                    <paper-input label="Longitude"
-                                readonly
-                                value="[[incident.longitude]]"
-                                placeholder="&#8212;" >
-                    </paper-input>
-                  </div>
-                </template>
-
-                <template is="dom-if" if="[[!readonly]]">
-                  <div class="col-6">
-                    <paper-input label="Latitude"
-                                type="number"
-                                value="{{incident.latitude}}"
-                                placeholder="&#8212;">
-                    </paper-input>
-                  </div>
-                  <div class="col-5">
-                    <paper-input label="Longitude"
-                                type="number"
-                                value="{{incident.longitude}}"
-                                placeholder="&#8212;">
-                    </paper-input>
-                  </div>
-
-                  <div class="col-1">
-                    <div class="button-container">
-                      <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
-                      </paper-icon-button>
+              <div class="col col-6">
+                <div class="coordinates-container">
+                  <template is="dom-if" if="[[readonly]]">
+                    <div class="col-6">
+                      <paper-input label="Latitude"
+                                  readonly
+                                  value="[[incident.latitude]]"
+                                  placeholder="&#8212;">
+                      </paper-input>
                     </div>
-                  </div>
-                </template>
+                    <div class="col-6">
+                      <paper-input label="Longitude"
+                                  readonly
+                                  value="[[incident.longitude]]"
+                                  placeholder="&#8212;" >
+                      </paper-input>
+                    </div>
+                  </template>
+
+                  <template is="dom-if" if="[[!readonly]]">
+                    <div class="col-6">
+                      <paper-input label="Latitude"
+                                  type="number"
+                                  value="{{incident.latitude}}"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </div>
+                    <div class="col-5">
+                      <paper-input label="Longitude"
+                                  type="number"
+                                  value="{{incident.longitude}}"
+                                  placeholder="&#8212;">
+                      </paper-input>
+                    </div>
+
+                    <div class="col-1">
+                      <div class="button-container">
+                        <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
+                        </paper-icon-button>
+                      </div>
+                    </div>
+                  </template>
+                </div>
               </div>
             </div>
           </div>
 
         </fieldset>
 
-        <template is="dom-if" if="[[incidentId]]">
+        <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly, incident)]]">
           <fieldset>
             <legend><h3>Related documents</h3></legend>
             <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
@@ -549,9 +553,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <template is="dom-repeat" items="[[incident.attachments]]">
                 <etools-data-table-row no-collapse>
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" title="[[getFilenameFromURL(item.attachment)]]" 
-                    data-col-header-label="File">
-                      <span><a href="[[item.attachment]]" target="_blank">[[getFilenameFromURL(item.attachment)]] </a>
+                    <span class="col-data col-4 break-word" 
+                          title="[[getFilenameFromURL(item.attachment)]]"
+                          data-col-header-label="File">
+                      <span>
+                        <a href="[[item.attachment]]" target="_blank">
+                           [[getFilenameFromURL(item.attachment)]]
+                        </a>
                       </span>
                     </span>
                     <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
@@ -630,13 +638,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           {id: false, name: 'Off Duty'}
         ]
       },
-      reported: {
-        type: Array,
-        value: [
-          {id: true, name: 'Reported'},
-          {id: false, name: 'Not Reported'}
-        ]
-      },
       events: {
         type: Array,
         value: []
@@ -694,21 +695,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   _idChanged(newId) {
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
-
     if (!newId) {
       this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
     }
 
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
-
-
-    if (!this.isOfflineOrUnsynced()) {
-      this.store.dispatch(fetchIncident(this.incidentId));
-    }
   }
 
   // It was created offline and not yet saved on server or new
@@ -726,10 +718,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (visible === false) {
       store.dispatch(clearErrors());
     }
-  }
-
-  isOfflineOrUnsynced() {
-    return this.state.app.offline || (this.incident && this.incident.unsynced);
   }
 
   _userSelected(event) {
@@ -770,10 +758,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.state = state;
 
-    if (!this.isOnExpectedPage(this.state)) {
-      return;
-    }
-
     this.staticData = state.staticData;
 
     this.events = state.events.list.map((elem) => {
@@ -801,9 +785,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
 
-    let incident = this.staticData.incidentCategories[0].subcategories.find(elem => elem.id === incidentSubcategory.id);
+    let incident = this.getSafetyCategory().subcategories.find(elem => elem.id === incidentSubcategory.id);
 
     return incident && incident.name === 'Road Traffic Accidents';
+  }
+
+  getSafetyCategory() {
+    return this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
   }
 
   showSubType(crashType) {
@@ -918,6 +906,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }, (error) => {
       console.warn('location fetch error:', error);
     });
+  }
+
+  _showRelatedDocsSection(incidentId, readonly, incident) {
+    if (!incidentId || isNaN(incidentId)) {
+      return false;
+    }
+    if (readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length)) {
+      return false;
+    }
+    return true;
   }
 
 }

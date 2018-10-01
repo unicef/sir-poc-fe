@@ -6,7 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-import '../../../common/datepicker-lite.js';
+import 'calendar-lite/datepicker-lite.js';
 
 import {
     addProgramme,

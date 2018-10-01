@@ -25,7 +25,7 @@ import ListCommonMixin from '../common/list-common-mixin.js';
 import { updateAppState } from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-import '../common/datepicker-lite.js';
+import 'calendar-lite/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -86,14 +86,14 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                                       hide-search>
           </etools-dropdown-multi-lite>
 
-          <div class="col col-3 filter">
+          <div class="col filter">
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
                              label="From">
             </datepicker-lite>
           </div>
 
-          <div class="col col-3 filter">
+          <div class="col filter">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
                              label="To">

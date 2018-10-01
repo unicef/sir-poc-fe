@@ -16,6 +16,7 @@ import '../styles/grid-layout-styles.js';
 
 export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
         .col-data > span {

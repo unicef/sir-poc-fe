@@ -30,31 +30,6 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           text-align: center;
         }
 
-        .statistics-between {
-          @apply --layout-end;
-          @apply --layout-center-justified;
-        }
-
-        .statistics-between span {
-          margin: 0 24px 11px 24px;
-        }
-
-        .statistics-between span:first-child {
-          margin-left: 0;
-        }
-
-        @media only screen and (max-width: 1024px) {
-          .statistics-between {
-            @apply --layout-vertical;
-            @apply --layout-start-justified;
-            @apply --layout-center;
-          }
-
-          .statistics-between span {
-            margin: 20px 0 -10px 0;
-          }
-        }
-
         datepicker-lite {
           --datepicker-lite-icon: {
             padding-bottom: 4px;

@@ -6,6 +6,7 @@ import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { IncidentModel } from './models/incident-model';
 import { addIncident } from '../../actions/incidents.js';
+import { showSnackbar } from '../../actions/app.js';
 import { updatePath } from '../common/navigation-helper.js';
 /**
  * @polymer
@@ -57,10 +58,7 @@ class AddIncident extends IncidentsBaseView {
   }
 
   showSuccessMessage() {
-    this.topWarnMessage = 'Incident saved';
-    setTimeout(() => {
-      this.topWarnMessage = '';
-    }, 4000);
+    this.store.dispatch(showSnackbar('Incident saved'));
   }
 
 }

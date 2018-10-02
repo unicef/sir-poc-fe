@@ -29,9 +29,10 @@ export const storeReady = () => (dispatch, getState) => {
   dispatch(fetchAllIncidentData());
 };
 
-export const showSnackbar = () => (dispatch) => {
+export const showSnackbar = (text) => (dispatch) => {
   dispatch({
-    type: ACTIONS.OPEN_SNACKBAR
+    type: ACTIONS.OPEN_SNACKBAR,
+    text
   });
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() =>
@@ -42,10 +43,10 @@ export const updateOffline = offline => (dispatch, getState) => {
   if (!getState()) {
     return;
   }
-  // Show the snackbar, unless this is the first load of the page.
-  if (getState().app.offline !== undefined) {
-    dispatch(showSnackbar());
-  }
+
+  let message = offline ? 'You are now offline' : 'You are now online';
+  dispatch(showSnackbar(message));
+
   dispatch({
     type: ACTIONS.UPDATE_OFFLINE,
     offline

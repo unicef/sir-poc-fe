@@ -1,3 +1,9 @@
+/*
+For development run it as
+  node server.js --dev
+or to have it run on a specific port
+  node server.js --dev -p 8084
+*/
 var express = require('express'); // eslint-disable-line
 var browserCapabilities = require('browser-capabilities'); // eslint-disable-line
 var proxy = require('http-proxy-middleware');

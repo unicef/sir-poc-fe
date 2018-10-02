@@ -179,7 +179,7 @@ export const syncIncident = newIncident => (dispatch, getState) => {
   });
 };
 
-export const submitIncident = (incident) => (dispatch, state) => {
+export const submitIncident = incident => (dispatch, state) => {
   let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
 
   return makeRequest(endpoint).then((result) => {
@@ -223,4 +223,46 @@ export const fetchIncident = id => (dispatch, getState) => {
   makeRequest(endpoint).then((response) => {
     dispatch(receiveIncident(response));
   });
+};
+
+export const editAttachmentsNotes = incident => (dispatch, getState) => {
+  if (getState().app.offline || incident.unsynced) {
+    return Promise.resolve();
+  }
+  if (!incident.attachments || !incident.attachments.length) {
+    return Promise.resolve();
+  }
+  let origIncident = getState().incidents.list.find(elem => elem.id === Number(incident.id));
+  if (!origIncident) {
+    return Promise.resolve();
+  }
+
+  let attChanges = [];
+  let origAtt = origIncident.attachments;
+  let currAtt = incident.attachments;
+
+  for (let i = 0; i < origAtt.length; i++) {
+    if (origAtt[i].note !== currAtt[i].note) {
+      attChanges.push({
+        id: currAtt[i].id,
+        note: currAtt[i].note
+      });
+    }
+  }
+
+  if (!attChanges.length) {
+    return Promise.resolve();
+  }
+
+  let operations = [];
+  attChanges.forEach((c) => {
+    let endpoint = prepareEndpoint(Endpoints.editIncidentAttachments, {id: c.id});
+    operations.push(makeRequest(endpoint, {note: c.note}));
+  });
+
+  return Promise.all(operations).catch((err) => {
+           dispatch(serverError(err.status === 500 ?
+           'There was an error updating Related Documents section' : err));
+         return Promise.resolve(); // the rest of the Incident changes will be saved despite attachments error
+        });
 };

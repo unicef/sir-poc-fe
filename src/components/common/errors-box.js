@@ -103,6 +103,12 @@ class ErrorsBox extends connect(store)(PolymerElement) {
   }
   _prepareErrors(serverErrors, errors) {
     let errs = [];
+    if (serverErrors && typeof serverErrors === 'string') {
+      errs = [serverErrors];
+    }
+    if (errors && typeof errors === 'string') {
+      errs = [...errs, ...errors];
+    }
     if (errors instanceof Array && errors.length > 0) {
       errs = [...errors];
     }

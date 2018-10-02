@@ -32,10 +32,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           cursor: pointer;
         }
 
-        .row-details {
-          display: block;
-        }
-
         .capitalize {
           text-transform: capitalize;
         }

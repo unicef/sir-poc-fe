@@ -1,10 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-icons/notification-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
-
-import '@polymer/iron-icons/editor-icons.js';
-import '@polymer/iron-icons/notification-icons.js';
 
 import { store } from '../../redux/store.js';
 import { syncEventOnList } from '../../actions/events.js';
@@ -37,7 +38,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         }
       </style>
 
-      <etools-data-table-header id="listHeader" no-title>
+      <iron-media-query query="(max-width: 1024px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+
+      <etools-data-table-header id="listHeader" no-title low-resolution-layout="[[lowResolutionLayout]]">
         <etools-data-table-column class="col-1">
           Case Number
         </etools-data-table-column>
@@ -68,7 +71,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[cases]]">
-        <etools-data-table-row unsynced$="[[item.unsynced]]">
+        <etools-data-table-row unsynced$="[[item.unsynced]]" low-resolution-layout="[[lowResolutionLayout]]">
           <div slot="row-data">
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
@@ -187,7 +190,8 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       events: Array,
       incidents: Array,
       offline: Boolean,
-      cases: Array
+      cases: Array,
+      lowResolutionLayout: Boolean
     };
   }
 

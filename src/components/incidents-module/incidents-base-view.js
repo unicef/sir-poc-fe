@@ -292,7 +292,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <paper-input value="{{incident.press_coverage}}"
                              placeholder="&#8212;"
                              label="Press Coverage Description"
-                             hidden="{{!pressCoverageSelected}}"
+                             hidden$="[[!pressCoverageSelected]]"
                              readonly="[[readonly]]"
                              required$="[[pressCoverageSelected]]">
                 </paper-input>

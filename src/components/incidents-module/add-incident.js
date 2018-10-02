@@ -58,7 +58,11 @@ class AddIncident extends IncidentsBaseView {
   }
 
   showSuccessMessage() {
-    this.store.dispatch(showSnackbar('Incident saved'));
+    if (this.state.app.offline) {
+      this.store.dispatch(showSnackbar('Incident stored. Must be synced when online'));
+    } else {
+      this.store.dispatch(showSnackbar('Incident saved'));
+    }
   }
 
 }

@@ -74,10 +74,10 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           </div>
         </div>
 
-        <div class="row-h center-text statistics-between">
+        <div class="row-h statistics-between">
           Show stastistics between
         </div>
-        <div class="row-h center-text statistics-between">
+        <div class="row-h statistics-between">
           <datepicker-lite value="{{selectedStartDate}}"></datepicker-lite>
           <span id="statistics-between-and">and</span>
           <datepicker-lite value="{{selectedEndDate}}"></datepicker-lite>

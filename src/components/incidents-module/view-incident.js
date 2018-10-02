@@ -4,6 +4,7 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
 import { scrollToTop } from '../common/content-container-helper.js';
+import { showSnackbar } from '../../actions/app.js';
 import { submitIncident } from '../../actions/incidents.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 
@@ -69,10 +70,7 @@ class ViewIncident extends IncidentsBaseView {
   }
 
   showSuccessMessage() {
-    this.topWarnMessage = 'Incident submitted';
-    setTimeout(() => {
-      this.topWarnMessage = '';
-    }, 4000);
+    this.store.dispatch(showSnackbar('Incident submitted'));
   }
 }
 

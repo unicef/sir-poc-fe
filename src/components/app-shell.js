@@ -199,8 +199,7 @@ class MyApp extends connect(store)(PolymerElement) {
 
         </app-header-layout>
         <snack-bar active$="[[snackbarOpened]]">
-          <span hidden$="[[!offline]]">You are now offline</span>
-          <span hidden$="[[offline]]">You are now online</span>
+          <span>[[snackbarText]]</span>
         </snack-bar>
       </app-drawer-layout>
     `;
@@ -218,6 +217,7 @@ class MyApp extends connect(store)(PolymerElement) {
         value: ['events', 'incidents', 'dashboard']
       },
       snackbarOpened: Boolean,
+      snackbarText: String,
       route: Object,
       routeData: Object,
       queryParams: Object,
@@ -271,6 +271,7 @@ class MyApp extends connect(store)(PolymerElement) {
     }
     // this.page = state.app.page;
     this.set('offline', state.app.offline);
+    this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
 

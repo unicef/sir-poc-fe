@@ -36,7 +36,8 @@ const app = (state = defaultState, action) => {
     case ACTIONS.OPEN_SNACKBAR:
       return {
         ...state,
-        snackbarOpened: true
+        snackbarOpened: true,
+        snackbarText: action.text
       };
     case ACTIONS.CLOSE_SNACKBAR:
       return {

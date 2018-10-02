@@ -133,6 +133,9 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
 
   getUserName(userId) {
     let user = this.users.find(u => u.id === Number(userId));
+    if (!user) {
+      return 'N/A';
+    }
     return user.first_name + ' ' + user.last_name;
   }
 

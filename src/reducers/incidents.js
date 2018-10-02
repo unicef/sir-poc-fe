@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 
 let defaultState = {
   list: [],
+  draft: {},
   premises:[],
   comments: [],
   personnel: [],
@@ -14,6 +15,11 @@ let defaultState = {
 
 const incidents = (state = defaultState, action) => {
   switch (action.type) {
+    case ACTIONS.SET_INCIDENT_DRAFT:
+      return {
+        ...state,
+        draft: action.incident
+      };
     case ACTIONS.RECEIVE_INCIDENTS:
       return {
         ...state,

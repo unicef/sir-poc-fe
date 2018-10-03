@@ -24,10 +24,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           max-width: 100%;
         }
 
-        .col-data iron-icon {
-          margin-right: 16px;
-        }
-
         .sync-btn {
           color: var(--primary-color);
           cursor: pointer;
@@ -40,6 +36,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         .case-det-desc,
         .case-det-loc {
           display: block;
+        }
+
+        etools-data-table-row[low-resolution-layout] etools-info-tooltip {
+          display: inherit;
         }
 
         @media only screen and (max-width: 900px) {
@@ -88,7 +88,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         <etools-data-table-row unsynced$="[[item.unsynced]]" 
                                low-resolution-layout="[[lowResolutionLayout]]"
                                medium-resolution-layout="[[mediumResolutionLayout]]">
-          <div slot="row-data">
+          <div slot="row-data" class="p-relative">
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
             </span>

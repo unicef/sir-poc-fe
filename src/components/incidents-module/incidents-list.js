@@ -62,6 +62,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           cursor: pointer;
         }
 
+        etools-data-table-row[low-resolution-layout] etools-info-tooltip {
+          display: inherit;
+        }
+
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>

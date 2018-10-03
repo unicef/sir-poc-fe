@@ -60,13 +60,13 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           margin-right: 16px;
         }
 
-        @media screen and (max-width: 767px) {
-          /* mobile specific css, under tablet min 768px */
-        }
-
         .sync-btn {
           color: var(--primary-color);
           cursor: pointer;
+        }
+
+        etools-data-table-row[low-resolution-layout] etools-info-tooltip {
+          display: inherit;
         }
         
       </style>
@@ -156,10 +156,9 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
                   <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                    <div> <!-- this div prevents resizing of the icon on low resolutions -->
-                      <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" on-click="_syncItem">
-                      </iron-icon>
-                    </div>
+                    <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" 
+                               on-click="_syncItem">
+                    </iron-icon>
                   </template>
                 </span>
             </div>

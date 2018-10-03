@@ -29,7 +29,7 @@ export const storeReady = () => (dispatch, getState) => {
   dispatch(fetchAllIncidentData());
 };
 
-export const showSnackbar = (text) => (dispatch) => {
+export const showSnackbar = text => (dispatch) => {
   dispatch({
     type: ACTIONS.OPEN_SNACKBAR,
     text

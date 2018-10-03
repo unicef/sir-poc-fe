@@ -37,7 +37,7 @@ const addCommentSuccess = (comment) => {
 
 const syncIncidentFail = () => {
   return {
-    type: ACTIONS.PLAIN_ERROR,
+    type: PLAIN_ERROR,
     plainErrors: ['There was an error syncing your incident. Please review the data and try again']
   };
 };
@@ -71,6 +71,13 @@ const updateEventIds = (newId, oldId) => {
   };
 };
 
+export const setIncidentDraft = (incident) => {
+  return {
+    type: ACTIONS.SET_INCIDENT_DRAFT,
+    incident
+  };
+};
+
 export const fetchAllIncidentData = () => (dispatch, getState) => {
   dispatch(fetchIncidents());
   dispatch(fetchIncidentComments());
@@ -79,7 +86,7 @@ export const fetchAllIncidentData = () => (dispatch, getState) => {
   dispatch(fetchIncidentProgrammes());
   dispatch(fetchIncidentProperties());
   dispatch(fetchIncidentEvacuations());
-}
+};
 
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {

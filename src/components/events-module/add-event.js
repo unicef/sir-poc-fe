@@ -2,6 +2,8 @@
  @license
  */
 import { html } from '@polymer/polymer/polymer-element.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { addEvent, setEventDraft } from '../../actions/events.js';
 import { EventsBaseView } from './events-base-view.js';
 import { getEventModel } from '../../models/event-model.js';
@@ -32,7 +34,15 @@ class AddEvent extends EventsBaseView {
   }
 
   _eventChanged() {
-    setTimeout(() => this.store.dispatch(setEventDraft(this.event)), 100);
+    this._debouncer = Debouncer.debounce(
+        this._debouncer,
+        timeOut.after(1000),
+        this.saveDraft.bind(this)
+    );
+  }
+
+  saveDraft() {
+    this.store.dispatch(setEventDraft(this.event));
   }
 
   async save() {

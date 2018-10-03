@@ -2,6 +2,8 @@
 @license
 */
 import { html } from '@polymer/polymer/polymer-element.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { getIncidentModel } from '../../models/incident-model';
@@ -42,7 +44,15 @@ class AddIncident extends IncidentsBaseView {
   }
 
   _incidentChanged() {
-    setTimeout(() => this.store.dispatch(setIncidentDraft(this.incident)), 100);
+    this._debouncer = Debouncer.debounce(
+        this._debouncer,
+        timeOut.after(1000),
+        this.saveDraft.bind(this)
+    );
+  }
+
+  saveDraft() {
+    this.store.dispatch(setIncidentDraft(this.incident));
   }
 
   async save() {

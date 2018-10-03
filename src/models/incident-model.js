@@ -1,10 +1,9 @@
 const IncidentModel = {
-  description: null,
+  description: '',
   incident_date: null,
   incident_time: null,
-  injuries: null,
+  injuries: '',
   on_duty: false,
-  region: null,
   street: '',
   note: '',
   reported: false,
@@ -14,7 +13,6 @@ const IncidentModel = {
   primary_person: {
     first_name: '',
     last_name: '',
-    gender: '',
     type_of_contract: ''
   }
 };

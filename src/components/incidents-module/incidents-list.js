@@ -171,7 +171,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
-            <div slot="row-data">
+            <div slot="row-data" class="p-relative">
               <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
                   <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>

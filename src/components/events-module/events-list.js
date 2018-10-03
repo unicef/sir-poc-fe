@@ -124,7 +124,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
 
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]" low-resolution-layout="[[lowResolutionLayout]]">
-            <div slot="row-data">
+            <div slot="row-data" class="p-relative">
                 <span class="col-data col-2" data-col-header-label="Case number">
                   <span class="truncate">
                     <a href="/events/view/[[item.id]]"> [[item.id]] </a>

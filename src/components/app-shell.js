@@ -10,6 +10,8 @@
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
+import { makeRequest } from '../components/common/request-helper.js';
+import { Endpoints } from '../config/endpoints.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -82,6 +84,10 @@ class MyApp extends connect(store)(PolymerElement) {
           color: var(--secondary-text-color);
           height: 48px;
           margin-right: 8px;
+        }
+
+        .sign-out {
+          cursor: pointer;
         }
 
         .drawer-list a {
@@ -165,6 +171,12 @@ class MyApp extends connect(store)(PolymerElement) {
               <iron-icon icon="av:playlist-add"></iron-icon>
               <span>New Incident</span>
             </a>
+
+            <a class="menu-heading sign-out"
+               on-tap="_signOut">
+              <iron-icon icon="icons:power-settings-new"></iron-icon>
+              <span>Sign Out</span>
+            </a>          
           </div>
 
         </app-drawer>
@@ -270,6 +282,10 @@ class MyApp extends connect(store)(PolymerElement) {
 
   _isValidPage(page) {
     return this.validPages.indexOf(page) !== -1;
+  }
+
+  _signOut() {
+    makeRequest(Endpoints.signOut).then(() => window.location = this.rootPath);
   }
 }
 

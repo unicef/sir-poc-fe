@@ -30,11 +30,33 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           text-align: center;
         }
 
+        .statistics-between {
+          @apply --layout-horizontal;
+          @apply --layout-end;
+          @apply --layout-center-justified;
+        }
+        
+        #statistics-between-and {
+          margin: 0 24px 13px;
+        }
+
         datepicker-lite {
           --datepicker-lite-icon: {
             padding-bottom: 4px;
           }
           text-align: center;
+          max-width: 160px;
+        }
+
+        @media screen and (max-width: 480px) {
+          .statistics-between {
+            @apply --layout-vertical;
+            @apply --layout-center;
+          }
+          
+          #statistics-between-and {
+            margin: 24px 0 0 0;
+          }
         }
 
       </style>
@@ -52,26 +74,13 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           </div>
         </div>
 
-        <div class="row-h">
-          <div class="col col-12 center-text">
-              <p> Show stastistics between </p>
-          </div>
+        <div class="row-h statistics-between">
+          Show stastistics between
         </div>
-
-        <div class="row-h">
-          <div class="col col-5">
-            <datepicker-lite value="{{selectedStartDate}}">
-            </datepicker-lite>
-          </div>
-
-          <div class="col col-2 center-text">
-            <p> and </p>
-          </div>
-
-          <div class="col col-5">
-            <datepicker-lite value="{{selectedEndDate}}">
-            </datepicker-lite>
-          </div>
+        <div class="row-h statistics-between">
+          <datepicker-lite value="{{selectedStartDate}}"></datepicker-lite>
+          <span id="statistics-between-and">and</span>
+          <datepicker-lite value="{{selectedEndDate}}"></datepicker-lite>
         </div>
 
         <div class="row-h">

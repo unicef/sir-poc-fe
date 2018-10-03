@@ -85,7 +85,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <fieldset>
           <legend><h3>Incident details</h3></legend>
           <div>
-            <div class="row-h flex-c">
+            <div class="row-h flex-c p-relative">
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
@@ -133,7 +133,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
             </div>
 
-            <div class="row-h flex-c">
+            <div class="row-h flex-c p-relative">
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
@@ -262,7 +262,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="row-h flex-c">
-              <div class="col col-3">
+              <div class="col col-3 p-relative">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedCriticality.description]]">
                   <etools-dropdown-lite slot="field" readonly="[[readonly]]"
@@ -552,7 +552,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <template is="dom-repeat" items="[[incident.attachments]]">
                 <etools-data-table-row no-collapse>
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" 
+                    <span class="col-data col-4 break-word"
                           title="[[getFilenameFromURL(item.attachment)]]"
                           data-col-header-label="File">
                       <span>

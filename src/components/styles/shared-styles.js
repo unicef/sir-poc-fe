@@ -68,7 +68,7 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
           padding: 5px 10px;
         };
       }
-      
+
       paper-button iron-icon {
         margin-right: 8px;
       }
@@ -101,6 +101,16 @@ documentContainer.innerHTML = `<dom-module id="shared-styles">
 
       etools-data-table-row[unsynced] {
         --list-bg-color: var(--unsynced-item-bg-color);
+      }
+
+      etools-info-tooltip {
+        --tooltip-box-style: {
+          white-space: normal !important;
+        };
+      }
+
+      .p-relative {
+        position: relative;
       }
     </style>
   </template>

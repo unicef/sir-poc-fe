@@ -170,7 +170,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]">
-            <div slot="row-data">
+            <div slot="row-data" class="p-relative">
               <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
                   <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
@@ -191,8 +191,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when
-                                          online to submit it.</span>
+                    <span slot="message">This incident has not been sumitted to the server.
+                                         Click the sync button when online to submit it.</span>
                   </etools-info-tooltip>
                 </template>
               </span>

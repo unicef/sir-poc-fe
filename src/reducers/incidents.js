@@ -1,6 +1,6 @@
-import * as ACTIONS from '../actions/constants.js';
-
 import { createSelector } from 'reselect';
+import * as ACTIONS from '../actions/constants.js';
+import { getIncidentModel } from '../models/incident-model.js';
 
 let defaultState = {
   list: [],
@@ -9,11 +9,17 @@ let defaultState = {
   personnel: [],
   evacuations:[],
   programmes: [],
-  properties: []
+  properties: [],
+  draft: getIncidentModel()
 };
 
 const incidents = (state = defaultState, action) => {
   switch (action.type) {
+    case ACTIONS.SET_INCIDENT_DRAFT:
+      return {
+        ...state,
+        draft: action.incident
+      };
     case ACTIONS.RECEIVE_INCIDENTS:
       return {
         ...state,

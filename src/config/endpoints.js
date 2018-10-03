@@ -228,5 +228,5 @@ export const Endpoints = {
   programmeTypes: {
     url: baseUrl + '/api/programme_types/',
     method: 'GET'
-  },
+  }
 };

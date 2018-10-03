@@ -4,12 +4,12 @@ import { getIncidentModel } from '../models/incident-model.js';
 
 let defaultState = {
   list: [],
-  premises:[],
+  premises: [],
   comments: [],
   personnel: [],
-  evacuations:[],
   programmes: [],
   properties: [],
+  evacuations: [],
   draft: getIncidentModel()
 };
 
@@ -55,7 +55,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         list: updateEventIds(state.list, action.oldId, action.newId)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_EVACUATION_SUCCESS:
       return {
         ...state,
@@ -71,7 +70,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         evacuations: getRefreshedData(state.evacuations, action.evacuations)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PROPERTY_SUCCESS:
       return {
         ...state,
@@ -87,7 +85,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         properties: getRefreshedData(state.properties, action.properties)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PREMISE_SUCCESS:
       return {
         ...state,
@@ -103,7 +100,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         premises: getRefreshedData(state.premises, action.premises)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PROGRAMME_SUCCESS:
       return {
         ...state,
@@ -119,7 +115,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         programmes: getRefreshedData(state.programmes, action.programmes)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PERSONNEL_SUCCESS:
       return {
         ...state,

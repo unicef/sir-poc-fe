@@ -54,7 +54,7 @@ const receiveEvent = (event) => {
   };
 };
 
-export const setEventDraft = event => {
+export const setEventDraft = (event) => {
   return {
     type: ACTIONS.SET_EVENT_DRAFT,
     event

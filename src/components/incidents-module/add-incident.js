@@ -2,10 +2,12 @@
 @license
 */
 import { html } from '@polymer/polymer/polymer-element.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { IncidentModel } from './models/incident-model';
-import { addIncident } from '../../actions/incidents.js';
+import { getIncidentModel } from '../../models/incident-model';
+import { addIncident, setIncidentDraft } from '../../actions/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import { updatePath } from '../common/navigation-helper.js';
 /**
@@ -17,6 +19,7 @@ class AddIncident extends IncidentsBaseView {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new incident';
+    this.set('incident', this.state.incidents.draft);
   }
 
   static get actionButtonsTemplate() {
@@ -26,7 +29,28 @@ class AddIncident extends IncidentsBaseView {
                     disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
         Save and add impact
       </paper-button>
+      <paper-button raised on-click="resetForm">
+        Reset data
+      </paper-button>
     `;
+  }
+
+  static get observers() {
+    return [
+      '_incidentChanged(incident.*)'
+    ];
+  }
+
+  _incidentChanged() {
+    this._debouncer = Debouncer.debounce(
+        this._debouncer,
+        timeOut.after(1000),
+        this.saveDraft.bind(this)
+    );
+  }
+
+  saveDraft() {
+    this.store.dispatch(setIncidentDraft(this.incident));
   }
 
   async save() {
@@ -54,11 +78,16 @@ class AddIncident extends IncidentsBaseView {
   }
 
   resetForm() {
-    this.incident = JSON.parse(JSON.stringify(IncidentModel));
+    this.incident = getIncidentModel();
+    this.resetValidations();
   }
 
   showSuccessMessage() {
-    this.store.dispatch(showSnackbar('Incident saved'));
+    if (this.state.app.offline) {
+      this.store.dispatch(showSnackbar('Incident stored. Must be synced when online'));
+    } else {
+      this.store.dispatch(showSnackbar('Incident saved'));
+    }
   }
 
 }

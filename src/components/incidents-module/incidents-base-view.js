@@ -21,7 +21,6 @@ import '../common/errors-box.js';
 import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
-import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
 
 import { fetchIncident } from '../../actions/incidents.js';
@@ -556,7 +555,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <template is="dom-repeat" items="[[incident.attachments]]">
                 <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" 
+                    <span class="col-data col-4 break-word"
                           title="[[getFilenameFromURL(item.attachment)]]"
                           data-col-header-label="File">
                       <span>
@@ -622,8 +621,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       state: Object,
       store: Object,
       incident: {
-        type: Object,
-        value: () => JSON.parse(JSON.stringify(IncidentModel))
+        type: Object
       },
       incidentId: {
         type: Number,
@@ -696,7 +694,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _idChanged(newId) {
     if (!newId) {
-      this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
     }
 

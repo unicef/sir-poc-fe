@@ -71,6 +71,13 @@ const updateEventIds = (newId, oldId) => {
   };
 };
 
+export const setIncidentDraft = incident => {
+  return {
+    type: ACTIONS.SET_INCIDENT_DRAFT,
+    incident
+  };
+};
+
 export const fetchAllIncidentData = () => (dispatch, getState) => {
   dispatch(fetchIncidents());
   dispatch(fetchIncidentComments());

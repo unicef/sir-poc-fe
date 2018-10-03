@@ -13,7 +13,6 @@ import { clearErrors } from '../../actions/errors.js';
 import { fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
-import { EventModel } from './models/event-model.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../styles/shared-styles.js';
@@ -104,6 +103,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <div class="col col-12">
               <paper-button raised on-click="save"
                             disabled$="[[canNotSave(eventId, state.app.offline)]]">Save</paper-button>
+              ${this.actionButtonsTemplate}
             </div>
           </div>
         </template>
@@ -112,6 +112,9 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     `;
   }
 
+  static get actionButtonsTemplate() {
+    return html``;
+  }
   static get goToEditBtnTmpl() {
     return html``;
   }
@@ -162,7 +165,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   _idChanged(newId) {
     if (!newId) {
-      this.event = JSON.parse(JSON.stringify(EventModel));
       return;
     }
 

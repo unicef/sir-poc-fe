@@ -26,8 +26,7 @@ class AddEvent extends EventsBaseView {
   static get actionButtonsTemplate() {
     return html`
         <paper-button raised
-                    on-click="resetForm"
-                    disabled$="[[canNotSave(eventId, state.app.offline)]]">
+                    on-click="resetForm">
         Reset data
       </paper-button>
     `;

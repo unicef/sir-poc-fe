@@ -30,8 +30,7 @@ class AddIncident extends IncidentsBaseView {
         Save and add impact
       </paper-button>
       <paper-button raised
-                    on-click="resetForm"
-                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+                    on-click="resetForm">
         Reset data
       </paper-button>
     `;

@@ -53,6 +53,10 @@ class AddEvent extends EventsBaseView {
     }
   }
 
+  _idChanged() {
+    // nothing to do here
+  }
+
   resetForm() {
     this.event = getEventModel();
     this.resetValidations();

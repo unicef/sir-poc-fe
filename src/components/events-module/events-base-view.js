@@ -13,7 +13,6 @@ import { clearErrors } from '../../actions/errors.js';
 import { fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
-import { EventModel } from './models/event-model.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../styles/shared-styles.js';
@@ -162,7 +161,6 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   _idChanged(newId) {
     if (!newId) {
-      this.event = JSON.parse(JSON.stringify(EventModel));
       return;
     }
 

@@ -1,8 +1,13 @@
 import { createSelector } from 'reselect';
 import * as ACTIONS from '../actions/constants.js';
 
-const events = (state = {list: []}, action) => {
+const events = (state = {list: [], draft: {}}, action) => {
   switch (action.type) {
+    case ACTIONS.SET_EVENT_DRAFT:
+      return {
+        ...state,
+        draft: action.event
+      };
     case ACTIONS.RECEIVE_EVENTS:
       return {
         ...state,

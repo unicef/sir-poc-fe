@@ -12,7 +12,9 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
@@ -66,11 +68,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           color: var(--primary-color);
           cursor: pointer;
         }
-
-        .row-details {
-          display: block;
-        }
+        
       </style>
+
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card filters">
           <paper-input class="filter search-input"
@@ -103,7 +104,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       </div>
 
       <div class="card list">
-        <etools-data-table-header id="listHeader" label="Events">
+        <etools-data-table-header id="listHeader" label="Events" low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-2">
             Case number
           </etools-data-table-column>
@@ -122,7 +123,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredEvents]]">
-          <etools-data-table-row unsynced$="[[item.unsynced]]">
+          <etools-data-table-row unsynced$="[[item.unsynced]]" low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
                 <span class="col-data col-2" data-col-header-label="Case number">
                   <span class="truncate">
@@ -163,25 +164,27 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                 </span>
             </div>
 
-            <div slot="row-data-details" class="row-details">
-              <div class="row-h flex-c">
-                <div class="col-6">
-                  <strong>Date created: </strong>
-                  <span>[[prettyDate(item.submitted_date)]]</span>
+            <div slot="row-data-details">
+              <div class="row-details-content flex-c">
+                <div class="row-h flex-c">
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Date created: </strong>
+                    <span>[[prettyDate(item.submitted_date)]]</span>
+                  </div>
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Date revised: </strong>
+                    <span>[[prettyDate(item.last_modify_date)]]</span>
+                  </div>
                 </div>
-                <div class="col-6">
-                  <strong>Date revised: </strong>
-                  <span>[[prettyDate(item.last_modify_date)]]</span>
-                </div>
-              </div>
-              <div class="row-h flex-c">
-                <div class="col-6">
-                  <strong>Description: </strong>
-                  <span>[[item.description]]</span>
-                </div>
-                <div class="col-6">
-                  <strong>Note: </strong>
-                  <span>[[item.note]]</span>
+                <div class="row-h flex-c">
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Description: </strong>
+                    <span>[[item.description]]</span>
+                  </div>
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Note: </strong>
+                    <span>[[item.note]]</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -191,7 +194,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         <etools-data-table-footer id="footer" page-size="{{pagination.pageSize}}"
                                   page-number="{{pagination.pageNumber}}"
                                   total-results="[[pagination.totalResults]]"
-                                  visible-range="{{visibleRange}}">
+                                  visible-range="{{visibleRange}}"
+                                  low-resolution-layout="[[lowResolutionLayout]]">
         </etools-data-table-footer>
       </div>
     `;

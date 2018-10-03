@@ -36,19 +36,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         .capitalize {
           text-transform: capitalize;
         }
-
-        .row-details-content {
-          font-size: 14px;  
-        }
         
         .case-det-desc,
         .case-det-loc {
           display: block;
-        }
-        
-        .row-details-content .case-det .rdc-title {
-          width: auto;
-          margin: 0 8px 0 0;
         }
 
         @media only screen and (max-width: 900px) {
@@ -171,29 +162,29 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           <div slot="row-data-details">
             <div class="row-details-content flex-c">
               <div class="row-h flex-c case-det case-det-desc">
-                <strong class="rdc-title">Description: </strong>[[item.description]]
+                <strong class="rdc-title inline">Description: </strong>[[item.description]]
               </div>
               <template is="dom-if" if="[[_caseIs(item.case_type, 'event')]]">
                 <div class="row-h flex-c case-det case-det-loc">
-                  <strong class="rdc-title">Location: </strong>[[item.location]]
+                  <strong class="rdc-title inline">Location: </strong>[[item.location]]
                 </div>
               </template>
               <template is="dom-if" if="[[_caseIs(item.case_type, 'incident')]]">
                 <div class="row-h flex-c case-det">
                   <div class="col col-3">
-                    <strong class="rdc-title">Category: </strong>
+                    <strong class="rdc-title inline">Category: </strong>
                     [[getNameFromId(item.incident_category, 'incidentCategories')]]
                   </div>
                   <div class="col col-3">
-                    <strong class="rdc-title">Region: </strong>
+                    <strong class="rdc-title inline">Region: </strong>
                     [[getNameFromId(item.region, 'regions')]]
                   </div>
                   <div class="col col-3">
-                    <strong class="rdc-title">Country: </strong>
+                    <strong class="rdc-title inline">Country: </strong>
                     [[getNameFromId(item.country, 'countries')]]
                   </div>
                   <div class="col col-3">
-                    <strong class="rdc-title">Person: </strong>
+                    <strong class="rdc-title inline">Person: </strong>
                     [[item.primary_person.first_name]] [[item.primary_person.last_name]]
                   </div>
                 </div>

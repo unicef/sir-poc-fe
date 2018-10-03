@@ -25,8 +25,7 @@ class AddEvent extends EventsBaseView {
 
   static get actionButtonsTemplate() {
     return html`
-        <paper-button raised
-                    on-click="resetForm">
+      <paper-button raised on-click="resetForm">
         Reset data
       </paper-button>
     `;

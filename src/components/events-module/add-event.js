@@ -1,9 +1,10 @@
 /**
  @license
  */
+import { html } from '@polymer/polymer/polymer-element.js';
 import { addEvent, setEventDraft } from '../../actions/events.js';
 import { EventsBaseView } from './events-base-view.js';
-import { EventModel } from './models/event-model.js';
+import { getEventModel } from '../../models/event-model.js';
 
 
 class AddEvent extends EventsBaseView {
@@ -20,7 +21,7 @@ class AddEvent extends EventsBaseView {
     ];
   }
 
-  static get goToEditBtnTmpl() {
+  static get actionButtonsTemplate() {
     return html`
         <paper-button raised
                     on-click="resetForm"
@@ -45,7 +46,8 @@ class AddEvent extends EventsBaseView {
   }
 
   resetForm() {
-    this.event = JSON.parse(JSON.stringify(EventModel));
+    this.event = getEventModel();
+    this.resetValidations();
   }
 }
 

@@ -4,7 +4,7 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { IncidentModel } from './models/incident-model';
+import { getIncidentModel } from '../../models/incident-model';
 import { addIncident, setIncidentDraft } from '../../actions/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import { updatePath } from '../common/navigation-helper.js';
@@ -70,7 +70,8 @@ class AddIncident extends IncidentsBaseView {
   }
 
   resetForm() {
-    this.incident = JSON.parse(JSON.stringify(IncidentModel));
+    this.incident = getIncidentModel();
+    this.resetValidations();
   }
 
   showSuccessMessage() {

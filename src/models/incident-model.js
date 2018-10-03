@@ -1,4 +1,4 @@
-export const IncidentModel = {
+const IncidentModel = {
   description: null,
   incident_date: null,
   incident_time: null,
@@ -18,3 +18,5 @@ export const IncidentModel = {
     type_of_contract: ''
   }
 };
+
+export const getIncidentModel = () => JSON.parse(JSON.stringify(IncidentModel));

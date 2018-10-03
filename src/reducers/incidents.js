@@ -1,16 +1,16 @@
-import * as ACTIONS from '../actions/constants.js';
-
 import { createSelector } from 'reselect';
+import * as ACTIONS from '../actions/constants.js';
+import { getIncidentModel } from '../models/incident-model.js';
 
 let defaultState = {
   list: [],
-  draft: {},
   premises:[],
   comments: [],
   personnel: [],
   evacuations:[],
   programmes: [],
-  properties: []
+  properties: [],
+  draft: getIncidentModel()
 };
 
 const incidents = (state = defaultState, action) => {

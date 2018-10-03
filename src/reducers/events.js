@@ -1,7 +1,8 @@
 import { createSelector } from 'reselect';
+import { getEventModel } from '../models/event-model.js';
 import * as ACTIONS from '../actions/constants.js';
 
-const events = (state = {list: [], draft: {}}, action) => {
+const events = (state = {list: [], draft: getEventModel()}, action) => {
   switch (action.type) {
     case ACTIONS.SET_EVENT_DRAFT:
       return {

@@ -103,6 +103,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <div class="col col-12">
               <paper-button raised on-click="save"
                             disabled$="[[canNotSave(eventId, state.app.offline)]]">Save</paper-button>
+              ${this.actionButtonsTemplate}
             </div>
           </div>
         </template>
@@ -111,6 +112,9 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
     `;
   }
 
+  static get actionButtonsTemplate() {
+    return html``;
+  }
   static get goToEditBtnTmpl() {
     return html``;
   }

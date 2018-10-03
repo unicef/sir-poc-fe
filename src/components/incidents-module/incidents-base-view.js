@@ -8,6 +8,8 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+
 import 'etools-upload/etools-upload-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
@@ -76,6 +78,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         }
 
       </style>
+      
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
         ${this.getTitleTemplate}
@@ -538,7 +542,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </etools-upload-multi>
             </div>
             <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
-              <etools-data-table-header no-collapse no-title>
+              <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
                 <etools-data-table-column class="col-4">
                   File
@@ -550,7 +554,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </etools-data-table-header>
 
               <template is="dom-repeat" items="[[incident.attachments]]">
-                <etools-data-table-row no-collapse>
+                <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
                   <div slot="row-data">
                     <span class="col-data col-4 break-word" 
                           title="[[getFilenameFromURL(item.attachment)]]"
@@ -670,7 +674,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
-      }
+      },
+      lowResolutionLayout: Boolean
     };
   }
 

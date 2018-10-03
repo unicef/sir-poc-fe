@@ -314,7 +314,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       selectedIncidentCategory: {
         type: Object,
         value: {}
-      }
+      },
+      lowResolutionLayout: Boolean
     };
   }
 

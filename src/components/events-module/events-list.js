@@ -242,7 +242,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         type: Boolean,
         value: false,
         observer: '_visibilityChanged'
-      }
+      },
+      lowResolutionLayout: Boolean
     };
   }
 

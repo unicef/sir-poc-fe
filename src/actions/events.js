@@ -77,6 +77,7 @@ const addEventOnline = (newEvent, dispatch) => {
 const addEventOffline = (newEvent, dispatch) => {
   newEvent.id = generateRandomHash();
   newEvent.unsynced = true;
+  newEvent.status = 'Not Synced';
 
   updatePath('/events/list/');
   dispatch(addEventSuccess(newEvent));

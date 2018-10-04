@@ -27,8 +27,8 @@ documentContainer.innerHTML = `
          @apply --layout-vertical;
       }
 
-      .center-row-layout {
-        align-items: center;
+      .layout-center {
+        @apply --layout-center
       }
       .break-word {
         word-break: break-all;

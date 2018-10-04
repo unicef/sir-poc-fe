@@ -1,10 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-icons/notification-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
-
-import '@polymer/iron-icons/editor-icons.js';
-import '@polymer/iron-icons/notification-icons.js';
 
 import { store } from '../../redux/store.js';
 import { syncEventOnList } from '../../actions/events.js';
@@ -23,35 +24,47 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           max-width: 100%;
         }
 
-        .col-data iron-icon {
-          margin-right: 16px;
-        }
-
         .sync-btn {
           color: var(--primary-color);
           cursor: pointer;
         }
 
-        .row-details {
-          display: block;
-        }
-
         .capitalize {
           text-transform: capitalize;
         }
+        
+        .case-det-desc,
+        .case-det-loc {
+          display: block;
+        }
+
+        etools-data-table-row[low-resolution-layout] etools-info-tooltip {
+          display: inherit;
+        }
+
+        @media only screen and (max-width: 900px) {
+          etools-data-table-row[medium-resolution-layout] *[slot="row-data-details"] .case-det-desc,
+          etools-data-table-row[medium-resolution-layout] *[slot="row-data-details"] .case-det-loc {
+            padding-top: 8px;
+            padding-bottom: 8px;
+          }
+        }
       </style>
 
-      <etools-data-table-header id="listHeader" no-title>
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      <iron-media-query query="(min-width: 768px) and (max-width: 1024px)"
+                        query-matches="{{mediumResolutionLayout}}"></iron-media-query>
+
+      <etools-data-table-header id="listHeader" label="Cases"
+                                low-resolution-layout="[[lowResolutionLayout]]"
+                                medium-resolution-layout="[[mediumResolutionLayout]]">
         <etools-data-table-column class="col-1">
           Case Number
-        </etools-data-table-column>
-        <etools-data-table-column class="col-3">
-          Description
         </etools-data-table-column>
         <etools-data-table-column class="col-1">
           Case Type
         </etools-data-table-column>
-        <etools-data-table-column class="col-1">
+        <etools-data-table-column class="col-2">
           Country
         </etools-data-table-column>
         <etools-data-table-column class="col-1">
@@ -60,10 +73,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         <etools-data-table-column class="col-2">
           Date created
         </etools-data-table-column>
-        <etools-data-table-column class="col-1">
+        <etools-data-table-column class="col-2">
           Category
         </etools-data-table-column>
-        <etools-data-table-column class="col-1">
+        <etools-data-table-column class="col-2">
           Subcategory
         </etools-data-table-column>
         <etools-data-table-column class="col-1">
@@ -72,18 +85,17 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[cases]]">
-        <etools-data-table-row unsynced$="[[item.unsynced]]">
-          <div slot="row-data">
+        <etools-data-table-row unsynced$="[[item.unsynced]]" 
+                               low-resolution-layout="[[lowResolutionLayout]]"
+                               medium-resolution-layout="[[mediumResolutionLayout]]">
+          <div slot="row-data" class="p-relative">
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
-            </span>
-            <span class="col-data col-3 truncate" data-col-header-label="Description">
-              [[item.description]]
             </span>
             <span class="col-data col-1 capitalize" data-col-header-label="Case type">
               [[item.case_type]]
             </span>
-            <span class="col-data col-1" data-col-header-label="Country">
+            <span class="col-data col-2" data-col-header-label="Country">
               <template is="dom-if" if="[[!!item.location]]">
                 [[item.location]]
               </template>
@@ -107,7 +119,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                 N/A
               </template>
             </span>
-            <span class="col-data col-1" data-col-header-label="Category">
+            <span class="col-data col-2" data-col-header-label="Category">
               <template is="dom-if" if="[[!!item.incident_category]]">
                 [[getNameFromId(item.incident_category, 'incidentCategories')]]
               </template>
@@ -115,7 +127,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                 N/A
               </template>
             </span>
-            <span class="col-data col-1" data-col-header-label="Subcategory">
+            <span class="col-data col-2" data-col-header-label="Subcategory">
               <template is="dom-if" if="[[!!item.incident_subcategory]]">
                 [[getIncidentSubcategory(item.incident_subcategory)]]
               </template>
@@ -148,34 +160,36 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
             </span>
           </div>
           <div slot="row-data-details">
-            <template is="dom-if" if="[[_caseIs(item.case_type, 'event')]]">
-              <div class="row-h flex-c">
-                <div class="col col-12">
-                  <strong> Location: </strong>
-                  [[item.location]]
-                </div>
+            <div class="row-details-content flex-c">
+              <div class="row-h flex-c case-det case-det-desc">
+                <strong class="rdc-title inline">Description: </strong>[[item.description]]
               </div>
-            </template>
-            <template is="dom-if" if="[[_caseIs(item.case_type, 'incident')]]">
-              <div class="row-h flex-c">
-                <div class="col col-3">
-                  <strong> Category: </strong>
-                  [[getNameFromId(item.incident_category, 'incidentCategories')]]
+              <template is="dom-if" if="[[_caseIs(item.case_type, 'event')]]">
+                <div class="row-h flex-c case-det case-det-loc">
+                  <strong class="rdc-title inline">Location: </strong>[[item.location]]
                 </div>
-                <div class="col col-3">
-                  <strong> Region: </strong>
-                  [[getNameFromId(item.region, 'regions')]]
+              </template>
+              <template is="dom-if" if="[[_caseIs(item.case_type, 'incident')]]">
+                <div class="row-h flex-c case-det">
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Category: </strong>
+                    [[getNameFromId(item.incident_category, 'incidentCategories')]]
+                  </div>
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Region: </strong>
+                    [[getNameFromId(item.region, 'regions')]]
+                  </div>
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Country: </strong>
+                    [[getNameFromId(item.country, 'countries')]]
+                  </div>
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Person: </strong>
+                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
+                  </div>
                 </div>
-                <div class="col col-3">
-                  <strong> Country: </strong>
-                  [[getNameFromId(item.country, 'countries')]]
-                </div>
-                <div class="col col-3">
-                  <strong> Person: </strong>
-                  [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                </div>
-              </div>
-            </template>
+              </template>
+            </div>
           </div>
         </etools-data-table-row>
       </template>
@@ -191,7 +205,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       events: Array,
       incidents: Array,
       offline: Boolean,
-      cases: Array
+      cases: Array,
+      lowResolutionLayout: Boolean,
+      mediumResolutionLayout: Boolean
     };
   }
 

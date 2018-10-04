@@ -54,7 +54,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         }
 
         .col-data iron-icon {
-          margin-right: 16px;
+          margin-right: 8px;
         }
 
         .sync-btn {
@@ -196,7 +196,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server.
+                    <span slot="message">This incident has not been submitted to the server.
                                          Click the sync button when online to submit it.</span>
                   </etools-info-tooltip>
                 </template>

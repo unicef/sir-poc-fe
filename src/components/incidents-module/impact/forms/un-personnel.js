@@ -239,7 +239,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
-                                value="{{incident.description}}"
+                                value="{{data.description}}"
                                 required auto-validate
                                 error-message="Description is required">
                 </paper-textarea>

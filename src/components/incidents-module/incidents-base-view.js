@@ -13,10 +13,11 @@ import '@polymer/iron-media-query/iron-media-query.js';
 import 'etools-upload/etools-upload-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-date-time/datepicker-lite.js';
+import 'etools-date-time/time-input.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import 'calendar-lite/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';

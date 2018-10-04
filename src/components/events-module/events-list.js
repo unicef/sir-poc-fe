@@ -57,7 +57,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         }
 
         .col-data iron-icon {
-          margin-right: 16px;
+          margin-right: 8px;
         }
 
         .sync-btn {
@@ -127,7 +127,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
             <div slot="row-data" class="p-relative">
                 <span class="col-data col-2" data-col-header-label="Case number">
                   <span class="truncate">
-                    <a href="/events/view/[[item.id]]"> [[item.id]] </a>
+                    <a href="/events/view/[[item.id]]">[[item.id]]</a>
                   </span>
                 </span>
               <span class="col-data col-3" title="[[item.start_date]]" data-col-header-label="Start date">
@@ -143,7 +143,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   <template is="dom-if" if="[[item.unsynced]]">
                     <etools-info-tooltip class="info" open-on-click>
                       <span slot="field">Not Synced</span>
-                      <span slot="message">This event has not been sumitted to the server. Click the sync button when
+                      <span slot="message">This event has not been submitted to the server. Click the sync button when
                                             online to submit it. </span>
                     </etools-info-tooltip>
                   </template>

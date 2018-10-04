@@ -20,8 +20,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
-        .col-data > span {
-          max-width: 100%;
+        
+        .col-data iron-icon {
+          margin-right: 8px;
         }
 
         .sync-btn {
@@ -96,15 +97,15 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               [[item.case_type]]
             </span>
             <span class="col-data col-2" data-col-header-label="Country">
-              <template is="dom-if" if="[[!!item.location]]">
+              <template is="dom-if" if="[[item.location]]">
                 [[item.location]]
               </template>
-              <template is="dom-if" if="[[!!item.country]]">
+              <template is="dom-if" if="[[item.country]]">
                 [[getNameFromId(item.country, 'countries')]]
               </template>
             </span>
             <span class="col-data col-1 capitalize" data-col-header-label="Status">
-              <template is="dom-if" if="[[!!item.status]]">
+              <template is="dom-if" if="[[item.status]]">
                 [[item.status]]
               </template>
               <template is="dom-if" if="[[!item.status]]">
@@ -113,14 +114,14 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                 <etools-info-tooltip class="info" open-on-click>
                   <span slot="message">
-                    This [[item.case_type]] has not been sumitted to the server.
+                    This [[item.case_type]] has not been submitted to the server.
                     Click the sync button when online to submit it.
                   </span>
                 </etools-info-tooltip>
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
-              <template is="dom-if" if="[[!!item.creation_date]]">
+              <template is="dom-if" if="[[item.creation_date]]">
                 [[prettyDate(item.creation_date)]]
               </template>
               <template is="dom-if" if="[[!item.creation_date]]">
@@ -128,7 +129,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Category">
-              <template is="dom-if" if="[[!!item.incident_category]]">
+              <template is="dom-if" if="[[item.incident_category]]">
                 [[getNameFromId(item.incident_category, 'incidentCategories')]]
               </template>
               <template is="dom-if" if="[[!item.incident_category]]">
@@ -136,7 +137,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Subcategory">
-              <template is="dom-if" if="[[!!item.incident_subcategory]]">
+              <template is="dom-if" if="[[item.incident_subcategory]]">
                 [[getIncidentSubcategory(item.incident_subcategory)]]
               </template>
               <template is="dom-if" if="[[!item.incident_subcategory]]">

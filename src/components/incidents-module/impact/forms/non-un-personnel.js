@@ -163,7 +163,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
             <div class="row-h flex-c">
               <div class="col col-4">
                 <etools-dropdown-lite
-                            id="category"
+                            id="impact"
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
@@ -232,8 +232,9 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
-          '#personnelType',
-          '#agency',
+          '#firstName',
+          '#lastName',
+          '#gender',
           '#impact'
         ]
       }

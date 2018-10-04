@@ -120,6 +120,8 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
               <etools-dropdown-lite
                         id="gender"
                         label="Gender"
+                        required
+                        auto-validate
                         readonly="[[readonly]]"
                         options="[[staticData.genders]]"
                         selected="{{data.person.gender}}">
@@ -204,7 +206,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
               </div>
               <div class="col col-3">
                 <etools-dropdown-lite
-                            id="category"
+                            id="impact"
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
@@ -292,9 +294,17 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
-          '#personnelType',
-          '#agency',
-          '#impact'
+          '#unEmployer',
+          '#firstName',
+          '#lastName',
+          '#nationality',
+          '#gender',
+          '#category',
+          '#dutyStationCountry',
+          '#dutyStationCity',
+          '#status',
+          '#impact',
+          '#description'
         ]
       }
     };

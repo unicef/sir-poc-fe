@@ -32,7 +32,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         .capitalize {
           text-transform: capitalize;
         }
-        
+
         .case-det-desc,
         .case-det-loc {
           display: block;
@@ -85,7 +85,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[cases]]">
-        <etools-data-table-row unsynced$="[[item.unsynced]]" 
+        <etools-data-table-row unsynced$="[[item.unsynced]]"
                                low-resolution-layout="[[lowResolutionLayout]]"
                                medium-resolution-layout="[[mediumResolutionLayout]]">
           <div slot="row-data" class="p-relative">
@@ -109,6 +109,14 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
               <template is="dom-if" if="[[!item.status]]">
                 N/A
+              </template>
+              <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                <etools-info-tooltip class="info" open-on-click>
+                  <span slot="message">
+                    This [[item.case_type]] has not been sumitted to the server.
+                    Click the sync button when online to submit it.
+                  </span>
+                </etools-info-tooltip>
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
@@ -149,13 +157,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                 </a>
               </template>
               <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                <etools-info-tooltip class="info" icon="notification:sync" open-on-click
-                            title="Sync [[item.case_type]]"
-                            class="sync-btn"
+                <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn"
                             on-click="_syncItem">
-                  <span slot="message">This [[item.case_type]] has not been sumitted to the server.
-                                       Click to submit when an internet connection is availale.</span>
-                </etools-info-tooltip>
+                </iron-icon>
               </template>
             </span>
           </div>

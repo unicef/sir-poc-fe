@@ -721,6 +721,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
+
+    /* eslint-disable camelcase */
     let {
       agency,
       contact,
@@ -750,6 +752,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       type_of_contract,
       un_official
     });
+    /* eslint-enable camelcase */
   }
 
   _stateChanged(state) {

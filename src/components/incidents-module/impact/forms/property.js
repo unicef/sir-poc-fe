@@ -193,7 +193,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if(this.visible) {
+    if (this.visible) {
       resetFieldsValidations(this, this.fieldsToValidateSelectors);
     }
   }

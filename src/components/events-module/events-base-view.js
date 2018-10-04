@@ -10,7 +10,6 @@ import '@polymer/paper-input/paper-input.js';
 import 'calendar-lite/datepicker-lite.js';
 
 import { clearErrors } from '../../actions/errors.js';
-import { fetchEvent } from '../../actions/events.js';
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';

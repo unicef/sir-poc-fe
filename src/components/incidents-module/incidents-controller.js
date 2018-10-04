@@ -190,7 +190,7 @@ class IncidentsController extends connect(store)(BaseController) {
   }
 
   hideReviewTab() {
-    if (this.showEditTab){
+    if (this.showEditTab) {
       return true;
     }
     if (this.isOffline) {

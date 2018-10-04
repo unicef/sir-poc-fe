@@ -8,20 +8,19 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+
 import 'etools-upload/etools-upload-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import '../common/datepicker-lite.js';
-import 'calendar-lite/time-picker-lite.js';
+import 'calendar-lite/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
-import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
 
 import { fetchIncident } from '../../actions/incidents.js';
@@ -78,17 +77,18 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         }
 
       </style>
+      
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
         ${this.getTitleTemplate}
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
-          <warn-message message="[[topWarnMessage]]" hidden$="[[!topWarnMessage.length]]"></warn-message>
         <fieldset>
           <legend><h3>Incident details</h3></legend>
           <div>
-            <div class="row-h flex-c">
+            <div class="row-h flex-c p-relative">
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
@@ -136,7 +136,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
             </div>
 
-            <div class="row-h flex-c">
+            <div class="row-h flex-c p-relative">
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
@@ -265,7 +265,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="row-h flex-c">
-              <div class="col col-3">
+              <div class="col col-3 p-relative">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedCriticality.description]]">
                   <etools-dropdown-lite slot="field" readonly="[[readonly]]"
@@ -541,7 +541,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </etools-upload-multi>
             </div>
             <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
-              <etools-data-table-header no-collapse no-title>
+              <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
                 <etools-data-table-column class="col-4">
                   File
@@ -553,9 +553,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </etools-data-table-header>
 
               <template is="dom-repeat" items="[[incident.attachments]]">
-                <etools-data-table-row no-collapse>
+                <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" 
+                    <span class="col-data col-4 break-word"
                           title="[[getFilenameFromURL(item.attachment)]]"
                           data-col-header-label="File">
                       <span>
@@ -620,13 +620,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
-      topWarnMessage: {
-        type: String,
-        value: ''
-      },
       incident: {
-        type: Object,
-        value: () => JSON.parse(JSON.stringify(IncidentModel))
+        type: Object
       },
       incidentId: {
         type: Number,
@@ -677,7 +672,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
-      }
+      },
+      lowResolutionLayout: Boolean
     };
   }
 
@@ -698,7 +694,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _idChanged(newId) {
     if (!newId) {
-      this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
     }
 
@@ -726,6 +721,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
+
+    /* eslint-disable camelcase */
     let {
       agency,
       contact,
@@ -755,6 +752,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       type_of_contract,
       un_official
     });
+    /* eslint-enable camelcase */
   }
 
   _stateChanged(state) {

@@ -6,7 +6,6 @@ import { updatePath } from '../components/common/navigation-helper.js';
 import { serverError, plainErrors } from './errors.js';
 import * as ACTIONS from './constants.js';
 
-
 const receiveIncidentEvacuations = (evacuations) => {
   return {
     type: ACTIONS.RECEIVE_EVACUATIONS,
@@ -29,8 +28,7 @@ const editEvacuationSuccess = (evacuation, id) => {
   };
 };
 
-export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) =>  {
-  let state = getState();
+export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) => {
   let operations = [
     ...await dispatch(syncPersonnelList(newId, oldId)),
     ...await dispatch(syncEvacuations(newId, oldId)),
@@ -51,7 +49,7 @@ export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) 
       updatePath(`/incidents/impact/${newId}/list/`);
     }
   });
-}
+};
 
 const addEvacuationOnline = (evacuation, dispatch) => {
   return makeRequest(Endpoints.addIncidentEvacuation, evacuation).then((result) => {
@@ -114,14 +112,14 @@ export const fetchIncidentEvacuations = () => (dispatch, getState) => {
   }
 };
 
-export const syncEvacuation = (evacuation) => (dispatch, getState) => {
+export const syncEvacuation = evacuation => (dispatch, getState) => {
   return _syncEvacuation(evacuation, dispatch).then((result) => {
     if (!result.success) {
       dispatch(serverError(result.error));
     }
     return result.success;
   });
-}
+};
 
 const _syncEvacuation = (evacuation, dispatch) => {
   return makeRequest(Endpoints.addIncidentEvacuation, evacuation).then((result) => {
@@ -132,22 +130,22 @@ const _syncEvacuation = (evacuation, dispatch) => {
     dispatch(editEvacuationSuccess(evacuation, evacuation.id));
     return {success: false, error: error.response};
   });
-}
+};
 
 const syncEvacuations = (newId, oldId) => (dispatch, getState) => {
   let evacuations = getState().incidents.evacuations.filter(ev => ev.incident_id == oldId);
   let operations = [];
 
-  for(let index = 0; index < evacuations.length; index++) {
+  for (let index = 0; index < evacuations.length; index++) {
     let evacuation = JSON.parse(JSON.stringify(evacuations[index]));
     evacuation.incident_id = newId;
     operations.push(_syncEvacuation(evacuation, dispatch));
-  };
+  }
 
   return operations;
-}
+};
 
-////////////////////////////////// Impacts on properties ///////////////////////////////////////////////////////////////
+/* Impacts on properties */
 
 const receiveIncidentProperties = (properties) => {
   return {
@@ -170,7 +168,6 @@ const editPropertySuccess = (property, id) => {
     id
   };
 };
-
 
 const addPropertyOnline = (property, dispatch) => {
   return makeRequest(Endpoints.addIncidentProperty, property).then((result) => {
@@ -233,14 +230,14 @@ export const fetchIncidentProperties = () => (dispatch, getState) => {
   }
 };
 
-export const syncProperty = (property) => (dispatch, getState) => {
+export const syncProperty = property => (dispatch, getState) => {
   return _syncProperty(property, dispatch).then((result) => {
     if (!result.success) {
       dispatch(serverError(result.error));
     }
     return result.success;
   });
-}
+};
 
 const _syncProperty = (property, dispatch) => {
   return makeRequest(Endpoints.addIncidentProperty, property).then((result) => {
@@ -251,21 +248,21 @@ const _syncProperty = (property, dispatch) => {
     dispatch(editPropertySuccess(property, property.id));
     return {success: false, error: error.response};
   });
-}
+};
 
-const syncProperties = (newId, oldId) => (dispatch, getState) =>  {
+const syncProperties = (newId, oldId) => (dispatch, getState) => {
   let properties = getState().incidents.properties.filter(ev => ev.incident_id == oldId);
   let operations = [];
 
-  properties.forEach(property => {
+  properties.forEach((property) => {
     property.incident_id = newId;
     operations.push(_syncProperty(property, dispatch));
   });
 
   return operations;
-}
+};
 
-////////////////////////////////// Impacts on premises ///////////////////////////////////////////////////////////////
+/* Impacts on premises */
 
 const receiveIncidentPremises = (premises) => {
   return {
@@ -350,14 +347,14 @@ export const fetchIncidentPremises = () => (dispatch, getState) => {
   }
 };
 
-export const syncPremise = (premise) => (dispatch, getState) => {
+export const syncPremise = premise => (dispatch, getState) => {
   return _syncPremise(premise, dispatch).then((result) => {
     if (!result.success) {
       dispatch(serverError(result.error));
     }
     return result.success;
   });
-}
+};
 
 const _syncPremise = (premise, dispatch) => {
   return makeRequest(Endpoints.addIncidentPremise, premise).then((result) => {
@@ -368,21 +365,21 @@ const _syncPremise = (premise, dispatch) => {
     dispatch(editPremiseSuccess(premise, premise.id));
     return {success: false, error: error.response};
   });
-}
+};
 
-const syncPremises = (newId, oldId) => (dispatch, getState) =>  {
+const syncPremises = (newId, oldId) => (dispatch, getState) => {
   let premises = getState().incidents.premises.filter(ev => ev.incident_id == oldId);
   let operations = [];
 
-  premises.forEach(premise => {
+  premises.forEach((premise) => {
     premise.incident_id = newId;
     operations.push(_syncPremise(premise, dispatch));
   });
 
   return operations;
-}
+};
 
-////////////////////////////////// Impacts on programmes ///////////////////////////////////////////////////////////////
+/* Impacts on programmes */
 
 const receiveIncidentProgrammes = (programmes) => {
   return {
@@ -405,7 +402,6 @@ const editProgrammeSuccess = (programme, id) => {
     id
   };
 };
-
 
 const addProgrammeOnline = (programme, dispatch) => {
   return makeRequest(Endpoints.addIncidentProgramme, programme).then((result) => {
@@ -468,14 +464,14 @@ export const fetchIncidentProgrammes = () => (dispatch, getState) => {
   }
 };
 
-export const syncProgramme = (programme) => (dispatch, getState) => {
+export const syncProgramme = programme => (dispatch, getState) => {
   return _syncProgramme(programme, dispatch).then((result) => {
     if (!result.success) {
       dispatch(serverError(result.error));
     }
     return result.success;
   });
-}
+};
 
 const _syncProgramme = (programme, dispatch) => {
   return makeRequest(Endpoints.addIncidentProgramme, programme).then((result) => {
@@ -486,21 +482,21 @@ const _syncProgramme = (programme, dispatch) => {
     dispatch(editProgrammeSuccess(programme, programme.id));
     return {success: false, error: error.response};
   });
-}
+};
 
-const syncProgrammes = (newId, oldId) => (dispatch, getState) =>  {
+const syncProgrammes = (newId, oldId) => (dispatch, getState) => {
   let programmes = getState().incidents.programmes.filter(ev => ev.incident_id == oldId);
   let operations = [];
 
-  programmes.forEach(programme => {
+  programmes.forEach((programme) => {
     programme.incident_id = newId;
     operations.push(_syncProgramme(programme, dispatch));
   });
 
   return operations;
-}
+};
 
-////////////////////////////////// Persons impacted ///////////////////////////////////////////////////////////
+/* Persons impacted */
 
 const receiveIncidentPersonnel = (personnel) => {
   return {
@@ -523,7 +519,6 @@ const editPersonnelSuccess = (personnel, id) => {
     id
   };
 };
-
 
 const addPersonnelOnline = (personnel, dispatch) => {
   return makeRequest(Endpoints.addIncidentPersonnel, personnel).then((result) => {
@@ -586,14 +581,14 @@ export const fetchIncidentPersonnel = () => (dispatch, getState) => {
   }
 };
 
-export const syncPersonnel = (personnel) => (dispatch, getState) => {
+export const syncPersonnel = personnel => (dispatch, getState) => {
   return _syncPersonnel(personnel, dispatch).then((result) => {
     if (!result.success) {
       dispatch(serverError(result.error));
     }
     return result.success;
   });
-}
+};
 
 const _syncPersonnel = (personnel, dispatch) => {
   return makeRequest(Endpoints.addIncidentPersonnel, personnel).then((result) => {
@@ -604,16 +599,16 @@ const _syncPersonnel = (personnel, dispatch) => {
     dispatch(editPersonnelSuccess(personnel, personnel.id));
     return {success: false, error: error.response};
   });
-}
+};
 
-const syncPersonnelList = (newId, oldId) => (dispatch, getState) =>  {
+const syncPersonnelList = (newId, oldId) => (dispatch, getState) => {
   let personnel = getState().incidents.personnel.filter(ev => ev.incident == oldId);
   let operations = [];
 
-  personnel.forEach(personnel => {
+  personnel.forEach((personnel) => {
     personnel.incident = newId;
     operations.push(_syncPersonnel(personnel, dispatch));
   });
 
   return operations;
-}
+};

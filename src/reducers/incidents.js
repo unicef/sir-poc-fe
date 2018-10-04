@@ -55,6 +55,12 @@ const incidents = (state = defaultState, action) => {
         ...state,
         list: updateEventIds(state.list, action.oldId, action.newId)
       };
+    case ACTIONS.DELETE_INCIDENT:
+      return {
+        ...state,
+        list: getListWithoutItem(state.list, action.incidentId)
+      };
+   ///////////////////////////////
     case ACTIONS.EDIT_EVACUATION_SUCCESS:
       return {
         ...state,
@@ -162,6 +168,21 @@ const updateEventIds = (list, oldId, newId) => {
 
     return incident;
   });
+};
+
+const getListWithoutItem = (list, deletedIncidentId) => {
+  let index = list.findIndex((i) => {
+    if (isNaN(deletedIncidentId)) {
+      return i.id === deletedIncidentId;
+    } else {
+      return i.id === Number(deletedIncidentId);
+    }
+  });
+  if (index < 0) {
+    return list;
+  }
+  list.splice(index, 1);
+  return [...list];
 };
 
 // ---------- SELECTORS -------

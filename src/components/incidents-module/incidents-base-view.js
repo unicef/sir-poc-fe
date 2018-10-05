@@ -60,21 +60,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         paper-input {
           width: 100%;
         }
-
-        .button-container {
-          @apply --layout-vertical;
-          justify-content: center;
-          height: 100%;
-        }
-
-        .col-6 + .col-5, .col-6 + .col-6 {
-          padding-left: 24px;
-        }
-
-        .coordinates-container {
-          @apply --layout-horizontal;
-          width: calc(100% - 24px);
-          padding: 0;
+        
+        #get-location {
+          margin-left: 16px;
         }
 
       </style>
@@ -474,60 +462,59 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
 
               <div class="col col-3">
-                <paper-input id="incidentTime"
+                <time-input id="incidentTime"
                             readonly$="[[readonly]]"
                             label="Incident time"
-                            type="time"
                             value="{{incident.incident_time}}"
                             required auto-validate
                             error-message="Incident time is required">
-                </paper-input>
+                </time-input>
               </div>
 
-              <div class="col col-6">
-                <div class="coordinates-container">
-                  <template is="dom-if" if="[[readonly]]">
-                    <div class="col-6">
-                      <paper-input label="Latitude"
-                                  readonly
-                                  value="[[incident.latitude]]"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </div>
-                    <div class="col-6">
-                      <paper-input label="Longitude"
-                                  readonly
-                                  value="[[incident.longitude]]"
-                                  placeholder="&#8212;" >
-                      </paper-input>
-                    </div>
-                  </template>
-
-                  <template is="dom-if" if="[[!readonly]]">
-                    <div class="col-6">
-                      <paper-input label="Latitude"
-                                  type="number"
-                                  value="{{incident.latitude}}"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </div>
-                    <div class="col-5">
-                      <paper-input label="Longitude"
-                                  type="number"
-                                  value="{{incident.longitude}}"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </div>
-
-                    <div class="col-1">
-                      <div class="button-container">
-                        <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
-                        </paper-icon-button>
-                      </div>
-                    </div>
-                  </template>
+              <template is="dom-if" if="[[readonly]]">
+                <div class="col col-3">
+                  <paper-input label="Latitude"
+                              readonly
+                              value="[[incident.latitude]]"
+                              placeholder="&#8212;">
+                  </paper-input>
                 </div>
-              </div>
+                <div class="col col-3">
+                  <paper-input label="Longitude"
+                              readonly
+                              value="[[incident.longitude]]"
+                              placeholder="&#8212;" >
+                  </paper-input>
+                </div>
+              </template>
+
+              <template is="dom-if" if="[[!readonly]]">
+                <div class="col col-3">
+                  <paper-input label="Latitude"
+                              type="number"
+                              value="{{incident.latitude}}"
+                              placeholder="&#8212;">
+                  </paper-input>
+                </div>
+                <div class="col col-3 layout-horizontal layout-center justified">
+                  <paper-input label="Longitude"
+                              type="number"
+                              value="{{incident.longitude}}"
+                              placeholder="&#8212;">
+                  </paper-input>
+                  
+                  <paper-icon-button id="get-location"
+                                     on-click="getLocation" 
+                                     title="Use device location" 
+                                     icon="device:gps-fixed">
+                  </paper-icon-button>
+                </div>
+
+                <!--<div class="col flex-c layout-vertical layout-center justified">-->
+                  <!---->
+                <!--</div>-->
+              </template>
+
             </div>
           </div>
 

@@ -105,10 +105,8 @@ documentContainer.innerHTML = `
           };
         }
 
-        datepicker-lite {
-          --datepicker-lite-icon: {
-            padding-bottom: 4px;
-          };
+        datepicker-lite,
+        time-input {
           max-width: 200px;
         }
 

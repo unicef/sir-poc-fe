@@ -84,11 +84,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                     hide-search>
         </etools-dropdown-multi-lite>
 
-        <datepicker-lite class="filter date"
+        <datepicker-lite class="filter"
                          value="{{filters.startDate}}"
                          label="From"></datepicker-lite>
 
-        <datepicker-lite class="filter date"
+        <datepicker-lite class="filter"
                          value="{{filters.endDate}}"
                          label="To"></datepicker-lite>
 

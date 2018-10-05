@@ -179,7 +179,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
-                                value="{{incident.description}}">
+                                value="{{data.description}}">
                 </paper-textarea>
               </div>
             </div>

@@ -2,10 +2,14 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
+
+import '@polymer/paper-button/paper-button.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../common/datepicker-lite.js';
 import './dashboard-list.js';
+import '../common/jwt-login.js'
+import '../common/jwt-login-msal.js'
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
@@ -31,7 +35,27 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           }
         }
       </style>
-
+      <div class="card">
+        <div>MSAL</div>
+        <jwt-login-msal id="msalElement">
+        </jwt-login-msal>
+        
+        <div class="wrapper-btns">
+        
+          <paper-button raised class="primary" on-tap="msaljwtCallLogin">JWT Log In</paper-button>
+          <paper-button class="link" on-tap="msaljwtLogout">Logout</paper-button>
+        </div>
+        
+      </div>
+      <div class="card">
+      <div class="wrapper-btns">
+        <jwt-login id="adalElement">
+        </jwt-login>
+          <paper-button raised class="primary" on-tap="jwtCallLogin">JWT Log In</paper-button>
+          <paper-button class="link" on-tap="jwtGetUser">Get Local User</paper-button>
+          <paper-button class="link" on-tap="jwtLogout">Logout</paper-button>
+        </div>
+      </div>
       <div class="card">
         <div class="row-h">
           <div class="col col-6 center-text">
@@ -136,6 +160,29 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     });
 
     return filteredIncidents;
+  }
+
+  jwtCallLogin(event) {
+    console.log(this.$.adalElement)
+    this.$.adalElement.login()
+  }
+  msaljwtCallLogin(event) {
+    console.log(this.$.msalElement)
+    this.$.msalElement.login()
+  }
+
+  jwtGetUser(event) {
+    let user = this.$.adalElement.getUser()
+    console.log(user)
+  }
+
+  jwtLogout(event) {
+    let user = this.$.adalElement.logout()
+    console.log(user)
+  }
+  msaljwtLogout(event) {
+    let user = this.$.msalElement.logout()
+    console.log(user)
   }
 
 }

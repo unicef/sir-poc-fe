@@ -292,5 +292,5 @@ export const deleteIncident = incidentId => (dispatch, getState) => {
 
 export const deleteIncidentLocally = incidentId => (dispatch, getState) => {
   dispatch(deleteIncidentFromRedux(incidentId));
-  setTimeout(updatePath('/incidents/list/'), 1000);
+  updatePath('/incidents/list/');
 };

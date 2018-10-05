@@ -510,9 +510,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   </paper-icon-button>
                 </div>
 
-                <!--<div class="col flex-c layout-vertical layout-center justified">-->
-                  <!---->
-                <!--</div>-->
               </template>
 
             </div>

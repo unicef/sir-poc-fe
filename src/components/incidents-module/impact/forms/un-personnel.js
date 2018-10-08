@@ -6,7 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 
 import {
     addPersonnel,
@@ -120,6 +120,8 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
               <etools-dropdown-lite
                         id="gender"
                         label="Gender"
+                        required
+                        auto-validate
                         readonly="[[readonly]]"
                         options="[[staticData.genders]]"
                         selected="{{data.person.gender}}">
@@ -204,7 +206,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
               </div>
               <div class="col col-3">
                 <etools-dropdown-lite
-                            id="category"
+                            id="impact"
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
@@ -237,7 +239,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
-                                value="{{incident.description}}"
+                                value="{{data.description}}"
                                 required auto-validate
                                 error-message="Description is required">
                 </paper-textarea>
@@ -292,9 +294,17 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
-          '#personnelType',
-          '#agency',
-          '#impact'
+          '#unEmployer',
+          '#firstName',
+          '#lastName',
+          '#nationality',
+          '#gender',
+          '#category',
+          '#dutyStationCountry',
+          '#dutyStationCity',
+          '#status',
+          '#impact',
+          '#description'
         ]
       }
     };

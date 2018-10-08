@@ -34,7 +34,7 @@ import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -84,11 +84,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                     hide-search>
         </etools-dropdown-multi-lite>
 
-        <datepicker-lite class="filter date"
+        <datepicker-lite class="filter"
                          value="{{filters.startDate}}"
                          label="From"></datepicker-lite>
 
-        <datepicker-lite class="filter date"
+        <datepicker-lite class="filter"
                          value="{{filters.endDate}}"
                          label="To"></datepicker-lite>
 

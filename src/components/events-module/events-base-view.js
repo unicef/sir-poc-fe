@@ -7,7 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 
 import { clearErrors } from '../../actions/errors.js';
 import { selectEvent } from '../../reducers/events.js';
@@ -47,14 +47,16 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
                              label="Start date"
                              value="{{event.start_date}}"
                              readonly="[[readonly]]"
-                             required></datepicker-lite>
+                             required auto-validate
+                             error-message="Start Date is required"></datepicker-lite>
           </div>
           <div class="col">
             <datepicker-lite id="endDate"
                              label="End date"
                              value="{{event.end_date}}"
                              readonly="[[readonly]]"
-                             required></datepicker-lite>
+                             required auto-validate
+                             error-message="End Date is required"></datepicker-lite>
           </div>
           <div class="col flex-c">
             <paper-input id="location"

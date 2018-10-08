@@ -6,7 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 
 import {
     addPersonnel,
@@ -163,7 +163,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
             <div class="row-h flex-c">
               <div class="col col-4">
                 <etools-dropdown-lite
-                            id="category"
+                            id="impact"
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
@@ -179,7 +179,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
-                                value="{{incident.description}}">
+                                value="{{data.description}}">
                 </paper-textarea>
               </div>
             </div>
@@ -232,8 +232,9 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
-          '#personnelType',
-          '#agency',
+          '#firstName',
+          '#lastName',
+          '#gender',
           '#impact'
         ]
       }

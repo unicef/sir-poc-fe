@@ -30,6 +30,7 @@ documentContainer.innerHTML = `<dom-module id="required-fields-styles">
       etools-date-input[required],
       etools-dropdown-lite[required],
       etools-dropdown-multi-lite[required],
+      time-input[required],
       datepicker-lite[required] {
         --paper-input-container-label: {
           @apply --required-star-style;

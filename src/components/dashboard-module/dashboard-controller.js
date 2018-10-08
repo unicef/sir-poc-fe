@@ -1,6 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
@@ -38,14 +38,6 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
         
         #statistics-between-and {
           margin: 0 24px 13px;
-        }
-
-        datepicker-lite {
-          --datepicker-lite-icon: {
-            padding-bottom: 4px;
-          }
-          text-align: center;
-          max-width: 160px;
         }
 
         @media screen and (max-width: 480px) {

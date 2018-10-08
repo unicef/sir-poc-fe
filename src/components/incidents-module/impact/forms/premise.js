@@ -48,7 +48,7 @@ export class PremiseForm extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
-        <h3> Un Premises </h3>
+        <h3> UN Premises </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>

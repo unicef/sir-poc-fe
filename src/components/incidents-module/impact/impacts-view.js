@@ -141,7 +141,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           <div class="col-6">
             <h3>UN Programme</h3>
           </div>
-          <div class="right">
+          <div class="col-6 right">
             <paper-button raised
                 class="smaller"
                 on-click="_addProgramme">

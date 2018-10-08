@@ -27,7 +27,7 @@ import ListCommonMixin from '../common/list-common-mixin.js';
 import { updateAppState } from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';

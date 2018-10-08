@@ -14,6 +14,10 @@ documentContainer.innerHTML = `
       .layout-horizontal {
          @apply --layout-horizontal;
       }
+      .layout-wrap {
+        @apply --layout-wrap;
+      }
+
       .space-between {
         @apply --layout-justified;
       }
@@ -21,6 +25,18 @@ documentContainer.innerHTML = `
       .layout-vertical,
       .col.layout-vertical {
          @apply --layout-vertical;
+      }
+
+      .layout-center {
+        @apply --layout-center;
+      }
+      .layout-center.justified {
+        @apply --layout-center-justified;
+      }
+      
+      .break-word {
+        word-break: break-all;
+        word-wrap: break-word;
       }
 
       .flex-c {

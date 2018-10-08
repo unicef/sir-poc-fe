@@ -4,20 +4,18 @@ import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
-import { serverError, PLAIN_ERROR } from './errors.js';
+import { serverError } from './errors.js';
 import { syncIncidentImpacts } from './incident-impacts.js';
-export const ADD_INCIDENT_COMMENT_SUCCESS = 'ADD_INCIDENT_COMMENT_SUCCESS';
-export const RECEIVE_INCIDENT_COMMENTS = 'RECEIVE_INCIDENT_COMMENTS';
-export const EDIT_INCIDENT_SUCCESS = 'EDIT_INCIDENT_SUCCESS';
-export const ADD_INCIDENT_SUCCESS = 'ADD_INCIDENT_SUCCESS';
-export const ADD_INCIDENT_FAIL = 'ADD_INCIDENT_FAIL';
-export const RECEIVE_INCIDENTS = 'RECEIVE_INCIDENTS';
-export const RECEIVE_INCIDENT = 'RECEIVE_INCIDENT';
-export const UPDATE_EVENT_IDS = 'UPDATE_EVENT_IDS';
+import * as ACTIONS from './constants.js';
+import { fetchIncidentEvacuations,
+         fetchIncidentProgrammes,
+         fetchIncidentProperties,
+         fetchIncidentPersonnel,
+         fetchIncidentPremises } from './incident-impacts.js';
 
 const editIncidentSuccess = (incident, id) => {
   return {
-    type: EDIT_INCIDENT_SUCCESS,
+    type: ACTIONS.EDIT_INCIDENT_SUCCESS,
     incident,
     id
   };
@@ -25,14 +23,14 @@ const editIncidentSuccess = (incident, id) => {
 
 const addIncidentSuccess = (newIncident) => {
   return {
-    type: ADD_INCIDENT_SUCCESS,
+    type: ACTIONS.ADD_INCIDENT_SUCCESS,
     newIncident
   };
 };
 
 const addCommentSuccess = (comment) => {
   return {
-    type: ADD_INCIDENT_COMMENT_SUCCESS,
+    type: ACTIONS.ADD_INCIDENT_COMMENT_SUCCESS,
     comment
   };
 };
@@ -46,42 +44,82 @@ const syncIncidentFail = () => {
 
 const receiveIncidents = (incidents) => {
   return {
-    type: RECEIVE_INCIDENTS,
+    type: ACTIONS.RECEIVE_INCIDENTS,
     incidents
   };
 };
 
 const receiveIncidentComments = (comments) => {
   return {
-    type: RECEIVE_INCIDENT_COMMENTS,
+    type: ACTIONS.RECEIVE_INCIDENT_COMMENTS,
     comments
   };
 };
 
 const receiveIncident = (incident) => {
   return {
-    type: RECEIVE_INCIDENT,
-    incident
+    type: ACTIONS.RECEIVE_INCIDENT,
+    incident,
+    id: incident.id
   };
 };
 
 const updateEventIds = (newId, oldId) => {
   return {
-    type: UPDATE_EVENT_IDS,
+    type: ACTIONS.UPDATE_EVENT_IDS,
     oldId, newId
   };
+};
+
+export const setIncidentDraft = (incident) => {
+  return {
+    type: ACTIONS.SET_INCIDENT_DRAFT,
+    incident
+  };
+};
+
+export const deleteIncidentFromRedux = (incidentId) => {
+  return {
+    type: ACTIONS.DELETE_INCIDENT,
+    incidentId
+  };
+};
+
+export const fetchAllIncidentData = () => (dispatch, getState) => {
+  dispatch(fetchIncidents());
+  dispatch(fetchIncidentComments());
+  dispatch(fetchIncidentPremises());
+  dispatch(fetchIncidentPersonnel());
+  dispatch(fetchIncidentProgrammes());
+  dispatch(fetchIncidentProperties());
+  dispatch(fetchIncidentEvacuations());
 };
 
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(addIncidentSuccess(result));
-    updatePath('/incidents/list/');
-    return true;
+    return result.id;
   }).catch((error) => {
     dispatch(serverError(error.response));
     scrollToTop();
     return false;
   });
+};
+
+const addIncidentOffline = (newIncident, dispatch) => {
+  newIncident.id = generateRandomHash();
+  newIncident.unsynced = true;
+  dispatch(addIncidentSuccess(newIncident));
+  return newIncident.id;
+};
+
+
+export const addIncident = newIncident => (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return addIncidentOffline(newIncident, dispatch);
+  } else {
+    return addIncidentOnline(newIncident, dispatch);
+  }
 };
 
 const addCommentOnline = comment => (dispatch, getState) => {
@@ -94,12 +132,8 @@ const addCommentOnline = comment => (dispatch, getState) => {
   });
 };
 
-const addIncidentOffline = (newIncident, dispatch) => {
-  newIncident.id = generateRandomHash();
-  newIncident.unsynced = true;
-  updatePath('/incidents/list/');
-  dispatch(addIncidentSuccess(newIncident));
-  return true;
+export const addComment = comment => (dispatch, getState) => {
+  return dispatch(addCommentOnline(comment));
 };
 
 const editIncidentOnline = (incident, dispatch, state) => {
@@ -120,18 +154,6 @@ const editIncidentOffline = (incident, dispatch) => {
   incident.unsynced = true;
   updatePath('/incidents/list/');
   dispatch(editIncidentSuccess(incident, incident.id));
-};
-
-export const addIncident = newIncident => (dispatch, getState) => {
-  if (getState().app.offline === true) {
-    return addIncidentOffline(newIncident, dispatch);
-  } else {
-    return addIncidentOnline(newIncident, dispatch);
-  }
-};
-
-export const addComment = comment => (dispatch, getState) => {
-  return addCommentOnline(comment, dispatch);
 };
 
 export const editIncident = incident => (dispatch, getState) => {
@@ -171,6 +193,18 @@ export const syncIncident = newIncident => (dispatch, getState) => {
   });
 };
 
+export const submitIncident = incident => (dispatch, state) => {
+  let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
+
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(result, result.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
 export const fetchIncidents = () => (dispatch, getState) => {
   if (getState().app.offline !== true) {
     makeRequest(Endpoints.incidentsList).then((result) => {
@@ -203,4 +237,60 @@ export const fetchIncident = id => (dispatch, getState) => {
   makeRequest(endpoint).then((response) => {
     dispatch(receiveIncident(response));
   });
+};
+
+export const editAttachmentsNotes = incident => (dispatch, getState) => {
+  if (getState().app.offline || incident.unsynced) {
+    return Promise.resolve();
+  }
+  if (!incident.attachments || !incident.attachments.length) {
+    return Promise.resolve();
+  }
+  let origIncident = getState().incidents.list.find(elem => elem.id === Number(incident.id));
+  if (!origIncident) {
+    return Promise.resolve();
+  }
+
+  let attChanges = [];
+  let origAtt = origIncident.attachments;
+  let currAtt = incident.attachments;
+
+  for (let i = 0; i < origAtt.length; i++) {
+    if (origAtt[i].note !== currAtt[i].note) {
+      attChanges.push({
+        id: currAtt[i].id,
+        note: currAtt[i].note
+      });
+    }
+  }
+
+  if (!attChanges.length) {
+    return Promise.resolve();
+  }
+
+  let operations = [];
+  attChanges.forEach((c) => {
+    let endpoint = prepareEndpoint(Endpoints.editIncidentAttachments, {id: c.id});
+    operations.push(makeRequest(endpoint, {note: c.note}));
+  });
+
+  return Promise.all(operations).catch((err) => {
+           dispatch(serverError(err.status === 500 ?
+           'There was an error updating Related Documents section' : err));
+         return Promise.resolve(); // the rest of the Incident changes will be saved despite attachments error
+        });
+};
+
+export const deleteIncident = incidentId => (dispatch, getState) => {
+  makeRequest(prepareEndpoint(Endpoints.deleteIncident, {id: incidentId})).then(() => {
+    dispatch(deleteIncidentLocally(incidentId));
+  }).catch((err) => {
+    dispatch(serverError(err));
+  });
+
+};
+
+export const deleteIncidentLocally = incidentId => (dispatch, getState) => {
+  dispatch(deleteIncidentFromRedux(incidentId));
+  updatePath('/incidents/list/');
 };

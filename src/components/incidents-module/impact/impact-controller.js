@@ -73,7 +73,7 @@ export class ImpactController extends connect(store)(PolymerElement) {
       subrouteData: Object,
       incidentId: {
         type: Number,
-        computed: '_setIncidentId(state.app.locationInfo.incidentId)',
+        computed: '_setIncidentId(state.app.locationInfo.incidentId)'
       },
       route: {
         type: Object,

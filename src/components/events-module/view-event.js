@@ -4,7 +4,6 @@
 import {html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
 import {EventsBaseView} from './events-base-view.js';
-import {isOnViewEvent} from '../../reducers/app.js';
 
 /**
  * @polymer
@@ -42,11 +41,6 @@ class ViewEvent extends EventsBaseView {
     this.readonly = true;
     this.title = 'View event';
   }
-
-  isOnExpectedPage() {
-    return isOnViewEvent(this.state);
-  }
-
 }
 
 window.customElements.define('view-event', ViewEvent);

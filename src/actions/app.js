@@ -10,16 +10,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
-import { fetchAndStoreEvents } from './events.js';
-import { fetchIncidents, fetchIncidentComments } from './incidents.js';
-import { fetchIncidentEvacuations } from './incident-impacts.js';
-
-export const UPDATE_OFFLINE = 'UPDATE_OFFLINE';
-export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
-export const OPEN_SNACKBAR = 'OPEN_SNACKBAR';
-export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
-export const UPDATE_LOCATION_INFO = 'UPDATE_LOCATION_INFO';
-
+import { fetchEvent, fetchAndStoreEvents } from './events.js';
+import { fetchIncident, fetchAllIncidentData } from './incidents.js';
+import * as ACTIONS from './constants.js';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 
@@ -31,32 +24,31 @@ export const storeReady = () => (dispatch, getState) => {
     return;
   }
 
-  dispatch(fetchIncidents());
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
-  dispatch(fetchIncidentComments());
-  dispatch(fetchIncidentEvacuations());
+  dispatch(fetchAllIncidentData());
 };
 
-export const showSnackbar = () => (dispatch) => {
+export const showSnackbar = text => (dispatch) => {
   dispatch({
-    type: OPEN_SNACKBAR
+    type: ACTIONS.OPEN_SNACKBAR,
+    text
   });
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() =>
-    dispatch({ type: CLOSE_SNACKBAR }), 3000);
+    dispatch({ type: ACTIONS.CLOSE_SNACKBAR }), 3000);
 };
 
 export const updateOffline = offline => (dispatch, getState) => {
   if (!getState()) {
     return;
   }
-  // Show the snackbar, unless this is the first load of the page.
-  if (getState().app.offline !== undefined) {
-    dispatch(showSnackbar());
-  }
+
+  let message = offline ? 'You are now offline' : 'You are now online';
+  dispatch(showSnackbar(message));
+
   dispatch({
-    type: UPDATE_OFFLINE,
+    type: ACTIONS.UPDATE_OFFLINE,
     offline
   });
 };
@@ -104,6 +96,9 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'comments':
       import('../components/incidents-module/incident-comments.js');
       break;
+    case 'review':
+      import('../components/incidents-module/incident-review.js');
+      break;
     case 'impact':
       import('../components/incidents-module/impact/impact-controller.js');
       break;
@@ -134,12 +129,24 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
   }
 };
 
-export const updateLocationInfo = (path, queryParams) => {
+export const updateLocationInfo = (path, queryParams) => (dispatch, getState) => {
 
   let [selectedModule, page, eventId, incidentId] = extractInfoFromPath(path);
 
-  return {
-    type: UPDATE_LOCATION_INFO,
+  if (!getState().app.offline) {
+    if (eventId && !isNaN(eventId) && getState().app.locationInfo.eventId !== eventId) {
+      // refresh event
+      dispatch(fetchEvent(eventId));
+    }
+
+    if (incidentId && !isNaN(incidentId) && getState().app.locationInfo.incidentId !== incidentId) {
+      // refresh incident
+      dispatch(fetchIncident(incidentId));
+    }
+  }
+
+  dispatch({
+    type: ACTIONS.UPDATE_LOCATION_INFO,
     locationInfo: {
       selectedModule,
       page,
@@ -147,7 +154,7 @@ export const updateLocationInfo = (path, queryParams) => {
       eventId,
       incidentId
     }
-  };
+  });
 };
 
 const extractInfoFromPath = (path) => {

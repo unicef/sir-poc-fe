@@ -1,71 +1,140 @@
-import {
-  ADD_INCIDENT_COMMENT_SUCCESS,
-  RECEIVE_INCIDENT_COMMENTS,
-  EDIT_INCIDENT_SUCCESS,
-  ADD_INCIDENT_SUCCESS,
-  RECEIVE_INCIDENTS,
-  RECEIVE_INCIDENT,
-  UPDATE_EVENT_IDS
-} from '../actions/incidents.js';
-import {
-  EDIT_EVACUATION_SUCCESS,
-  ADD_EVACUATION_SUCCESS,
-  RECEIVE_EVACUATIONS
-} from '../actions/incident-impacts.js';
-
 import { createSelector } from 'reselect';
+import * as ACTIONS from '../actions/constants.js';
+import { getIncidentModel } from '../models/incident-model.js';
 
-const incidents = (state = {list: [], comments: []}, action) => {
+let defaultState = {
+  list: [],
+  premises: [],
+  comments: [],
+  personnel: [],
+  programmes: [],
+  properties: [],
+  evacuations: [],
+  draft: getIncidentModel()
+};
+
+const incidents = (state = defaultState, action) => {
   switch (action.type) {
-    case RECEIVE_INCIDENTS:
+    case ACTIONS.SET_INCIDENT_DRAFT:
+      return {
+        ...state,
+        draft: action.incident
+      };
+    case ACTIONS.RECEIVE_INCIDENTS:
       return {
         ...state,
         list: getRefreshedData(state.list, action.incidents)
       };
-    case RECEIVE_INCIDENT_COMMENTS:
+    case ACTIONS.RECEIVE_INCIDENT_COMMENTS:
       return {
         ...state,
         comments: action.comments
       };
-    case RECEIVE_INCIDENT:
+    case ACTIONS.RECEIVE_INCIDENT:
       return {
         ...state,
         list: getListWithEditedItem(state.list, action)
       };
-    case RECEIVE_EVACUATIONS:
-      return {
-        ...state,
-        evacuations: getRefreshedData(state.evacuations, action.evacuations)
-      };
-    case ADD_INCIDENT_SUCCESS:
+    case ACTIONS.ADD_INCIDENT_SUCCESS:
       return {
         ...state,
         list: [...state.list, action.newIncident]
       };
-    case ADD_INCIDENT_COMMENT_SUCCESS:
+    case ACTIONS.ADD_INCIDENT_COMMENT_SUCCESS:
       return {
         ...state,
         comments: [...state.comments, action.comment]
       };
-    case ADD_EVACUATION_SUCCESS:
-      return {
-        ...state,
-        evacuations: [...state.evacuations, action.evacuation]
-      };
-    case EDIT_INCIDENT_SUCCESS:
+    case ACTIONS.EDIT_INCIDENT_SUCCESS:
       return {
         ...state,
         list: getListWithEditedItem(state.list, action)
       };
-    case EDIT_EVACUATION_SUCCESS:
+    case ACTIONS.UPDATE_EVENT_IDS:
+      return {
+        ...state,
+        list: updateEventIds(state.list, action.oldId, action.newId)
+      };
+    case ACTIONS.DELETE_INCIDENT:
+      return {
+        ...state,
+        list: getListWithoutItem(state.list, action.incidentId)
+      };
+   ///////////////////////////////
+    case ACTIONS.EDIT_EVACUATION_SUCCESS:
       return {
         ...state,
         evacuations: getListWithEditedItem(state.evacuations, action, 'evacuation')
       };
-    case UPDATE_EVENT_IDS:
+    case ACTIONS.ADD_EVACUATION_SUCCESS:
       return {
         ...state,
-        list: updateEventIds(state.list, action.oldId, action.newId)
+        evacuations: [...state.evacuations, action.evacuation]
+      };
+    case ACTIONS.RECEIVE_EVACUATIONS:
+      return {
+        ...state,
+        evacuations: getRefreshedData(state.evacuations, action.evacuations)
+      };
+    case ACTIONS.EDIT_PROPERTY_SUCCESS:
+      return {
+        ...state,
+        properties: getListWithEditedItem(state.properties, action, 'property')
+      };
+    case ACTIONS.ADD_PROPERTY_SUCCESS:
+      return {
+        ...state,
+        properties: [...state.properties, action.property]
+      };
+    case ACTIONS.RECEIVE_PROPERTIES:
+      return {
+        ...state,
+        properties: getRefreshedData(state.properties, action.properties)
+      };
+    case ACTIONS.EDIT_PREMISE_SUCCESS:
+      return {
+        ...state,
+        premises: getListWithEditedItem(state.premises, action, 'premise')
+      };
+    case ACTIONS.ADD_PREMISE_SUCCESS:
+      return {
+        ...state,
+        premises: [...state.premises, action.premise]
+      };
+    case ACTIONS.RECEIVE_PREMISES:
+      return {
+        ...state,
+        premises: getRefreshedData(state.premises, action.premises)
+      };
+    case ACTIONS.EDIT_PROGRAMME_SUCCESS:
+      return {
+        ...state,
+        programmes: getListWithEditedItem(state.programmes, action, 'programme')
+      };
+    case ACTIONS.ADD_PROGRAMME_SUCCESS:
+      return {
+        ...state,
+        programmes: [...state.programmes, action.programme]
+      };
+    case ACTIONS.RECEIVE_PROGRAMMES:
+      return {
+        ...state,
+        programmes: getRefreshedData(state.programmes, action.programmes)
+      };
+    case ACTIONS.EDIT_PERSONNEL_SUCCESS:
+      return {
+        ...state,
+        personnel: getListWithEditedItem(state.personnel, action, 'personnel')
+      };
+    case ACTIONS.ADD_PERSONNEL_SUCCESS:
+      return {
+        ...state,
+        personnel: [...state.personnel, action.personnel]
+      };
+    case ACTIONS.RECEIVE_PERSONNEL:
+      return {
+        ...state,
+        personnel: getRefreshedData(state.personnel, action.personnel)
       };
     default:
       return state;
@@ -74,13 +143,13 @@ const incidents = (state = {list: [], comments: []}, action) => {
 
 export default incidents;
 
-const getListWithEditedItem = (list, action, key) => {
-  key = key || 'incident';
+const getListWithEditedItem = (list, action, actionKey) => {
+  actionKey = actionKey || 'incident';
   return list.map((element) => {
     if (action.id !== element.id) {
       return element;
     }
-    return action[key];
+    return action[actionKey];
   });
 };
 
@@ -99,6 +168,21 @@ const updateEventIds = (list, oldId, newId) => {
 
     return incident;
   });
+};
+
+const getListWithoutItem = (list, deletedIncidentId) => {
+  let index = list.findIndex((i) => {
+    if (isNaN(deletedIncidentId)) {
+      return i.id === deletedIncidentId;
+    } else {
+      return i.id === Number(deletedIncidentId);
+    }
+  });
+  if (index < 0) {
+    return list;
+  }
+  list.splice(index, 1);
+  return [...list];
 };
 
 // ---------- SELECTORS -------

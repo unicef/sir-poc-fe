@@ -77,6 +77,7 @@ class IncidentsController extends connect(store)(BaseController) {
         <edit-incident name="edit"></edit-incident>
 
         <view-incident name="view"></view-incident>
+        <incident-review name="review"></incident-review>
         <impact-controller name="impact" route="{{subRoute}}"></impact-controller>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
@@ -144,6 +145,7 @@ class IncidentsController extends connect(store)(BaseController) {
   getTabs(offline, showEditTab, incidentId) {
     let hideHistory = this._unsyncedAndCreatedOffline(incidentId);
     let hideComments = this._unsyncedAndCreatedOffline(incidentId);
+    let hideReview = this.hideReviewTab();
     hideHistory = hideHistory || offline;
 
     return [
@@ -160,6 +162,11 @@ class IncidentsController extends connect(store)(BaseController) {
       {
         name: 'impact',
         tabLabel: 'IMPACT'
+      },
+      {
+        name: 'review',
+        tabLabel: 'REVIEW',
+        hidden: hideReview
       },
       {
         name: 'comments',
@@ -180,6 +187,19 @@ class IncidentsController extends connect(store)(BaseController) {
 
   _showTabs(page) {
     return !!this.viewPageTabs.find(pt => pt.name === page);
+  }
+
+  hideReviewTab() {
+    if (this.showEditTab) {
+      return true;
+    }
+    if (this.isOffline) {
+      return true;
+    }
+    if (this._unsyncedAndCreatedOffline(this.incidentId)) {
+      return true;
+    }
+    return false;
   }
 
 }

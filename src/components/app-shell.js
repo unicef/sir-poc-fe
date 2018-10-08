@@ -120,7 +120,8 @@ class MyApp extends connect(store)(PolymerElement) {
       <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
 
-      <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="900px">
+      <!-- menu will switch to mobile hamburger menu under 1280px -->
+      <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="1280px">
         <!-- Drawer content -->
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar id="menu-header">
@@ -187,8 +188,7 @@ class MyApp extends connect(store)(PolymerElement) {
 
         </app-header-layout>
         <snack-bar active$="[[snackbarOpened]]">
-          <span hidden$="[[!offline]]">You are now offline</span>
-          <span hidden$="[[offline]]">You are now online</span>
+          <span>[[snackbarText]]</span>
         </snack-bar>
       </app-drawer-layout>
     `;
@@ -206,6 +206,7 @@ class MyApp extends connect(store)(PolymerElement) {
         value: ['events', 'incidents', 'dashboard']
       },
       snackbarOpened: Boolean,
+      snackbarText: String,
       route: Object,
       routeData: Object,
       queryParams: Object,
@@ -259,6 +260,7 @@ class MyApp extends connect(store)(PolymerElement) {
     }
     // this.page = state.app.page;
     this.set('offline', state.app.offline);
+    this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
 

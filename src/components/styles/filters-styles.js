@@ -46,10 +46,6 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         min-width: 160px;
         width: auto;
       }
-      
-      .date {
-        width: 160px;
-      }
      
       .select {
         min-width: 220px;
@@ -64,6 +60,10 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
       .export paper-listbox {
         width: 110px;
       }
+      
+      .filters .filter:not(:first-of-type) {
+          padding-left: 0;
+        }
       
       @media screen and (max-width: 768px) {
         .filter{

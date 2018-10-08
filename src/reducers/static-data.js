@@ -1,12 +1,17 @@
-import * as ACTIONS from '../actions/static-data.js';
+import * as ACTIONS from '../actions/constants.js';
 
 const defaultStaticData = {
     personnelCategories: [],
     incidentCategories: [],
     threatCategories: [],
+    programmeScopes: [],
+    programmeAreas: [],
+    programmeTypes: [],
     propertyTypes: [],
+    premisesTypes: [],
     nationalities: [],
     criticalities: [],
+    crashSubTypes: [],
     vehicleTypes: [],
     unLocations: [],
     crashTypes: [],
@@ -84,6 +89,11 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         crashTypes: action.crashTypes
       };
+    case ACTIONS.RECEIVE_CRASH_SUB_TYPES:
+      return {
+        ...state,
+        crashSubTypes: action.crashSubTypes
+      };
     case ACTIONS.RECEIVE_COUNTRIES:
       return {
         ...state,
@@ -138,6 +148,26 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         propertyTypes: action.propertyTypes
+      };
+    case ACTIONS.RECEIVE_PREMISES_TYPES:
+      return {
+        ...state,
+        premisesTypes: action.premisesTypes
+      };
+    case ACTIONS.RECEIVE_PROGRAMME_SCOPES:
+      return {
+        ...state,
+        programmeScopes: action.programmeScopes
+      };
+    case ACTIONS.RECEIVE_PROGRAMME_AREAS:
+      return {
+        ...state,
+        programmeAreas: action.programmeAreas
+      };
+    case ACTIONS.RECEIVE_PROGRAMME_TYPES:
+      return {
+        ...state,
+        programmeTypes: action.programmeTypes
       };
     case ACTIONS.RECEIVE_PERSONNEL_CATEGORIES:
       return {

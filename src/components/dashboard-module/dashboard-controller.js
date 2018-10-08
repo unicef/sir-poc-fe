@@ -1,4 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import 'etools-date-time/datepicker-lite.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
@@ -6,34 +8,53 @@ import DateMixin from '../common/date-mixin.js';
 import '@polymer/paper-button/paper-button.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
-import '../common/datepicker-lite.js';
 import './dashboard-list.js';
 import '../common/jwt-login.js'
 import '../common/jwt-login-msal.js'
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
         :host {
           @apply --layout-vertical;
         }
+
         .label {
           padding-top: 28px;
         }
+
         .large-text {
           width: 100%;
           font-size: 72px;
         }
+
         .center-text {
           text-align: center;
         }
-        datepicker-lite {
-          --paper-input-container-shared-input-style: {
-            text-align: center;
-            width: calc(100% + 32px);
+
+        .statistics-between {
+          @apply --layout-horizontal;
+          @apply --layout-end;
+          @apply --layout-center-justified;
+        }
+        
+        #statistics-between-and {
+          margin: 0 24px 13px;
+        }
+
+        @media screen and (max-width: 480px) {
+          .statistics-between {
+            @apply --layout-vertical;
+            @apply --layout-center;
+          }
+          
+          #statistics-between-and {
+            margin: 24px 0 0 0;
           }
         }
+
       </style>
       <div class="card">
         <div>MSAL</div>
@@ -58,38 +79,24 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       </div>
       <div class="card">
         <div class="row-h">
-          <div class="col col-6 center-text">
-            <div class="large-text"> [[filteredEvents.length]] </div>
+          <div class="col col-5 center-text">
+            <div class="large-text"> [[filteredEvents.length]]</div>
             Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
-          <div class="col col-6 center-text">
-            <div class="large-text"> [[filteredIncidents.length]] </div>
+          <div class="col col-2"></div>
+          <div class="col col-5 center-text">
+            <div class="large-text"> [[filteredIncidents.length]]</div>
             Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
           </div>
         </div>
 
-        <div class="row-h">
-          <div class="col col-4"> </div>
-          <div class="col col-4">
-            <div class="center-text">
-              <p> Show stastistics between </p>
-            </div>
-
-            <div class="center-text">
-              <datepicker-lite value="{{selectedStartDate}}">
-              </datepicker-lite>
-            </div>
-
-            <div class="center-text">
-              <p> and </p>
-            </div>
-
-            <div class="center-text">
-              <datepicker-lite value="{{selectedEndDate}}">
-              </datepicker-lite>
-            </div>
-          </div>
-          <div class="col col-4"> </div>
+        <div class="row-h statistics-between">
+          Show stastistics between
+        </div>
+        <div class="row-h statistics-between">
+          <datepicker-lite value="{{selectedStartDate}}"></datepicker-lite>
+          <span id="statistics-between-and">and</span>
+          <datepicker-lite value="{{selectedEndDate}}"></datepicker-lite>
         </div>
 
         <div class="row-h">

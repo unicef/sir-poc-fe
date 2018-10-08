@@ -81,6 +81,7 @@ class IncidentsController extends connect(store)(BaseController) {
         <impact-controller name="impact" route="{{subRoute}}"></impact-controller>
         <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
+        <incident-timeline name="timeline"></incident-timeline>
       </iron-pages>
     `;
   }
@@ -172,6 +173,10 @@ class IncidentsController extends connect(store)(BaseController) {
         name: 'comments',
         tabLabel: 'COMMENTS',
         hidden: hideComments
+      },
+      {
+        name: 'timeline',
+        tabLabel: 'TIMELINE'
       },
       {
         name: 'history',

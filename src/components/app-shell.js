@@ -277,7 +277,6 @@ class MyApp extends connect(store)(PolymerElement) {
     return this.validPages.indexOf(page) !== -1;
   }
 
-  // _getAdminUrl
 }
 
 window.customElements.define('app-shell', MyApp);

@@ -24,6 +24,7 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import { store } from '../../redux/store.js';
+import 'etools-date-time/datepicker-lite.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
@@ -34,7 +35,7 @@ import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import 'etools-date-time/datepicker-lite.js';
+
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -228,7 +229,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                     <span>[[prettyDate(item.last_modify_date)]]</span>
                   </div>
                 </div>
-  
+
                 <div class="row-h flex-c">
                   <div class="col col-6">
                     <strong class="rdc-title inline">Description: </strong>

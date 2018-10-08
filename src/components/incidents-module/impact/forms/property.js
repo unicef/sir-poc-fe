@@ -12,7 +12,6 @@ import {
     editProperty,
     syncProperty
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -26,12 +25,13 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class PropertyForm extends connect(store)(PolymerElement) {
+export class PropertyForm extends connect(store)(ImpactFormBase) {
   static get is() {
     return 'property-form';
   }
@@ -129,10 +129,6 @@ export class PropertyForm extends connect(store)(PolymerElement) {
     return {
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -193,9 +189,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if (this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   _computeIsNew(id) {
@@ -205,7 +199,6 @@ export class PropertyForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.data = {};
-      this.resetValidations();
       return;
     }
 
@@ -213,12 +206,6 @@ export class PropertyForm extends connect(store)(PolymerElement) {
     if (workingItem) {
       this.data = JSON.parse(JSON.stringify(workingItem)) || {};
       this.resetValidations();
-    }
-  }
-
-  _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
     }
   }
 

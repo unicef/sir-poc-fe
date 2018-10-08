@@ -46,10 +46,6 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
         min-width: 160px;
         width: auto;
       }
-      
-      .date {
-        width: 160px;
-      }
      
       .select {
         min-width: 220px;

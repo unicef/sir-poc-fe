@@ -28,8 +28,12 @@ documentContainer.innerHTML = `
       }
 
       .layout-center {
-        @apply --layout-center
+        @apply --layout-center;
       }
+      .layout-center.justified {
+        @apply --layout-center-justified;
+      }
+      
       .break-word {
         word-break: break-all;
         word-wrap: break-word;

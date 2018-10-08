@@ -4,7 +4,7 @@ import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
-import { serverError, PLAIN_ERROR } from './errors.js';
+import { serverError } from './errors.js';
 import { syncIncidentImpacts } from './incident-impacts.js';
 import * as ACTIONS from './constants.js';
 import { fetchIncidentEvacuations,
@@ -75,6 +75,13 @@ export const setIncidentDraft = (incident) => {
   return {
     type: ACTIONS.SET_INCIDENT_DRAFT,
     incident
+  };
+};
+
+export const deleteIncidentFromRedux = (incidentId) => {
+  return {
+    type: ACTIONS.DELETE_INCIDENT,
+    incidentId
   };
 };
 
@@ -272,4 +279,18 @@ export const editAttachmentsNotes = incident => (dispatch, getState) => {
            'There was an error updating Related Documents section' : err));
          return Promise.resolve(); // the rest of the Incident changes will be saved despite attachments error
         });
+};
+
+export const deleteIncident = incidentId => (dispatch, getState) => {
+  makeRequest(prepareEndpoint(Endpoints.deleteIncident, {id: incidentId})).then(() => {
+    dispatch(deleteIncidentLocally(incidentId));
+  }).catch((err) => {
+    dispatch(serverError(err));
+  });
+
+};
+
+export const deleteIncidentLocally = incidentId => (dispatch, getState) => {
+  dispatch(deleteIncidentFromRedux(incidentId));
+  updatePath('/incidents/list/');
 };

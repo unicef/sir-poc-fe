@@ -41,6 +41,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'
   },
+  deleteIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/',
+    method: 'DELETE'
+  },
   submitIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/submit/',
     method: 'PUT'

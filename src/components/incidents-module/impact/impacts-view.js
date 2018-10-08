@@ -56,7 +56,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card error-card" hidden$="[[!errors.length]]">
-        <errors-box errors="{{errors}}"></errors-box>
+        <errors-box prepared-errors="{{errors}}"></errors-box>
       </div>
 
       <div class="card">

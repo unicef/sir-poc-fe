@@ -70,12 +70,12 @@ class JWTLoginMSAL extends PolymerElement {
         }
   }
   logout() {
-    this.adal.logOut();
+    this.msal.logOut();
     this.set('myUser', 'Unknown User')
   }
   getUser() {
       let user;
-      user = this.adal.getCachedUser();
+      user = this.msal.getUser();
       console.log(user);
       if (user) {
         this.set('myUser', user.profile.name);
@@ -83,8 +83,8 @@ class JWTLoginMSAL extends PolymerElement {
       } else {
         return null
       }
-      
-      
+
+
   }
 }
 

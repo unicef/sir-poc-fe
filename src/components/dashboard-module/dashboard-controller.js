@@ -39,7 +39,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           @apply --layout-end;
           @apply --layout-center-justified;
         }
-        
+
         #statistics-between-and {
           margin: 0 24px 13px;
         }
@@ -49,7 +49,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
             @apply --layout-vertical;
             @apply --layout-center;
           }
-          
+
           #statistics-between-and {
             margin: 24px 0 0 0;
           }
@@ -60,13 +60,14 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
         <div>MSAL</div>
         <jwt-login-msal id="msalElement">
         </jwt-login-msal>
-        
+
         <div class="wrapper-btns">
-        
+
           <paper-button raised class="primary" on-tap="msaljwtCallLogin">JWT Log In</paper-button>
+          <paper-button class="link" on-tap="msalGetUser">Get Local User</paper-button>
           <paper-button class="link" on-tap="msaljwtLogout">Logout</paper-button>
         </div>
-        
+
       </div>
       <div class="card">
       <div class="wrapper-btns">
@@ -181,6 +182,10 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
   jwtGetUser(event) {
     let user = this.$.adalElement.getUser()
     console.log(user)
+  }
+  msalGetUser(event) {
+    let user = this.$.msalElement.getUser();
+    console.log(user);
   }
 
   jwtLogout(event) {

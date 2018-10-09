@@ -22,10 +22,10 @@ export class PremisesList extends connect(store)(PolymerElement) {
           @apply --layout-vertical;
         }
       </style>
-      
+
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
-      <div hidden$="[[!PremisesList.length]]">
+      <div hidden$="[[!premisesList.length]]">
         <etools-data-table-header id="listHeader" no-title no-collapse low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-3">
             Owner
@@ -45,7 +45,7 @@ export class PremisesList extends connect(store)(PolymerElement) {
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[premisesList]]">
-          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]" 
+          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Owner">

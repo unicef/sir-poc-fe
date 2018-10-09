@@ -9,13 +9,14 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
 import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
+import { selectIncidentComments } from '../../../reducers/incidents.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
-import '../../history-components/revisions-list.js';
 import '../../history-components/diff-view.js';
 import './incident-revision-view.js';
+import './incident-timeline.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
   static get template() {
@@ -39,10 +40,10 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       </app-route>
 
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
-        <revisions-list name="list"
-                   module="incidents"
-                   history="[[history]]">
-        </revisions-list>
+        <incident-timeline name="list"
+                           comments="[[comments]]"
+                           history="[[history]]">
+        </incident-timeline>
         <diff-view name="diff"
                    module="incidents"
                    working-item="[[workingItem]]">
@@ -73,6 +74,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
       workingItem: Object,
       subRouteData: Object,
       routeData: Object,
+      comments: Object,
       history: Object,
       route: Object,
       state: Object
@@ -119,6 +121,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
   _idChanged(newId) {
     if (!this.state.app.offline && newId && !isNaN(newId)) {
       this._fetchHistory();
+      this.comments = JSON.parse(JSON.stringify(selectIncidentComments(this.state))) || [];
     }
   }
 

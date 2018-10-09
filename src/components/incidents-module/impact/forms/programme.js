@@ -27,12 +27,13 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
+import DateMixin from "../../../common/date-mixin.js";
 
 /**
  * @polymer
  * @customElement
  */
-export class ProgrammeForm extends connect(store)(PolymerElement) {
+export class ProgrammeForm extends connect(store)(DateMixin(PolymerElement)) {
   static get is() {
     return 'programme-form';
   }
@@ -110,6 +111,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
             <div class="col col-3">
               <datepicker-lite id="startDate"
                               value="{{data.start_date}}"
+                              max-date="[[toDate(data.end_date)]]"
                               readonly="[[readonly]]"
                               label="Start of impact">
               </datepicker-lite>
@@ -117,6 +119,7 @@ export class ProgrammeForm extends connect(store)(PolymerElement) {
             <div class="col col-3">
               <datepicker-lite id="endDate"
                               value="{{data.end_date}}"
+                              min-date="[[toDate(data.start_date)]]"
                               readonly="[[readonly]]"
                               label="End of impact">
               </datepicker-lite>

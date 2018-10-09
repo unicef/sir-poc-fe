@@ -22,6 +22,7 @@ import {
     validateFields
   } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
+import DateMixin from "../../../common/date-mixin.js";
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -32,14 +33,14 @@ import '../../../styles/form-fields-styles.js';
  * @polymer
  * @customElement
  */
-export class UnPersonnelForm extends connect(store)(PolymerElement) {
+export class UnPersonnelForm extends connect(store)(DateMixin(PolymerElement)) {
   static get is() {
     return 'un-personnel-form';
   }
 
   static get template() {
     return html`
-      <style include="shared-styles grid-layout-styles required-fields-styles  form-fields-styles">
+      <style include="shared-styles grid-layout-styles required-fields-styles form-fields-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -220,6 +221,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                 <div class="col col-3">
                   <datepicker-lite id="captureDate"
                               value="{{data.capture_date}}"
+                              max-date="[[toDate(data.release_date)]]"
                               readonly="[[readonly]]"
                               label="Captured on">
                   </datepicker-lite>
@@ -227,6 +229,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                 <div class="col col-3">
                   <datepicker-lite id="releaseDate"
                               value="{{data.release_date}}"
+                              min-date="[[toDate(data.capture_date)]]"
                               readonly="[[readonly]]"
                               label="Released on">
                   </datepicker-lite>

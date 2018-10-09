@@ -22,11 +22,11 @@ export class ProgrammesList extends connect(store)(PolymerElement) {
           @apply --layout-vertical;
         }
       </style>
-      
+
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
-      <div hidden$="[[!ProgrammesList.length]]">
-        <etools-data-table-header id="listHeader" no-title no-collapse 
+      <div hidden$="[[!programmesList.length]]">
+        <etools-data-table-header id="listHeader" no-title no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-5">
             Owner
@@ -43,7 +43,7 @@ export class ProgrammesList extends connect(store)(PolymerElement) {
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[programmesList]]">
-          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]" 
+          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
               <span class="col-data col-5" data-col-header-label="Owner">

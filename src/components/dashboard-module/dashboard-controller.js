@@ -65,6 +65,11 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           <paper-button class="link" on-tap="msalGetUser">Get Local User</paper-button>
           <paper-button class="link" on-tap="msaljwtLogout">Logout</paper-button>
         </div>
+        <div>
+          <strong>aquireTokenSilent</strong> is gonna try to get logged in user token from cache (msal cache).
+          If user is not logged in or token expired it will throw an error.
+          <paper-button class="link" on-tap="msalAquireToken">Aquire Token</paper-button>
+        </div>
       </div>
       
       <div class="card">
@@ -164,11 +169,15 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
   }
 
   msalGetUser(event) {
-    let user = this.$.msalElement.getUser();
+    this.$.msalElement.getUser();
   }
 
   msaljwtLogout(event) {
-    let user = this.$.msalElement.logout();
+    this.$.msalElement.logout();
+  }
+
+  msalAquireToken() {
+    this.$.msalElement.aquireTokenSilent();
   }
 
 }

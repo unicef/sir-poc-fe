@@ -85,6 +85,12 @@ class JWTLoginMSAL extends PolymerElement {
       return null;
     }
   }
+
+  aquireTokenSilent() {
+    this.msal.acquireTokenSilent([this.config.clientId])
+        .then(token => console.log(token))
+        .catch(error => console.log(error));
+  }
 }
 
 window.customElements.define('jwt-login-msal', JWTLoginMSAL);

@@ -1,7 +1,7 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -12,7 +12,6 @@ import {
     editPremise,
     syncPremise
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -26,12 +25,13 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class PremiseForm extends connect(store)(PolymerElement) {
+export class PremiseForm extends connect(store)(ImpactFormBase) {
   static get is() {
     return 'premise-form';
   }
@@ -48,7 +48,7 @@ export class PremiseForm extends connect(store)(PolymerElement) {
       </style>
 
       <div class="card">
-        <h3> Un Premises </h3>
+        <h3> UN Premises </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -154,10 +154,6 @@ export class PremiseForm extends connect(store)(PolymerElement) {
     return {
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -174,9 +170,12 @@ export class PremiseForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
+          '#country',
+          '#city',
           '#premisesType',
           '#agency',
-          '#impact'
+          '#impact',
+          '#description'
         ]
       }
     };
@@ -219,9 +218,7 @@ export class PremiseForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if (this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   _computeIsNew(id) {
@@ -231,19 +228,12 @@ export class PremiseForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.data = {};
-      this.resetValidations();
       return;
     }
     let workingItem = this.premisesList.find(item => '' + item.id === id);
     if (workingItem) {
       this.data = JSON.parse(JSON.stringify(workingItem)) || {};
       this.resetValidations();
-    }
-  }
-
-  _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
     }
   }
 

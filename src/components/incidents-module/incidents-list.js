@@ -209,10 +209,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <div> <!-- this div princidents resizing of the icon on low resolutions -->
                     <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
                     </iron-icon>
-                  </div>
                 </template>
               </span>
             </div>

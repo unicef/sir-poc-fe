@@ -15,6 +15,10 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
           display: block;
         }
 
+        .card {
+          padding: 16px;
+        }
+
         section.timeline-outer {
           width: calc(100% - 100px);
           margin-right: 0;
@@ -111,6 +115,7 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
   _stateChanged(state) {
 
   }
+
 }
 
 window.customElements.define(IncidentTimeline.is, IncidentTimeline);

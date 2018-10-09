@@ -53,6 +53,13 @@ const receiveEvent = (event) => {
     id: event.id
   };
 };
+
+export const setEventDraft = (event) => {
+  return {
+    type: ACTIONS.SET_EVENT_DRAFT,
+    event
+  };
+};
 // ------------------------------
 
 const addEventOnline = (newEvent, dispatch) => {
@@ -70,6 +77,7 @@ const addEventOnline = (newEvent, dispatch) => {
 const addEventOffline = (newEvent, dispatch) => {
   newEvent.id = generateRandomHash();
   newEvent.unsynced = true;
+  newEvent.status = 'Not Synced';
 
   updatePath('/events/list/');
   dispatch(addEventSuccess(newEvent));

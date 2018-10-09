@@ -4,7 +4,7 @@ import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
-import { serverError, PLAIN_ERROR } from './errors.js';
+import { serverError } from './errors.js';
 import { syncIncidentImpacts } from './incident-impacts.js';
 import * as ACTIONS from './constants.js';
 import { fetchIncidentEvacuations,
@@ -37,7 +37,7 @@ const addCommentSuccess = (comment) => {
 
 const syncIncidentFail = () => {
   return {
-    type: ACTIONS.PLAIN_ERROR,
+    type: PLAIN_ERROR,
     plainErrors: ['There was an error syncing your incident. Please review the data and try again']
   };
 };
@@ -71,6 +71,20 @@ const updateEventIds = (newId, oldId) => {
   };
 };
 
+export const setIncidentDraft = (incident) => {
+  return {
+    type: ACTIONS.SET_INCIDENT_DRAFT,
+    incident
+  };
+};
+
+export const deleteIncidentFromRedux = (incidentId) => {
+  return {
+    type: ACTIONS.DELETE_INCIDENT,
+    incidentId
+  };
+};
+
 export const fetchAllIncidentData = () => (dispatch, getState) => {
   dispatch(fetchIncidents());
   dispatch(fetchIncidentComments());
@@ -79,7 +93,7 @@ export const fetchAllIncidentData = () => (dispatch, getState) => {
   dispatch(fetchIncidentProgrammes());
   dispatch(fetchIncidentProperties());
   dispatch(fetchIncidentEvacuations());
-}
+};
 
 const addIncidentOnline = (newIncident, dispatch) => {
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
@@ -179,7 +193,7 @@ export const syncIncident = newIncident => (dispatch, getState) => {
   });
 };
 
-export const submitIncident = (incident) => (dispatch, state) => {
+export const submitIncident = incident => (dispatch, state) => {
   let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
 
   return makeRequest(endpoint).then((result) => {
@@ -223,4 +237,60 @@ export const fetchIncident = id => (dispatch, getState) => {
   makeRequest(endpoint).then((response) => {
     dispatch(receiveIncident(response));
   });
+};
+
+export const editAttachmentsNotes = incident => (dispatch, getState) => {
+  if (getState().app.offline || incident.unsynced) {
+    return Promise.resolve();
+  }
+  if (!incident.attachments || !incident.attachments.length) {
+    return Promise.resolve();
+  }
+  let origIncident = getState().incidents.list.find(elem => elem.id === Number(incident.id));
+  if (!origIncident) {
+    return Promise.resolve();
+  }
+
+  let attChanges = [];
+  let origAtt = origIncident.attachments;
+  let currAtt = incident.attachments;
+
+  for (let i = 0; i < origAtt.length; i++) {
+    if (origAtt[i].note !== currAtt[i].note) {
+      attChanges.push({
+        id: currAtt[i].id,
+        note: currAtt[i].note
+      });
+    }
+  }
+
+  if (!attChanges.length) {
+    return Promise.resolve();
+  }
+
+  let operations = [];
+  attChanges.forEach((c) => {
+    let endpoint = prepareEndpoint(Endpoints.editIncidentAttachments, {id: c.id});
+    operations.push(makeRequest(endpoint, {note: c.note}));
+  });
+
+  return Promise.all(operations).catch((err) => {
+           dispatch(serverError(err.status === 500 ?
+           'There was an error updating Related Documents section' : err));
+         return Promise.resolve(); // the rest of the Incident changes will be saved despite attachments error
+        });
+};
+
+export const deleteIncident = incidentId => (dispatch, getState) => {
+  makeRequest(prepareEndpoint(Endpoints.deleteIncident, {id: incidentId})).then(() => {
+    dispatch(deleteIncidentLocally(incidentId));
+  }).catch((err) => {
+    dispatch(serverError(err));
+  });
+
+};
+
+export const deleteIncidentLocally = incidentId => (dispatch, getState) => {
+  dispatch(deleteIncidentFromRedux(incidentId));
+  updatePath('/incidents/list/');
 };

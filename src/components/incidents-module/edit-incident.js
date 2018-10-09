@@ -1,11 +1,11 @@
 /**
 @license
 */
+import { html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/paper-dialog/paper-dialog.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
-import { editIncident } from '../../actions/incidents.js';
-import { makeRequest } from '../../components/common/request-helper.js';
-import { Endpoints } from '../../config/endpoints.js';
-import { serverError } from '../../actions/errors';
+import { editIncident, editAttachmentsNotes, deleteIncident,
+  deleteIncidentLocally } from '../../actions/incidents.js';
 
 /**
  * @polymer
@@ -14,6 +14,25 @@ import { serverError } from '../../actions/errors';
 class EditIncident extends IncidentsBaseView {
   static get is() {
     return 'edit-incident';
+  }
+
+  static get actionButtonsTemplate() {
+    return html`
+      <paper-button raised
+        hidden$="[[!_showDelete(incident.status, incident.unsynced, state.app.offline, incident.attachments)]]"
+        on-click="openDeleteConfirmation">
+        Delete
+      </paper-button>
+
+      <paper-dialog id="delConfirm">
+        <h2>Confirm Delete</h2>
+        <p>Are you sure you want to delete this incident?</p>
+        <div class="buttons">
+          <paper-button class="white-bg smaller" dialog-dismiss>No</paper-button>
+          <paper-button class="smaller" on-tap="deleteIncident" dialog-confirm autofocus>Yes</paper-button>
+        </div>
+    </paper-dialog>
+    `;
   }
 
   connectedCallback() {
@@ -26,45 +45,39 @@ class EditIncident extends IncidentsBaseView {
       return;
     }
 
-   // this.saveAttachmentsNotes().then(() =>{
+    this.store.dispatch(editAttachmentsNotes(this.incident)).then(() =>{
       this.store.dispatch(editIncident(this.incident));
-   // });
+    });
   }
 
-  // TODO - update after endpoint changes
-  saveAttachmentsNotes() {
-    if (this.state.app.offline || this.incident.unsynced) {
-      return Promise.resolve();
+  openDeleteConfirmation() {
+    this.shadowRoot.querySelector('#delConfirm').opened = true;
+  }
+
+  deleteIncident() {
+    if (isNaN(this.incidentId)) {
+      this.store.dispatch(deleteIncidentLocally(this.incidentId));
+    } else {
+      this.store.dispatch(deleteIncident(this.incidentId));
     }
-    if (!this.incident.attachments || !this.incident.attachments.length) {
-      return Promise.resolve();
-    }
-    let origIncident = this.state.incidents.list.find(elem => elem.id === Number(this.incidentId));
-    if (!origIncident) {
-      return Promise.resolve();
+  }
+
+  _showDelete(status, unsynced, offline, attachments) {
+    if (attachments && attachments.length) {
+      return false;// bk err when there are att
     }
 
-    let attChanges;
-    let origAtt = origIncident.attachments;
-    let currAtt = this.incident.attachments;
-
-    for (let i = 0; i < origAtt.length; i++) {
-      if (origAtt[i].note !== currAtt[i].note) {
-        attChanges = { // TODO
-          id: currAtt[i].id,
-          note: currAtt[i].note
-        };
+    if (offline) {
+      if (unsynced) {
+        return true;
       }
+      return false;
     }
 
-    if (!attChanges) {
-      return Promise.resolve();
+    if (status === 'created' || unsynced) {
+      return true;
     }
-
-    return makeRequest(Endpoints.addIncidentAttachments, attChanges).catch((err) => {
-           this.store.dispatch(serverError(err));
-           return Promise.resolve(); // the rest of the Incident changes will be saved despite attachments error
-          });
+    return false;
   }
 
 }

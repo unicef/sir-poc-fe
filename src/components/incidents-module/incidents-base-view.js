@@ -8,19 +8,20 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+
 import 'etools-upload/etools-upload-multi.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
-
+import 'etools-date-time/datepicker-lite.js';
+import 'etools-date-time/time-input.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import '../common/datepicker-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { store } from '../../redux/store.js';
-import { IncidentModel } from './models/incident-model.js';
 import { selectIncident } from '../../reducers/incidents.js';
 
 import { fetchIncident } from '../../actions/incidents.js';
@@ -59,35 +60,24 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         paper-input {
           width: 100%;
         }
-
-        .button-container {
-          @apply --layout-vertical;
-          justify-content: center;
-          height: 100%;
-        }
-
-        .col-6 + .col-5, .col-6 + .col-6 {
-          padding-left: 24px;
-        }
-
-        .coordinates-container {
-          @apply --layout-horizontal;
-          width: calc(100% - 24px);
-          padding: 0;
+        
+        #get-location {
+          margin-left: 16px;
         }
 
       </style>
+      
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
         ${this.getTitleTemplate}
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
-          <warn-message message="[[topWarnMessage]]" hidden$="[[!topWarnMessage.length]]"></warn-message>
         <fieldset>
           <legend><h3>Incident details</h3></legend>
           <div>
-            <div class="row-h flex-c">
+            <div class="row-h flex-c p-relative">
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
@@ -135,7 +125,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
             </div>
 
-            <div class="row-h flex-c">
+            <div class="row-h flex-c p-relative">
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
@@ -264,7 +254,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
 
             <div class="row-h flex-c">
-              <div class="col col-3">
+              <div class="col col-3 p-relative">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedCriticality.description]]">
                   <etools-dropdown-lite slot="field" readonly="[[readonly]]"
@@ -472,60 +462,56 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
 
               <div class="col col-3">
-                <paper-input id="incidentTime"
+                <time-input id="incidentTime"
                             readonly$="[[readonly]]"
                             label="Incident time"
-                            type="time"
                             value="{{incident.incident_time}}"
                             required auto-validate
                             error-message="Incident time is required">
-                </paper-input>
+                </time-input>
               </div>
 
-              <div class="col col-6">
-                <div class="coordinates-container">
-                  <template is="dom-if" if="[[readonly]]">
-                    <div class="col-6">
-                      <paper-input label="Latitude"
-                                  readonly
-                                  value="[[incident.latitude]]"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </div>
-                    <div class="col-6">
-                      <paper-input label="Longitude"
-                                  readonly
-                                  value="[[incident.longitude]]"
-                                  placeholder="&#8212;" >
-                      </paper-input>
-                    </div>
-                  </template>
-
-                  <template is="dom-if" if="[[!readonly]]">
-                    <div class="col-6">
-                      <paper-input label="Latitude"
-                                  type="number"
-                                  value="{{incident.latitude}}"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </div>
-                    <div class="col-5">
-                      <paper-input label="Longitude"
-                                  type="number"
-                                  value="{{incident.longitude}}"
-                                  placeholder="&#8212;">
-                      </paper-input>
-                    </div>
-
-                    <div class="col-1">
-                      <div class="button-container">
-                        <paper-icon-button on-click="getLocation" title="Use device location" icon="device:gps-fixed">
-                        </paper-icon-button>
-                      </div>
-                    </div>
-                  </template>
+              <template is="dom-if" if="[[readonly]]">
+                <div class="col col-3">
+                  <paper-input label="Latitude"
+                              readonly
+                              value="[[incident.latitude]]"
+                              placeholder="&#8212;">
+                  </paper-input>
                 </div>
-              </div>
+                <div class="col col-3">
+                  <paper-input label="Longitude"
+                              readonly
+                              value="[[incident.longitude]]"
+                              placeholder="&#8212;" >
+                  </paper-input>
+                </div>
+              </template>
+
+              <template is="dom-if" if="[[!readonly]]">
+                <div class="col col-3">
+                  <paper-input label="Latitude"
+                              type="number"
+                              value="{{incident.latitude}}"
+                              placeholder="&#8212;">
+                  </paper-input>
+                </div>
+                <div class="col col-3 layout-horizontal layout-center justified">
+                  <paper-input label="Longitude"
+                              type="number"
+                              value="{{incident.longitude}}"
+                              placeholder="&#8212;">
+                  </paper-input>
+                  
+                  <paper-icon-button id="get-location"
+                                     on-click="getLocation" 
+                                     title="Use device location" 
+                                     icon="device:gps-fixed">
+                  </paper-icon-button>
+                </div>
+
+              </template>
+
             </div>
           </div>
 
@@ -540,7 +526,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </etools-upload-multi>
             </div>
             <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
-              <etools-data-table-header no-collapse no-title>
+              <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
                 <etools-data-table-column class="col-4">
                   File
@@ -552,9 +538,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </etools-data-table-header>
 
               <template is="dom-repeat" items="[[incident.attachments]]">
-                <etools-data-table-row no-collapse>
+                <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
                   <div slot="row-data">
-                    <span class="col-data col-4 break-word" 
+                    <span class="col-data col-4 break-word"
                           title="[[getFilenameFromURL(item.attachment)]]"
                           data-col-header-label="File">
                       <span>
@@ -619,13 +605,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
-      topWarnMessage: {
-        type: String,
-        value: ''
-      },
       incident: {
-        type: Object,
-        value: () => JSON.parse(JSON.stringify(IncidentModel))
+        type: Object
       },
       incidentId: {
         type: Number,
@@ -676,7 +657,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       selectedCriticality: {
         type: Object,
         value: {}
-      }
+      },
+      lowResolutionLayout: Boolean
     };
   }
 
@@ -697,7 +679,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _idChanged(newId) {
     if (!newId) {
-      this.incident = JSON.parse(JSON.stringify(IncidentModel));
       return;
     }
 
@@ -725,6 +706,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!event.detail.selectedItem) {
       return;
     }
+
+    /* eslint-disable camelcase */
     let {
       agency,
       contact,
@@ -754,6 +737,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       type_of_contract,
       un_official
     });
+    /* eslint-enable camelcase */
   }
 
   _stateChanged(state) {

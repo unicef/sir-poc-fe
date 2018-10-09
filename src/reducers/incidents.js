@@ -1,19 +1,25 @@
-import * as ACTIONS from '../actions/constants.js';
-
 import { createSelector } from 'reselect';
+import * as ACTIONS from '../actions/constants.js';
+import { getIncidentModel } from '../models/incident-model.js';
 
 let defaultState = {
   list: [],
-  premises:[],
+  premises: [],
   comments: [],
   personnel: [],
-  evacuations:[],
   programmes: [],
-  properties: []
+  properties: [],
+  evacuations: [],
+  draft: getIncidentModel()
 };
 
 const incidents = (state = defaultState, action) => {
   switch (action.type) {
+    case ACTIONS.SET_INCIDENT_DRAFT:
+      return {
+        ...state,
+        draft: action.incident
+      };
     case ACTIONS.RECEIVE_INCIDENTS:
       return {
         ...state,
@@ -49,6 +55,11 @@ const incidents = (state = defaultState, action) => {
         ...state,
         list: updateEventIds(state.list, action.oldId, action.newId)
       };
+    case ACTIONS.DELETE_INCIDENT:
+      return {
+        ...state,
+        list: getListWithoutItem(state.list, action.incidentId)
+      };
    ///////////////////////////////
     case ACTIONS.EDIT_EVACUATION_SUCCESS:
       return {
@@ -65,7 +76,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         evacuations: getRefreshedData(state.evacuations, action.evacuations)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PROPERTY_SUCCESS:
       return {
         ...state,
@@ -81,7 +91,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         properties: getRefreshedData(state.properties, action.properties)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PREMISE_SUCCESS:
       return {
         ...state,
@@ -97,7 +106,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         premises: getRefreshedData(state.premises, action.premises)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PROGRAMME_SUCCESS:
       return {
         ...state,
@@ -113,7 +121,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         programmes: getRefreshedData(state.programmes, action.programmes)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_PERSONNEL_SUCCESS:
       return {
         ...state,
@@ -161,6 +168,21 @@ const updateEventIds = (list, oldId, newId) => {
 
     return incident;
   });
+};
+
+const getListWithoutItem = (list, deletedIncidentId) => {
+  let index = list.findIndex((i) => {
+    if (isNaN(deletedIncidentId)) {
+      return i.id === deletedIncidentId;
+    } else {
+      return i.id === Number(deletedIncidentId);
+    }
+  });
+  if (index < 0) {
+    return list;
+  }
+  list.splice(index, 1);
+  return [...list];
 };
 
 // ---------- SELECTORS -------

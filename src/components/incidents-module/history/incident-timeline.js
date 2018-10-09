@@ -19,6 +19,28 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
           padding: 16px;
         }
 
+        .container {
+          padding: 10px 0;
+        }
+
+        hr {
+          color: var(--secondary-text-color);
+          border-width: 0;
+          border-style: inset;
+          overflow: visible;
+          text-align: center;
+          height: 8px;
+        }
+
+        hr:after {
+          background: var(--background-color);
+          font-size: 1.4em;
+          content: attr(year);
+          padding: 0 4px;
+          position: relative;
+          top: -13px;
+        }
+
         section.timeline-outer {
           width: calc(100% - 100px);
           margin-right: 0;
@@ -27,8 +49,7 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
 
         .timeline {
           border-left: 8px solid var(--primary-color);
-          border-bottom-right-radius: 2px;
-          padding: 20px 0;
+          padding: 0;
           list-style: none;
         }
 
@@ -77,33 +98,31 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <section id="timeline" class="timeline-outer">
-        <div class="container" id="content">
-          <ul class="timeline">
-
-            <template is="dom-repeat" items="[[timeline]]" as="thisYear">
-             <!-- Todo: find a stilish way to print the year -->
-             <!-- [[thisYear.year]] -->
-              <template is="dom-repeat" items="[[thisYear.items]]" as="thisDay">
-                <li>
-                  <div class="to-the-left">
-                    <b>[[thisDay.date.day]]</b>
-                    [[thisDay.date.month]]
-                  </div>
-                  <template is="dom-repeat" items="[[thisDay.items]]">
-                    <div class="card">
-                      <h3> Card title </h3>
-                      <p>
-                        action: [[item.action]]
-                      </p>
+      <template is="dom-repeat" items="[[timeline]]" as="thisYear">
+        <div class="container">
+          <hr year$="[[thisYear.year]]">
+          <section class="timeline-outer">
+              <ul class="timeline">
+                <template is="dom-repeat" items="[[thisYear.items]]" as="thisDay">
+                  <li>
+                    <div class="to-the-left">
+                      <b>[[thisDay.date.day]]</b>
+                      [[thisDay.date.month]]
                     </div>
-                  </template>
-                </li>
-              </template>
-            </template>
-          </ul>
+                    <template is="dom-repeat" items="[[thisDay.items]]">
+                      <div class="card">
+                        <h3> Card title </h3>
+                        <p>
+                          action: [[item.action]]
+                        </p>
+                      </div>
+                    </template>
+                  </li>
+                </template>
+              </ul>
+          </section>
         </div>
-      </section>
+      </template>
     `;
   }
   static get is() {

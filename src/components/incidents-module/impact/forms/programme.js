@@ -1,7 +1,7 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -13,7 +13,6 @@ import {
     editProgramme,
     syncProgramme
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -28,12 +27,13 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
 import DateMixin from "../../../common/date-mixin.js";
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class ProgrammeForm extends connect(store)(DateMixin(PolymerElement)) {
+export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
   static get is() {
     return 'programme-form';
   }
@@ -190,10 +190,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(PolymerElement)) {
       selectedScope: Object,
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -210,6 +206,12 @@ export class ProgrammeForm extends connect(store)(DateMixin(PolymerElement)) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
+          '#country',
+          '#scope',
+          '#impact',
+          '#agency',
+          '#programmeType',
+          '#description'
         ]
       }
     };
@@ -258,9 +260,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   resetValidations() {
-    if (this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   _computeIsNew(id) {
@@ -270,7 +270,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(PolymerElement)) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.data = {};
-      this.resetValidations();
       return;
     }
     let workingItem = this.programmesList.find(item => '' + item.id === id);
@@ -288,12 +287,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(PolymerElement)) {
   }
   scopeIsOther(scope) {
     return !this.scopeIsCity(scope) && !this.scopeIsCountry(scope);
-  }
-
-  _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
   }
 
 }

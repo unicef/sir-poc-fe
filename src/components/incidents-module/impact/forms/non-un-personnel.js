@@ -166,7 +166,9 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                         error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
-              <div class="col col-6">
+            </div>
+            <div class="row-h flex-c">
+              <div class="col col-12">
                 <paper-textarea id="description"
                                 readonly$="[[readonly]]"
                                 label="Description"

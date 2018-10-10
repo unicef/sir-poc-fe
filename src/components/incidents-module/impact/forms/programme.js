@@ -81,26 +81,6 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
                                     error-message="This is required">
               </etools-dropdown-lite>
             </div>
-
-          </div>
-
-          <div class="row-h flex-c">
-
-            <div class="col col-3">
-              <datepicker-lite id="startDate"
-                               value="{{data.start_date}}"
-                               readonly="[[readonly]]"
-                               label="Start of impact">
-              </datepicker-lite>
-            </div>
-            <div class="col col-3">
-              <datepicker-lite id="endDate"
-                               value="{{data.end_date}}"
-                               readonly="[[readonly]]"
-                               label="End of impact">
-              </datepicker-lite>
-            </div>
-
             <div class="col col-3">
               <template is="dom-if" if="[[scopeIsCity(selectedScope)]]">
                 <etools-dropdown-lite label="Area impacted"
@@ -126,6 +106,24 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
                                       selected="{{data.area}}">
                 </etools-dropdown-lite>
               </template>
+            </div>
+          </div>
+
+          <div class="row-h flex-c">
+
+            <div class="col col-3">
+              <datepicker-lite id="startDate"
+                               value="{{data.start_date}}"
+                               readonly="[[readonly]]"
+                               label="Start of impact">
+              </datepicker-lite>
+            </div>
+            <div class="col col-3">
+              <datepicker-lite id="endDate"
+                               value="{{data.end_date}}"
+                               readonly="[[readonly]]"
+                               label="End of impact">
+              </datepicker-lite>
             </div>
 
           </div>

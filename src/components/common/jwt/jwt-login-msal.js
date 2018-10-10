@@ -84,7 +84,7 @@ class JWTLoginMSAL extends PolymerElement {
   }
 
   logout() {
-    this.msal.logout();
+    this.msal.logout().then();
     this.set('myUser', 'Unknown User')
   }
 

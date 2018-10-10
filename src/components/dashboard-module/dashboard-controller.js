@@ -10,7 +10,7 @@ import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import './dashboard-list.js';
 
-import '../common/jwt/jwt-login-msal.js'
+import {SirMsalAuth} from '../common/jwt/msal-authentication.js';
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
@@ -59,7 +59,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       
       <div class="card">
         <div>MSAL login</div>
-        <jwt-login-msal id="msalElement"></jwt-login-msal>
+        <!--<jwt-login-msal id="msalElement"></jwt-login-msal>-->
         <div class="wrapper-btns">
           <paper-button raised class="primary" on-tap="msaljwtCallLogin">JWT Log In</paper-button>
           <paper-button class="link" on-tap="msalGetUser">Get Local User</paper-button>
@@ -165,19 +165,19 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
   }
 
   msaljwtCallLogin(event) {
-    this.$.msalElement.login();
+    SirMsalAuth.login();
   }
 
   msalGetUser(event) {
-    this.$.msalElement.getUser();
+    console.log(SirMsalAuth.getUser());
   }
 
   msaljwtLogout(event) {
-    this.$.msalElement.logout();
+    SirMsalAuth.logout();
   }
 
   msalAquireToken() {
-    this.$.msalElement.aquireTokenSilent();
+    SirMsalAuth.aquireTokenSilent();
   }
 
 }

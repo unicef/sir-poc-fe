@@ -20,17 +20,20 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'injuries': 'Injuries',
           'end_date': 'End Date',
           'location': 'Location',
+          'latitude': 'Latitude',
+          'longitude': 'Longitude',
           'start_date': 'Start Date',
           'crash_type': 'Crash Type',
-          'crash_sub_type': 'Crash Subtype',
           'criticality': 'Criticality',
           'description': 'Description',
           'vehicle_type': 'Vehicle Type',
           'incident_time': 'Incident Time',
           'incident_date': 'Incident Date',
+          'crash_sub_type': 'Crash Subtype',
           'threat_category': 'Threat Category',
           'incident_category': 'Incident Category',
-          'contributing_factor': 'Contributing Factor'
+          'contributing_factor': 'Contributing Factor',
+          'incident_SUBcategory': 'Incident Subcategory'
         }
       }
     };

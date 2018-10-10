@@ -1,22 +1,20 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import { getNameFromId } from '../../common/utils.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
+import HistoryHelpers from '../../history-components/history-helpers.js';
 
 /**
  * @polymer
  * @customElement
  */
-class IncidentTimeline extends connect(store)(PolymerElement) {
+class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
   static get template() {
     return html`
       <style include="shared-styles">
         :host {
           display: block;
-        }
-
-        .card {
-          padding: 16px;
         }
 
         .container {
@@ -64,7 +62,7 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
           top: 0;
         }
 
-        .timeline .to-the-left {
+        .timeline .timeline-date {
           max-width: 40px;
           margin-left: -72px;
           color: var(--primary-text-color);
@@ -98,24 +96,48 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
         }
       </style>
 
-      <template is="dom-repeat" items="[[timeline]]" as="thisYear">
+      <template is="dom-repeat" items="[[timeline]]" as="workingYear">
         <div class="container">
-          <hr year$="[[thisYear.year]]">
+          <hr year$="[[workingYear.year]]">
           <section class="timeline-outer">
               <ul class="timeline">
-                <template is="dom-repeat" items="[[thisYear.items]]" as="thisDay">
+                <template is="dom-repeat" items="[[workingYear.items]]" as="thisDay">
                   <li>
-                    <div class="to-the-left">
+                    <div class="timeline-date">
                       <b>[[thisDay.date.day]]</b>
                       [[thisDay.date.month]]
                     </div>
                     <template is="dom-repeat" items="[[thisDay.items]]">
-                      <div class="card">
-                        <h3> Card title </h3>
-                        <p>
-                          action: [[item.action]]
-                        </p>
-                      </div>
+                      <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
+                        <div class="card">
+                          [[getUserName(item.by_user)]] added this incident.
+                          <span title="View entire incident at this version">
+                            <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
+                              View original data
+                            </a>
+                          </span>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
+                        <div class="card">
+                          [[getUserName(item.by_user)]] changed fields:
+                          <p> [[getChangedFileds(item.change)]] </p>
+                          You can
+                          <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
+                            view the changes
+                          </a>
+                          or
+                          <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
+                            view the entire incident at this revision
+                          </a>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
+                        <div class="card">
+                          [[getUserName(item.by_user)]] commented on this:
+                          <p> [[item.comment]] </p>
+                        </div>
+                      </template>
                     </template>
                   </li>
                 </template>
@@ -144,6 +166,10 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
+    if (!state || !state.staticData || !state.app) {
+      return;
+    }
+    this.users = state.staticData.users;
   }
 
   _computeTimline(history, comments) {
@@ -169,7 +195,7 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
     for(let year in tempTimeline) {
       let yearsEntries = [];
       for(let date in tempTimeline[year]) {
-        tempTimeline[year][date].sort((a, b) => a.created > b.created);
+        tempTimeline[year][date].sort((a, b) => a.created < b.created);
         let dateComponents = {day: moment(date).format('DD'), month: moment(date).format('MMM')};
         yearsEntries.push({date: dateComponents, items: tempTimeline[year][date]});
       }
@@ -186,6 +212,27 @@ class IncidentTimeline extends connect(store)(PolymerElement) {
 
   _getYear(dateString) {
     return moment(dateString).format('YYYY');
+  }
+
+  actionIs(received, expected) {
+    return received === expected;
+  }
+
+  getUserName(userId) {
+    let user = this.users.find(u => u.id === Number(userId));
+    if (!user) {
+      return 'N/A';
+    }
+    return user.first_name + ' ' + user.last_name;
+  }
+
+  getChangedFileds(changesObj) {
+    let changes = Object.keys(changesObj);
+
+    changes = changes.filter(change => change !== 'version');
+    changes = changes.map(change => this.getLabelForField(change));
+
+    return (changes.length > 0 ? changes: ['No changes']).join(', ');
   }
 }
 

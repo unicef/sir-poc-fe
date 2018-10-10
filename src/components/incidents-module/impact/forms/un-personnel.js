@@ -1,34 +1,34 @@
 /**
-@license
-*/
-import { html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+ @license
+ */
+import {html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import {
-    addPersonnel,
-    editPersonnel,
-    syncPersonnel
-  } from '../../../../actions/incident-impacts.js';
+  addPersonnel,
+  editPersonnel,
+  syncPersonnel
+} from '../../../../actions/incident-impacts.js';
 
-import { store } from '../../../../redux/store.js';
+import {store} from '../../../../redux/store.js';
 
-import { scrollToTop } from '../../../common/content-container-helper.js';
-import { updatePath } from '../../../common/navigation-helper.js';
+import {scrollToTop} from '../../../common/content-container-helper.js';
+import {updatePath} from '../../../common/navigation-helper.js';
 import {
-    resetFieldsValidations,
-    validateFields
-  } from '../../../common/validations-helper.js';
+  resetFieldsValidations,
+  validateFields
+} from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
-import { ImpactFormBase } from './impact-form-base.js';
+import {ImpactFormBase} from './impact-form-base.js';
 
 /**
  * @polymer
@@ -40,6 +40,7 @@ export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
   }
 
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles  form-fields-styles">
         :host {
@@ -56,57 +57,57 @@ export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-6">
-                <etools-dropdown-lite
-                        id="autoCompleteUser"
-                        label="Auto complete staff member"
-                        trigger-value-change-event
-                        on-etools-selected-item-changed="_userSelected"
-                        options="[[staticData.users]]">
-                </etools-dropdown-lite>
+            <div class="col col-4">
+              <etools-dropdown-lite
+                      id="autoCompleteUser"
+                      label="Auto complete staff member"
+                      trigger-value-change-event
+                      on-etools-selected-item-changed="_userSelected"
+                      options="[[staticData.users]]">
+              </etools-dropdown-lite>
             </div>
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
-                        id="unEmployer"
-                        label="Employer"
-                        readonly="[[readonly]]"
-                        options="[[staticData.agencies]]"
-                        selected="{{data.person.agency}}"
-                        required auto-validate
-                        error-message="Employer is required">
+                      id="unEmployer"
+                      label="Employer"
+                      readonly="[[readonly]]"
+                      options="[[staticData.agencies]]"
+                      selected="{{data.person.agency}}"
+                      required auto-validate
+                      error-message="Employer is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-                <paper-input id="firstName"
-                            placeholder="&#8212;"
-                            readonly$="[[readonly]]"
-                            label="First name"
-                            value="{{data.person.first_name}}"
-                            required auto-validate
-                            error-message="First name is required">
-                </paper-input>
+              <paper-input id="firstName"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="First name"
+                           value="{{data.person.first_name}}"
+                           required auto-validate
+                           error-message="First name is required">
+              </paper-input>
             </div>
             <div class="col col-3">
-                <paper-input id="lastName"
-                            placeholder="&#8212;"
-                            readonly$="[[readonly]]"
-                            label="Last name"
-                            value="{{data.person.last_name}}"
-                            required auto-validate
-                            error-message="Last name is required">
-                </paper-input>
+              <paper-input id="lastName"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="Last name"
+                           value="{{data.person.last_name}}"
+                           required auto-validate
+                           error-message="Last name is required">
+              </paper-input>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                        id="nationality"
-                        label="Nationality"
-                        readonly="[[readonly]]"
-                        options="[[staticData.nationalities]]"
-                        selected="{{data.person.nationality}}"
-                        required auto-validate
-                        error-message="Nationality is required">
+                      id="nationality"
+                      label="Nationality"
+                      readonly="[[readonly]]"
+                      options="[[staticData.nationalities]]"
+                      selected="{{data.person.nationality}}"
+                      required auto-validate
+                      error-message="Nationality is required">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -114,36 +115,37 @@ export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <datepicker-lite id="birthDate"
-                              value="{{data.person.date_of_birth}}"
-                              readonly="[[readonly]]"
-                              label="Date of birth">
+                               value="{{data.person.date_of_birth}}"
+                               readonly="[[readonly]]"
+                               label="Date of birth">
               </datepicker-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                        id="gender"
-                        label="Gender"
-                        required
-                        auto-validate
-                        readonly="[[readonly]]"
-                        options="[[staticData.genders]]"
-                        selected="{{data.person.gender}}">
+                      id="gender"
+                      label="Gender"
+                      required
+                      auto-validate
+                      readonly="[[readonly]]"
+                      options="[[staticData.genders]]"
+                      selected="{{data.person.gender}}">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <paper-input id="email"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="Email"
-                          value="{{data.person.email}}">
+                           type="email"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="Email"
+                           value="{{data.person.email}}">
               </paper-input>
             </div>
             <div class="col col-3">
               <paper-input id="index"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="Index number"
-                          value="{{data.person.index_number}}">
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="Index number"
+                           value="{{data.person.index_number}}">
               </paper-input>
             </div>
           </div>
@@ -151,43 +153,43 @@ export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
-                          id="category"
-                          label="Category"
-                          readonly="[[readonly]]"
-                          options="[[staticData.personnelCategories]]"
-                          selected="{{data.person.category}}"
-                          required auto-validate
-                          error-message="Category is required">
+                      id="category"
+                      label="Category"
+                      readonly="[[readonly]]"
+                      options="[[staticData.personnelCategories]]"
+                      selected="{{data.person.category}}"
+                      required auto-validate
+                      error-message="Category is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                          id="dutyStationCountry"
-                          label="Duty station country"
-                          readonly="[[readonly]]"
-                          options="[[staticData.countries]]"
-                          selected="{{data.person.country}}"
-                          required auto-validate
-                          error-message="Duty station country is required">
+                      id="dutyStationCountry"
+                      label="Duty station country"
+                      readonly="[[readonly]]"
+                      options="[[staticData.countries]]"
+                      selected="{{data.person.country}}"
+                      required auto-validate
+                      error-message="Duty station country is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                          id="dutyStationCity"
-                          label="Duty station city"
-                          readonly="[[readonly]]"
-                          options="[[staticData.cities]]"
-                          selected="{{data.person.city}}"
-                          required auto-validate
-                          error-message="Duty station city is required">
+                      id="dutyStationCity"
+                      label="Duty station city"
+                      readonly="[[readonly]]"
+                      options="[[staticData.cities]]"
+                      selected="{{data.person.city}}"
+                      required auto-validate
+                      error-message="Duty station city is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <paper-input id="index"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="Job title"
-                          value="{{data.person.job_title}}">
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="Job title"
+                           value="{{data.person.job_title}}">
               </paper-input>
             </div>
           </div>
@@ -198,40 +200,40 @@ export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
             <div class="row-h flex-c">
               <div class="col col-3">
                 <etools-dropdown-lite
-                            id="status"
-                            label="Status"
-                            readonly="[[readonly]]"
-                            options="[[statuses]]"
-                            selected="{{data.status}}"
-                            required auto-validate
-                            error-message="Status is required">
+                        id="status"
+                        label="Status"
+                        readonly="[[readonly]]"
+                        options="[[statuses]]"
+                        selected="{{data.status}}"
+                        required auto-validate
+                        error-message="Status is required">
                 </etools-dropdown-lite>
               </div>
               <div class="col col-3">
                 <etools-dropdown-lite
-                            id="impact"
-                            label="Impact"
-                            readonly="[[readonly]]"
-                            options="[[staticData.impacts.person]]"
-                            selected="{{data.impact}}"
-                            selected-item="{{selectedImpactType}}"
-                            required auto-validate
-                            error-message="Impact is required">
+                        id="impact"
+                        label="Impact"
+                        readonly="[[readonly]]"
+                        options="[[staticData.impacts.person]]"
+                        selected="{{data.impact}}"
+                        selected-item="{{selectedImpactType}}"
+                        required auto-validate
+                        error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
               <template is="dom-if" if="[[_shouldShowCaptureForm(selectedImpactType.name)]]">
                 <div class="col col-3">
                   <datepicker-lite id="captureDate"
-                              value="{{data.capture_date}}"
-                              readonly="[[readonly]]"
-                              label="Captured on">
+                                   value="{{data.capture_date}}"
+                                   readonly="[[readonly]]"
+                                   label="Captured on">
                   </datepicker-lite>
                 </div>
                 <div class="col col-3">
                   <datepicker-lite id="releaseDate"
-                              value="{{data.release_date}}"
-                              readonly="[[readonly]]"
-                              label="Released on">
+                                   value="{{data.release_date}}"
+                                   readonly="[[readonly]]"
+                                   label="Released on">
                   </datepicker-lite>
                 </div>
               </template>
@@ -383,7 +385,7 @@ export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
     this.set('data.person.email', event.detail.selectedItem.email);
   }
 
-   _shouldShowCaptureForm(impactName) {
+  _shouldShowCaptureForm(impactName) {
     if (!impactName) {
       return false;
     }
@@ -395,7 +397,7 @@ export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
       'detained'
     ];
 
-    for (let index = 0; index < keyWords.length; index ++) {
+    for (let index = 0; index < keyWords.length; index++) {
       if (name.search(keyWords[index]) > -1) {
         return true;
       }

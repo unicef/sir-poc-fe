@@ -1,32 +1,32 @@
 /**
-@license
-*/
-import { html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+ @license
+ */
+import {html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import {
-    addProgramme,
-    editProgramme,
-    syncProgramme
-  } from '../../../../actions/incident-impacts.js';
-import { store } from '../../../../redux/store.js';
-import { scrollToTop } from '../../../common/content-container-helper.js';
-import { updatePath } from '../../../common/navigation-helper.js';
+  addProgramme,
+  editProgramme,
+  syncProgramme
+} from '../../../../actions/incident-impacts.js';
+import {store} from '../../../../redux/store.js';
+import {scrollToTop} from '../../../common/content-container-helper.js';
+import {updatePath} from '../../../common/navigation-helper.js';
 import {
-    resetFieldsValidations,
-    validateFields
-  } from '../../../common/validations-helper.js';
+  resetFieldsValidations,
+  validateFields
+} from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
-import { ImpactFormBase } from './impact-form-base.js';
+import {ImpactFormBase} from './impact-form-base.js';
 
 /**
  * @polymer
@@ -38,11 +38,13 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
   }
 
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles form-fields-styles">
         :host {
           @apply --layout-vertical;
         }
+
         errors-box {
           margin: 0 24px;
         }
@@ -57,7 +59,7 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-6">
+            <div class="col col-3">
               <etools-dropdown-lite id="country"
                                     label="Country of impact"
                                     readonly="[[readonly]]"
@@ -67,7 +69,8 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
                                     error-message="This is required">
               </etools-dropdown-lite>
             </div>
-            <div class="col col-6">
+
+            <div class="col col-3">
               <etools-dropdown-lite id="scope"
                                     label="Geographical Scope"
                                     readonly="[[readonly]]"
@@ -78,10 +81,27 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
                                     error-message="This is required">
               </etools-dropdown-lite>
             </div>
+
           </div>
 
           <div class="row-h flex-c">
-            <div class="col col-6">
+
+            <div class="col col-3">
+              <datepicker-lite id="startDate"
+                               value="{{data.start_date}}"
+                               readonly="[[readonly]]"
+                               label="Start of impact">
+              </datepicker-lite>
+            </div>
+            <div class="col col-3">
+              <datepicker-lite id="endDate"
+                               value="{{data.end_date}}"
+                               readonly="[[readonly]]"
+                               label="End of impact">
+              </datepicker-lite>
+            </div>
+
+            <div class="col col-3">
               <template is="dom-if" if="[[scopeIsCity(selectedScope)]]">
                 <etools-dropdown-lite label="Area impacted"
                                       enable-none-option
@@ -107,23 +127,10 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
                 </etools-dropdown-lite>
               </template>
             </div>
-            <div class="col col-3">
-              <datepicker-lite id="startDate"
-                              value="{{data.start_date}}"
-                              readonly="[[readonly]]"
-                              label="Start of impact">
-              </datepicker-lite>
-            </div>
-            <div class="col col-3">
-              <datepicker-lite id="endDate"
-                              value="{{data.end_date}}"
-                              readonly="[[readonly]]"
-                              label="End of impact">
-              </datepicker-lite>
-            </div>
+
           </div>
           <div class="row-h flex-c">
-            <div class="col col-12">
+            <div class="col col-3">
               <etools-dropdown-lite id="impact"
                                     label="Impact type"
                                     readonly="[[readonly]]"
@@ -133,21 +140,20 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
                                     error-message="This is required">
               </etools-dropdown-lite>
             </div>
-          </div>
 
-          <div class="row-h flex-c">
-            <div class="col col-6">
+            <div class="col col-3">
               <etools-dropdown-lite
-                        id="agency"
-                        label="Agency"
-                        readonly="[[readonly]]"
-                        options="[[staticData.agencies]]"
-                        selected="{{data.agency}}"
-                        required auto-validate
-                        error-message="This is required">
+                      id="agency"
+                      label="Agency"
+                      readonly="[[readonly]]"
+                      options="[[staticData.agencies]]"
+                      selected="{{data.agency}}"
+                      required auto-validate
+                      error-message="This is required">
               </etools-dropdown-lite>
             </div>
-            <div class="col col-6">
+
+            <div class="col col-3">
               <etools-dropdown-lite id="programmeType"
                                     label="Programmes type"
                                     readonly="[[readonly]]"
@@ -158,6 +164,7 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
           </div>
+
         </fieldset>
 
         <fieldset>
@@ -279,9 +286,11 @@ export class ProgrammeForm extends connect(store)(ImpactFormBase) {
   scopeIsCity(scope) {
     return scope && scope.name === 'City';
   }
+
   scopeIsCountry(scope) {
     return scope && scope.name === 'Security level area';
   }
+
   scopeIsOther(scope) {
     return !this.scopeIsCity(scope) && !this.scopeIsCountry(scope);
   }

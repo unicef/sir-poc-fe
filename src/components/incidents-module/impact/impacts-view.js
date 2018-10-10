@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { updatePath } from '../../common/navigation-helper.js';
 import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../../redux/store.js';
 import { clearErrors } from '../../../actions/errors.js';
 import '../../styles/shared-styles.js';
@@ -62,7 +63,13 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal">
           <div class="col-6">
-            <h3>UN Personnel</h3>
+            <etools-info-tooltip class="info" theme="light">
+              <h3 slot="field">UN Personnel</h3>
+              <span slot="message">
+                Individuals covered by Chapter III of the UNSMS Security Policy Manual, Applicability of United 
+                Nations Security Management System, dated 08 April 2011 (Security Policy Manual, Chapter III)
+              </span>
+            </etools-info-tooltip>
           </div>
           <div class="col-6 right">
             <paper-button raised
@@ -79,7 +86,14 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal">
           <div class="col-6">
-            <h3>Non-UN Personnel</h3>
+            <etools-info-tooltip class="info" theme="light">
+              <h3 slot="field">Non-UN Personnel</h3>
+              <span slot="message">
+                Any person not defined as above as UN Personnel that is impacted by an incident in which a 
+                UN Personnel is the perpetrator. For instance, a non-UN person could be involved in a traffic 
+                accident with a UN staff member, or could be a visitor to a UN building when an incident occurs.
+              </span>
+            </etools-info-tooltip>
           </div>
           <div class="col-6 right">
             <paper-button raised class="smaller" on-click="_addNonUn">
@@ -109,7 +123,12 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal">
           <div class="col-6">
-            <h3>UN Property(assets)</h3>
+            <etools-info-tooltip class="info" theme="light">
+              <h3 slot="field">UN Property (Assets)</h3>
+              <span slot="message">
+                UN Assets include equipment, vehicles and vessels.
+              </span>
+            </etools-info-tooltip>
           </div>
           <div class="col-6 right">
             <paper-button raised class="smaller" on-click="_addProperty">
@@ -124,7 +143,15 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal">
           <div class="col-6">
-            <h3>UN Premises(facilities)</h3>
+            <etools-info-tooltip class="info" theme="light">
+              <h3 slot="field">UN Premises (Facilities)</h3>
+              <span slot="message">
+                Premises: any location occupied for living or working by UN Personnel, as identified 
+                by the Premises Policy.<br> Facilities: unoccupied property and/or other 
+                infrastructure used for UN services, such as water and food points, and communication 
+                repeater stations.
+              </span>
+            </etools-info-tooltip>
           </div>
           <div class="col-6 right">
             <paper-button raised class="smaller" on-click="_addPremise">

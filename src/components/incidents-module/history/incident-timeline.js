@@ -100,48 +100,48 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
         <div class="container">
           <hr year$="[[workingYear.year]]" hidden$="[[isCurrentYear(workingYear.year)]]">
           <section class="timeline-outer">
-              <ul class="timeline">
-                <template is="dom-repeat" items="[[workingYear.items]]" as="thisDay">
-                  <li>
-                    <div class="timeline-date">
-                      <b>[[thisDay.date.day]]</b>
-                      [[thisDay.date.month]]
-                    </div>
-                    <template is="dom-repeat" items="[[thisDay.items]]">
-                      <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
-                        <div class="card">
-                          [[getUserName(item.by_user)]] added this incident.
-                          <span title="View entire incident at this version">
-                            <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
-                              View original data
-                            </a>
-                          </span>
-                        </div>
-                      </template>
-                      <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
-                        <div class="card">
-                          [[getUserName(item.by_user)]] changed fields:
-                          <p> [[getChangedFileds(item.change)]] </p>
-                          You can
-                          <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
-                            view the changes
-                          </a>
-                          or
+            <ul class="timeline">
+              <template is="dom-repeat" items="[[workingYear.items]]" as="workingDay">
+                <li>
+                  <div class="timeline-date">
+                    <b>[[workingDay.date.day]]</b>
+                    [[workingDay.date.month]]
+                  </div>
+                  <template is="dom-repeat" items="[[workingDay.items]]">
+                    <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
+                      <div class="card">
+                        [[getUserName(item.by_user, item.by_user_display)]] added this incident.
+                        <span title="View entire incident at this version">
                           <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
-                            view the entire incident at this revision
+                            View original data
                           </a>
-                        </div>
-                      </template>
-                      <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
-                        <div class="card">
-                          [[getUserName(item.by_user)]] commented on this:
-                          <p> [[item.comment]] </p>
-                        </div>
-                      </template>
+                        </span>
+                      </div>
                     </template>
-                  </li>
-                </template>
-              </ul>
+                    <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
+                      <div class="card">
+                        [[getUserName(item.by_user, item.by_user_display)]] changed fields:
+                        <p> [[getChangedFileds(item.change)]] </p>
+                        You can
+                        <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
+                          view the changes
+                        </a>
+                        or
+                        <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
+                          view the entire incident at this revision
+                        </a>
+                      </div>
+                    </template>
+                    <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
+                      <div class="card">
+                        [[getUserName(item.last_modify_user_id)]] commented on this:
+                        <p> [[item.comment]] </p>
+                      </div>
+                    </template>
+                  </template>
+                </li>
+              </template>
+            </ul>
           </section>
         </div>
       </template>
@@ -192,9 +192,9 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
       tempTimeline[year][created].push(elem);
     });
 
-    for(let year in tempTimeline) {
+    for (let year in tempTimeline) {
       let yearsEntries = [];
-      for(let date in tempTimeline[year]) {
+      for (let date in tempTimeline[year]) {
         tempTimeline[year][date].sort((a, b) => a.created < b.created);
         let dateComponents = {day: moment(date).format('DD'), month: moment(date).format('MMM')};
         yearsEntries.push({date: dateComponents, items: tempTimeline[year][date]});
@@ -202,7 +202,8 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
       finalTimeline.push({year, items: yearsEntries});
     }
 
-    // TODO: Sorting. Newest items first
+    finalTimeline.sort((a, b) => a.year < b.year);
+
     this.set('timeline', finalTimeline);
   }
 
@@ -218,10 +219,10 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
     return received === expected;
   }
 
-  getUserName(userId) {
+  getUserName(userId, fallback) {
     let user = this.users.find(u => u.id === Number(userId));
     if (!user) {
-      return 'N/A';
+      return fallback || 'N/A';
     }
     return user.first_name + ' ' + user.last_name;
   }

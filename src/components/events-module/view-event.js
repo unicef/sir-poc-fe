@@ -41,9 +41,6 @@ class ViewEvent extends EventsBaseView {
     this.readonly = true;
     this.title = 'View event';
   }
-
-
-
 }
 
 window.customElements.define('view-event', ViewEvent);

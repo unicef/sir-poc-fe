@@ -6,14 +6,13 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 
 import {
     addEvacuation,
     editEvacuation,
     syncEvacuation
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -27,12 +26,13 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class EvacuationForm extends connect(store)(PolymerElement) {
+export class EvacuationForm extends connect(store)(ImpactFormBase) {
   static get is() {
     return 'evacuation-form';
   }
@@ -211,10 +211,6 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     return {
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -297,7 +293,6 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.data = {};
-      this.resetValidations();
       return;
     }
 
@@ -305,12 +300,6 @@ export class EvacuationForm extends connect(store)(PolymerElement) {
     if (currentEvacuation) {
       this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
       this.resetValidations();
-    }
-  }
-
-  _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
     }
   }
 

@@ -131,7 +131,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         observer: '_idChanged'
       },
       offline: {
-        type: Boolean,
+        type: Boolean
       },
       state: {
         type: Object

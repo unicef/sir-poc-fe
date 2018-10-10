@@ -3,6 +3,8 @@
 */
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/image-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+
 import 'etools-data-table';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
@@ -16,6 +18,7 @@ import '../styles/grid-layout-styles.js';
 
 export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles data-table-styles grid-layout-styles">
         :host {
@@ -30,8 +33,12 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
           text-transform: capitalize;
         }
       </style>
+      
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      
       <div class="card list">
-        <etools-data-table-header id="listHeader" label="History of changes">
+        <etools-data-table-header id="listHeader" label="History of changes" 
+                                  low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-3">
             Action
           </etools-data-table-column>
@@ -46,7 +53,8 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[history]]">
-          <etools-data-table-row no-collapse="[[isCreateAction(item.action)]]">
+          <etools-data-table-row no-collapse="[[isCreateAction(item.action)]]" 
+                                 low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Action">
                 <span class="truncate action">
@@ -78,9 +86,9 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
               </span>
             </div>
             <div slot="row-data-details">
-              <div class="col-12">
-                <strong> Fileds modified: </strong>
-                <span> [[getChangedFileds(item.change)]] </span>
+              <div class="row-h flex-c row-details-content">
+                <strong class="rdc-title inline">Fileds modified:</strong>
+                <span>[[getChangedFileds(item.change)]]</span>
               </div>
             </div>
           </etools-data-table-row>
@@ -107,7 +115,8 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
       },
       users: {
         type: Array
-      }
+      },
+      lowResolutionLayout: Boolean
     };
   }
 
@@ -133,6 +142,9 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
 
   getUserName(userId) {
     let user = this.users.find(u => u.id === Number(userId));
+    if (!user) {
+      return 'N/A';
+    }
     return user.first_name + ' ' + user.last_name;
   }
 

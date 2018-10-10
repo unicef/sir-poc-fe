@@ -1,20 +1,19 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 
 import {
     addPersonnel,
     editPersonnel,
     syncPersonnel
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -28,12 +27,13 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
+export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
   static get is() {
     return 'non-un-personnel-form';
   }
@@ -164,7 +164,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
             <div class="row-h flex-c">
               <div class="col col-4">
                 <etools-dropdown-lite
-                            id="category"
+                            id="impact"
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
@@ -186,7 +186,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
-                                value="{{incident.description}}">
+                                value="{{data.description}}">
                 </paper-textarea>
               </div>
             </div>
@@ -202,10 +202,6 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       selectedImpactType: Object,
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -239,8 +235,9 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
-          '#personnelType',
-          '#agency',
+          '#firstName',
+          '#lastName',
+          '#gender',
           '#impact'
         ]
       }
@@ -287,9 +284,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if (this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   resetData() {
@@ -303,7 +298,6 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.resetData();
-      this.resetValidations();
       return;
     }
     let workingItem = this.personnelList.find(item => '' + item.id === id);

@@ -1,21 +1,22 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import 'calendar-lite/datepicker-lite.js';
+import 'etools-date-time/datepicker-lite.js';
 
 import {
     addPersonnel,
     editPersonnel,
     syncPersonnel
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
+
 import { store } from '../../../../redux/store.js';
+
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
 import {
@@ -28,12 +29,13 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class UnPersonnelForm extends connect(store)(PolymerElement) {
+export class UnPersonnelForm extends connect(store)(ImpactFormBase) {
   static get is() {
     return 'un-personnel-form';
   }
@@ -57,6 +59,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
           <div class="row-h flex-c">
             <div class="col col-6">
                 <etools-dropdown-lite
+                        id="autoCompleteUser"
                         label="Auto complete staff member"
                         trigger-value-change-event
                         on-etools-selected-item-changed="_userSelected"
@@ -121,6 +124,8 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
               <etools-dropdown-lite
                         id="gender"
                         label="Gender"
+                        required
+                        auto-validate
                         readonly="[[readonly]]"
                         options="[[staticData.genders]]"
                         selected="{{data.person.gender}}">
@@ -205,7 +210,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
               </div>
               <div class="col col-3">
                 <etools-dropdown-lite
-                            id="category"
+                            id="impact"
                             label="Impact"
                             readonly="[[readonly]]"
                             options="[[staticData.impacts.person]]"
@@ -243,7 +248,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
-                                value="{{incident.description}}"
+                                value="{{data.description}}"
                                 required auto-validate
                                 error-message="Description is required">
                 </paper-textarea>
@@ -261,10 +266,6 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       selectedImpactType: Object,
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -298,9 +299,17 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       fieldsToValidateSelectors: {
         type: Array,
         value: [
-          '#personnelType',
-          '#agency',
-          '#impact'
+          '#unEmployer',
+          '#firstName',
+          '#lastName',
+          '#nationality',
+          '#gender',
+          '#category',
+          '#dutyStationCountry',
+          '#dutyStationCity',
+          '#status',
+          '#impact',
+          '#description'
         ]
       }
     };
@@ -346,13 +355,12 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if (this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   resetData() {
     this.data = JSON.parse(JSON.stringify(this.modelForNew));
+    this.$.autoCompleteUser.selected = null;
   }
 
   _computeIsNew(id) {
@@ -362,7 +370,6 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.resetData();
-      this.resetValidations();
       return;
     }
     let workingItem = this.personnelList.find(item => '' + item.id === id);

@@ -103,6 +103,16 @@ class ErrorsBox extends connect(store)(PolymerElement) {
   }
   _prepareErrors(serverErrors, errors) {
     let errs = [];
+    if (!serverErrors && !errors) {
+      return [];
+    }
+
+    if (serverErrors && typeof serverErrors === 'string') {
+      errs = [serverErrors];
+    }
+    if (errors && typeof errors === 'string') {
+      errs = [...errs, ...errors];
+    }
     if (errors instanceof Array && errors.length > 0) {
       errs = [...errors];
     }
@@ -110,8 +120,12 @@ class ErrorsBox extends connect(store)(PolymerElement) {
       let serverErrs = this._getServerErrorsArray(serverErrors);
       errs = [...errs, ...serverErrs];
     }
+    if (serverErrors && serverErrors.status === 500) {
+      errs = [...errs, 'Internal Server error'];
+    }
     return errs;
   }
+
 
   _getServerErrorsArray(serverErrors) {
     let errsArr = [];

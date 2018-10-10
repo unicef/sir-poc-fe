@@ -18,11 +18,13 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
+import '@polymer/iron-media-query/iron-media-query.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import { store } from '../../redux/store.js';
+import 'etools-date-time/datepicker-lite.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
@@ -33,7 +35,7 @@ import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import 'calendar-lite/datepicker-lite.js';
+
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -53,7 +55,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         }
 
         .col-data iron-icon {
-          margin-right: 16px;
+          margin-right: 8px;
         }
 
         .sync-btn {
@@ -61,11 +63,13 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           cursor: pointer;
         }
 
-        .row-details {
-          display: block;
+        etools-data-table-row[low-resolution-layout] etools-info-tooltip {
+          display: inherit;
         }
 
       </style>
+
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card filters">
         <paper-input class="filter search-input"
@@ -81,11 +85,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                     hide-search>
         </etools-dropdown-multi-lite>
 
-        <datepicker-lite class="filter date"
+        <datepicker-lite class="filter"
                          value="{{filters.startDate}}"
                          label="From"></datepicker-lite>
 
-        <datepicker-lite class="filter date"
+        <datepicker-lite class="filter"
                          value="{{filters.endDate}}"
                          label="To"></datepicker-lite>
 
@@ -150,7 +154,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
       <div class="card list">
         <etools-data-table-header id="listHeader"
-                                  label="Incidents">
+                                  label="Incidents"
+                                  low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-3">
             Case number
           </etools-data-table-column>
@@ -169,8 +174,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
-          <etools-data-table-row unsynced$="[[item.unsynced]]">
-            <div slot="row-data">
+          <etools-data-table-row unsynced$="[[item.unsynced]]"
+                                 low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
+            <div slot="row-data" class="p-relative">
               <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
                   <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
@@ -191,8 +197,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when
-                                          online to submit it.</span>
+                    <span slot="message">This incident has not been submitted to the server.
+                                         Click the sync button when online to submit it.</span>
                   </etools-info-tooltip>
                 </template>
               </span>
@@ -204,33 +210,33 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <div> <!-- this div princidents resizing of the icon on low resolutions -->
                     <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
                     </iron-icon>
-                  </div>
                 </template>
               </span>
             </div>
-            <div slot="row-data-details" class="row-details">
-              <div class="row-h flex-c">
-                <div class="col-6">
-                  <strong>Date created: </strong>
-                  <span>[[prettyDate(item.submitted_date)]]</span>
+            <div slot="row-data-details">
+              <div class="row-details-content flex-c">
+                <div class="row-h flex-c">
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Date created: </strong>
+                    <span>[[prettyDate(item.submitted_date)]]</span>
+                  </div>
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Date revised: </strong>
+                    <span>[[prettyDate(item.last_modify_date)]]</span>
+                  </div>
                 </div>
-                <div class="col-6">
-                  <strong>Date revised: </strong>
-                  <span>[[prettyDate(item.last_modify_date)]]</span>
-                </div>
-              </div>
 
-              <div class="row-h flex-c">
-                <div class="col-6">
-                  <strong>Description: </strong>
-                  <span>[[item.description]]</span>
-                </div>
-                <div class="col-6">
-                  <strong>Note: </strong>
-                  <span>[[item.note]]</span>
+                <div class="row-h flex-c">
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Description: </strong>
+                    <span>[[item.description]]</span>
+                  </div>
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Note: </strong>
+                    <span>[[item.note]]</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -240,7 +246,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <etools-data-table-footer id="footer" page-size="{{pagination.pageSize}}"
                                   page-number="{{pagination.pageNumber}}"
                                   total-results="[[pagination.totalResults]]"
-                                  visible-range="{{visibleRange}}">
+                                  visible-range="{{visibleRange}}"
+                                  low-resolution-layout="[[lowResolutionLayout]]">
         </etools-data-table-footer>
       </div>
     `;
@@ -310,7 +317,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       selectedIncidentCategory: {
         type: Object,
         value: {}
-      }
+      },
+      lowResolutionLayout: Boolean
     };
   }
 

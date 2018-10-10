@@ -1,10 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-icons/notification-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
-
-import '@polymer/iron-icons/editor-icons.js';
-import '@polymer/iron-icons/notification-icons.js';
 
 import { store } from '../../redux/store.js';
 import { syncEventOnList } from '../../actions/events.js';
@@ -19,12 +20,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
-        .col-data > span {
-          max-width: 100%;
-        }
-
+        
         .col-data iron-icon {
-          margin-right: 16px;
+          margin-right: 8px;
         }
 
         .sync-btn {
@@ -32,26 +30,42 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           cursor: pointer;
         }
 
-        .row-details {
-          display: block;
-        }
-
         .capitalize {
           text-transform: capitalize;
         }
+
+        .case-det-desc,
+        .case-det-loc {
+          display: block;
+        }
+
+        etools-data-table-row[low-resolution-layout] etools-info-tooltip {
+          display: inherit;
+        }
+
+        @media only screen and (max-width: 900px) {
+          etools-data-table-row[medium-resolution-layout] *[slot="row-data-details"] .case-det-desc,
+          etools-data-table-row[medium-resolution-layout] *[slot="row-data-details"] .case-det-loc {
+            padding-top: 8px;
+            padding-bottom: 8px;
+          }
+        }
       </style>
 
-      <etools-data-table-header id="listHeader" no-title>
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      <iron-media-query query="(min-width: 768px) and (max-width: 1024px)"
+                        query-matches="{{mediumResolutionLayout}}"></iron-media-query>
+
+      <etools-data-table-header id="listHeader" label="Cases"
+                                low-resolution-layout="[[lowResolutionLayout]]"
+                                medium-resolution-layout="[[mediumResolutionLayout]]">
         <etools-data-table-column class="col-1">
           Case Number
-        </etools-data-table-column>
-        <etools-data-table-column class="col-3">
-          Description
         </etools-data-table-column>
         <etools-data-table-column class="col-1">
           Case Type
         </etools-data-table-column>
-        <etools-data-table-column class="col-1">
+        <etools-data-table-column class="col-2">
           Country
         </etools-data-table-column>
         <etools-data-table-column class="col-1">
@@ -60,10 +74,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         <etools-data-table-column class="col-2">
           Date created
         </etools-data-table-column>
-        <etools-data-table-column class="col-1">
+        <etools-data-table-column class="col-2">
           Category
         </etools-data-table-column>
-        <etools-data-table-column class="col-1">
+        <etools-data-table-column class="col-2">
           Subcategory
         </etools-data-table-column>
         <etools-data-table-column class="col-1">
@@ -72,51 +86,58 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       </etools-data-table-header>
 
       <template id="rows" is="dom-repeat" items="[[cases]]">
-        <etools-data-table-row unsynced$="[[item.unsynced]]">
-          <div slot="row-data">
+        <etools-data-table-row unsynced$="[[item.unsynced]]"
+                               low-resolution-layout="[[lowResolutionLayout]]"
+                               medium-resolution-layout="[[mediumResolutionLayout]]">
+          <div slot="row-data" class="p-relative">
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
-            </span>
-            <span class="col-data col-3 truncate" data-col-header-label="Description">
-              [[item.description]]
             </span>
             <span class="col-data col-1 capitalize" data-col-header-label="Case type">
               [[item.case_type]]
             </span>
-            <span class="col-data col-1" data-col-header-label="Country">
-              <template is="dom-if" if="[[!!item.location]]">
+            <span class="col-data col-2" data-col-header-label="Country">
+              <template is="dom-if" if="[[item.location]]">
                 [[item.location]]
               </template>
-              <template is="dom-if" if="[[!!item.country]]">
+              <template is="dom-if" if="[[item.country]]">
                 [[getNameFromId(item.country, 'countries')]]
               </template>
             </span>
             <span class="col-data col-1 capitalize" data-col-header-label="Status">
-              <template is="dom-if" if="[[!!item.status]]">
+              <template is="dom-if" if="[[item.status]]">
                 [[item.status]]
               </template>
               <template is="dom-if" if="[[!item.status]]">
                 N/A
               </template>
+              <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                <etools-info-tooltip class="info" open-on-click>
+                  <span slot="message">
+                    This [[item.case_type]] has not been submitted to the server.
+                    Click the sync button when online to submit it.
+                  </span>
+                </etools-info-tooltip>
+              </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
-              <template is="dom-if" if="[[!!item.creation_date]]">
+              <template is="dom-if" if="[[item.creation_date]]">
                 [[prettyDate(item.creation_date)]]
               </template>
               <template is="dom-if" if="[[!item.creation_date]]">
                 N/A
               </template>
             </span>
-            <span class="col-data col-1" data-col-header-label="Category">
-              <template is="dom-if" if="[[!!item.incident_category]]">
+            <span class="col-data col-2" data-col-header-label="Category">
+              <template is="dom-if" if="[[item.incident_category]]">
                 [[getNameFromId(item.incident_category, 'incidentCategories')]]
               </template>
               <template is="dom-if" if="[[!item.incident_category]]">
                 N/A
               </template>
             </span>
-            <span class="col-data col-1" data-col-header-label="Subcategory">
-              <template is="dom-if" if="[[!!item.incident_subcategory]]">
+            <span class="col-data col-2" data-col-header-label="Subcategory">
+              <template is="dom-if" if="[[item.incident_subcategory]]">
                 [[getIncidentSubcategory(item.incident_subcategory)]]
               </template>
               <template is="dom-if" if="[[!item.incident_subcategory]]">
@@ -137,45 +158,43 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                 </a>
               </template>
               <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                <etools-info-tooltip class="info" icon="notification:sync" open-on-click
-                            title="Sync [[item.case_type]]"
-                            class="sync-btn"
+                <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn"
                             on-click="_syncItem">
-                  <span slot="message">This [[item.case_type]] has not been sumitted to the server.
-                                       Click to submit when an internet connection is availale.</span>
-                </etools-info-tooltip>
+                </iron-icon>
               </template>
             </span>
           </div>
           <div slot="row-data-details">
-            <template is="dom-if" if="[[_caseIs(item.case_type, 'event')]]">
-              <div class="row-h flex-c">
-                <div class="col col-12">
-                  <strong> Location: </strong>
-                  [[item.location]]
-                </div>
+            <div class="row-details-content flex-c">
+              <div class="row-h flex-c case-det case-det-desc">
+                <strong class="rdc-title inline">Description: </strong>[[item.description]]
               </div>
-            </template>
-            <template is="dom-if" if="[[_caseIs(item.case_type, 'incident')]]">
-              <div class="row-h flex-c">
-                <div class="col col-3">
-                  <strong> Category: </strong>
-                  [[getNameFromId(item.incident_category, 'incidentCategories')]]
+              <template is="dom-if" if="[[_caseIs(item.case_type, 'event')]]">
+                <div class="row-h flex-c case-det case-det-loc">
+                  <strong class="rdc-title inline">Location: </strong>[[item.location]]
                 </div>
-                <div class="col col-3">
-                  <strong> Region: </strong>
-                  [[getNameFromId(item.region, 'regions')]]
+              </template>
+              <template is="dom-if" if="[[_caseIs(item.case_type, 'incident')]]">
+                <div class="row-h flex-c case-det">
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Category: </strong>
+                    [[getNameFromId(item.incident_category, 'incidentCategories')]]
+                  </div>
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Region: </strong>
+                    [[getNameFromId(item.region, 'regions')]]
+                  </div>
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Country: </strong>
+                    [[getNameFromId(item.country, 'countries')]]
+                  </div>
+                  <div class="col col-3">
+                    <strong class="rdc-title inline">Person: </strong>
+                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
+                  </div>
                 </div>
-                <div class="col col-3">
-                  <strong> Country: </strong>
-                  [[getNameFromId(item.country, 'countries')]]
-                </div>
-                <div class="col col-3">
-                  <strong> Person: </strong>
-                  [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                </div>
-              </div>
-            </template>
+              </template>
+            </div>
           </div>
         </etools-data-table-row>
       </template>
@@ -191,7 +210,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       events: Array,
       incidents: Array,
       offline: Boolean,
-      cases: Array
+      cases: Array,
+      lowResolutionLayout: Boolean,
+      mediumResolutionLayout: Boolean
     };
   }
 

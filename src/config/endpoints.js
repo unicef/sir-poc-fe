@@ -41,6 +41,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'
   },
+  deleteIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/',
+    method: 'DELETE'
+  },
   submitIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/submit/',
     method: 'PUT'
@@ -82,7 +86,7 @@ export const Endpoints = {
     method: 'POST'
   },
   editIncidentAttachments: {
-    url: baseUrl + '/api/incident_attachments/',
+    url: baseUrl + '/api/incident_attachments/<%=id%>/',
     method: 'PATCH'
   },
   addIncidentPremise: {
@@ -228,5 +232,5 @@ export const Endpoints = {
   programmeTypes: {
     url: baseUrl + '/api/programme_types/',
     method: 'GET'
-  },
+  }
 };

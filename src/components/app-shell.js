@@ -120,7 +120,8 @@ class MyApp extends connect(store)(PolymerElement) {
       <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
 
-      <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="900px">
+      <!-- menu will switch to mobile hamburger menu under 1280px -->
+      <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="1280px">
         <!-- Drawer content -->
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar id="menu-header">

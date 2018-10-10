@@ -98,7 +98,7 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
 
       <template is="dom-repeat" items="[[timeline]]" as="workingYear">
         <div class="container">
-          <hr year$="[[workingYear.year]]">
+          <hr year$="[[workingYear.year]]" hidden$="[[isCurrentYear(workingYear.year)]]">
           <section class="timeline-outer">
               <ul class="timeline">
                 <template is="dom-repeat" items="[[workingYear.items]]" as="thisDay">
@@ -233,6 +233,10 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
     changes = changes.map(change => this.getLabelForField(change));
 
     return (changes.length > 0 ? changes: ['No changes']).join(', ');
+  }
+
+  isCurrentYear(year) {
+    return moment().format('YYYY') === year;
   }
 }
 

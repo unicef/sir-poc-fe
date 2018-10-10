@@ -24,7 +24,9 @@ class JWTLoginMSAL extends PolymerElement {
         value: {
           clientId: "6f55045b-7da9-48df-9277-f2a170e60df0",
           redirectUri: "http://localhost:8081/",
-          popUp: true
+          popUp: true,
+          response_type: 'code',
+          cacheLocation: 'localStorage'
         }
       },
       myUser: {
@@ -37,7 +39,19 @@ class JWTLoginMSAL extends PolymerElement {
   ready() {
     super.ready();
     console.log('WOOOO my jwt element is here - MSAL');
-    this.set("msal", new Msal.UserAgentApplication(this.config.clientId, null, this.authCallback));
+    const logger = new Msal.Logger(this.loggerCallback,
+        { level: Msal.LogLevel.Verbose, correlationId: 'SIR_APP' });
+    this.set("msal", new Msal.UserAgentApplication(
+        this.config.clientId, null, this.authCallback,
+        {
+          redirectUri: "http://localhost:8081/dashboard", // now the only URL configured to work for this
+          cacheLocation: 'localStorage',
+          logger: logger
+        }));
+  }
+
+  loggerCallback(logLevel, message, piiEnabled) {
+    console.log(message);
   }
 
   authCallback(errorDesc, token, error, tokenType) {
@@ -88,6 +102,12 @@ class JWTLoginMSAL extends PolymerElement {
 
   aquireTokenSilent() {
     this.msal.acquireTokenSilent([this.config.clientId])
+        .then(token => console.log(token))
+        .catch(error => console.log(error));
+  }
+
+  acquireTokenPopup() {
+    this.msal.acquireTokenPopup([this.config.clientId])
         .then(token => console.log(token))
         .catch(error => console.log(error));
   }

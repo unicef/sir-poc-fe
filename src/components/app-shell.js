@@ -165,6 +165,11 @@ class MyApp extends connect(store)(PolymerElement) {
               <iron-icon icon="av:playlist-add"></iron-icon>
               <span>New Incident</span>
             </a>
+            
+            <a class="menu-heading" href="[[rootPath]]admin/" target="_blank">
+              <iron-icon icon="supervisor-account"></iron-icon>
+              <span>Admin</span>
+            </a>
           </div>
 
         </app-drawer>
@@ -271,6 +276,7 @@ class MyApp extends connect(store)(PolymerElement) {
   _isValidPage(page) {
     return this.validPages.indexOf(page) !== -1;
   }
+
 }
 
 window.customElements.define('app-shell', MyApp);

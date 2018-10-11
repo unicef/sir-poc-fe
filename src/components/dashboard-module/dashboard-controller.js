@@ -70,9 +70,11 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           Show stastistics between
         </div>
         <div class="row-h statistics-between">
-          <datepicker-lite value="{{selectedStartDate}}"></datepicker-lite>
+          <datepicker-lite value="{{selectedStartDate}}" 
+                           max-date="[[toDate(selectedEndDate)]]"></datepicker-lite>
           <span id="statistics-between-and">and</span>
-          <datepicker-lite value="{{selectedEndDate}}"></datepicker-lite>
+          <datepicker-lite value="{{selectedEndDate}}" 
+                           min-date="[[toDate(selectedStartDate)]]"></datepicker-lite>
         </div>
 
         <div class="row-h">

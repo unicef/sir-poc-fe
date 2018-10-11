@@ -1,5 +1,5 @@
 /**
- @license
+ * @license
  */
 import {html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
@@ -77,22 +77,22 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="gender"
-                      label="Gender"
-                      readonly="[[readonly]]"
-                      options="[[staticData.genders]]"
-                      selected="{{data.person.gender}}"
-                      required auto-validate
-                      error-message="Gender is required">
+                  id="gender"
+                  label="Gender"
+                  readonly="[[readonly]]"
+                  options="[[staticData.genders]]"
+                  selected="{{data.person.gender}}"
+                  required auto-validate
+                  error-message="Gender is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="nationality"
-                      label="Nationality"
-                      readonly="[[readonly]]"
-                      options="[[staticData.nationalities]]"
-                      selected="{{data.person.nationality}}">
+                  id="nationality"
+                  label="Nationality"
+                  readonly="[[readonly]]"
+                  options="[[staticData.nationalities]]"
+                  selected="{{data.person.nationality}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -133,20 +133,20 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="country"
-                      label="Country"
-                      readonly="[[readonly]]"
-                      options="[[staticData.countries]]"
-                      selected="{{data.person.country}}">
+                  id="country"
+                  label="Country"
+                  readonly="[[readonly]]"
+                  options="[[staticData.countries]]"
+                  selected="{{data.person.country}}">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="city"
-                      label="City"
-                      readonly="[[readonly]]"
-                      options="[[staticData.cities]]"
-                      selected="{{data.person.city}}">
+                  id="city"
+                  label="City"
+                  readonly="[[readonly]]"
+                  options="[[staticData.cities]]"
+                  selected="{{data.person.city}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -157,13 +157,13 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             <div class="row-h flex-c">
               <div class="col col-3">
                 <etools-dropdown-lite
-                        id="impact"
-                        label="Impact"
-                        readonly="[[readonly]]"
-                        options="[[staticData.impacts.person]]"
-                        selected="{{data.impact}}"
-                        required auto-validate
-                        error-message="Impact is required">
+                    id="impact"
+                    label="Impact"
+                    readonly="[[readonly]]"
+                    options="[[staticData.impacts.person]]"
+                    selected="{{data.impact}}"
+                    required auto-validate
+                    error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
             </div>

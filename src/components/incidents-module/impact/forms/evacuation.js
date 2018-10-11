@@ -1,5 +1,5 @@
 /**
- @license
+ * @license
  */
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
@@ -59,7 +59,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-4">
+            <div class="col col-3">
               <etools-dropdown-lite
                       id="agency"
                       label="Agency"
@@ -70,7 +70,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
                       error-message="This is required">
               </etools-dropdown-lite>
             </div>
-            <div class="col col-6">
+            <div class="col col-3">
               <datepicker-lite id="date"
                                value="{{data.date}}"
                                readonly="[[readonly]]"

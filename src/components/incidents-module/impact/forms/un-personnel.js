@@ -1,5 +1,5 @@
 /**
- @license
+ * @license
  */
 import {html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
@@ -58,26 +58,26 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-4">
+            <div class="col col-3">
               <etools-dropdown-lite
-                      id="autoCompleteUser"
-                      label="Auto complete staff member"
-                      trigger-value-change-event
-                      on-etools-selected-item-changed="_userSelected"
-                      options="[[staticData.users]]">
+                  id="autoCompleteUser"
+                  label="Auto complete staff member"
+                  trigger-value-change-event
+                  on-etools-selected-item-changed="_userSelected"
+                  options="[[staticData.users]]">
               </etools-dropdown-lite>
             </div>
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="unEmployer"
-                      label="Employer"
-                      readonly="[[readonly]]"
-                      options="[[staticData.agencies]]"
-                      selected="{{data.person.agency}}"
-                      required auto-validate
-                      error-message="Employer is required">
+                  id="unEmployer"
+                  label="Employer"
+                  readonly="[[readonly]]"
+                  options="[[staticData.agencies]]"
+                  selected="{{data.person.agency}}"
+                  required auto-validate
+                  error-message="Employer is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
@@ -102,13 +102,13 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="nationality"
-                      label="Nationality"
-                      readonly="[[readonly]]"
-                      options="[[staticData.nationalities]]"
-                      selected="{{data.person.nationality}}"
-                      required auto-validate
-                      error-message="Nationality is required">
+                  id="nationality"
+                  label="Nationality"
+                  readonly="[[readonly]]"
+                  options="[[staticData.nationalities]]"
+                  selected="{{data.person.nationality}}"
+                  required auto-validate
+                  error-message="Nationality is required">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -123,13 +123,13 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="gender"
-                      label="Gender"
-                      required
-                      auto-validate
-                      readonly="[[readonly]]"
-                      options="[[staticData.genders]]"
-                      selected="{{data.person.gender}}">
+                  id="gender"
+                  label="Gender"
+                  required
+                  auto-validate
+                  readonly="[[readonly]]"
+                  options="[[staticData.genders]]"
+                  selected="{{data.person.gender}}">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
@@ -154,35 +154,35 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="category"
-                      label="Category"
-                      readonly="[[readonly]]"
-                      options="[[staticData.personnelCategories]]"
-                      selected="{{data.person.category}}"
-                      required auto-validate
-                      error-message="Category is required">
+                  id="category"
+                  label="Category"
+                  readonly="[[readonly]]"
+                  options="[[staticData.personnelCategories]]"
+                  selected="{{data.person.category}}"
+                  required auto-validate
+                  error-message="Category is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="dutyStationCountry"
-                      label="Duty station country"
-                      readonly="[[readonly]]"
-                      options="[[staticData.countries]]"
-                      selected="{{data.person.country}}"
-                      required auto-validate
-                      error-message="Duty station country is required">
+                  id="dutyStationCountry"
+                  label="Duty station country"
+                  readonly="[[readonly]]"
+                  options="[[staticData.countries]]"
+                  selected="{{data.person.country}}"
+                  required auto-validate
+                  error-message="Duty station country is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="dutyStationCity"
-                      label="Duty station city"
-                      readonly="[[readonly]]"
-                      options="[[staticData.cities]]"
-                      selected="{{data.person.city}}"
-                      required auto-validate
-                      error-message="Duty station city is required">
+                  id="dutyStationCity"
+                  label="Duty station city"
+                  readonly="[[readonly]]"
+                  options="[[staticData.cities]]"
+                  selected="{{data.person.city}}"
+                  required auto-validate
+                  error-message="Duty station city is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
@@ -201,25 +201,25 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="row-h flex-c">
               <div class="col col-3">
                 <etools-dropdown-lite
-                        id="status"
-                        label="Status"
-                        readonly="[[readonly]]"
-                        options="[[statuses]]"
-                        selected="{{data.status}}"
-                        required auto-validate
-                        error-message="Status is required">
+                    id="status"
+                    label="Status"
+                    readonly="[[readonly]]"
+                    options="[[statuses]]"
+                    selected="{{data.status}}"
+                    required auto-validate
+                    error-message="Status is required">
                 </etools-dropdown-lite>
               </div>
               <div class="col col-3">
                 <etools-dropdown-lite
-                        id="impact"
-                        label="Impact"
-                        readonly="[[readonly]]"
-                        options="[[staticData.impacts.person]]"
-                        selected="{{data.impact}}"
-                        selected-item="{{selectedImpactType}}"
-                        required auto-validate
-                        error-message="Impact is required">
+                    id="impact"
+                    label="Impact"
+                    readonly="[[readonly]]"
+                    options="[[staticData.impacts.person]]"
+                    selected="{{data.impact}}"
+                    selected-item="{{selectedImpactType}}"
+                    required auto-validate
+                    error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
               <template is="dom-if" if="[[_shouldShowCaptureForm(selectedImpactType.name)]]">

@@ -1,31 +1,31 @@
 /**
-@license
-*/
-import { html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+ * @license
+ */
+import {html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 
 import {
-    addPremise,
-    editPremise,
-    syncPremise
-  } from '../../../../actions/incident-impacts.js';
-import { store } from '../../../../redux/store.js';
-import { scrollToTop } from '../../../common/content-container-helper.js';
-import { updatePath } from '../../../common/navigation-helper.js';
+  addPremise,
+  editPremise,
+  syncPremise
+} from '../../../../actions/incident-impacts.js';
+import {store} from '../../../../redux/store.js';
+import {scrollToTop} from '../../../common/content-container-helper.js';
+import {updatePath} from '../../../common/navigation-helper.js';
 import {
-    resetFieldsValidations,
-    validateFields
-  } from '../../../common/validations-helper.js';
+  resetFieldsValidations,
+  validateFields
+} from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
-import { ImpactFormBase } from './impact-form-base.js';
+import {ImpactFormBase} from './impact-form-base.js';
 
 /**
  * @polymer
@@ -43,6 +43,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
         :host {
           @apply --layout-vertical;
         }
+
         errors-box {
           margin: 0 24px;
         }
@@ -57,7 +58,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-2">
+            <div class="col col-3">
               <etools-dropdown-lite id="country"
                                     label="Country"
                                     readonly="[[readonly]]"
@@ -68,8 +69,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
             
-            
-            <div class="col col-2">
+            <div class="col col-3">
               <etools-dropdown-lite id="city"
                                     label="City"
                                     readonly="[[readonly]]"
@@ -82,17 +82,20 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
 
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="agency"
-                      label="Owner"
-                      readonly="[[readonly]]"
-                      options="[[staticData.agencies]]"
-                      selected="{{data.agency}}"
-                      required auto-validate
-                      error-message="This is required">
+                  id="agency"
+                  label="Owner"
+                  readonly="[[readonly]]"
+                  options="[[staticData.agencies]]"
+                  selected="{{data.agency}}"
+                  required auto-validate
+                  error-message="This is required">
               </etools-dropdown-lite>
             </div>
-
-            <div class="col col-2">
+            
+          </div>
+          
+          <div class="row-h flex-c">
+            <div class="col col-3">
               <etools-dropdown-lite id="location"
                                     label="UN Location"
                                     readonly="[[readonly]]"
@@ -118,16 +121,16 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
           <legend><h3>Impact details</h3></legend>
           <div>
             <div class="row-h flex-c">
-              <div class="col col-2">
+              <div class="col col-3">
                 <etools-dropdown-lite
-                            id="impact"
-                            label="Impact"
-                            readonly="[[readonly]]"
-                            options="[[staticData.impacts.property]]"
-                            selected="{{data.impact}}"
-                            selected-item="{{selectedImpactType}}"
-                            required auto-validate
-                            error-message="This is required">
+                    id="impact"
+                    label="Impact"
+                    readonly="[[readonly]]"
+                    options="[[staticData.impacts.property]]"
+                    selected="{{data.impact}}"
+                    selected-item="{{selectedImpactType}}"
+                    required auto-validate
+                    error-message="This is required">
                 </etools-dropdown-lite>
               </div>
             </div>
@@ -186,6 +189,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
       '_idChanged(impactId)'
     ];
   }
+
   _stateChanged(state) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;

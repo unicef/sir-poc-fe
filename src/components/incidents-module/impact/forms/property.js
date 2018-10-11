@@ -1,5 +1,5 @@
 /**
- @license
+ * @license
  */
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
@@ -60,20 +60,20 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
-                      id="agency"
-                      label="Owner"
-                      readonly="[[readonly]]"
-                      options="[[staticData.agencies]]"
-                      selected="{{data.agency}}">
+                  id="agency"
+                  label="Owner"
+                  readonly="[[readonly]]"
+                  options="[[staticData.agencies]]"
+                  selected="{{data.agency}}">
               </etools-dropdown-lite>
             </div>
             <div class="col col-2">
               <etools-dropdown-lite
-                      id="property_type"
-                      label="Property type"
-                      readonly="[[readonly]]"
-                      options="[[staticData.propertyTypes]]"
-                      selected="{{data.property_type}}">
+                  id="property_type"
+                  label="Property type"
+                  readonly="[[readonly]]"
+                  options="[[staticData.propertyTypes]]"
+                  selected="{{data.property_type}}">
               </etools-dropdown-lite>
             </div>
             <div class="col col-2">
@@ -96,14 +96,14 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
             <div class="row-h flex-c">
               <div class="col col-3">
                 <etools-dropdown-lite
-                        id="category"
-                        label="Impact"
-                        readonly="[[readonly]]"
-                        options="[[staticData.impacts.property]]"
-                        selected="{{data.impact}}"
-                        selected-item="{{selectedImpactType}}"
-                        required auto-validate
-                        error-message="Impact is required">
+                    id="category"
+                    label="Impact"
+                    readonly="[[readonly]]"
+                    options="[[staticData.impacts.property]]"
+                    selected="{{data.impact}}"
+                    selected-item="{{selectedImpactType}}"
+                    required auto-validate
+                    error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
             </div>

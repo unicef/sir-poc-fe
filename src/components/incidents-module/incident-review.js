@@ -1,11 +1,13 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-input/paper-textarea.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-lite.js';
+import { editIncident, approveIncident, rejectIncident, addComment } from '../../actions/incidents.js';
+import { showSnackbar } from '../../actions/app.js';
 import { selectIncident } from '../../reducers/incidents.js';
-import { editIncident } from '../../actions/incidents.js';
 import { clearErrors } from '../../actions/errors.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
@@ -106,7 +108,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             </paper-input>
           </div>
         </div>
-
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-button raised
@@ -116,7 +117,25 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             </paper-button>
           </div>
         </div>
-    </div>
+      </div>
+      <div class="card">
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <errors-box></errors-box>
+              <paper-textarea label="Write your comment here" id="commentText"
+                              required auto-validate
+                              error-message="Please add a comment"
+                              value="{{commentText}}"></paper-textarea>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-button class="btn" raised on-click="addComment"> Add comment </paper-button>
+              <paper-button class="btn" raised on-click="approve"> Approve </paper-button>
+              <paper-button class="btn" raised on-click="reject"> Reject </paper-button>
+            </div>
+          </div>
+      </div>
     `;
   }
 
@@ -177,6 +196,53 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   _visibilityChanged(visible) {
     if (visible === false) {
       store.dispatch(clearErrors());
+    }
+  }
+
+  restComment() {
+    this.commentText = '';
+    this.$.commentText.invalid = false;
+  }
+
+  async addComment() {
+    if (!this.$.commentText.validate()) {
+      return;
+    }
+
+    let comment = {
+      incident: this.incidentId,
+      comment: this.commentText
+    };
+
+    let successfull = await store.dispatch(addComment(comment));
+    if (typeof successfull === 'boolean' && successfull) {
+      this.restComment();
+      store.dispatch(showSnackbar('Comment added'));
+    }
+  }
+
+  async reject() {
+    if (!this.$.commentText.validate()) {
+      return;
+    }
+
+    let data = {
+      incident: this.incidentId,
+      comment: this.commentText
+    };
+
+    let successfull = await store.dispatch(rejectIncident(data));
+    if (typeof successfull === 'boolean' && successfull) {
+      this.restComment();
+      store.dispatch(showSnackbar('Incident rejected'));
+    }
+  }
+
+  async approve() {
+    let successfull = await store.dispatch(approveIncident(this.incidentId));
+
+    if (typeof successfull === 'boolean' && successfull) {
+      store.dispatch(showSnackbar('Intervention rejected'));
     }
   }
 

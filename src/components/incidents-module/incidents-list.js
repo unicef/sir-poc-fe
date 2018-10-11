@@ -87,10 +87,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
         <datepicker-lite class="filter"
                          value="{{filters.startDate}}"
+                         max-date="[[toDate(filters.endDate)]]"
                          label="From"></datepicker-lite>
 
         <datepicker-lite class="filter"
                          value="{{filters.endDate}}"
+                         min-date="[[toDate(filters.startDate)]]"
                          label="To"></datepicker-lite>
 
         <etools-dropdown-lite class="filter select"
@@ -210,10 +212,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <div> <!-- this div princidents resizing of the icon on low resolutions -->
                     <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
                     </iron-icon>
-                  </div>
                 </template>
               </span>
             </div>

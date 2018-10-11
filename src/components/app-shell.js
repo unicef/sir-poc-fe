@@ -128,6 +128,15 @@ class MyApp extends connect(store)(PolymerElement) {
         :host([page="login"]) #logout {
           display: none;
         }
+
+        :host([page="login"]) app-drawer a,
+        :host([page="login"]) app-drawer app-toolbar {
+          -webkit-filter: blur(2px);
+          -moz-filter: blur(2px);
+          -o-filter: blur(2px);
+          -ms-filter: blur(2px);
+          filter: blur(2px);
+        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -257,7 +266,10 @@ class MyApp extends connect(store)(PolymerElement) {
     if (this.page === page) {
       return;
     }
+    // TODO: if offline tokenIsValid should return true no matter what
+    // put token in localstorage and get it in SirMsalAuth constructor
     if (SirMsalAuth.tokenIsValid()) {
+
       if (page === 'login') {
         // no need to go to login page, go to landing page instead
         updatePath('dashboard');

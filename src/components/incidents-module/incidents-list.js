@@ -87,10 +87,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
         <datepicker-lite class="filter"
                          value="{{filters.startDate}}"
+                         max-date="[[toDate(filters.endDate)]]"
                          label="From"></datepicker-lite>
 
         <datepicker-lite class="filter"
                          value="{{filters.endDate}}"
+                         min-date="[[toDate(filters.startDate)]]"
                          label="To"></datepicker-lite>
 
         <etools-dropdown-lite class="filter select"

@@ -1,7 +1,7 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -13,8 +13,9 @@ import {
     editPersonnel,
     syncPersonnel
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
+
 import { store } from '../../../../redux/store.js';
+
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
 import {
@@ -22,24 +23,26 @@ import {
     validateFields
   } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
+import DateMixin from "../../../common/date-mixin.js";
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class UnPersonnelForm extends connect(store)(PolymerElement) {
+export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   static get is() {
     return 'un-personnel-form';
   }
 
   static get template() {
     return html`
-      <style include="shared-styles grid-layout-styles required-fields-styles  form-fields-styles">
+      <style include="shared-styles grid-layout-styles required-fields-styles form-fields-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -56,6 +59,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
           <div class="row-h flex-c">
             <div class="col col-6">
                 <etools-dropdown-lite
+                        id="autoCompleteUser"
                         label="Auto complete staff member"
                         trigger-value-change-event
                         on-etools-selected-item-changed="_userSelected"
@@ -220,6 +224,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                 <div class="col col-3">
                   <datepicker-lite id="captureDate"
                               value="{{data.capture_date}}"
+                              max-date="[[toDate(data.release_date)]]"
                               readonly="[[readonly]]"
                               label="Captured on">
                   </datepicker-lite>
@@ -227,6 +232,7 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
                 <div class="col col-3">
                   <datepicker-lite id="releaseDate"
                               value="{{data.release_date}}"
+                              min-date="[[toDate(data.capture_date)]]"
                               readonly="[[readonly]]"
                               label="Released on">
                   </datepicker-lite>
@@ -257,10 +263,6 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
       selectedImpactType: Object,
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -350,13 +352,12 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if (this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   resetData() {
     this.data = JSON.parse(JSON.stringify(this.modelForNew));
+    this.$.autoCompleteUser.selected = null;
   }
 
   _computeIsNew(id) {
@@ -366,7 +367,6 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.resetData();
-      this.resetValidations();
       return;
     }
     let workingItem = this.personnelList.find(item => '' + item.id === id);
@@ -405,12 +405,6 @@ export class UnPersonnelForm extends connect(store)(PolymerElement) {
     }
 
     return false;
-  }
-
-  _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
   }
 
 }

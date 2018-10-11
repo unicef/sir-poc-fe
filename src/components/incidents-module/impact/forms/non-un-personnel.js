@@ -1,7 +1,7 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -13,7 +13,6 @@ import {
     editPersonnel,
     syncPersonnel
   } from '../../../../actions/incident-impacts.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import { updatePath } from '../../../common/navigation-helper.js';
@@ -27,12 +26,13 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
+import { ImpactFormBase } from './impact-form-base.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
+export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
   static get is() {
     return 'non-un-personnel-form';
   }
@@ -195,10 +195,6 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
       selectedImpactType: Object,
       staticData: Array,
       impactId: String,
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -281,9 +277,7 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if (this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   resetData() {
@@ -297,19 +291,12 @@ export class NonUnPersonnelForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.resetData();
-      this.resetValidations();
       return;
     }
     let workingItem = this.personnelList.find(item => '' + item.id === id);
     if (workingItem) {
       this.data = JSON.parse(JSON.stringify(workingItem));
       this.resetValidations();
-    }
-  }
-
-  _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
     }
   }
 

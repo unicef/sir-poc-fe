@@ -100,7 +100,7 @@ class JWTLoginMSAL extends PolymerElement {
     }
   }
 
-  aquireTokenSilent() {
+  acquireTokenSilent() {
     this.msal.acquireTokenSilent([this.config.clientId])
         .then(token => console.log(token))
         .catch(error => console.log(error));

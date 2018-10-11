@@ -72,32 +72,49 @@ class SirMsalAuthentication {
    * Try to get logged user token. If no user is logged in or token expired, go to login
    * @returns {Promise<T | never>}
    */
-  aquireTokenSilent() {
-    this.msal.acquireTokenSilent([this.clientId])
+  acquireTokenSilent() {
+    return this.msal.acquireTokenSilent([this.clientId])
         .then((token) => {
           this.token = token;
           return token;
-        })
-        .catch((error) => {
-          console.error(error);
-          // user not logged in, open login popup
-          return this.login();
         });
+  }
+
+  acquireTokenRedirect() {
+    // authCallback will run as a callback to this method
+    return this.msal.acquireTokenRedirect([this.clientId]);
   }
 
   getUser() {
     return this.msal.getUser();
   }
 
-  decodeBase64Token(encodedToken) {
-    let base64Url = encodedToken.split('.')[1];
+  getToken() {
+    return this.token;
+  }
+
+  getRequestsAuthHeader() {
+    if (!this.token) {
+      return null;
+    }
+    return {'Authorization': 'JWT ' + this.token};
+  }
+
+  decodeBase64Token() {
+    if (!this.token) {
+      return null;
+    }
+    let base64Url = this.token.split('.')[1];
     let base64 = base64Url.replace('-', '+').replace('_', '/');
     return JSON.parse(window.atob(base64));
   }
 
-  tokenIsValid(token) {
-    let decodedToken = this.decodeBase64Token(token);
-    return Date.now() < decodedToken.exp;
+  tokenIsValid() {
+    let decodedToken = this.decodeBase64Token();
+    if (!this.token || !decodedToken) {
+      return false;
+    }
+    return Date.now() < Number(decodedToken.exp + '000');
   }
 
 }

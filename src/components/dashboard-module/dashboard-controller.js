@@ -10,7 +10,8 @@ import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import './dashboard-list.js';
 
-import {SirMsalAuth} from '../common/jwt/msal-authentication.js';
+import {SirMsalAuth} from '../auth/jwt/msal-authentication.js';
+import '../auth/sir-login.js';
 
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
@@ -56,21 +57,6 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
         }
 
       </style>
-      
-      <div class="card">
-        <div>MSAL login</div>
-        <!--<jwt-login-msal id="msalElement"></jwt-login-msal>-->
-        <div class="wrapper-btns">
-          <paper-button raised class="primary" on-tap="msaljwtCallLogin">JWT Log In</paper-button>
-          <paper-button class="link" on-tap="msalGetUser">Get Local User</paper-button>
-          <paper-button class="link" on-tap="msaljwtLogout">Logout</paper-button>
-        </div>
-        <div>
-          <strong>aquireTokenSilent</strong> is gonna try to get logged in user token from cache (msal cache).
-          If user is not logged in or token expired it will throw an error.
-          <paper-button class="link" on-tap="msalAquireToken">Aquire Token</paper-button>
-        </div>
-      </div>
       
       <div class="card">
         <div class="row-h">
@@ -162,22 +148,6 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     });
 
     return filteredIncidents;
-  }
-
-  msaljwtCallLogin(event) {
-    SirMsalAuth.login();
-  }
-
-  msalGetUser(event) {
-    console.log(SirMsalAuth.getUser());
-  }
-
-  msaljwtLogout(event) {
-    SirMsalAuth.logout();
-  }
-
-  msalAquireToken() {
-    SirMsalAuth.aquireTokenSilent();
   }
 
 }

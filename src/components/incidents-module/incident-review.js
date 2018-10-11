@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-dialog/paper-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -131,11 +132,29 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
           <div class="row-h flex-c">
             <div class="col col-12">
               <paper-button class="btn" raised on-click="addComment"> Add comment </paper-button>
-              <paper-button class="btn" raised on-click="approve"> Approve </paper-button>
-              <paper-button class="btn" raised on-click="reject"> Reject </paper-button>
+              <paper-button class="btn" raised on-click="openApproveConfirmation"> Approve </paper-button>
+              <paper-button class="btn" raised on-click="openRejectConfirmation"> Reject </paper-button>
             </div>
           </div>
       </div>
+
+      <paper-dialog id="rejConfirm">
+        <h2>Confirm Reject</h2>
+        <p>Are you sure you want to reject this incident?</p>
+        <div class="buttons">
+          <paper-button class="white-bg smaller" dialog-dismiss>Canel</paper-button>
+          <paper-button class="smaller" on-tap="reject" dialog-confirm autofocus>Reject</paper-button>
+        </div>
+      </paper-dialog>
+
+      <paper-dialog id="approveConfirm">
+        <h2>Confirm Approve</h2>
+        <p>Are you sure you want to approve this incident?</p>
+        <div class="buttons">
+          <paper-button class="white-bg smaller" dialog-dismiss>Canel</paper-button>
+          <paper-button class="smaller" on-tap="approve" dialog-confirm autofocus>Approve</paper-button>
+        </div>
+      </paper-dialog>
     `;
   }
 
@@ -204,6 +223,18 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     this.$.commentText.invalid = false;
   }
 
+  openRejectConfirmation() {
+    if (!this.$.commentText.validate()) {
+      return;
+    }
+    this.shadowRoot.querySelector('#rejConfirm').opened = true;
+  }
+
+  openApproveConfirmation() {
+    this.shadowRoot.querySelector('#approveConfirm').opened = true;
+  }
+
+
   async addComment() {
     if (!this.$.commentText.validate()) {
       return;
@@ -222,10 +253,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   async reject() {
-    if (!this.$.commentText.validate()) {
-      return;
-    }
-
     let data = {
       incident: this.incidentId,
       comment: this.commentText

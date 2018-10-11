@@ -2,23 +2,23 @@
  @license
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-date-time/datepicker-lite.js';
 
-import { clearErrors } from '../../actions/errors.js';
-import { selectEvent } from '../../reducers/events.js';
-import { store } from '../../redux/store.js';
+import {clearErrors} from '../../actions/errors.js';
+import {selectEvent} from '../../reducers/events.js';
+import {store} from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import { resetFieldsValidations, validateFields } from '../common/validations-helper';
+import {resetFieldsValidations, validateFields} from '../common/validations-helper';
 
 export class EventsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -88,6 +88,37 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
                             error-message="Description is required"></paper-textarea>
           </div>
         </div>
+        
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <paper-input id="created_by"
+                         label="Created by"
+                         placeholder="&#8212;"
+                         type="text"
+                         readonly$="[[readonly]]"
+                         value="{{_getUsername(event.submitted_by)}}"></paper-input>
+          </div>
+          <div class="col">
+            <datepicker-lite id="created_on"
+                             label="Created on"
+                             value="{{event.submitted_date}}"
+                             readonly="[[readonly]]"></datepicker-lite>
+          </div>
+          <div class="col col-3">
+            <paper-input id="last_edited_by"
+                         label="Last edited by"
+                         placeholder="&#8212;"
+                         type="text"
+                         readonly$="[[readonly]]"
+                         value="{{_getUsername(event.last_modify_user_id)}}"></paper-input>
+          </div>
+          <div class="col">
+            <datepicker-lite id="last_edited_on"
+                             label="Last edited on"
+                             value="{{event.last_modify_date}}"
+                             readonly="[[readonly]]"></datepicker-lite>
+          </div>
+        </div>
 
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
@@ -116,6 +147,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
   static get actionButtonsTemplate() {
     return html``;
   }
+
   static get goToEditBtnTmpl() {
     return html``;
   }
@@ -205,5 +237,16 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
 
   resetValidations() {
     resetFieldsValidations(this, this.fieldsToValidateSelectors);
+  }
+
+  _getUsername(userId) {
+    if (userId === null || userId === undefined) {
+      return 'N/A';
+    }
+    let user = this.state.staticData.users.find(u => Number(u.id) === Number(userId));
+    if (user) {
+      return user.name;
+    }
+    return 'N/A';
   }
 }

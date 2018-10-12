@@ -110,7 +110,7 @@ class SirMsalAuthentication {
 
   getRequestsAuthHeader() {
     if (!this.token) {
-      return null;
+      return {};
     }
     return {'Authorization': 'JWT ' + this.token};
   }
@@ -124,13 +124,14 @@ class SirMsalAuthentication {
     return JSON.parse(window.atob(base64));
   }
 
-  tokenIsValid(userIsOffline) {
+  tokenIsValid() {
     let decodedToken = this.decodeBase64Token();
     if (!decodedToken) {
       return false;
     }
-    if (userIsOffline && decodedToken) {
-      // if user is offline, but he was logged at least once, then user should be able to access offline functionality
+    if (!navigator.onLine && decodedToken) {
+      // if user is offline, but he was logged at least once,
+      // then user should be able to access offline functionality
       return true;
     }
     return Date.now() < Number(decodedToken.exp + '000');

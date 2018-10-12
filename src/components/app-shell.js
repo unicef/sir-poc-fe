@@ -255,7 +255,6 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
@@ -271,7 +270,7 @@ class MyApp extends connect(store)(PolymerElement) {
     if (this.page === page) {
       return;
     }
-    if (SirMsalAuth.tokenIsValid(this.offline)) {
+    if (SirMsalAuth.tokenIsValid()) {
       if (page === 'login') {
         // no need to go to login page, go to landing page instead
         updatePath('dashboard');

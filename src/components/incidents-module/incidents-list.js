@@ -219,12 +219,16 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                <a href="/incidents/view/[[item.id]]">
-                  <iron-icon icon="assignment" title="View Incident"></iron-icon>
-                </a>
-                <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
-                  <iron-icon icon="editor:mode-edit"></iron-icon>
-                </a>
+                <template is="dom-if" if="[[checkStatus(item.status)]]">
+                  <a href="/incidents/view/[[item.id]]">
+                    <iron-icon icon="assignment" title="View Incident"></iron-icon>
+                  </a>
+                </template>
+                <template is="dom-if" if="[[!checkStatus(item.status)]]">
+                  <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
+                    <iron-icon icon="editor:mode-edit"></iron-icon>
+                  </a>
+                </template>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                     <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
                     </iron-icon>
@@ -532,6 +536,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
   notEditable(incident, offline) {
     return offline && !incident.unsynced;
+  }
+
+  checkStatus(status) {
+    return status === 'approved';
   }
 
   getIncidentSubcategory(id) {

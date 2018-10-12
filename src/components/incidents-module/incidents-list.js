@@ -158,19 +158,25 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <etools-data-table-header id="listHeader"
                                   label="Incidents"
                                   low-resolution-layout="[[lowResolutionLayout]]">
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-1">
             Case number
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-4">
+            Description
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
             City
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
-            Incident Category
+          <etools-data-table-column class="col-1">
+            Category
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Subcategory
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Status
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
             Actions
           </etools-data-table-column>
         </etools-data-table-header>
@@ -179,18 +185,26 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
-              <span class="col-data col-3" data-col-header-label="Case number">
+              <span class="col-data col-1" data-col-header-label="Case number">
                 <span class="truncate">
                   <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
                 </span>
               </span>
-              <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">
+              <span class="col-data col-4" data-col-header-label="Case number">
+                <span class="truncate">
+                  [[item.description]]
+                </span>
+              </span>
+              <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
                   <span>[[getNameFromId(item.city, 'cities')]]</span>
               </span>
-              <span class="col-data col-3" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
+              <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">
                 <span>[[getNameFromId(item.incident_category, 'incidentCategories')]]</span>
-
+              </span>
+              <span class="col-data col-2" title="[[getIncidentSubcategory(item.incident_subcategory)]]"
+                    data-col-header-label="Incident Subcategory">
+                <span>[[getIncidentSubcategory(item.incident_subcategory)]]</span>
               </span>
               <span class="col-data col-2" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
@@ -204,7 +218,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                   </etools-info-tooltip>
                 </template>
               </span>
-              <span class="col-data col-2" data-col-header-label="Actions">
+              <span class="col-data col-1" data-col-header-label="Actions">
                 <a href="/incidents/view/[[item.id]]">
                   <iron-icon icon="assignment" title="View Incident"></iron-icon>
                 </a>
@@ -232,7 +246,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
                 <div class="row-h flex-c">
                   <div class="col col-6">
-                    <strong class="rdc-title inline">Description: </strong>
+                    <strong class="rdc-title inline">Long Description: </strong>
                     <span>[[item.description]]</span>
                   </div>
                   <div class="col col-6">
@@ -518,6 +532,14 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
   notEditable(incident, offline) {
     return offline && !incident.unsynced;
+  }
+
+  getIncidentSubcategory(id) {
+    if (id) {
+      let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
+      let selectedDatum = allSubCategories.find(item => item.id === id);
+      return selectedDatum.name;
+    }
   }
 
   // Outputs the query string for the list

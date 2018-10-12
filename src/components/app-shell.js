@@ -271,10 +271,7 @@ class MyApp extends connect(store)(PolymerElement) {
     if (this.page === page) {
       return;
     }
-    // TODO: if offline tokenIsValid should return true no matter what
-    // put token in localstorage and get it in SirMsalAuth constructor
-    if (SirMsalAuth.tokenIsValid()) {
-
+    if (SirMsalAuth.tokenIsValid(this.offline)) {
       if (page === 'login') {
         // no need to go to login page, go to landing page instead
         updatePath('dashboard');

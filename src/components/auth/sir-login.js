@@ -5,8 +5,15 @@ import '@polymer/paper-button/paper-button.js';
 
 import {SirMsalAuth} from './jwt/msal-authentication.js';
 import {updatePath} from "../common/navigation-helper";
+import {requestPageLoadData} from "../../actions/app.js";
+import {connect} from "pwa-helpers/connect-mixin";
+import {store} from "../../redux/store";
 
-class SirLogin extends PolymerElement {
+/**
+ * @customElement
+ * @polymer
+ */
+class SirLogin extends connect(store)(PolymerElement) {
 
   // Define optional shadow DOM template
   static get template() {
@@ -16,7 +23,6 @@ class SirLogin extends PolymerElement {
         :host {
           @apply --layout-horizontal;
           @apply --layout-center;
-          /*@apply --layout-center-justified;*/
 
           padding: 24px;
           margin: 24px;
@@ -69,12 +75,19 @@ class SirLogin extends PolymerElement {
 
   _login() {
     SirMsalAuth.login().then(() => {
+      store.dispatch(requestPageLoadData());
       this._goToLandingPage();
     });
   }
 
   _goToLandingPage() {
     updatePath('dashboard');
+  }
+
+  _stateChanged(state) {
+    if (!state) {
+      return;
+    }
   }
 
 }

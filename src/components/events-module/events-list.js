@@ -90,6 +90,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           <div class="col filter">
             <datepicker-lite id="fromDate"
                              value="{{filters.startDate}}"
+                             max-date="[[toDate(filters.endDate)]]"
                              label="From">
             </datepicker-lite>
           </div>
@@ -97,6 +98,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           <div class="col filter">
             <datepicker-lite id="endDate"
                              value="{{filters.endDate}}"
+                             min-date="[[toDate(filters.startDate)]]"
                              label="To">
             </datepicker-lite>
           </div>

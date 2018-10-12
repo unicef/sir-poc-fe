@@ -621,7 +621,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       state: Object,
       store: Object,
       incident: {
-        type: Object
+        type: Object,
+        observer: 'incidentLoaded'
       },
       incidentId: {
         type: Number,
@@ -677,7 +678,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Boolean,
         value: false,
         observer: 'pressCoverageChanged'
-      }
+      },
       lowResolutionLayout: Boolean
     };
   }
@@ -691,6 +692,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+  }
+
+  incidentLoaded() {
     if (this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
@@ -820,6 +824,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   // clears press_coverage field if checkbox is unchecked
   pressCoverageChanged() {
+    if (!this.incident) {
+      return;
+    }
     if (this.incident.press_coverage && !this.pressCoverageSelected) {
       this.set('incident.press_coverage', '');
     }

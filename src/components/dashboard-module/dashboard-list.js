@@ -14,6 +14,7 @@ import { getNameFromId } from '../common/utils.js';
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
+import moment from 'moment';
 
 export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
@@ -37,6 +38,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         .case-det-desc,
         .case-det-loc {
           display: block;
+        }
+
+        etools-data-table-row[created-last-week]:not([unsynced]) {
+          --list-bg-color: #fff3cd;
         }
 
         etools-data-table-row[low-resolution-layout] etools-info-tooltip {
@@ -88,7 +93,8 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       <template id="rows" is="dom-repeat" items="[[cases]]">
         <etools-data-table-row unsynced$="[[item.unsynced]]"
                                low-resolution-layout="[[lowResolutionLayout]]"
-                               medium-resolution-layout="[[mediumResolutionLayout]]">
+                               medium-resolution-layout="[[mediumResolutionLayout]]"
+                               created-last-week$="[[wasCreatedLastWeek(item)]]">
           <div slot="row-data" class="p-relative">
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
@@ -254,6 +260,14 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
 
   checkStatus(status) {
     return status === 'approved';
+  }
+
+  wasCreatedLastWeek(item) {
+    const date = new Date();
+    const lastWeek = date.getDate() - 7;
+
+    const createdDate = item.case_type === 'event' ? item.start_date : item.creation_date;
+    return moment(createdDate).isAfter(moment().add(-7, 'days'));
   }
 
   _syncItem(item) {

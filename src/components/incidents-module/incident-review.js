@@ -7,9 +7,9 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import { editIncident, approveIncident, rejectIncident, addComment } from '../../actions/incidents.js';
-import { showSnackbar } from '../../actions/app.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { clearErrors } from '../../actions/errors.js';
+import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
 import '../styles/form-fields-styles.js';
@@ -28,11 +28,20 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         :host {
           display: block;
         }
+        .error-card {
+          padding: 0;
+          box-shadow: none;
+        }
+        errors-box {
+          width: auto;
+        }
       </style>
+
+      <div class="card error-card" hidden$="[[!errors.length]]">
+        <errors-box prepared-errors="{{errors}}"></errors-box>
+      </div>
+
       <div class="card">
-        <div class="layout-horizontal">
-          <errors-box></errors-box>
-        </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite id="eodReview"
@@ -122,7 +131,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
       <div class="card">
           <div class="row-h flex-c">
             <div class="col col-12">
-              <errors-box></errors-box>
               <paper-textarea label="Write your comment here" id="commentText"
                               required auto-validate
                               error-message="Please add a comment"

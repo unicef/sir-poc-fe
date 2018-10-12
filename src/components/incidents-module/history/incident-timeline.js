@@ -192,15 +192,20 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
       tempTimeline[year][created].push(elem);
     });
 
-    for (let year in tempTimeline) {
+    let sortedYears = Object.keys(tempTimeline).sort((a, b) => a < b);
+
+    sortedYears.forEach((year) => {
       let yearsEntries = [];
-      for (let date in tempTimeline[year]) {
+      let sortedDatesThisYear = Object.keys(tempTimeline[year]).sort((a, b) => new Date(a) < new Date(b));
+
+      sortedDatesThisYear.forEach((date) => {
         tempTimeline[year][date].sort((a, b) => a.created < b.created);
         let dateComponents = {day: moment(date).format('DD'), month: moment(date).format('MMM')};
         yearsEntries.push({date: dateComponents, items: tempTimeline[year][date]});
-      }
+      });
+
       finalTimeline.push({year, items: yearsEntries});
-    }
+    });
 
     finalTimeline.sort((a, b) => a.year < b.year);
 

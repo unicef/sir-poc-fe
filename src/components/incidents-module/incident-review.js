@@ -269,7 +269,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     let successfull = await store.dispatch(approveIncident(this.incidentId));
 
     if (typeof successfull === 'boolean' && successfull) {
-      store.dispatch(showSnackbar('Intervention rejected'));
+      store.dispatch(showSnackbar('Incident approved'));
     }
   }
 

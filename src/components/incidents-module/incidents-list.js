@@ -7,8 +7,8 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
@@ -23,15 +23,15 @@ import '@polymer/iron-media-query/iron-media-query.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import { store } from '../../redux/store.js';
+import {store} from '../../redux/store.js';
 import 'etools-date-time/datepicker-lite.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import { syncIncidentOnList } from '../../actions/incidents.js';
+import {syncIncidentOnList} from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 import {updateAppState} from '../common/navigation-helper';
-import { getNameFromId } from '../common/utils.js';
-import { Endpoints } from '../../config/endpoints.js';
+import {getNameFromId} from '../common/utils.js';
+import {Endpoints} from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -145,10 +145,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             Export
           </paper-button>
           <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
-              <paper-item doc-type="pdf">PDF</paper-item>
-              <paper-item doc-type="csv">CSV</paper-item>
-              <paper-item doc-type="xls">XLS</paper-item>
-              <paper-item doc-type="xlsx">XLSX</paper-item>
+            <paper-item doc-type="pdf">PDF</paper-item>
+            <paper-item doc-type="csv">CSV</paper-item>
+            <paper-item doc-type="xls">XLS</paper-item>
+            <paper-item doc-type="xlsx">XLSX</paper-item>
           </paper-listbox>
         </paper-menu-button>
 
@@ -219,12 +219,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                <template is="dom-if" if="[[checkStatus(item.status)]]">
+                <template is="dom-if" if="[[isApproved(item.status)]]">
                   <a href="/incidents/view/[[item.id]]">
                     <iron-icon icon="assignment" title="View Incident"></iron-icon>
                   </a>
                 </template>
-                <template is="dom-if" if="[[!checkStatus(item.status)]]">
+                <template is="dom-if" if="[[!isApproved(item.status)]]">
                   <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
@@ -365,7 +365,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _queryParamsChanged(params) {
-    if (params && this.visible ) {
+    if (params && this.visible) {
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
@@ -451,15 +451,15 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
     filteredIncidents = filteredIncidents.filter(incident => this._applyQFilter(incident, q));
     filteredIncidents = filteredIncidents.filter(incident => this._applyStatusFilter(incident,
-                                                                                      this.filters.syncStatus));
+        this.filters.syncStatus));
     filteredIncidents = filteredIncidents.filter(incident => this._applyDateFilter(incident, startDate, endDate));
     filteredIncidents = filteredIncidents.filter(incident => this._applyCountryFilter(incident, country));
     filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentCategoryFilter(incident,
-                                                                                                    incidentCategory));
+        incidentCategory));
     filteredIncidents = filteredIncidents.filter(incident => this._applyEventFilter(incident, event));
     filteredIncidents = filteredIncidents.filter(incident => this._applyTargetFilter(incident, target));
     filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentSubcategoryFilter(incident,
-                                                                                                        subcategory));
+        subcategory));
     filteredIncidents = filteredIncidents.filter(incident => this._applyThreatCategoryFilter(incident, threatCategory));
 
     return this.applyPagination(filteredIncidents);
@@ -538,7 +538,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     return offline && !incident.unsynced;
   }
 
-  checkStatus(status) {
+  isApproved(status) {
     return status === 'approved';
   }
 

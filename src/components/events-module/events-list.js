@@ -8,23 +8,23 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import { store } from '../../redux/store.js';
+import {store} from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 
-import { syncEventOnList } from '../../actions/events.js';
+import {syncEventOnList} from '../../actions/events.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import { updateAppState } from '../common/navigation-helper';
+import {updateAppState} from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import 'etools-date-time/datepicker-lite.js';
@@ -68,40 +68,40 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         etools-data-table-row[low-resolution-layout] etools-info-tooltip {
           display: inherit;
         }
-        
+
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card filters">
-          <paper-input class="filter search-input"
-                       placeholder="Search by Description or Location"
-                       value="{{filters.q}}">
-            <iron-icon icon="search" slot="prefix"></iron-icon>
-          </paper-input>
+        <paper-input class="filter search-input"
+                     placeholder="Search by Description or Location"
+                     value="{{filters.q}}">
+          <iron-icon icon="search" slot="prefix"></iron-icon>
+        </paper-input>
 
-          <etools-dropdown-multi-lite class="filter sync-filter"
-                                      label="Sync status"
-                                      options="[[itemSyncStatusOptions]]"
-                                      selected-values="{{filters.syncStatus}}"
-                                      hide-search>
-          </etools-dropdown-multi-lite>
+        <etools-dropdown-multi-lite class="filter sync-filter"
+                                    label="Sync status"
+                                    options="[[itemSyncStatusOptions]]"
+                                    selected-values="{{filters.syncStatus}}"
+                                    hide-search>
+        </etools-dropdown-multi-lite>
 
-          <div class="col filter">
-            <datepicker-lite id="fromDate"
-                             value="{{filters.startDate}}"
-                             max-date="[[toDate(filters.endDate)]]"
-                             label="From">
-            </datepicker-lite>
-          </div>
+        <div class="col filter">
+          <datepicker-lite id="fromDate"
+                           value="{{filters.startDate}}"
+                           max-date="[[toDate(filters.endDate)]]"
+                           label="From">
+          </datepicker-lite>
+        </div>
 
-          <div class="col filter">
-            <datepicker-lite id="endDate"
-                             value="{{filters.endDate}}"
-                             min-date="[[toDate(filters.startDate)]]"
-                             label="To">
-            </datepicker-lite>
-          </div>
+        <div class="col filter">
+          <datepicker-lite id="endDate"
+                           value="{{filters.endDate}}"
+                           min-date="[[toDate(filters.startDate)]]"
+                           label="To">
+          </datepicker-lite>
+        </div>
 
       </div>
 
@@ -113,7 +113,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           <etools-data-table-column class="col-4">
             Description
           </etools-data-table-column>
-          <etools-data-table-column class="col-1">
+          <etools-data-table-column class="col-2">
             Start date
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
@@ -140,7 +140,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   [[item.description]]
                 </span>
               </span>
-              <span class="col-data col-1" title="[[item.start_date]]" data-col-header-label="Start date">
+              <span class="col-data col-2" title="[[item.start_date]]" data-col-header-label="Start date">
                 [[item.start_date]]
               </span>
               <span class="col-data col-2" title="[[item.location]]" data-col-header-label="Location">
@@ -159,19 +159,19 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                 </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                <template is="dom-if" if="[[checkStatus(item.status)]]">
+                <template is="dom-if" if="[[isApproved(item.status)]]">
                   <a href="/events/view/[[item.id]]">
                     <iron-icon icon="assignment" title="View Event"></iron-icon>
                   </a>
                 </template>
-                <template is="dom-if" if="[[!checkStatus(item.status)]]">
+                <template is="dom-if" if="[[!isApproved(item.status)]]">
                   <a href="/events/edit/[[item.id]]" title="Edit Event" hidden$="[[notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
                 </template>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn" 
-                              on-click="_syncItem">
+                  <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn"
+                             on-click="_syncItem">
                   </iron-icon>
                 </template>
               </span>
@@ -224,7 +224,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       filteredEvents: {
         type: Array,
         computed: '_filterData(events, filters.q, pagination.pageSize, pagination.pageNumber, ' +
-        'filters.syncStatus.length, filters.startDate, filters.endDate, _queryParamsInitComplete)'
+            'filters.syncStatus.length, filters.startDate, filters.endDate, _queryParamsInitComplete)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -354,7 +354,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
   }
 
-  checkStatus(status) {
+  isApproved(status) {
     return status === 'approved';
   }
 

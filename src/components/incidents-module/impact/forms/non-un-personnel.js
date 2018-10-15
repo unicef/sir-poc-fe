@@ -302,16 +302,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     }
   }
 
-  _shouldShowNextOfKinCheckbox(impactName) {
-    return impactName === 'Death';
-  }
-
-  _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
-  }
-
 }
 
 window.customElements.define(NonUnPersonnelForm.is, NonUnPersonnelForm);

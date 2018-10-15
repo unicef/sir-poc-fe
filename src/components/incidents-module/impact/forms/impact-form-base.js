@@ -19,4 +19,8 @@ export class ImpactFormBase extends PolymerElement {
       this.resetValidations();
     }
   }
+
+  _shouldShowNextOfKinCheckbox(impactName) {
+    return impactName === 'Death';
+  }
 }

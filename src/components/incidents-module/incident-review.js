@@ -150,7 +150,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         <h2>Confirm Reject</h2>
         <p>Are you sure you want to reject this incident?</p>
         <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>Canel</paper-button>
+          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
           <paper-button class="smaller" on-tap="reject" dialog-confirm autofocus>Reject</paper-button>
         </div>
       </paper-dialog>
@@ -159,7 +159,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         <h2>Confirm Approve</h2>
         <p>Are you sure you want to approve this incident?</p>
         <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>Canel</paper-button>
+          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
           <paper-button class="smaller" on-tap="approve" dialog-confirm autofocus>Approve</paper-button>
         </div>
       </paper-dialog>

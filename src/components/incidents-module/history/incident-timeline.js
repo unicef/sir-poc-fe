@@ -119,18 +119,26 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
                       </div>
                     </template>
                     <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
-                      <div class="card">
-                        [[getUserName(item.by_user, item.by_user_display)]] changed fields:
-                        <p> [[getChangedFileds(item.change)]] </p>
-                        You can
-                        <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
-                          view the changes
-                        </a>
-                        or
-                        <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
-                          view the entire incident at this revision
-                        </a>
-                      </div>
+                      <template is="dom-if" if="[[statusHasChanged(item.change)]]">
+                        <div class="card">
+                          [[getUserName(item.by_user, item.by_user_display)]] [[item.change.status.after]] this <br>
+                        </div>
+                      </template>
+
+                      <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
+                        <div class="card">
+                          [[getUserName(item.by_user, item.by_user_display)]] changed fields:
+                          <p> [[getChangedFileds(item.change)]] </p>
+                          You can
+                          <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
+                            view the changes
+                          </a>
+                          or
+                          <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
+                            view the entire incident at this revision
+                          </a>
+                        </div>
+                      </template>
                     </template>
                     <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
                       <div class="card">
@@ -222,6 +230,10 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
 
   actionIs(received, expected) {
     return received === expected;
+  }
+
+  statusHasChanged(changesObj) {
+    return Object.keys(changesObj).indexOf('status') > -1;
   }
 
   getUserName(userId, fallback) {

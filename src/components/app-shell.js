@@ -74,14 +74,34 @@ class MyApp extends connect(store)(PolymerElement) {
 
         #menu-header {
           @apply --layout-horizontal;
+          @apply --layout-center;
           height: 63px;
           border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+          background-color: var(--menu-header-bg, #d6d8d9);
+        }
+        
+        #menu-header #app-logo {
+          @apply --layout-horizontal;
+          @apply --layout-center;
+          @apply --layout-center-justified;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          border: 2px solid var(--primary-color);
+          background-color: #fff;
+          color: var(--primary-color);
+          font-size: 20px;
         }
 
-        #menu-header iron-icon {
+        #menu-header #app-name {
+          @apply --layout-vertical;
+          margin-left: 8px;
+          font-size: 14px;
+        }
+        
+        #menu-header #app-name span:last-child {
           color: var(--secondary-text-color);
-          height: 48px;
-          margin-right: 8px;
+          font-size: 13px;
         }
 
         .capitalize {
@@ -129,8 +149,11 @@ class MyApp extends connect(store)(PolymerElement) {
         <!-- Drawer content -->
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar id="menu-header">
-            <iron-icon icon="event"></iron-icon>
-            <span>Menu</span>
+            <span id="app-logo">SIR</span>
+            <span id="app-name">
+              <span>Safety and Security</span>
+              <span>Incident Recording System</span>
+            </span>
           </app-toolbar>
 
           <div class="drawer-list">

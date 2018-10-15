@@ -84,6 +84,10 @@ class MyApp extends connect(store)(PolymerElement) {
           margin-right: 8px;
         }
 
+        .capitalize {
+          text-transform: capitalize;
+        }
+
         .drawer-list a {
           @apply --layout-horizontal;
           @apply --layout-center;
@@ -180,7 +184,7 @@ class MyApp extends connect(store)(PolymerElement) {
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title="">SIR</div>
+              <div main-title="" class="capitalize">SIR - [[page]]</div>
             </app-toolbar>
           </app-header>
 

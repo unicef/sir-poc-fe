@@ -192,7 +192,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
   }
 
   _addUnPersonnel() {
-    updatePath(`incidents/impact/${this.incidentId}/un-personel/new/`);
+    updatePath(`incidents/impact/${this.incidentId}/un-personnel/new/`);
   }
 
   _addEvacuation() {

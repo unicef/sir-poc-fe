@@ -57,12 +57,12 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
         <div class="row-h">
           <div class="col col-5 center-text">
             <div class="large-text"> [[filteredEvents.length]]</div>
-            Events between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
+            Events between [[checkSelection(selectedStartDate)]] and [[checkSelection(selectedEndDate)]]
           </div>
           <div class="col col-2"></div>
           <div class="col col-5 center-text">
             <div class="large-text"> [[filteredIncidents.length]]</div>
-            Incidents between [[prettyDate(selectedStartDate)]] and [[prettyDate(selectedEndDate)]]
+            Incidents between [[checkSelection(selectedStartDate)]] and [[checkSelection(selectedEndDate)]]
           </div>
         </div>
 
@@ -147,6 +147,13 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
     return filteredIncidents;
   }
 
+  checkSelection(date) {
+    if (date) {
+      return this.prettyDate(date);
+    } else {
+      return '---';
+    }
+  }
 }
 
 window.customElements.define(DashboardController.is, DashboardController);

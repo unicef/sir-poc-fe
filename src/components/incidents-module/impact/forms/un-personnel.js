@@ -6,6 +6,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import {
@@ -23,13 +24,14 @@ import {
   validateFields
 } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
-import DateMixin from "../../../common/date-mixin.js";
+import DateMixin from '../../../common/date-mixin.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
+import { clearErrors } from '../../../../actions/errors.js';
 
 /**
  * @polymer
@@ -222,6 +224,11 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                     error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
+              <template is="dom-if" if="[[_shouldShowNextOfKinCheckbox(selectedImpactType.name)]]">
+                <div class="col col-3">
+                  <paper-checkbox checked="{{data.next_of_kin_notified}}">Next of Kin Notified?</paper-checkbox>
+                </div>
+              </template>
               <template is="dom-if" if="[[_shouldShowCaptureForm(selectedImpactType.name)]]">
                 <div class="col col-3">
                   <datepicker-lite id="captureDate"

@@ -90,6 +90,7 @@ class MyApp extends connect(store)(PolymerElement) {
           border: 2px solid var(--primary-color);
           background-color: #fff;
           color: var(--primary-color);
+          font-size: 20px;
         }
 
         #menu-header #app-name {

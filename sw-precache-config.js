@@ -11,6 +11,7 @@
 module.exports = {
   staticFileGlobs: [
     'src/**/*',
+    'images/**/*',
     'manifest.json',
     'node_modules/moment/min/moment.min.js',
     'node_modules/web-animations-js/web-animations-next-lite.min.js',

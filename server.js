@@ -10,7 +10,7 @@ var proxy = require('http-proxy-middleware');
 
 const app = express();
 const basedir = __dirname + '/build/'; // eslint-disable-line
-let port = 8082;
+let port = 8080;
 
 let portOptionIndex = process.argv.indexOf('-p');// eslint-disable-line
 let isDevelopment = process.argv.indexOf('--dev') > -1;// eslint-disable-line

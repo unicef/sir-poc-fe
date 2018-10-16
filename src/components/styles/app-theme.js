@@ -24,6 +24,7 @@ documentContainer.innerHTML = `
         --primary-error-color: #ea4022;
         --secondary-error-color: #f8d7da;
 
+        --menu-header-bg: #d6d8d9;
         --menu-selected-bg-color: #e8e8e8;
         --unsynced-item-bg-color: var(--secondary-error-color);
 

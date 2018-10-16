@@ -32,6 +32,7 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
       paper-input,
       paper-textarea,
       datepicker-lite,
+      time-input,
       etools-dropdown-lite,
       etools-dropdown-multi-lite {
         --paper-input-container-underline-focus: {
@@ -43,6 +44,7 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
       }
 
       paper-input[readonly],
+      time-input[readonly],
       paper-textarea[readonly],
       datepicker-lite[readonly],
       etools-dropdown-lite[readonly],

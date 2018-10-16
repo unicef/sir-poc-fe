@@ -75,7 +75,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <errors-box></errors-box>
         </div>
         <fieldset>
-          <legend><h3>Incident details</h3></legend>
+          <legend><h3>Incident Details</h3></legend>
           <div>
             <div class="row-h flex-c p-relative">
               <div class="col col-4">
@@ -97,7 +97,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <etools-dropdown-lite id="threatCategory"
                                         slot="field"
                                         readonly="[[readonly]]"
-                                        label="Threat category"
+                                        label="Threat Category"
                                         options="[[staticData.threatCategories]]"
                                         selected="{{incident.threat_category}}"
                                         selected-item="{{selectedThreatCategory}}"
@@ -133,7 +133,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <etools-dropdown-lite id="incidentCat"
                                         slot="field"
                                         readonly="[[readonly]]"
-                                        label="Incident category"
+                                        label="Incident Category"
                                         options="[[staticData.incidentCategories]]"
                                         selected="{{incident.incident_category}}"
                                         selected-item="{{selectedIncidentCategory}}"
@@ -303,6 +303,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       trigger-value-change-event
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
+                                      readonly="[[readonly]]"
                                       enable-none-option
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
@@ -311,7 +312,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="row-h flex-c">
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="primaryPersonFirstName"
                              label="First Name"
                              value="{{incident.primary_person.first_name}}"
@@ -321,7 +322,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
 
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="primaryPersonLastName"
                              label="Last Name"
                              value="{{incident.primary_person.last_name}}"
@@ -330,7 +331,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="indexNumber"
                              label="Index Number"
                              value="{{incident.primary_person.index_number}}"
@@ -383,7 +384,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
             <div class="row-h flex-c">
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="jobTitle"
                              label="Job Title"
                              value="{{incident.primary_person.job_title}}"
@@ -391,7 +392,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="typeOfContract"
                              label="Type of Contract"
                              value="{{incident.primary_person.type_of_contract}}"
@@ -400,7 +401,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="contact"
                              label="Contact"
                              value="{{incident.primary_person.contact}}"
@@ -422,6 +423,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
+                <etools-dropdown-lite id="region"
+                                      readonly="[[readonly]]"
+                                      required auto-validate
+                                      label="Region"
+                                      options="[[staticData.regions]]"
+                                      selected="{{incident.region}}">
+                </etools-dropdown-lite>
+              </div>
+
+              <div class="col col-3">
                 <etools-dropdown-lite id="country"
                                       readonly="[[readonly]]"
                                       label="Country"
@@ -429,15 +440,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       selected="{{incident.country}}"
                                       required auto-validate
                                       error-message="Country is required">
-                </etools-dropdown-lite>
-              </div>
-              <div class="col col-3">
-                <etools-dropdown-lite id="region"
-                                      readonly="[[readonly]]"
-                                      required auto-validate
-                                      label="Region"
-                                      options="[[staticData.regions]]"
-                                      selected="{{incident.region}}">
                 </etools-dropdown-lite>
               </div>
 
@@ -458,7 +460,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <paper-input id="street"
                             readonly$="[[readonly]]" label="Street" type="text"
                             placeholder="&#8212;" value="{{incident.street}}"
-                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                             error-message="Street is required"></paper-input>
               </div>
             </div>
@@ -470,7 +471,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <datepicker-lite id="incidentDate"
                                 value="{{incident.incident_date}}"
                                 readonly="[[readonly]]"
-                                label="Incident date"
+                                label="Incident Date"
                                 required
                                 error-message="Incident date is required">
                 </datepicker-lite>
@@ -479,7 +480,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <div class="col col-3">
                 <time-input id="incidentTime"
                             readonly$="[[readonly]]"
-                            label="Incident time"
+                            label="Incident Time"
                             value="{{incident.incident_time}}"
                             required auto-validate
                             error-message="Incident time is required">

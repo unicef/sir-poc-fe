@@ -27,7 +27,7 @@ class ViewIncident extends IncidentsBaseView {
           </a>
           <paper-button raised
                     on-click="openSubmitConfirmation"
-                    hidden$="[[canNotSubmit(incident.event, state.app.offline, incidentId, incident.status)]]">
+                    hidden$="[[canNotSubmit(state.app.offline, incident.status)]]">
             Submit
           </paper-button>
         </div>
@@ -75,12 +75,8 @@ class ViewIncident extends IncidentsBaseView {
     return false;
   }
 
-  canNotSubmit(eventId, offline, incidentId, status) {
-    if (!this.canNotSave(eventId, offline, incidentId)) {
-      return false;
-    }
-
-    return status !== 'created';
+  canNotSubmit(offline, status) {
+    return status !== 'created' || offline;
   }
 
   showSuccessMessage() {

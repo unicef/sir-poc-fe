@@ -139,9 +139,21 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
           </div>
           <div class="row-h flex-c">
             <div class="col col-12">
-              <paper-button class="btn" raised on-click="addComment"> Add comment </paper-button>
-              <paper-button class="btn" raised on-click="openApproveConfirmation"> Approve </paper-button>
-              <paper-button class="btn" raised on-click="openRejectConfirmation"> Reject </paper-button>
+              <paper-button class="btn" raised
+                                        on-click="addComment"
+                                        hidden$="[[offline]]">
+                Add comment
+              </paper-button>
+              <paper-button class="btn" raised
+                                        hidden$="[[_hideApproveButton(offline, incident.status)]]"
+                                        on-click="openApproveConfirmation">
+                Approve
+              </paper-button>
+              <paper-button class="btn" raised
+                                        hidden$="[[_hideRejectButton(offline, incident.status)]]"
+                                        on-click="openRejectConfirmation">
+                Reject
+              </paper-button>
             </div>
           </div>
       </div>
@@ -280,6 +292,15 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
       store.dispatch(showSnackbar('Incident approved'));
     }
   }
+
+  _hideApproveButton(offline, status) {
+    return ['submitted', 'rejected'].indexOf(status) === -1 || offline;
+  }
+
+  _hideRejectButton(offline, status) {
+    return status !== 'submitted' || offline;
+  }
+
 
 }
 

@@ -60,13 +60,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         paper-input {
           width: 100%;
         }
-        
+
         #get-location {
           margin-left: 16px;
         }
 
       </style>
-      
+
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
@@ -518,10 +518,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                               value="{{incident.longitude}}"
                               placeholder="&#8212;">
                   </paper-input>
-                  
+
                   <paper-icon-button id="get-location"
-                                     on-click="getLocation" 
-                                     title="Use device location" 
+                                     on-click="getLocation"
+                                     title="Use device location"
                                      icon="device:gps-fixed">
                   </paper-icon-button>
                 </div>

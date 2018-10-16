@@ -63,7 +63,20 @@ documentContainer.innerHTML = `<dom-module id="filters-styles">
       
       .filters .filter:not(:first-of-type) {
           padding-left: 0;
-        }
+      }
+
+      .filters-button {
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        color: var(--list-secondary-text-color, #757575);
+        font-weight: bold;
+      }
+
+      #toggleIcon {
+        --iron-icon-height: 32px;
+        --iron-icon-width: 32px;
+      }
       
       @media screen and (max-width: 768px) {
         .filter{

@@ -73,7 +73,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
-        <paper-button raised class="white-bg" on-tap="_toggleFilters">Filters</paper-button>
         <iron-collapse id="collapse">
           <div class="filters">
             <paper-input class="filter search-input"
@@ -155,9 +154,14 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 <paper-item doc-type="xlsx">XLSX</paper-item>
               </paper-listbox>
             </paper-menu-button>
-            </div>
-          </iron-collapse>
+          </div>
+        </iron-collapse>
+
+        <div class="filters-button" on-tap="_toggleFilters">
+          FILTERS<br>
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
         </div>
+      </div>
 
       <div class="card list">
         <etools-data-table-header id="listHeader"
@@ -371,6 +375,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
   _toggleFilters() {
     this.$.collapse.toggle();
+    this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
   }
 
   _queryParamsChanged(params) {

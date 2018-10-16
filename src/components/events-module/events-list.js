@@ -75,7 +75,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
-        <paper-button raised class="white-bg" on-tap="_toggleFilters">Filters</paper-button>
         <iron-collapse id="collapse">
           <div class="filters">
             <paper-input class="filter search-input"
@@ -108,6 +107,11 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
             </div>
           </div>
         </iron-collapse>
+
+        <div class="filters-button" on-tap="_toggleFilters">
+          FILTERS<br>
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+        </div>
       </div>
 
       <div class="card list">
@@ -361,6 +365,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
 
   _toggleFilters() {
     this.$.collapse.toggle();
+    this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
   }
 
   isApproved(status) {

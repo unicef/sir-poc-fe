@@ -76,6 +76,10 @@ documentContainer.innerHTML = `
           color: var(--warning-text-color, orange);
         }
 
+        .alert-text {
+          color: red;
+        }
+
         paper-button {
           background-color: var(--app-primary-color, #4285f4);
           --paper-button: {

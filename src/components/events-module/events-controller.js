@@ -27,10 +27,14 @@ class EventsController extends connect(store)(BaseController) {
         .tabs-container {
           background-color: white;
           border-left: 1px solid #eeeeee;
+          border-bottom: 1px solid #eeeeee;
           --paper-tabs: {
             font-size: 14px;
             max-width: 350px;
           }
+          position: -webkit-sticky; /* Safari */
+          position: sticky;
+          top: -1px;
         }
 
         paper-tabs {

@@ -36,4 +36,4 @@ RUN npm install polymer-cli \
 
 ENV PATH="/code/node_modules/.bin:${PATH}"
 
-CMD ["polymer", "serve", "-H", "0.0.0.0"]
+CMD ["npm", "run", "start"]

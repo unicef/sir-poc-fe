@@ -49,13 +49,48 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-        <h3> Impacted non-UN personnel </h3>
-
+      
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
 
         <fieldset>
+          <legend><h3>Impact details</h3></legend>
+          <div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-dropdown-lite
+                            id="impact"
+                            label="Impact"
+                            readonly="[[readonly]]"
+                            options="[[staticData.impacts.person]]"
+                            selected="{{data.impact}}"
+                            selected-item="{{selectedImpactType}}"
+                            required auto-validate
+                            error-message="Impact is required">
+                </etools-dropdown-lite>
+              </div>
+              <template is="dom-if" if="[[_shouldShowNextOfKinCheckbox(selectedImpactType.name)]]">
+                <div class="col col-3">
+                  <paper-checkbox checked="{{data.next_of_kin_notified}}">Next of Kin Notified?</paper-checkbox>
+                </div>
+              </template>
+            </div>
+            <div class="row-h flex-c">
+              <div class="col col-12">
+                <paper-textarea id="description"
+                                readonly$="[[readonly]]"
+                                label="Description"
+                                placeholder="&#8212;"
+                                value="{{data.description}}">
+                </paper-textarea>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        
+        <fieldset>
+          <legend><h3>Impacted Non-UN Personnel</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-3">
               <paper-input id="firstName"
@@ -150,40 +185,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                   options="[[staticData.cities]]"
                   selected="{{data.person.city}}">
               </etools-dropdown-lite>
-            </div>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend><h3>Impact details</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <etools-dropdown-lite
-                            id="impact"
-                            label="Impact"
-                            readonly="[[readonly]]"
-                            options="[[staticData.impacts.person]]"
-                            selected="{{data.impact}}"
-                            selected-item="{{selectedImpactType}}"
-                            required auto-validate
-                            error-message="Impact is required">
-                </etools-dropdown-lite>
-              </div>
-              <template is="dom-if" if="[[_shouldShowNextOfKinCheckbox(selectedImpactType.name)]]">
-                <div class="col col-3">
-                  <paper-checkbox checked="{{data.next_of_kin_notified}}">Next of Kin Notified?</paper-checkbox>
-                </div>
-              </template>
-            </div>
-            <div class="row-h flex-c">
-              <div class="col col-12">
-                <paper-textarea id="description"
-                                readonly$="[[readonly]]"
-                                label="Description"
-                                placeholder="&#8212;"
-                                value="{{data.description}}">
-                </paper-textarea>
-              </div>
             </div>
           </div>
         </fieldset>

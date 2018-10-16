@@ -52,13 +52,79 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
       </style>
 
       <div class="card">
-        <h3> Impacted UN personnel </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
 
         <fieldset>
+          <legend><h3>Impact details</h3></legend>
+          <div>
+            <div class="row-h flex-c">
+              <div class="col col-3">
+                <etools-dropdown-lite
+                    id="status"
+                    label="Status"
+                    readonly="[[readonly]]"
+                    options="[[statuses]]"
+                    selected="{{data.status}}"
+                    required auto-validate
+                    error-message="Status is required">
+                </etools-dropdown-lite>
+              </div>
+              <div class="col col-3">
+                <etools-dropdown-lite
+                    id="impact"
+                    label="Impact"
+                    readonly="[[readonly]]"
+                    options="[[staticData.impacts.person]]"
+                    selected="{{data.impact}}"
+                    selected-item="{{selectedImpactType}}"
+                    required auto-validate
+                    error-message="Impact is required">
+                </etools-dropdown-lite>
+              </div>
+              <template is="dom-if" if="[[_shouldShowNextOfKinCheckbox(selectedImpactType.name)]]">
+                <div class="col col-3">
+                  <paper-checkbox checked="{{data.next_of_kin_notified}}">Next of Kin Notified?</paper-checkbox>
+                </div>
+              </template>
+              <template is="dom-if" if="[[_shouldShowCaptureForm(selectedImpactType.name)]]">
+                <div class="col col-3">
+                  <datepicker-lite id="captureDate"
+                                   value="{{data.capture_date}}"
+                                   max-date="[[toDate(data.release_date)]]"
+                                   readonly="[[readonly]]"
+                                   label="Captured on">
+                  </datepicker-lite>
+                </div>
+                <div class="col col-3">
+                  <datepicker-lite id="releaseDate"
+                                   value="{{data.release_date}}"
+                                   min-date="[[toDate(data.capture_date)]]"
+                                   readonly="[[readonly]]"
+                                   label="Released on">
+                  </datepicker-lite>
+                </div>
+              </template>
+            </div>
+            <div class="row-h flex-c">
+              <div class="col col-12">
+                <paper-textarea id="description"
+                                readonly$="[[readonly]]"
+                                label="Description"
+                                placeholder="&#8212;"
+                                value="{{data.description}}"
+                                required auto-validate
+                                error-message="Description is required">
+                </paper-textarea>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><h3> Impacted UN personnel</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
@@ -194,71 +260,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                            label="Job title"
                            value="{{data.person.job_title}}">
               </paper-input>
-            </div>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend><h3>Impact details</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <etools-dropdown-lite
-                    id="status"
-                    label="Status"
-                    readonly="[[readonly]]"
-                    options="[[statuses]]"
-                    selected="{{data.status}}"
-                    required auto-validate
-                    error-message="Status is required">
-                </etools-dropdown-lite>
-              </div>
-              <div class="col col-3">
-                <etools-dropdown-lite
-                    id="impact"
-                    label="Impact"
-                    readonly="[[readonly]]"
-                    options="[[staticData.impacts.person]]"
-                    selected="{{data.impact}}"
-                    selected-item="{{selectedImpactType}}"
-                    required auto-validate
-                    error-message="Impact is required">
-                </etools-dropdown-lite>
-              </div>
-              <template is="dom-if" if="[[_shouldShowNextOfKinCheckbox(selectedImpactType.name)]]">
-                <div class="col col-3">
-                  <paper-checkbox checked="{{data.next_of_kin_notified}}">Next of Kin Notified?</paper-checkbox>
-                </div>
-              </template>
-              <template is="dom-if" if="[[_shouldShowCaptureForm(selectedImpactType.name)]]">
-                <div class="col col-3">
-                  <datepicker-lite id="captureDate"
-                                   value="{{data.capture_date}}"
-                                   max-date="[[toDate(data.release_date)]]"
-                                   readonly="[[readonly]]"
-                                   label="Captured on">
-                  </datepicker-lite>
-                </div>
-                <div class="col col-3">
-                  <datepicker-lite id="releaseDate"
-                                   value="{{data.release_date}}"
-                                   min-date="[[toDate(data.capture_date)]]"
-                                   readonly="[[readonly]]"
-                                   label="Released on">
-                  </datepicker-lite>
-                </div>
-              </template>
-            </div>
-            <div class="row-h flex-c">
-              <div class="col col-12">
-                <paper-textarea id="description"
-                                readonly$="[[readonly]]"
-                                label="Description"
-                                placeholder="&#8212;"
-                                value="{{data.description}}"
-                                required auto-validate
-                                error-message="Description is required">
-                </paper-textarea>
-              </div>
             </div>
           </div>
         </fieldset>

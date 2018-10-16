@@ -303,6 +303,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       trigger-value-change-event
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
+                                      readonly="[[readonly]]"
                                       enable-none-option
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
@@ -311,7 +312,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="row-h flex-c">
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="primaryPersonFirstName"
                              label="First Name"
                              value="{{incident.primary_person.first_name}}"
@@ -321,7 +322,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
 
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="primaryPersonLastName"
                              label="Last Name"
                              value="{{incident.primary_person.last_name}}"
@@ -330,7 +331,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="indexNumber"
                              label="Index Number"
                              value="{{incident.primary_person.index_number}}"
@@ -383,7 +384,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
             <div class="row-h flex-c">
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="jobTitle"
                              label="Job Title"
                              value="{{incident.primary_person.job_title}}"
@@ -391,7 +392,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="typeOfContract"
                              label="Type of Contract"
                              value="{{incident.primary_person.type_of_contract}}"
@@ -400,7 +401,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="contact"
                              label="Contact"
                              value="{{incident.primary_person.contact}}"
@@ -458,7 +459,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <paper-input id="street"
                             readonly$="[[readonly]]" label="Street" type="text"
                             placeholder="&#8212;" value="{{incident.street}}"
-                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                             error-message="Street is required"></paper-input>
               </div>
             </div>

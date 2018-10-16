@@ -69,6 +69,10 @@ class MyApp extends connect(store)(PolymerElement) {
           color: #fff;
           background-color: var(--app-primary-color);
         }
+        
+        app-header app-toolbar {
+          @apply --layout-justified;
+        }
 
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
@@ -139,7 +143,11 @@ class MyApp extends connect(store)(PolymerElement) {
           color: var(--app-primary-color);
         }
         
-        :host([page="login"]) app-drawer:after {
+        :host([page="login"]) app-drawer .drawer-list {
+          position: relative;  
+        }
+        
+        :host([page="login"]) app-drawer .drawer-list:after {
           position: absolute;
           content: "";
           top: 0;
@@ -153,8 +161,7 @@ class MyApp extends connect(store)(PolymerElement) {
           display: none;
         }
 
-        :host([page="login"]) app-drawer a,
-        :host([page="login"]) app-drawer app-toolbar {
+        :host([page="login"]) app-drawer a {
           -webkit-filter: blur(2px);
           -moz-filter: blur(2px);
           -o-filter: blur(2px);

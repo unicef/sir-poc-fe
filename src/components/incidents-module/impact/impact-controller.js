@@ -55,7 +55,7 @@ export class ImpactController extends connect(store)(PolymerElement) {
         data="{{subrouteData}}">
       </app-route>
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" selected-attribute="visible" role="main">
-        <un-personnel-form name="un-personel" impact-id="[[subrouteData.id]]"></un-personnel-form>
+        <un-personnel-form name="un-personnel" impact-id="[[subrouteData.id]]"></un-personnel-form>
         <non-un-personnel-form name="non-un" impact-id="[[subrouteData.id]]"></non-un-personnel-form>
         <evacuation-form name="evacuation" impact-id="[[subrouteData.id]]"></evacuation-form>
         <property-form name="property" impact-id="[[subrouteData.id]]"></property-form>

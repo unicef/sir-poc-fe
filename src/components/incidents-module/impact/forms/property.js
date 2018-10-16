@@ -1,31 +1,31 @@
 /**
-@license
-*/
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+ * @license
+ */
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 
 import {
-    addProperty,
-    editProperty,
-    syncProperty
-  } from '../../../../actions/incident-impacts.js';
-import { store } from '../../../../redux/store.js';
-import { scrollToTop } from '../../../common/content-container-helper.js';
-import { updatePath } from '../../../common/navigation-helper.js';
+  addProperty,
+  editProperty,
+  syncProperty
+} from '../../../../actions/incident-impacts.js';
+import {store} from '../../../../redux/store.js';
+import {scrollToTop} from '../../../common/content-container-helper.js';
+import {updatePath} from '../../../common/navigation-helper.js';
 import {
-    resetFieldsValidations,
-    validateFields
-  } from '../../../common/validations-helper.js';
+  resetFieldsValidations,
+  validateFields
+} from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
-import { ImpactFormBase } from './impact-form-base.js';
+import {ImpactFormBase} from './impact-form-base.js';
 
 /**
  * @polymer
@@ -37,11 +37,13 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
   }
 
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles form-fields-styles">
         :host {
           @apply --layout-vertical;
         }
+
         errors-box {
           margin: 0 24px;
         }
@@ -56,38 +58,37 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-12">
+            <div class="col col-3">
               <etools-dropdown-lite
-                        id="agency"
-                        label="Owner"
-                        readonly="[[readonly]]"
-                        options="[[staticData.agencies]]"
-                        selected="{{data.agency}}">
+                  id="agency"
+                  label="Owner"
+                  readonly="[[readonly]]"
+                  options="[[staticData.agencies]]"
+                  selected="{{data.agency}}">
               </etools-dropdown-lite>
             </div>
-          </div>
-          <div class="row-h flex-c">
-            <div class="col col-6">
+            <div class="col col-2">
               <etools-dropdown-lite
-                        id="property_type"
-                        label="Property type"
-                        readonly="[[readonly]]"
-                        options="[[staticData.propertyTypes]]"
-                        selected="{{data.property_type}}">
+                  id="property_type"
+                  label="Property type"
+                  readonly="[[readonly]]"
+                  options="[[staticData.propertyTypes]]"
+                  selected="{{data.property_type}}">
               </etools-dropdown-lite>
             </div>
-
-            <div class="col col-6">
+            <div class="col col-2">
               <paper-input id="value"
-                              readonly$="[[readonly]]"
-                              label="Value"
-                              type="number"
-                              placeholder="&#8212;"
-                              value="{{data.value}}">
+                           readonly$="[[readonly]]"
+                           label="Value"
+                           type="number"
+                           placeholder="&#8212;"
+                           value="{{data.value}}"
+                           required
+                           error-message="Value is required">
               </paper-input>
             </div>
-
           </div>
+
         </fieldset>
         <fieldset>
           <legend><h3>Impact details</h3></legend>
@@ -95,14 +96,14 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
             <div class="row-h flex-c">
               <div class="col col-3">
                 <etools-dropdown-lite
-                            id="category"
-                            label="Impact"
-                            readonly="[[readonly]]"
-                            options="[[staticData.impacts.property]]"
-                            selected="{{data.impact}}"
-                            selected-item="{{selectedImpactType}}"
-                            required auto-validate
-                            error-message="Impact is required">
+                    id="category"
+                    label="Impact"
+                    readonly="[[readonly]]"
+                    options="[[staticData.impacts.property]]"
+                    selected="{{data.impact}}"
+                    selected-item="{{selectedImpactType}}"
+                    required auto-validate
+                    error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
             </div>
@@ -177,7 +178,8 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
         type: Array,
         value: [
           '#category',
-          '#description'
+          '#description',
+          '#value'
         ]
       }
     };
@@ -188,6 +190,7 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
       '_idChanged(impactId)'
     ];
   }
+
   _stateChanged(state) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;

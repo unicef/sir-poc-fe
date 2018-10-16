@@ -7,8 +7,8 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
@@ -23,15 +23,15 @@ import '@polymer/iron-media-query/iron-media-query.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import { store } from '../../redux/store.js';
+import {store} from '../../redux/store.js';
 import 'etools-date-time/datepicker-lite.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import { syncIncidentOnList } from '../../actions/incidents.js';
+import {syncIncidentOnList} from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 import {updateAppState} from '../common/navigation-helper';
-import { getNameFromId } from '../common/utils.js';
-import { Endpoints } from '../../config/endpoints.js';
+import {getNameFromId} from '../common/utils.js';
+import {Endpoints} from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -87,10 +87,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
         <datepicker-lite class="filter"
                          value="{{filters.startDate}}"
+                         max-date="[[toDate(filters.endDate)]]"
                          label="From"></datepicker-lite>
 
         <datepicker-lite class="filter"
                          value="{{filters.endDate}}"
+                         min-date="[[toDate(filters.startDate)]]"
                          label="To"></datepicker-lite>
 
         <etools-dropdown-lite class="filter select"
@@ -143,10 +145,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             Export
           </paper-button>
           <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
-              <paper-item doc-type="pdf">PDF</paper-item>
-              <paper-item doc-type="csv">CSV</paper-item>
-              <paper-item doc-type="xls">XLS</paper-item>
-              <paper-item doc-type="xlsx">XLSX</paper-item>
+            <paper-item doc-type="pdf">PDF</paper-item>
+            <paper-item doc-type="csv">CSV</paper-item>
+            <paper-item doc-type="xls">XLS</paper-item>
+            <paper-item doc-type="xlsx">XLSX</paper-item>
           </paper-listbox>
         </paper-menu-button>
 
@@ -156,19 +158,25 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <etools-data-table-header id="listHeader"
                                   label="Incidents"
                                   low-resolution-layout="[[lowResolutionLayout]]">
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-1">
             Case number
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-4">
+            Description
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
             City
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
-            Incident Category
+          <etools-data-table-column class="col-1">
+            Category
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Subcategory
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Status
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
             Actions
           </etools-data-table-column>
         </etools-data-table-header>
@@ -177,18 +185,26 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
-              <span class="col-data col-3" data-col-header-label="Case number">
+              <span class="col-data col-1" data-col-header-label="Case number">
                 <span class="truncate">
                   <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
                 </span>
               </span>
-              <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">
+              <span class="col-data col-4" data-col-header-label="Case number">
+                <span class="truncate">
+                  [[item.description]]
+                </span>
+              </span>
+              <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
                   <span>[[getNameFromId(item.city, 'cities')]]</span>
               </span>
-              <span class="col-data col-3" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
+              <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">
                 <span>[[getNameFromId(item.incident_category, 'incidentCategories')]]</span>
-
+              </span>
+              <span class="col-data col-2" title="[[getIncidentSubcategory(item.incident_subcategory)]]"
+                    data-col-header-label="Incident Subcategory">
+                <span>[[getIncidentSubcategory(item.incident_subcategory)]]</span>
               </span>
               <span class="col-data col-2" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
@@ -202,13 +218,17 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                   </etools-info-tooltip>
                 </template>
               </span>
-              <span class="col-data col-2" data-col-header-label="Actions">
-                <a href="/incidents/view/[[item.id]]">
-                  <iron-icon icon="assignment" title="View Incident"></iron-icon>
-                </a>
-                <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
-                  <iron-icon icon="editor:mode-edit"></iron-icon>
-                </a>
+              <span class="col-data col-1" data-col-header-label="Actions">
+                <template is="dom-if" if="[[isApproved(item.status)]]">
+                  <a href="/incidents/view/[[item.id]]">
+                    <iron-icon icon="assignment" title="View Incident"></iron-icon>
+                  </a>
+                </template>
+                <template is="dom-if" if="[[!isApproved(item.status)]]">
+                  <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
+                    <iron-icon icon="editor:mode-edit"></iron-icon>
+                  </a>
+                </template>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
                     <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
                     </iron-icon>
@@ -230,7 +250,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
                 <div class="row-h flex-c">
                   <div class="col col-6">
-                    <strong class="rdc-title inline">Description: </strong>
+                    <strong class="rdc-title inline">Long Description: </strong>
                     <span>[[item.description]]</span>
                   </div>
                   <div class="col col-6">
@@ -345,7 +365,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _queryParamsChanged(params) {
-    if (params && this.visible ) {
+    if (params && this.visible) {
       if (params.q && params.q !== this.filters.q) {
         this.set('filters.q', params.q);
       }
@@ -431,15 +451,15 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
     filteredIncidents = filteredIncidents.filter(incident => this._applyQFilter(incident, q));
     filteredIncidents = filteredIncidents.filter(incident => this._applyStatusFilter(incident,
-                                                                                      this.filters.syncStatus));
+        this.filters.syncStatus));
     filteredIncidents = filteredIncidents.filter(incident => this._applyDateFilter(incident, startDate, endDate));
     filteredIncidents = filteredIncidents.filter(incident => this._applyCountryFilter(incident, country));
     filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentCategoryFilter(incident,
-                                                                                                    incidentCategory));
+        incidentCategory));
     filteredIncidents = filteredIncidents.filter(incident => this._applyEventFilter(incident, event));
     filteredIncidents = filteredIncidents.filter(incident => this._applyTargetFilter(incident, target));
     filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentSubcategoryFilter(incident,
-                                                                                                        subcategory));
+        subcategory));
     filteredIncidents = filteredIncidents.filter(incident => this._applyThreatCategoryFilter(incident, threatCategory));
 
     return this.applyPagination(filteredIncidents);
@@ -516,6 +536,18 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
   notEditable(incident, offline) {
     return offline && !incident.unsynced;
+  }
+
+  isApproved(status) {
+    return status === 'approved';
+  }
+
+  getIncidentSubcategory(id) {
+    if (id) {
+      let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
+      let selectedDatum = allSubCategories.find(item => item.id === id);
+      return selectedDatum.name;
+    }
   }
 
   // Outputs the query string for the list

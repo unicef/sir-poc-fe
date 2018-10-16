@@ -1,32 +1,32 @@
 /**
-@license
-*/
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+ * @license
+ */
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import {
-    addEvacuation,
-    editEvacuation,
-    syncEvacuation
-  } from '../../../../actions/incident-impacts.js';
-import { store } from '../../../../redux/store.js';
-import { scrollToTop } from '../../../common/content-container-helper.js';
-import { updatePath } from '../../../common/navigation-helper.js';
+  addEvacuation,
+  editEvacuation,
+  syncEvacuation
+} from '../../../../actions/incident-impacts.js';
+import {store} from '../../../../redux/store.js';
+import {scrollToTop} from '../../../common/content-container-helper.js';
+import {updatePath} from '../../../common/navigation-helper.js';
 import {
-    resetFieldsValidations,
-    validateFields
-  } from '../../../common/validations-helper.js';
+  resetFieldsValidations,
+  validateFields
+} from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
-import { ImpactFormBase } from './impact-form-base.js';
+import {ImpactFormBase} from './impact-form-base.js';
 
 /**
  * @polymer
@@ -38,11 +38,13 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
   }
 
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles form-fields-styles">
         :host {
           @apply --layout-vertical;
         }
+
         errors-box {
           margin: 0 24px;
         }
@@ -57,50 +59,50 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-6">
+            <div class="col col-3">
               <etools-dropdown-lite
-                        id="agency"
-                        label="Agency"
-                        readonly="[[readonly]]"
-                        options="[[staticData.agencies]]"
-                        selected="{{data.agency}}"
-                        required auto-validate
-                        error-message="This is required">
+                      id="agency"
+                      label="Agency"
+                      readonly="[[readonly]]"
+                      options="[[staticData.agencies]]"
+                      selected="{{data.agency}}"
+                      required auto-validate
+                      error-message="This is required">
               </etools-dropdown-lite>
             </div>
-            <div class="col col-6">
+            <div class="col col-3">
               <datepicker-lite id="date"
-                              value="{{data.date}}"
-                              readonly="[[readonly]]"
-                              label="Date"
-                              required auto-validate
-                              error-message="This is required">
+                               value="{{data.date}}"
+                               readonly="[[readonly]]"
+                               label="Date"
+                               required auto-validate
+                               error-message="This is required">
               </datepicker-lite>
             </div>
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
               <paper-input id="noPersInternational"
-                          type="number"
-                          min="0"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="No. of persons international"
-                          value="{{data.number_international}}"
-                          required auto-validate
-                          error-message="This is required">
+                           type="number"
+                           min="0"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="No. of persons international"
+                           value="{{data.number_international}}"
+                           required auto-validate
+                           error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
               <paper-input id="noDepInternational"
-                          type="number"
-                          min="0"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="No. of dependants international"
-                          value="{{data.number_international_dependants}}"
-                          required auto-validate
-                          error-message="This is required">
+                           type="number"
+                           min="0"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="No. of dependants international"
+                           value="{{data.number_international_dependants}}"
+                           required auto-validate
+                           error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
@@ -127,26 +129,26 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <paper-input id="noPersNational"
-                          type="number"
-                          min="0"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="No. of persons national"
-                          value="{{data.number_national}}"
-                          required auto-validate
-                          error-message="This is required">
+                           type="number"
+                           min="0"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="No. of persons national"
+                           value="{{data.number_national}}"
+                           required auto-validate
+                           error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
               <paper-input id="noDepNational"
-                          type="number"
-                          min="0"
-                          placeholder="&#8212;"
-                          readonly$="[[readonly]]"
-                          label="No. of dependants national"
-                          value="{{data.number_national_dependants}}"
-                          required auto-validate
-                          error-message="This is required">
+                           type="number"
+                           min="0"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="No. of dependants national"
+                           value="{{data.number_national_dependants}}"
+                           required auto-validate
+                           error-message="This is required">
               </paper-input>
             </div>
             <div class="col col-3">
@@ -177,14 +179,14 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
             <div class="row-h flex-c">
               <div class="col col-3">
                 <etools-dropdown-lite
-                            id="category"
-                            label="Impact"
-                            readonly="[[readonly]]"
-                            options="[[staticData.impacts.evacuation]]"
-                            selected="{{data.impact}}"
-                            selected-item="{{selectedImpactType}}"
-                            required auto-validate
-                            error-message="Impact is required">
+                        id="category"
+                        label="Impact"
+                        readonly="[[readonly]]"
+                        options="[[staticData.impacts.evacuation]]"
+                        selected="{{data.impact}}"
+                        selected-item="{{selectedImpactType}}"
+                        required auto-validate
+                        error-message="Impact is required">
                 </etools-dropdown-lite>
               </div>
             </div>
@@ -280,6 +282,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
       '_idChanged(impactId)'
     ];
   }
+
   _stateChanged(state) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;

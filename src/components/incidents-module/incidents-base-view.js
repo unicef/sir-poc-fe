@@ -75,7 +75,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <errors-box></errors-box>
         </div>
         <fieldset>
-          <legend><h3>Incident details</h3></legend>
+          <legend><h3>Incident Details</h3></legend>
           <div>
             <div class="row-h flex-c p-relative">
               <div class="col col-4">
@@ -97,7 +97,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <etools-dropdown-lite id="threatCategory"
                                         slot="field"
                                         readonly="[[readonly]]"
-                                        label="Threat category"
+                                        label="Threat Category"
                                         options="[[staticData.threatCategories]]"
                                         selected="{{incident.threat_category}}"
                                         selected-item="{{selectedThreatCategory}}"
@@ -133,7 +133,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <etools-dropdown-lite id="incidentCat"
                                         slot="field"
                                         readonly="[[readonly]]"
-                                        label="Incident category"
+                                        label="Incident Category"
                                         options="[[staticData.incidentCategories]]"
                                         selected="{{incident.incident_category}}"
                                         selected-item="{{selectedIncidentCategory}}"
@@ -267,13 +267,27 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   <span slot="message">[[selectedCriticality.description]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-9" hidden$="[[!incident.incident_category]]">
+              <div class="col col-3" hidden$="[[isSafetyIncident(selectedIncidentCategory)]]">
                 <etools-dropdown-multi-lite hidden$="[[isSafetyIncident(selectedIncidentCategory)]]"
                                             readonly="[[readonly]]"
                                             label="Weapons used"
                                             options="[[staticData.weapons]]"
                                             selected-values="{{incident.weapons_used}}">
                 </etools-dropdown-multi-lite>
+              </div>
+              <div class="col col-3">
+                <paper-checkbox checked="{{pressCoverageSelected}}" disabled="[[readonly]]">
+                  Press Coverage?
+                </paper-checkbox>
+              </div>
+              <div class="col col-3">
+                <paper-input value="{{incident.press_coverage}}"
+                             placeholder="&#8212;"
+                             label="Press Coverage Description"
+                             hidden$="[[!pressCoverageSelected]]"
+                             readonly="[[readonly]]"
+                             required$="[[pressCoverageSelected]]">
+                </paper-input>
               </div>
             </div>
           </div>
@@ -289,6 +303,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       trigger-value-change-event
                                       on-etools-selected-item-changed="_userSelected"
                                       options="[[staticData.users]]"
+                                      readonly="[[readonly]]"
                                       enable-none-option
                                       error-message="Primary person is required">
                 </etools-dropdown-lite>
@@ -297,7 +312,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             <div class="row-h flex-c">
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="primaryPersonFirstName"
                              label="First Name"
                              value="{{incident.primary_person.first_name}}"
@@ -307,7 +322,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
 
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="primaryPersonLastName"
                              label="Last Name"
                              value="{{incident.primary_person.last_name}}"
@@ -316,7 +331,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="indexNumber"
                              label="Index Number"
                              value="{{incident.primary_person.index_number}}"
@@ -369,7 +384,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
             <div class="row-h flex-c">
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="jobTitle"
                              label="Job Title"
                              value="{{incident.primary_person.job_title}}"
@@ -377,7 +392,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="typeOfContract"
                              label="Type of Contract"
                              value="{{incident.primary_person.type_of_contract}}"
@@ -386,7 +401,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </paper-input>
               </div>
               <div class="col col-3">
-                <paper-input readonly="[[readonly]]"
+                <paper-input readonly$="[[readonly]]"
                              id="contact"
                              label="Contact"
                              value="{{incident.primary_person.contact}}"
@@ -408,6 +423,16 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
+                <etools-dropdown-lite id="region"
+                                      readonly="[[readonly]]"
+                                      required auto-validate
+                                      label="Region"
+                                      options="[[staticData.regions]]"
+                                      selected="{{incident.region}}">
+                </etools-dropdown-lite>
+              </div>
+
+              <div class="col col-3">
                 <etools-dropdown-lite id="country"
                                       readonly="[[readonly]]"
                                       label="Country"
@@ -415,14 +440,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                       selected="{{incident.country}}"
                                       required auto-validate
                                       error-message="Country is required">
-                </etools-dropdown-lite>
-              </div>
-              <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      required auto-validate
-                                      label="Region"
-                                      options="[[staticData.regions]]"
-                                      selected="{{incident.region}}">
                 </etools-dropdown-lite>
               </div>
 
@@ -443,7 +460,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <paper-input id="street"
                             readonly$="[[readonly]]" label="Street" type="text"
                             placeholder="&#8212;" value="{{incident.street}}"
-                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
                             error-message="Street is required"></paper-input>
               </div>
             </div>
@@ -455,8 +471,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <datepicker-lite id="incidentDate"
                                 value="{{incident.incident_date}}"
                                 readonly="[[readonly]]"
-                                label="Incident date"
-                                required auto-validate
+                                label="Incident Date"
+                                required
                                 error-message="Incident date is required">
                 </datepicker-lite>
               </div>
@@ -464,7 +480,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               <div class="col col-3">
                 <time-input id="incidentTime"
                             readonly$="[[readonly]]"
-                            label="Incident time"
+                            label="Incident Time"
                             value="{{incident.incident_time}}"
                             required auto-validate
                             error-message="Incident time is required">
@@ -641,7 +657,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       state: Object,
       store: Object,
       incident: {
-        type: Object
+        type: Object,
+        observer: 'incidentLoaded'
       },
       incidentId: {
         type: Number,
@@ -693,6 +710,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Object,
         value: {}
       },
+      pressCoverageSelected: {
+        type: Boolean,
+        value: false,
+        observer: 'pressCoverageChanged'
+      },
       lowResolutionLayout: Boolean
     };
   }
@@ -706,6 +728,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+  }
+
+  incidentLoaded() {
+    if (this.incident.press_coverage) {
+      this.set('pressCoverageSelected', true);
+    }
   }
 
   _setIncidentId(id) {
@@ -824,10 +852,20 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   isSafetyIncident(incidentCategory) {
     if (!incidentCategory) {
-      return;
+      return true;
     }
 
     return incidentCategory.name === 'Safety';
+  }
+
+  // clears press_coverage field if checkbox is unchecked
+  pressCoverageChanged() {
+    if (!this.incident) {
+      return;
+    }
+    if (this.incident.press_coverage && !this.pressCoverageSelected) {
+      this.set('incident.press_coverage', '');
+    }
   }
 
   isSexualAssault(selectedIncidentSubcategory) {

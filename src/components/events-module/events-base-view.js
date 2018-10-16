@@ -2,25 +2,26 @@
  @license
  */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-date-time/datepicker-lite.js';
 
-import {clearErrors} from '../../actions/errors.js';
-import {selectEvent} from '../../reducers/events.js';
-import {store} from '../../redux/store.js';
+import { clearErrors } from '../../actions/errors.js';
+import { selectEvent } from '../../reducers/events.js';
+import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import {resetFieldsValidations, validateFields} from '../common/validations-helper';
+import { resetFieldsValidations, validateFields } from '../common/validations-helper';
+import DateMixin from "../common/date-mixin.js";
 
-export class EventsBaseView extends connect(store)(PolymerElement) {
+export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -46,6 +47,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <datepicker-lite id="startDate"
                              label="Start date"
                              value="{{event.start_date}}"
+                             max-date="[[toDate(event.end_date)]]"
                              readonly="[[readonly]]"
                              required auto-validate
                              error-message="Start Date is required"></datepicker-lite>
@@ -54,6 +56,7 @@ export class EventsBaseView extends connect(store)(PolymerElement) {
             <datepicker-lite id="endDate"
                              label="End date"
                              value="{{event.end_date}}"
+                             min-date="[[toDate(event.start_date)]]"
                              readonly="[[readonly]]"
                              required auto-validate
                              error-message="End Date is required"></datepicker-lite>

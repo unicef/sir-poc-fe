@@ -462,6 +462,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         subcategory));
     filteredIncidents = filteredIncidents.filter(incident => this._applyThreatCategoryFilter(incident, threatCategory));
 
+    filteredIncidents.sort((left, right) => {
+      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
+    });
+
     return this.applyPagination(filteredIncidents);
   }
 

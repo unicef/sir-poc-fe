@@ -330,6 +330,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
     filteredEvents = filteredEvents.filter(e => this._applyStatusFilter(e, this.filters.syncStatus));
     filteredEvents = filteredEvents.filter(e => this._applyDateFilter(e, startDate, endDate));
 
+    filteredEvents.sort((left, right) => {
+      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
+    });
+
     return this.applyPagination(filteredEvents);
   }
 

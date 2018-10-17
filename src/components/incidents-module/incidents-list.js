@@ -19,6 +19,7 @@ import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-media-query/iron-media-query.js';
+import '@polymer/iron-collapse/iron-collapse.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
@@ -71,87 +72,95 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
-      <div class="card filters">
-        <paper-input class="filter search-input"
-                     placeholder="Search by Person Involved, City or Description"
-                     value="{{filters.q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+      <div class="card">
+        <iron-collapse id="collapse">
+          <div class="filters">
+            <paper-input class="filter search-input"
+                        placeholder="Search by Person Involved, City or Description"
+                        value="{{filters.q}}">
+              <iron-icon icon="search" slot="prefix"></iron-icon>
+            </paper-input>
 
-        <etools-dropdown-multi-lite class="filter sync-filter"
-                                    label="Sync Status"
-                                    options="[[itemSyncStatusOptions]]"
-                                    selected-values="{{filters.syncStatus}}"
-                                    hide-search>
-        </etools-dropdown-multi-lite>
+            <etools-dropdown-multi-lite class="filter sync-filter"
+                                        label="Sync Status"
+                                        options="[[itemSyncStatusOptions]]"
+                                        selected-values="{{filters.syncStatus}}"
+                                        hide-search>
+            </etools-dropdown-multi-lite>
 
-        <datepicker-lite class="filter"
-                         value="{{filters.startDate}}"
-                         max-date="[[toDate(filters.endDate)]]"
-                         label="From"></datepicker-lite>
+            <datepicker-lite class="filter"
+                            value="{{filters.startDate}}"
+                            max-date="[[toDate(filters.endDate)]]"
+                            label="From"></datepicker-lite>
 
-        <datepicker-lite class="filter"
-                         value="{{filters.endDate}}"
-                         min-date="[[toDate(filters.startDate)]]"
-                         label="To"></datepicker-lite>
+            <datepicker-lite class="filter"
+                            value="{{filters.endDate}}"
+                            min-date="[[toDate(filters.startDate)]]"
+                            label="To"></datepicker-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Country"
-                              enable-none-option
-                              options="[[staticData.countries]]"
-                              selected="{{filters.country}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Country"
+                                  enable-none-option
+                                  options="[[staticData.countries]]"
+                                  selected="{{filters.country}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Incident Category"
-                              enable-none-option
-                              options="[[staticData.incidentCategories]]"
-                              selected="{{filters.incidentCategory}}"
-                              selected-item="{{selectedIncidentCategory}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Incident Category"
+                                  enable-none-option
+                                  options="[[staticData.incidentCategories]]"
+                                  selected="{{filters.incidentCategory}}"
+                                  selected-item="{{selectedIncidentCategory}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Incident Subcategory"
-                              enable-none-option
-                              disabled="[[!selectedIncidentCategory]]"
-                              options="[[selectedIncidentCategory.subcategories]]"
-                              selected="{{filters.incidentSubcategory}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Incident Subcategory"
+                                  enable-none-option
+                                  disabled="[[!selectedIncidentCategory]]"
+                                  options="[[selectedIncidentCategory.subcategories]]"
+                                  selected="{{filters.incidentSubcategory}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Events"
-                              enable-none-option
-                              options="[[events]]"
-                              selected="{{filters.event}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Events"
+                                  enable-none-option
+                                  options="[[events]]"
+                                  selected="{{filters.event}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Target"
-                              enable-none-option
-                              options="[[staticData.targets]]"
-                              selected="{{filters.target}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Target"
+                                  enable-none-option
+                                  options="[[staticData.targets]]"
+                                  selected="{{filters.target}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Threat Category"
-                              enable-none-option
-                              options="[[staticData.threatCategories]]"
-                              selected="{{filters.threatCategory}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Threat Category"
+                                  enable-none-option
+                                  options="[[staticData.threatCategories]]"
+                                  selected="{{filters.threatCategory}}">
+            </etools-dropdown-lite>
 
-        <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
-          <paper-button raised class="white-bg" slot="dropdown-trigger">
-            <iron-icon icon="file-download"></iron-icon>
-            Export
-          </paper-button>
-          <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
-            <paper-item doc-type="pdf">PDF</paper-item>
-            <paper-item doc-type="csv">CSV</paper-item>
-            <paper-item doc-type="xls">XLS</paper-item>
-            <paper-item doc-type="xlsx">XLSX</paper-item>
-          </paper-listbox>
-        </paper-menu-button>
+            <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
+              <paper-button raised class="white-bg" slot="dropdown-trigger">
+                <iron-icon icon="file-download"></iron-icon>
+                Export
+              </paper-button>
+              <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
+                <paper-item doc-type="pdf">PDF</paper-item>
+                <paper-item doc-type="csv">CSV</paper-item>
+                <paper-item doc-type="xls">XLS</paper-item>
+                <paper-item doc-type="xlsx">XLSX</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+          </div>
+        </iron-collapse>
 
+        <div class="filters-button" on-tap="_toggleFilters">
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          FILTERS
+        </div>
       </div>
 
       <div class="card list">
@@ -362,6 +371,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         updateAppState('/incidents/list', this._lastQueryString, false);
       }
     }
+  }
+
+  _toggleFilters() {
+    this.$.collapse.toggle();
+    this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
   }
 
   _queryParamsChanged(params) {

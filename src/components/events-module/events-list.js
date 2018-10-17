@@ -13,6 +13,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
+import '@polymer/iron-collapse/iron-collapse.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import 'etools-data-table/etools-data-table.js';
@@ -73,36 +74,44 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
-      <div class="card filters">
-        <paper-input class="filter search-input"
-                     placeholder="Search by Description or Location"
-                     value="{{filters.q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+      <div class="card">
+        <iron-collapse id="collapse">
+          <div class="filters">
+            <paper-input class="filter search-input"
+                        placeholder="Search by Description or Location"
+                        value="{{filters.q}}">
+              <iron-icon icon="search" slot="prefix"></iron-icon>
+            </paper-input>
 
-        <etools-dropdown-multi-lite class="filter sync-filter"
-                                    label="Sync status"
-                                    options="[[itemSyncStatusOptions]]"
-                                    selected-values="{{filters.syncStatus}}"
-                                    hide-search>
-        </etools-dropdown-multi-lite>
+            <etools-dropdown-multi-lite class="filter sync-filter"
+                                        label="Sync status"
+                                        options="[[itemSyncStatusOptions]]"
+                                        selected-values="{{filters.syncStatus}}"
+                                        hide-search>
+            </etools-dropdown-multi-lite>
 
-        <div class="col filter">
-          <datepicker-lite id="fromDate"
-                           value="{{filters.startDate}}"
-                           max-date="[[toDate(filters.endDate)]]"
-                           label="From">
-          </datepicker-lite>
+            <div class="col filter">
+              <datepicker-lite id="fromDate"
+                              value="{{filters.startDate}}"
+                              max-date="[[toDate(filters.endDate)]]"
+                              label="From">
+              </datepicker-lite>
+            </div>
+
+            <div class="col filter">
+              <datepicker-lite id="endDate"
+                              value="{{filters.endDate}}"
+                              min-date="[[toDate(filters.startDate)]]"
+                              label="To">
+              </datepicker-lite>
+            </div>
+          </div>
+        </iron-collapse>
+
+        <div class="filters-button" on-tap="_toggleFilters">
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          FILTERS
         </div>
-
-        <div class="col filter">
-          <datepicker-lite id="endDate"
-                           value="{{filters.endDate}}"
-                           min-date="[[toDate(filters.startDate)]]"
-                           label="To">
-          </datepicker-lite>
-        </div>
-
       </div>
 
       <div class="card list">
@@ -356,6 +365,11 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   _applyDateFilter(e, startDate, endDate) {
     return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
+  }
+
+  _toggleFilters() {
+    this.$.collapse.toggle();
+    this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
   }
 
   isApproved(status) {

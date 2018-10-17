@@ -591,6 +591,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       incident_subcategory: this.filters.incidentSubcategory,
       incident_date__gt: this.filters.startDate,
       incident_date__lt: this.filters.endDate,
+      country: this.filters.country,
+      q: this.filters.q,
       event: this.filters.event,
       format: docType,
       target: this.filters.target,

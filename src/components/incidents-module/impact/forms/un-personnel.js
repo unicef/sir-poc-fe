@@ -125,6 +125,17 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
         <fieldset>
           <legend><h3> Impacted UN personnel</h3></legend>
+          
+          <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
+            <div class="row-h flex-c">
+              <div class="alert-text">
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual 
+                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be informed that 
+                all other information is VOLUNTARY.
+              </div>
+            </div>
+          </template>
+
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
@@ -144,7 +155,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   readonly="[[readonly]]"
                   options="[[staticData.agencies]]"
                   selected="{{data.person.agency}}"
-                  required auto-validate
+                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                   error-message="Employer is required">
               </etools-dropdown-lite>
             </div>
@@ -154,7 +165,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                            readonly$="[[readonly]]"
                            label="First name"
                            value="{{data.person.first_name}}"
-                           required auto-validate
+                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="First name is required">
               </paper-input>
             </div>
@@ -164,7 +175,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                            readonly$="[[readonly]]"
                            label="Last name"
                            value="{{data.person.last_name}}"
-                           required auto-validate
+                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="Last name is required">
               </paper-input>
             </div>
@@ -175,7 +186,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   readonly="[[readonly]]"
                   options="[[staticData.nationalities]]"
                   selected="{{data.person.nationality}}"
-                  required auto-validate
+                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                   error-message="Nationality is required">
               </etools-dropdown-lite>
             </div>
@@ -193,7 +204,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <etools-dropdown-lite
                   id="gender"
                   label="Gender"
-                  required
+                  required$="[[!isSexualAssault(selectedImpactType)]]"
                   auto-validate
                   readonly="[[readonly]]"
                   options="[[staticData.genders]]"
@@ -227,7 +238,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   readonly="[[readonly]]"
                   options="[[staticData.personnelCategories]]"
                   selected="{{data.person.category}}"
-                  required auto-validate
+                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                   error-message="Category is required">
               </etools-dropdown-lite>
             </div>
@@ -249,7 +260,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   readonly="[[readonly]]"
                   options="[[staticData.cities]]"
                   selected="{{data.person.city}}"
-                  required auto-validate
+                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                   error-message="Duty station city is required">
               </etools-dropdown-lite>
             </div>
@@ -270,7 +281,10 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
   static get properties() {
     return {
-      selectedImpactType: Object,
+      selectedImpactType: {
+        type: Object,
+        value: {}
+      },
       staticData: Array,
       impactId: String,
       offline: Boolean,
@@ -333,6 +347,14 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
     this.data.incident = state.app.locationInfo.incidentId;
+  }
+
+  isSexualAssault() {
+    if (this.selectedImpactType) {
+      return this.selectedImpactType.name === 'Sexually assaulted';
+    } else {
+      return false;
+    }
   }
 
   async save() {

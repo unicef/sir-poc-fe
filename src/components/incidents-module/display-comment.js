@@ -33,8 +33,8 @@ class DisplayComment extends DateMixin(PolymerElement) {
       <div class="container">
 
           <div class="username-and-date">
-            <div class="username">[[_getUsername(comment.last_modify_user)]]</div>
-            <div class="date">[[prettyDate(comment.created)]]</div>
+            <div class="username">[[_getUsername(comment.last_modify_user_id)]]</div>
+            <div class="date">[[_displayDateTime(comment.created)]] UTC</div>
           </div>
 
           <div>
@@ -55,6 +55,11 @@ class DisplayComment extends DateMixin(PolymerElement) {
         value: []
       }
     };
+  }
+
+  _displayDateTime(date) {
+    let dateString = this._convertDate(date);
+    return this._utcDate(dateString, 'D MMM YYYY HH:mm:ss');
   }
 
   _getUsername(userId) {

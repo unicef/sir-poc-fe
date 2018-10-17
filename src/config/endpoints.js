@@ -49,6 +49,14 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/submit/',
     method: 'PUT'
   },
+  approveIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/approve/',
+    method: 'PUT'
+  },
+  rejectIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/reject/',
+    method: 'PUT'
+  },
   incidentsCommentsList: {
     url: baseUrl + '/api/comments/',
     method: 'GET'

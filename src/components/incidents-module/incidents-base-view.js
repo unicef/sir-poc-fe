@@ -168,6 +168,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
             </div>
 
+            <template is="dom-if" if="[[isSexualAssault(selectedIncidentSubcategory)]]">
+              <div class="row-h flex-c">
+                <div class="alert-text">
+                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the 
+                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident 
+                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that 
+                  all other information is VOLUNTARY.
+                </div>
+              </div>
+            </template>
+
             <template is="dom-if" if="[[isTrafficAccident(selectedIncidentSubcategory, staticData)]]" restamp>
               <div class="row-h flex-c">
                 <div class="col col-4">
@@ -835,7 +846,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   isSexualAssault(selectedIncidentSubcategory) {
     if (this.selectedIncidentSubcategory) {
-      return selectedIncidentSubcategory.name === 'Sexual assault' ? true : false;
+      return selectedIncidentSubcategory.name === 'Sexual assault';
     }
   }
 

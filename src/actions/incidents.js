@@ -205,6 +205,29 @@ export const submitIncident = incident => (dispatch, state) => {
   });
 };
 
+export const approveIncident = incidentId => (dispatch, state) => {
+  let endpoint = prepareEndpoint(Endpoints.approveIncident, {id: incidentId});
+
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(result, result.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+export const rejectIncident = data => (dispatch, getState) => {
+  let endpoint = prepareEndpoint(Endpoints.rejectIncident, {id: data.incident});
+  return makeRequest(endpoint, data).then((result) => {
+    dispatch(addCommentSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
 export const fetchIncidents = () => (dispatch, getState) => {
   if (getState().app.offline !== true) {
     makeRequest(Endpoints.incidentsList).then((result) => {

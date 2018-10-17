@@ -158,8 +158,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         </iron-collapse>
 
         <div class="filters-button" on-tap="_toggleFilters">
-          FILTERS<br>
           <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          FILTERS
         </div>
       </div>
 

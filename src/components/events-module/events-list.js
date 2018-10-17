@@ -109,8 +109,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
         </iron-collapse>
 
         <div class="filters-button" on-tap="_toggleFilters">
-          FILTERS<br>
           <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          FILTERS
         </div>
       </div>
 

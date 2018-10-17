@@ -207,7 +207,7 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
       let sortedDatesThisYear = Object.keys(tempTimeline[year]).sort((a, b) => new Date(a) < new Date(b));
 
       sortedDatesThisYear.forEach((date) => {
-        tempTimeline[year][date].sort((a, b) => a.created < b.created);
+        tempTimeline[year][date].sort((a, b) => new Date(a.created) < new Date(b.created));
         let dateComponents = {day: moment(date).format('DD'), month: moment(date).format('MMM')};
         yearsEntries.push({date: dateComponents, items: tempTimeline[year][date]});
       });
@@ -241,7 +241,7 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
     if (!user) {
       return fallback || 'N/A';
     }
-    return user.first_name + ' ' + user.last_name;
+    return user.name;
   }
 
   getChangedFileds(changesObj) {
@@ -250,7 +250,7 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
     changes = changes.filter(change => change !== 'version');
     changes = changes.map(change => this.getLabelForField(change));
 
-    return (changes.length > 0 ? changes: ['No changes']).join(', ');
+    return (changes.length > 0 ? changes: ['No changes found']).join(', ');
   }
 
   isCurrentYear(year) {

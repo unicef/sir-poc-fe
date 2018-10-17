@@ -116,13 +116,18 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
 
   _stateChanged(state) {
     this.set('state', state);
+    this._fetchComments();
   }
 
   _idChanged(newId) {
     if (!this.state.app.offline && newId && !isNaN(newId)) {
       this._fetchHistory();
-      this.comments = JSON.parse(JSON.stringify(selectIncidentComments(this.state))) || [];
+      this._fetchComments();
     }
+  }
+
+  _fetchComments() {
+    this.comments = JSON.parse(JSON.stringify(selectIncidentComments(this.state))) || [];
   }
 
   _fetchHistory() {

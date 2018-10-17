@@ -96,7 +96,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
               <div class="alert-text">
-                ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual 
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual 
                 assault subcategory are Impact, Description, and Country. The victim should be informed that 
                 all other information is VOLUNTARY.
               </div>

@@ -145,6 +145,10 @@ class ErrorsBox extends connect(store)(PolymerElement) {
         }
         errsArr = [...errsArr, ...nestedErr];
       }
+
+      if (typeof serverErrors[field] === 'string') {
+        errsArr.push(field + ': ' + serverErrors[field]);
+      }
     }
     return errsArr;
   }

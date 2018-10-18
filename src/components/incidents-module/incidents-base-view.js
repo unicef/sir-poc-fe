@@ -616,44 +616,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
-  _userSelected(event) {
-    if (!event.detail.selectedItem) {
-      return;
-    }
-
-    /* eslint-disable camelcase */
-    let {
-      agency,
-      contact,
-      date_of_birth,
-      first_name,
-      gender,
-      index_number,
-      job_title,
-      last_name,
-      nationality,
-      title,
-      type_of_contract,
-      un_official
-    } = event.detail.selectedItem;
-
-    this.set('incident.primary_person', {
-      agency,
-      contact,
-      date_of_birth,
-      first_name,
-      gender,
-      index_number,
-      job_title,
-      last_name,
-      nationality,
-      title,
-      type_of_contract,
-      un_official
-    });
-    /* eslint-enable camelcase */
-  }
-
   _stateChanged(state) {
     this.state = state;
 
@@ -821,10 +783,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!incidentId || isNaN(incidentId)) {
       return false;
     }
-    if (readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length)) {
-      return false;
-    }
-    return true;
+    return !(readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length));
   }
 
 }

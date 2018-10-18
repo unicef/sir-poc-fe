@@ -1,12 +1,15 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-input/paper-textarea.js';
+import '@polymer/paper-dialog/paper-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-lite.js';
+import { editIncident, approveIncident, rejectIncident, addComment } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
-import { editIncident } from '../../actions/incidents.js';
 import { clearErrors } from '../../actions/errors.js';
+import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
 import '../styles/form-fields-styles.js';
@@ -25,11 +28,20 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         :host {
           display: block;
         }
+        .error-card {
+          padding: 0;
+          box-shadow: none;
+        }
+        errors-box {
+          width: auto;
+        }
       </style>
+
+      <div class="card error-card" hidden$="[[!errors.length]]">
+        <errors-box prepared-errors="{{errors}}"></errors-box>
+      </div>
+
       <div class="card">
-        <div class="layout-horizontal">
-          <errors-box></errors-box>
-        </div>
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite id="eodReview"
@@ -106,7 +118,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             </paper-input>
           </div>
         </div>
-
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-button raised
@@ -116,7 +127,54 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             </paper-button>
           </div>
         </div>
-    </div>
+      </div>
+      <div class="card">
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-textarea label="Write your comment here" id="commentText"
+                              required auto-validate
+                              error-message="Please add a comment"
+                              value="{{commentText}}"></paper-textarea>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-button class="btn" raised
+                                        on-click="addComment"
+                                        hidden$="[[offline]]">
+                Add comment
+              </paper-button>
+              <paper-button class="btn" raised
+                                        hidden$="[[_hideApproveButton(offline, incident.status)]]"
+                                        on-click="openApproveConfirmation">
+                Approve
+              </paper-button>
+              <paper-button class="btn" raised
+                                        hidden$="[[_hideRejectButton(offline, incident.status)]]"
+                                        on-click="openRejectConfirmation">
+                Reject
+              </paper-button>
+            </div>
+          </div>
+      </div>
+
+      <paper-dialog id="rejConfirm">
+        <h2>Confirm Reject</h2>
+        <p>Are you sure you want to reject this incident?</p>
+        <div class="buttons">
+          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
+          <paper-button class="smaller" on-tap="reject" dialog-confirm autofocus>Reject</paper-button>
+        </div>
+      </paper-dialog>
+
+      <paper-dialog id="approveConfirm">
+        <h2>Confirm Approve</h2>
+        <p>Are you sure you want to approve this incident?</p>
+        <div class="buttons">
+          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
+          <paper-button class="smaller" on-tap="approve" dialog-confirm autofocus>Approve</paper-button>
+        </div>
+      </paper-dialog>
     `;
   }
 
@@ -179,6 +237,70 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
       store.dispatch(clearErrors());
     }
   }
+
+  restComment() {
+    this.commentText = '';
+    this.$.commentText.invalid = false;
+  }
+
+  openRejectConfirmation() {
+    if (!this.$.commentText.validate()) {
+      return;
+    }
+    this.shadowRoot.querySelector('#rejConfirm').opened = true;
+  }
+
+  openApproveConfirmation() {
+    this.shadowRoot.querySelector('#approveConfirm').opened = true;
+  }
+
+
+  async addComment() {
+    if (!this.$.commentText.validate()) {
+      return;
+    }
+
+    let comment = {
+      incident: this.incidentId,
+      comment: this.commentText
+    };
+
+    let successfull = await store.dispatch(addComment(comment));
+    if (typeof successfull === 'boolean' && successfull) {
+      this.restComment();
+      store.dispatch(showSnackbar('Comment added'));
+    }
+  }
+
+  async reject() {
+    let data = {
+      incident: this.incidentId,
+      comment: this.commentText
+    };
+
+    let successfull = await store.dispatch(rejectIncident(data));
+    if (typeof successfull === 'boolean' && successfull) {
+      this.restComment();
+      store.dispatch(showSnackbar('Incident rejected'));
+    }
+  }
+
+  async approve() {
+    let successfull = await store.dispatch(approveIncident(this.incidentId));
+
+    if (typeof successfull === 'boolean' && successfull) {
+      store.dispatch(showSnackbar('Incident approved'));
+    }
+  }
+
+  _hideApproveButton(offline, status) {
+    return ['submitted', 'rejected'].indexOf(status) === -1 || offline;
+  }
+
+  _hideRejectButton(offline, status) {
+    return status !== 'submitted' || offline;
+  }
+
 
 }
 

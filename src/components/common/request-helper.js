@@ -51,10 +51,10 @@ export const makeRequest = function(endpoint, data = {}) {
   return requestElem.completes.then((result) => {
     return result.response;
   }).catch((error) => {
-    if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
-      // TODO: should this be replaced by redirect to FE login page?
-      redirectToLogin();
-    }
+    // if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
+    //   TODO: should this be replaced by redirect to FE login page?
+    //   redirectToAdminLogin();
+    // }
     throw new SirRequestError(error, requestElem.xhr.status, requestElem.xhr.statusText, requestElem.xhr.response);
   });
 };

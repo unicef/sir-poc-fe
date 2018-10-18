@@ -98,28 +98,28 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
                          label="Created by"
                          placeholder="&#8212;"
                          type="text"
-                         readonly$
+                         readonly
                          value="[[_getUsername(event.submitted_by)]]"></paper-input>
           </div>
           <div class="col">
             <datepicker-lite id="created_on"
                              label="Created on"
                              value="[[event.submitted_date]]"
-                             readonly$></datepicker-lite>
+                             readonly></datepicker-lite>
           </div>
           <div class="col col-3">
             <paper-input id="last_edited_by"
                          label="Last edited by"
                          placeholder="&#8212;"
                          type="text"
-                         readonly$
+                         readonly
                          value="[[_getUsername(event.last_modify_user_id)]]"></paper-input>
           </div>
           <div class="col">
             <datepicker-lite id="last_edited_on"
                              label="Last edited on"
                              value="[[event.last_modify_date]]"
-                             readonly$></datepicker-lite>
+                             readonly></datepicker-lite>
           </div>
         </div>
 

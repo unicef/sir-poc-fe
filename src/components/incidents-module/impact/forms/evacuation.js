@@ -210,27 +210,27 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
                              placeholder="&#8212;"
                              type="text"
                              value="[[_getUsername(data.created_by_user_id)]]"
-                             readonly$></paper-input>
+                             readonly></paper-input>
               </div>
               <div class="col">
                 <datepicker-lite id="created_on"
                                  label="Created on"
                                  value="[[data.created_on]]"
-                                 readonly$></datepicker-lite>
+                                 readonly></datepicker-lite>
               </div>
               <div class="col col-3">
                 <paper-input id="last_edited_by"
                              label="Last edited by"
                              placeholder="&#8212;"
                              type="text"
-                             readonly$
+                             readonly
                              value="[[_getUsername(data.last_modify_user_id)]]"></paper-input>
               </div>
               <div class="col">
                 <datepicker-lite id="last_edited_on"
                                  label="Last edited on"
                                  value="[[event.last_modify_date]]"
-                                 readonly$></datepicker-lite>
+                                 readonly></datepicker-lite>
               </div>
             </div>
           </div>

@@ -538,28 +538,28 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                              label="Created by"
                              placeholder="&#8212;"
                              type="text"
-                             readonly$
+                             readonly
                              value="[[_getUsername(incident.created_by)]]"></paper-input>
               </div>
               <div class="col">
                 <datepicker-lite id="created_on"
                                  label="Created on"
                                  value="[[incident.creation_date]]"
-                                 readonly$></datepicker-lite>
+                                 readonly></datepicker-lite>
               </div>
               <div class="col col-3">
                 <paper-input id="last_edited_by"
                              label="Last edited by"
                              placeholder="&#8212;"
                              type="text"
-                             readonly$
+                             readonly
                              value="[[_getUsername(incident.last_modify_user_id)]]"></paper-input>
               </div>
               <div class="col">
                 <datepicker-lite id="last_edited_on"
                                  label="Last edited on"
                                  value="[[incident.last_modify_date]]"
-                                 readonly$></datepicker-lite>
+                                 readonly></datepicker-lite>
               </div>
             </div>
           </div>

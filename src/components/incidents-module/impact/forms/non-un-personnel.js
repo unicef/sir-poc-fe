@@ -203,9 +203,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         </fieldset>
 
         <fieldset hidden$="[[isNew]]">
-          <div class="col col-12">
-            <review-fields data="[[data]]"></review-fields>
-          </div>
+          <review-fields data="[[data]]"></review-fields>
         </fieldset>
         <paper-button on-click="save">Save</paper-button>
       </div>

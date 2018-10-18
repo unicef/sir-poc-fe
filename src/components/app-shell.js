@@ -191,7 +191,7 @@ class MyApp extends connect(store)(PolymerElement) {
           <div class="drawer-list">
             <a class="menu-heading"
               selected$="[[pathsMatch(page, 'dashboard')]]"
-              href="[[rootPath]]dashboard"> Dashboard </a>
+              href="[[rootPath]]dashboard">Dashboard</a>
 
             <a class="menu-heading"
               selected$="[[pathsMatch(page, 'events')]]"
@@ -239,7 +239,7 @@ class MyApp extends connect(store)(PolymerElement) {
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div class="capitalize">SIR - [[page]]</div>
+              <div class="capitalize">[[_getPageTitle(page)]]</div>
               <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
             </app-toolbar>
           </app-header>
@@ -363,6 +363,10 @@ class MyApp extends connect(store)(PolymerElement) {
 
   _logout() {
     SirMsalAuth.logout();
+  }
+
+  _getPageTitle(page) {
+    return !page ? '' : `SIR - ${page}`;
   }
 
 }

@@ -91,8 +91,8 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
                             error-message="Description is required"></paper-textarea>
           </div>
         </div>
-        
-        <div class="row-h flex-c">
+
+        <div class="row-h flex-c" hidden$="[[hideReviewFields]]">
           <div class="col col-3">
             <paper-input id="created_by"
                          label="Created by"
@@ -101,7 +101,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
                          readonly
                          value="[[_getUsername(event.submitted_by)]]"></paper-input>
           </div>
-          <div class="col">
+          <div class="col col-3">
             <datepicker-lite id="created_on"
                              label="Created on"
                              value="[[event.submitted_date]]"
@@ -115,7 +115,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
                          readonly
                          value="[[_getUsername(event.last_modify_user_id)]]"></paper-input>
           </div>
-          <div class="col">
+          <div class="col col-3">
             <datepicker-lite id="last_edited_on"
                              label="Last edited on"
                              value="[[event.last_modify_date]]"
@@ -161,6 +161,10 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
         type: Object
       },
       readonly: {
+        type: Boolean,
+        value: false
+      },
+      hideReviewFields: {
         type: Boolean,
         value: false
       },

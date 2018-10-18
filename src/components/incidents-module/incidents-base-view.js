@@ -171,9 +171,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <template is="dom-if" if="[[isSexualAssault(selectedIncidentSubcategory)]]">
               <div class="row-h flex-c">
                 <div class="alert-text">
-                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the 
-                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident 
-                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that 
+                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident
+                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that
                   all other information is VOLUNTARY.
                 </div>
               </div>
@@ -541,8 +541,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             </div>
           </div>
-          
-          <div>
+
+          <div hidden$="[[hideReviewFields]]">
             <div class="row-h flex-c">
               <div class="col col-3">
                 <paper-input id="created_by"
@@ -552,7 +552,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                              readonly
                              value="[[_getUsername(incident.created_by)]]"></paper-input>
               </div>
-              <div class="col">
+              <div class="col col-3">
                 <datepicker-lite id="created_on"
                                  label="Created on"
                                  value="[[incident.creation_date]]"
@@ -566,7 +566,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                              readonly
                              value="[[_getUsername(incident.last_modify_user_id)]]"></paper-input>
               </div>
-              <div class="col">
+              <div class="col col-3">
                 <datepicker-lite id="last_edited_on"
                                  label="Last edited on"
                                  value="[[incident.last_modify_date]]"
@@ -574,9 +574,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
             </div>
           </div>
-          
-          
-
         </fieldset>
 
         <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly, incident)]]">
@@ -688,6 +685,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: []
       },
       readonly: {
+        type: Boolean,
+        value: false
+      },
+      hideReviewFields: {
         type: Boolean,
         value: false
       },

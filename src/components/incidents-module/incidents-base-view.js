@@ -60,13 +60,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         paper-input {
           width: 100%;
         }
-        
+
         #get-location {
           margin-left: 16px;
         }
 
       </style>
-      
+
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
@@ -167,6 +167,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-info-tooltip>
               </div>
             </div>
+
+            <template is="dom-if" if="[[isSexualAssault(selectedIncidentSubcategory)]]">
+              <div class="row-h flex-c">
+                <div class="alert-text">
+                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the 
+                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident 
+                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that 
+                  all other information is VOLUNTARY.
+                </div>
+              </div>
+            </template>
 
             <template is="dom-if" if="[[isTrafficAccident(selectedIncidentSubcategory, staticData)]]" restamp>
               <div class="row-h flex-c">
@@ -393,10 +404,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                               value="{{incident.longitude}}"
                               placeholder="&#8212;">
                   </paper-input>
-                  
+
                   <paper-icon-button id="get-location"
-                                     on-click="getLocation" 
-                                     title="Use device location" 
+                                     on-click="getLocation"
+                                     title="Use device location"
                                      icon="device:gps-fixed">
                   </paper-icon-button>
                 </div>
@@ -710,7 +721,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   isSexualAssault(selectedIncidentSubcategory) {
     if (this.selectedIncidentSubcategory) {
-      return selectedIncidentSubcategory.name === 'Sexual assault' ? true : false;
+      return selectedIncidentSubcategory.name === 'Sexual assault';
     }
   }
 

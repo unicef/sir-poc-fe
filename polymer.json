@@ -15,7 +15,6 @@
     "src/components/incidents-module/add-incident.js",
     "src/components/incidents-module/view-incident.js",
     "src/components/incidents-module/edit-incident.js",
-    "src/components/incidents-module/incident-comments.js",
     "src/components/incidents-module/incidents-controller.js",
     "src/components/incidents-module/history/incident-history-controller.js"
   ],

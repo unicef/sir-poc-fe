@@ -98,9 +98,6 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'history':
       import('../components/incidents-module/history/incident-history-controller.js');
       break;
-    case 'comments':
-      import('../components/incidents-module/incident-comments.js');
-      break;
     case 'review':
       import('../components/incidents-module/incident-review.js');
       break;

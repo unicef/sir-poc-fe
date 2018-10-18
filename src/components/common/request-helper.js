@@ -1,6 +1,6 @@
 
 import '@polymer/iron-ajax/iron-request.js';
-import { redirectToLogin } from './navigation-helper.js';
+// import { redirectToAdminLogin } from './navigation-helper.js';
 import {SirMsalAuth} from "../auth/jwt/msal-authentication";
 
 // let ironRequestElem;

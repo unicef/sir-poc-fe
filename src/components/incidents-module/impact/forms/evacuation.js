@@ -27,7 +27,7 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
-import './review-fields.js';
+import '../../../common/review-fields.js';
 /**
  * @polymer
  * @customElement

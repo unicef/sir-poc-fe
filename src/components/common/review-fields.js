@@ -1,10 +1,10 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../../../redux/store.js';
+import { store } from '../../redux/store.js';
 
-import '../../../styles/shared-styles.js';
-import '../../../styles/grid-layout-styles.js';
-import '../../../styles/form-fields-styles.js';
+import '../styles/shared-styles.js';
+import '../styles/grid-layout-styles.js';
+import '../styles/form-fields-styles.js';
 
 
 export class ReviewFields extends connect(store)(PolymerElement) {

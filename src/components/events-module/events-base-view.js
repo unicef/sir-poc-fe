@@ -14,6 +14,7 @@ import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
+import '../common/review-fields.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -92,35 +93,8 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
           </div>
         </div>
 
-        <div class="row-h flex-c" hidden$="[[hideReviewFields]]">
-          <div class="col col-3">
-            <paper-input id="created_by"
-                         label="Created by"
-                         placeholder="&#8212;"
-                         type="text"
-                         readonly
-                         value="[[_getUsername(event.submitted_by)]]"></paper-input>
-          </div>
-          <div class="col col-3">
-            <datepicker-lite id="created_on"
-                             label="Created on"
-                             value="[[event.submitted_date]]"
-                             readonly></datepicker-lite>
-          </div>
-          <div class="col col-3">
-            <paper-input id="last_edited_by"
-                         label="Last edited by"
-                         placeholder="&#8212;"
-                         type="text"
-                         readonly
-                         value="[[_getUsername(event.last_modify_user_id)]]"></paper-input>
-          </div>
-          <div class="col col-3">
-            <datepicker-lite id="last_edited_on"
-                             label="Last edited on"
-                             value="[[event.last_modify_date]]"
-                             readonly></datepicker-lite>
-          </div>
+        <div hidden$="[[hideReviewFields]]">
+          <review-fields data="[[event]]"></review-fields>
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
@@ -244,16 +218,5 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
 
   resetValidations() {
     resetFieldsValidations(this, this.fieldsToValidateSelectors);
-  }
-
-  _getUsername(userId) {
-    if (userId === null || userId === undefined) {
-      return 'N/A';
-    }
-    let user = this.state.staticData.users.find(u => Number(u.id) === Number(userId));
-    if (user) {
-      return user.name;
-    }
-    return 'N/A';
   }
 }

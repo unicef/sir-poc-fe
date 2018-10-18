@@ -20,6 +20,7 @@ import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
+import '../common/review-fields.js';
 import {validateAllRequired, resetRequiredValidations} from '../common/validations-helper.js';
 import {store} from '../../redux/store.js';
 import {selectIncident} from '../../reducers/incidents.js';
@@ -417,37 +418,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
           </div>
 
+        </fieldset>
+        <fieldset>
           <div hidden$="[[hideReviewFields]]">
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <paper-input id="created_by"
-                             label="Created by"
-                             placeholder="&#8212;"
-                             type="text"
-                             readonly
-                             value="[[_getUsername(incident.created_by)]]"></paper-input>
-              </div>
-              <div class="col col-3">
-                <datepicker-lite id="created_on"
-                                 label="Created on"
-                                 value="[[incident.creation_date]]"
-                                 readonly></datepicker-lite>
-              </div>
-              <div class="col col-3">
-                <paper-input id="last_edited_by"
-                             label="Last edited by"
-                             placeholder="&#8212;"
-                             type="text"
-                             readonly
-                             value="[[_getUsername(incident.last_modify_user_id)]]"></paper-input>
-              </div>
-              <div class="col col-3">
-                <datepicker-lite id="last_edited_on"
-                                 label="Last edited on"
-                                 value="[[incident.last_modify_date]]"
-                                 readonly></datepicker-lite>
-              </div>
-            </div>
+            <review-fields data="[[incident]]"></review-fields>
           </div>
         </fieldset>
 
@@ -822,17 +796,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
     return !(readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length));
-  }
-
-  _getUsername(userId) {
-    if (userId === null || userId === undefined) {
-      return 'N/A';
-    }
-    let user = this.state.staticData.users.find(u => Number(u.id) === Number(userId));
-    if (user) {
-      return user.name;
-    }
-    return 'N/A';
   }
 
 }

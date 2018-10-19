@@ -7,24 +7,46 @@
  */
 
 const SIR_MSAL_CONF = {
-  CLIENT_ID: '6f55045b-7da9-48df-9277-f2a170e60df0',
-  TOKEN_L_STORAGE_KEY: 'sir-msal-token',
-  REDIRECT_URI: 'http://localhost:8081/dashboard',
-  CACHE_LOCATION: 'localStorage',
-  MSAL_LOGGER_CORELATION_ID: 'SIR_APP'
+  dev: {
+    client_id: '6f55045b-7da9-48df-9277-f2a170e60df0',
+    token_l_storage_key: 'sir-msal-token-dev',
+    logger_config: {
+      log_level: 'dev',
+      msal_logger_corelation_id: 'SIR_APP_DEV'
+    },
+    user_agent_app_config: {
+      redirectUri: 'http://localhost:8081/dashboard', // just for testing
+      cacheLocation: 'localStorage'
+    }
+  },
+  prod: {
+    client_id: 'ab828403-c7f7-4419-8dbf-b9e7832f9387',
+    token_l_storage_key: 'sir-msal-token',
+    logger_config: {
+      log_level: 'prod',
+      msal_logger_corelation_id: 'SIR_APP'
+    },
+    user_agent_app_config: {
+      redirectUri: window.location.href,
+      cacheLocation: 'localStorage'
+    }
+  }
 };
 
 class SirMsalAuthentication {
 
   constructor() {
     if (!SirMsalAuthentication._instance) {
-      this.clientId = SIR_MSAL_CONF.CLIENT_ID;
-      this.storeTokenKey = SIR_MSAL_CONF.TOKEN_L_STORAGE_KEY;
+      this.config = this.isDevEnv() ? SIR_MSAL_CONF.dev : SIR_MSAL_CONF.prod;
       this.token = this.getStoredToken();
       this.msal = this.configureMsal();
       SirMsalAuthentication._instance = this;
     }
     return SirMsalAuthentication._instance;
+  }
+
+  isDevEnv() {
+    return window.location.href.indexOf('localhost') > -1;
   }
 
   get token() {
@@ -39,17 +61,26 @@ class SirMsalAuthentication {
   }
 
   configureMsal() {
-    return new Msal.UserAgentApplication(this.clientId, null, this.authCallback, this.msalConfigOptions());
+    return new Msal.UserAgentApplication(this.config.client_id, null, this.authCallback, this.msalConfigOptions());
   }
 
   msalConfigOptions() {
-    const logger = new Msal.Logger(this.loggerCallback,
-        {level: Msal.LogLevel.Verbose, correlationId: SIR_MSAL_CONF.MSAL_LOGGER_CORELATION_ID});
-    return {
-      redirectUri: SIR_MSAL_CONF.REDIRECT_URI, // now the only URL configured to work for this
-      cacheLocation: SIR_MSAL_CONF.CACHE_LOCATION,
-      logger: logger
-    }
+    const logger = this.getLogger();
+    return Object.assign({}, this.config.user_agent_app_config, {logger: logger});
+  }
+
+  /**
+   * possible values: Error, Warning, Info, Verbose
+   * level:
+   *    - dev = Msal.LogLevel.Verbose
+   *    - prod = Msal.LogLevel.Warning
+   * @returns {Msal.Logger}
+   */
+  getLogger() {
+    return new Msal.Logger(this.loggerCallback, {
+      level: this.config.logger_config.log_level === 'dev' ? Msal.LogLevel.Verbose : Msal.LogLevel.Warning,
+      correlationId: this.config.logger_config.msal_logger_corelation_id
+    });
   }
 
   loggerCallback(logLevel, message, piiEnabled) {
@@ -92,7 +123,7 @@ class SirMsalAuthentication {
    * @returns {Promise<T | never>}
    */
   acquireTokenSilent() {
-    return this.msal.acquireTokenSilent([this.clientId])
+    return this.msal.acquireTokenSilent([this.config.client_id])
         .then((token) => {
           this.token = token;
           return token;
@@ -101,7 +132,7 @@ class SirMsalAuthentication {
 
   acquireTokenRedirect() {
     // authCallback will run as a callback to this method
-    return this.msal.acquireTokenRedirect([this.clientId]);
+    return this.msal.acquireTokenRedirect([this.config.client_id]);
   }
 
   getUser() {
@@ -141,11 +172,11 @@ class SirMsalAuthentication {
     if (token === this.getStoredToken()) {
       return;
     }
-    localStorage.setItem(this.storeTokenKey, token);
+    localStorage.setItem(this.config.token_l_storage_key, token);
   }
 
   getStoredToken() {
-    return localStorage.getItem(this.storeTokenKey);
+    return localStorage.getItem(this.config.token_l_storage_key);
   }
 
 }

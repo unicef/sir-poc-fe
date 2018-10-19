@@ -6,6 +6,34 @@
  */
 const ListCommonMixin = superClass => class extends superClass {
 
+  static get properties() {
+    return {
+      showToggleFiltersBtn: {
+        type: Boolean,
+        value: false,
+        observer: '_showToggleFiltersBtnChanged'
+      }
+    };
+  }
+
+  _showToggleFiltersBtnChanged(show) {
+    if (!this.$.collapse) {
+      return;
+    }
+    if ((show && this.$.collapse.opened) || (!show && !this.$.collapse.opened)) {
+      this._toggleFilters();
+    }
+  }
+
+  _toggleFilters() {
+    if (this.$.collapse) {
+      this.$.collapse.toggle();
+    }
+    if (this.$.toggleIcon) {
+      this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
+    }
+  }
+
   // Outputs the query string for the list
   _buildUrlQueryString(filters) {
     let queryParams = [];

@@ -26,7 +26,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
         }
 
         etools-data-table-row[no-collapse] {
-          padding-left: 32px;
+          --list-row-wrapper-padding: 0 24px 0 56px;
         }
 
         .action {

@@ -65,14 +65,6 @@ class SirLogin extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {}
-  }
-
-  connectedCallback() {
-    super.connectedCallback()
-  }
-
   _login() {
     SirMsalAuth.login().then(() => {
       store.dispatch(requestPageLoadData());

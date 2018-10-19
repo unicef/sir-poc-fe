@@ -5,6 +5,7 @@ import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
 import { serverError } from './errors.js';
+import { PLAIN_ERROR } from './errors.js';
 import { syncIncidentImpacts } from './incident-impacts.js';
 import * as ACTIONS from './constants.js';
 import { fetchIncidentEvacuations,

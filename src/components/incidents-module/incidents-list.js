@@ -196,7 +196,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             <div slot="row-data" class="p-relative">
               <span class="col-data col-1" data-col-header-label="Case number">
                 <span class="truncate">
-                  <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
+                  <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Case number">

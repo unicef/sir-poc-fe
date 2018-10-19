@@ -15,7 +15,7 @@ const SIR_MSAL_CONF = {
       msal_logger_corelation_id: 'SIR_APP_DEV'
     },
     user_agent_app_config: {
-      redirectUri: 'http://localhost:8081/dashboard', // just for testing
+      redirectUri: 'http://localhost:8081/login', // just for testing
       cacheLocation: 'localStorage'
     }
   },

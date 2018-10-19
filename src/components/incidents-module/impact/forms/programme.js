@@ -216,7 +216,10 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+        <paper-button on-tap="save">Save</paper-button>
+        <paper-button class="cancelBtn" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -230,10 +233,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {}
       },
       isNew: {
         type: Boolean,

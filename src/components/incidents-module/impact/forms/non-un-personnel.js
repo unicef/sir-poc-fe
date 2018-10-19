@@ -231,7 +231,10 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+        <paper-button on-tap="save">Save</paper-button>
+        <paper-button class="cancelBtn" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -248,12 +251,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {
-          person: {}
-        }
       },
       modelForNew: {
         type: Object,
@@ -297,7 +294,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
-    this.data.incident = state.app.locationInfo.incidentId;
+    this.data.incident_id = state.app.locationInfo.incidentId;
   }
 
   async save() {
@@ -310,7 +307,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
     }
-    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
+    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
     }
     else {
@@ -318,7 +315,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident}/`);
+      updatePath(`incidents/impact/${this.data.incident_id}/`);
       this.resetData();
     }
     if (result === false) {

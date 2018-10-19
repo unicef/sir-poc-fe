@@ -235,7 +235,11 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="saveEvacuation">Save</button>
+        <paper-button on-tap="saveEvacuation">Save</button>
+        </paper-button>
+        <paper-button class="cancelBtn" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -248,10 +252,6 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {}
       },
       isNew: {
         type: Boolean,

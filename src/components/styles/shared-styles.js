@@ -93,6 +93,14 @@ documentContainer.innerHTML = `
         paper-button iron-icon {
           margin-right: 8px;
         }
+        
+        .addImpact {
+          background-color: var(--secondary-button-color);
+        }
+        
+        .cancelBtn {
+          background-color: var(--primary-error-color);
+        }
 
         etools-info-tooltip.info {
           --etools-tooltip-trigger-icon: {

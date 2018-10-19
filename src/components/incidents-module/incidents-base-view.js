@@ -31,6 +31,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import {Endpoints} from '../../config/endpoints';
+import {updatePath} from "../common/navigation-helper";
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -64,6 +65,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         #get-location {
           margin-left: 16px;
         }
+        
+        .buttons-area paper-button:not(:first-child) {
+          margin-left: 4px;
+        }
 
       </style>
 
@@ -74,6 +79,19 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
+        
+        <div class="row-h flex-c padd-top">
+            <div class="col col-12">
+              <paper-button raised
+                            on-tap="save"
+                            disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+                Save as Draft
+              </paper-button>
+              ${this.goToSubmitBtnTmpl}
+             
+            </div>
+        </div>
+        
         <fieldset>
           <legend><h3>Incident Details</h3></legend>
           <div>
@@ -406,7 +424,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   </paper-input>
 
                   <paper-icon-button id="get-location"
-                                     on-click="getLocation"
+                                     on-tap="getLocation"
                                      title="Use device location"
                                      icon="device:gps-fixed">
                   </paper-icon-button>
@@ -512,20 +530,30 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <warn-message message="Can't save, selected event must be synced first"></warn-message>
           </div>
 
-          <div class="row-h flex-c padd-top">
-            <div class="col col-12">
-              <paper-button raised
-                            on-click="save"
-                            disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-                Save
-              </paper-button>
-              ${this.actionButtonsTemplate}
-            </div>
-          </div>
         </template>
-        ${this.goToEditBtnTmpl}
+        
+        <div class="row-h flex-c padd-top buttons-area">
+          <paper-button raised
+                        on-tap="save"
+                        hidden$="[[readonly]]"
+                        disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+            Save as Draft
+          </paper-button>
+        
+          ${this.actionButtonsTemplate}
+        
+          ${this.goToEditBtnTmpl}
+          
+          <paper-button class="cancelBtn" raised on-tap="_returnToIncidentsList">
+            Cancel
+          </paper-button>
+        </div>
       </div>
     `;
+  }
+
+  static get goToSubmitBtnTmpl() {
+    return html``;
   }
 
   static get goToEditBtnTmpl() {
@@ -832,6 +860,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return user.name;
     }
     return 'N/A';
+  }
+
+  _returnToIncidentsList() {
+    updatePath('/incidents/list/');
   }
 
 }

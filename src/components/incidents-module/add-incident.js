@@ -24,12 +24,13 @@ class AddIncident extends IncidentsBaseView {
 
   static get actionButtonsTemplate() {
     return html`
-      <paper-button raised
-                    on-click="saveAndAddImpact"
+      <paper-button class="addImpact"
+                    raised
+                    on-tap="saveAndAddImpact"
                     disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-        Save and add impact
+        Add Impact
       </paper-button>
-      <paper-button raised on-click="resetForm">
+      <paper-button raised on-tap="resetForm">
         Reset data
       </paper-button>
     `;

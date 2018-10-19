@@ -15,23 +15,31 @@ import { IncidentsBaseView } from './incidents-base-view.js';
  *
  */
 class ViewIncident extends IncidentsBaseView {
+  static get goToSubmitBtnTmpl() {
+    // language=HTML
+    return html`
+      <paper-button raised
+                    on-tap="openSubmitConfirmation">
+            Submit
+      </paper-button>
+    `;
+  }
+
   static get goToEditBtnTmpl() {
     // language=HTML
     return html`
-      <div class="row-h flex-c padd-top" hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
-        <div class="col col-12">
-          <a href="/incidents/edit/[[incidentId]]">
-            <paper-button raised>
-              Edit
-            </paper-button>
-          </a>
-          <paper-button raised
-                    on-click="openSubmitConfirmation"
-                    hidden$="[[canNotSubmit(state.app.offline, incident.status)]]">
-            Submit
-          </paper-button>
-        </div>
-      </div>
+      <a href="/incidents/edit/[[incidentId]]" 
+         hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
+        <paper-button raised>
+          Edit
+        </paper-button>
+      </a>
+      
+      <paper-button raised
+                on-tap="openSubmitConfirmation">
+        Submit
+      </paper-button>
+        
       <paper-dialog id="submitConfirm">
         <h2>Confirm Submit</h2>
         <p>Are you sure you want to submit this incident?</p>
@@ -75,13 +83,18 @@ class ViewIncident extends IncidentsBaseView {
     return false;
   }
 
-  canNotSubmit(offline, status) {
-    return status !== 'created' || offline;
-  }
+  // canNotSubmit(offline, status) {
+  //   return status !== 'created' || offline;
+  // }
 
   showSuccessMessage() {
     this.store.dispatch(showSnackbar('Incident submitted'));
   }
+
+  // canNotSubmit(offline, status, unsynced, id) {
+  //   return !this.canEdit(offline, unsynced, id) ||
+  //       status !== 'created' || offline;
+  // }
 }
 
 window.customElements.define('view-incident', ViewIncident);

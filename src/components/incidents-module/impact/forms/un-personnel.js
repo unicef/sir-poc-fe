@@ -18,7 +18,6 @@ import {
 import {store} from '../../../../redux/store.js';
 
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -31,7 +30,6 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
-import { clearErrors } from '../../../../actions/errors.js';
 
 /**
  * @polymer
@@ -130,8 +128,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="row-h flex-c">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual 
-                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be informed that 
-                all other information is VOLUNTARY.
+                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be 
+                informed that all other information is VOLUNTARY.
               </div>
             </div>
           </template>
@@ -304,7 +302,10 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+        <paper-button raised on-tap="save">Save</paper-button>
+        <paper-button class="cancelBtn" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -321,12 +322,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {
-          person: {}
-        }
       },
       modelForNew: {
         type: Object,
@@ -376,7 +371,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
-    this.data.incident = state.app.locationInfo.incidentId;
+    this.data.incident_id = state.app.locationInfo.incidentId;
   }
 
   isSexualAssault() {
@@ -397,7 +392,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
     }
-    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
+    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
     }
     else {
@@ -405,7 +400,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident}/`);
+      this._goToIncidentImpacts();
       this.resetData();
     }
     if (result === false) {

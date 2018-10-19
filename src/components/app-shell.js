@@ -42,6 +42,7 @@ import {
   updateLocationInfo
 } from '../actions/app.js';
 
+import {SirMsalAuth} from './auth/jwt/msal-authentication.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -53,6 +54,7 @@ setRootPath(MyAppGlobals.rootPath);
 
 class MyApp extends connect(store)(PolymerElement) {
   static get template() {
+    // language=HTML
     return html`
       <style>
         :host {
@@ -66,6 +68,10 @@ class MyApp extends connect(store)(PolymerElement) {
         app-header {
           color: #fff;
           background-color: var(--app-primary-color);
+        }
+        
+        app-header app-toolbar {
+          @apply --layout-justified;
         }
 
         app-header paper-icon-button {
@@ -136,6 +142,32 @@ class MyApp extends connect(store)(PolymerElement) {
           background-color: var(--menu-selected-bg-color);
           color: var(--app-primary-color);
         }
+        
+        :host([page="login"]) app-drawer .drawer-list {
+          position: relative;  
+        }
+        
+        :host([page="login"]) app-drawer .drawer-list:after {
+          position: absolute;
+          content: "";
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: rgba(255, 255, 255, .7);
+        }
+
+        :host([page="login"]) #logout {
+          display: none;
+        }
+
+        :host([page="login"]) app-drawer a {
+          -webkit-filter: blur(2px);
+          -moz-filter: blur(2px);
+          -o-filter: blur(2px);
+          -ms-filter: blur(2px);
+          filter: blur(2px);
+        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -159,7 +191,7 @@ class MyApp extends connect(store)(PolymerElement) {
           <div class="drawer-list">
             <a class="menu-heading"
               selected$="[[pathsMatch(page, 'dashboard')]]"
-              href="[[rootPath]]dashboard"> Dashboard </a>
+              href="[[rootPath]]dashboard">Dashboard</a>
 
             <a class="menu-heading"
               selected$="[[pathsMatch(page, 'events')]]"
@@ -207,11 +239,13 @@ class MyApp extends connect(store)(PolymerElement) {
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title="" class="capitalize">SIR - [[page]]</div>
+              <div class="capitalize">[[_getPageTitle(page)]]</div>
+              <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
             </app-toolbar>
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+            <sir-login name="login"></sir-login>
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
             <dashboard-controller name="dashboard"></dashboard-controller>
@@ -235,7 +269,7 @@ class MyApp extends connect(store)(PolymerElement) {
       },
       validPages: {
         type: Array,
-        value: ['events', 'incidents', 'dashboard']
+        value: ['login', 'dashboard', 'events', 'incidents']
       },
       snackbarOpened: Boolean,
       snackbarText: String,
@@ -255,7 +289,6 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
@@ -268,11 +301,35 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _routePageChanged(page) {
-     // Show the corresponding page according to the route.
-     //
-     // If no page was found in the route data, page will be an empty string.
-     // Show the dashboard in that case. And if the page doesn't exist, show 'view404'.
-    if (!page) {
+    if (this.page === page) {
+      return;
+    }
+    if (SirMsalAuth.tokenIsValid()) {
+      if (page === 'login') {
+        // no need to go to login page, go to landing page instead
+        updatePath('dashboard');
+      }
+      // if msal login token is valid proceed to requested page immediately
+      this._routePageChangedCallback(page);
+    } else {
+      // if no valid token found, request token.
+      // if no valid token is received then go to login page
+      SirMsalAuth.acquireTokenSilent()
+          .then(() => {
+            this._routePageChangedCallback(page);
+          })
+          .catch(() => {
+            updatePath('login');
+            this.page = 'login';
+          });
+    }
+  }
+
+  _routePageChangedCallback(page) {
+    // Show the corresponding page according to the route.
+    // If no page was found in the route data, page will be an empty string.
+    // Show the dashboard in that case. And if the page doesn't exist, show 'view404'.
+    if (!page || page === 'login') {
       updatePath('dashboard');
     } else if (this._isValidPage(page)) {
       this.page = page;
@@ -302,6 +359,14 @@ class MyApp extends connect(store)(PolymerElement) {
 
   _isValidPage(page) {
     return this.validPages.indexOf(page) !== -1;
+  }
+
+  _logout() {
+    SirMsalAuth.logout();
+  }
+
+  _getPageTitle(page) {
+    return !page ? '' : `SIR - ${page}`;
   }
 
 }

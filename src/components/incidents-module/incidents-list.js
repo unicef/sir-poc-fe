@@ -76,7 +76,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <iron-collapse id="collapse">
           <div class="filters">
             <paper-input class="filter search-input"
-                        placeholder="Search by Person Involved, City or Description"
+                        placeholder="Search by City or Description"
                         value="{{filters.q}}">
               <iron-icon icon="search" slot="prefix"></iron-icon>
             </paper-input>
@@ -488,9 +488,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       return true;
     }
     q = q.toLowerCase();
-    let person = (incident.primary_person.first_name + ' ' + incident.primary_person.last_name).trim();
-    return person.toLowerCase().search(q) > -1 ||
-        String(incident.city).search(q) > -1 ||
+    return String(incident.city).search(q) > -1 ||
         String(incident.description).toLowerCase().search(q) > -1;
   }
 
@@ -591,6 +589,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       incident_subcategory: this.filters.incidentSubcategory,
       incident_date__gt: this.filters.startDate,
       incident_date__lt: this.filters.endDate,
+      country: this.filters.country,
+      q: this.filters.q,
       event: this.filters.event,
       format: docType,
       target: this.filters.target,

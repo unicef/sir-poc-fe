@@ -91,6 +91,37 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
                             error-message="Description is required"></paper-textarea>
           </div>
         </div>
+        
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <paper-input id="created_by"
+                         label="Created by"
+                         placeholder="&#8212;"
+                         type="text"
+                         readonly
+                         value="[[_getUsername(event.submitted_by)]]"></paper-input>
+          </div>
+          <div class="col">
+            <datepicker-lite id="created_on"
+                             label="Created on"
+                             value="[[event.submitted_date]]"
+                             readonly></datepicker-lite>
+          </div>
+          <div class="col col-3">
+            <paper-input id="last_edited_by"
+                         label="Last edited by"
+                         placeholder="&#8212;"
+                         type="text"
+                         readonly
+                         value="[[_getUsername(event.last_modify_user_id)]]"></paper-input>
+          </div>
+          <div class="col">
+            <datepicker-lite id="last_edited_on"
+                             label="Last edited on"
+                             value="[[event.last_modify_date]]"
+                             readonly></datepicker-lite>
+          </div>
+        </div>
 
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
@@ -119,6 +150,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   static get actionButtonsTemplate() {
     return html``;
   }
+
   static get goToEditBtnTmpl() {
     return html``;
   }
@@ -208,5 +240,16 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
 
   resetValidations() {
     resetFieldsValidations(this, this.fieldsToValidateSelectors);
+  }
+
+  _getUsername(userId) {
+    if (userId === null || userId === undefined) {
+      return 'N/A';
+    }
+    let user = this.state.staticData.users.find(u => Number(u.id) === Number(userId));
+    if (user) {
+      return user.name;
+    }
+    return 'N/A';
   }
 }

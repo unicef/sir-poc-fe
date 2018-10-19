@@ -194,10 +194,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                     <strong class="rdc-title inline">Country: </strong>
                     [[getNameFromId(item.country, 'countries')]]
                   </div>
-                  <div class="col col-3">
-                    <strong class="rdc-title inline">Person: </strong>
-                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                  </div>
                 </div>
               </template>
             </div>

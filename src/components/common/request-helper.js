@@ -1,6 +1,7 @@
 
 import '@polymer/iron-ajax/iron-request.js';
-import { redirectToLogin } from './navigation-helper.js';
+// import { redirectToAdminLogin } from './navigation-helper.js';
+import {SirMsalAuth} from "../auth/jwt/msal-authentication";
 
 // let ironRequestElem;
 
@@ -46,14 +47,14 @@ const SirRequestError = function(error, statusCode, statusText, response) {
 export const makeRequest = function(endpoint, data = {}) {
   let reqConfig = generateRequestConfigOptions(endpoint, data);
   let requestElem = getRequestElement();
-
   requestElem.send(reqConfig);
   return requestElem.completes.then((result) => {
     return result.response;
   }).catch((error) => {
-    if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
-      redirectToLogin();
-    }
+    // if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
+    //   TODO: should this be replaced by redirect to FE login page?
+    //   redirectToAdminLogin();
+    // }
     throw new SirRequestError(error, requestElem.xhr.status, requestElem.xhr.statusText, requestElem.xhr.response);
   });
 };
@@ -99,12 +100,16 @@ const _getRequestHeaders = (reqConfig) => {
     headers['content-type'] = 'text';
   }
 
+  const authorizationHeader = SirMsalAuth.tokenIsValid()
+      ? SirMsalAuth.getRequestsAuthHeader()
+      : {};
+
   let clientConfiguredHeaders = _getClientConfiguredHeaders(reqConfig.headers);
   let csrfHeaders = {};
   if (!_csrfSafeMethod(reqConfig.method)) {
     csrfHeaders = _getCsrfHeader(reqConfig.csrfCheck);
   }
-  headers = Object.assign({}, headers, clientConfiguredHeaders, csrfHeaders);
+  headers = Object.assign({}, headers, clientConfiguredHeaders, csrfHeaders, authorizationHeader);
 
   if (reqConfig.multiPart) {
     // content type will be automatically set in this case

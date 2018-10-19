@@ -11,24 +11,34 @@
 import '@polymer/polymer/polymer-element.js';
 
 const documentContainer = document.createElement('template');
-documentContainer.innerHTML = `<dom-module id="button-styles">
-  <template>
-    <style>
-      paper-button {
-        margin: 8px 0;
-        padding: 8px;
-      }
+// language=HTML
+documentContainer.innerHTML = `
+  <dom-module id="button-styles">
+    <template>
+      <style>
+        paper-button {
+          margin: 8px 0;
+          padding: 8px;
+          background-color: var(--primary-color, #4285f4);
+          color: var(--light-primary-text-color, #fff);
+          font-weight: bold;
+        }
 
-      .white-bg {
-        background-color: white;
-        color: var(--primary-color, #309ae0);
-      }
-      .smaller {
-        font-size: 14px;
-        padding: 0 8px;
-      }
-    </style>
-  </template>
-</dom-module>`;
+        paper-button iron-icon {
+          margin-right: 8px;
+        }
+
+        .white-bg {
+          background-color: white;
+          color: var(--primary-color, #309ae0);
+        }
+
+        .smaller {
+          font-size: 14px;
+          padding: 0 8px;
+        }
+      </style>
+    </template>
+  </dom-module>`;
 
 document.head.appendChild(documentContainer.content);

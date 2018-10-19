@@ -3,7 +3,7 @@ export function updatePath(newPath) {
   window.dispatchEvent(new Event('popstate'));
 }
 
-export function redirectToLogin() {
+export function redirectToAdminLogin() {
   // using updatePath will not cause a hard redirect
   window.location = '/admin/login';
 }

@@ -97,7 +97,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
                                created-last-week$="[[wasCreatedLastWeek(item)]]">
           <div slot="row-data" class="p-relative">
             <span class="col-data col-1" data-col-header-label="Case Number">
-              <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
+              <a href="/[[item.case_type]]s/view/[[item.id]]">[[item.case_number]]</a>
             </span>
             <span class="col-data col-1 capitalize" data-col-header-label="Case type">
               [[item.case_type]]

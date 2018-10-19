@@ -28,7 +28,6 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
-import { clearErrors } from '../../../../actions/errors.js';
 
 /**
  * @polymer
@@ -49,7 +48,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-      
+
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
@@ -89,15 +88,15 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
           </div>
         </fieldset>
-        
+
         <fieldset>
           <legend><h3>Impacted Non-UN Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
               <div class="alert-text">
-                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual 
-                assault subcategory are Impact, Description, and Country. The victim should be informed that 
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
+                assault subcategory are Impact, Description, and Country. The victim should be informed that
                 all other information is VOLUNTARY.
               </div>
             </div>
@@ -199,7 +198,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
           </div>
-            
+
           <div class="row-h flex-c">
             <div class="col col-3">
               <paper-input id="created_by"

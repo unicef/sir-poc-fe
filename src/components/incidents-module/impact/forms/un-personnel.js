@@ -125,12 +125,12 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
         <fieldset>
           <legend><h3> Impacted UN personnel</h3></legend>
-          
+
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
               <div class="alert-text">
-                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual 
-                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be informed that 
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
+                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be informed that
                 all other information is VOLUNTARY.
               </div>
             </div>
@@ -143,7 +143,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   label="Auto complete staff member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
-                  options="[[staticData.users]]">
+                  options="[[staticData.users]]"
+                  selected="{{data.person.id}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -446,6 +447,11 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.set('data.person.first_name', event.detail.selectedItem.first_name);
     this.set('data.person.last_name', event.detail.selectedItem.last_name);
     this.set('data.person.email', event.detail.selectedItem.email);
+    this.set('data.person.nationality', event.detail.selectedItem.nationality);
+    this.set('data.person.gender', event.detail.selectedItem.gender);
+    this.set('data.person.date_of_birth', event.detail.selectedItem.date_of_birth);
+    this.set('data.person.index_number', event.detail.selectedItem.index_number);
+    this.set('data.person.job_title', event.detail.selectedItem.job_title);
   }
 
   _shouldShowCaptureForm(impactName) {

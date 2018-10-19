@@ -127,10 +127,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
-              <template is="dom-if" if="[[item.creation_date]]">
-                [[prettyDate(item.creation_date)]]
+              <template is="dom-if" if="[[item.created_on]]">
+                [[prettyDate(item.created_on)]]
               </template>
-              <template is="dom-if" if="[[!item.creation_date]]">
+              <template is="dom-if" if="[[!item.created_on]]">
                 N/A
               </template>
             </span>

@@ -143,8 +143,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   label="Auto complete staff member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
-                  options="[[staticData.users]]"
-                  selected="{{data.person.id}}">
+                  options="[[staticData.users]]">
               </etools-dropdown-lite>
             </div>
           </div>

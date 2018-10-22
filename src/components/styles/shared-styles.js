@@ -78,7 +78,7 @@ documentContainer.innerHTML = `
         }
 
         .alert-text {
-          color: red;
+          color: var(--primary-error-color);
         }
 
         etools-info-tooltip.info {

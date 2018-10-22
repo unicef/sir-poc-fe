@@ -80,16 +80,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <errors-box></errors-box>
         </div>
         
-        <div class="row-h flex-c padd-top">
-            <div class="col col-12">
-              <paper-button raised
-                            on-tap="save"
-                            disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-                Save as Draft
-              </paper-button>
-              ${this.goToSubmitBtnTmpl}
-             
-            </div>
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            ${this.saveBtnTmpl}
+            ${this.submitBtnTmpl}
+          </div>
         </div>
         
         <fieldset>
@@ -533,18 +528,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </template>
         
         <div class="row-h flex-c padd-top buttons-area">
-          <paper-button raised
-                        on-tap="save"
-                        hidden$="[[readonly]]"
-                        disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-            Save as Draft
-          </paper-button>
-        
+          ${this.saveBtnTmpl}
           ${this.actionButtonsTemplate}
-        
           ${this.goToEditBtnTmpl}
-          
-          <paper-button class="cancelBtn" raised on-tap="_returnToIncidentsList">
+          ${this.submitIncidentTmpl}
+          <paper-button class="danger" raised on-tap="_returnToIncidentsList">
             Cancel
           </paper-button>
         </div>
@@ -552,7 +540,22 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get goToSubmitBtnTmpl() {
+  static get saveBtnTmpl() {
+    return html`
+      <paper-button raised
+                    on-tap="save"
+                    hidden$="[[readonly]]"
+                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+        Save as Draft
+      </paper-button>
+    `;
+  }
+
+  static get submitBtnTmpl() {
+    return html``;
+  }
+
+  static get submitIncidentTmpl() {
     return html``;
   }
 

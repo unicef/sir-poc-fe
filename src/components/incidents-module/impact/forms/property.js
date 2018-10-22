@@ -153,7 +153,7 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
           </div>
         </fieldset>
         <paper-button on-tap="save">Save</paper-button>
-        <paper-button class="cancelBtn" raised on-tap="_goToIncidentImpacts">
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
           Cancel
         </paper-button>
       </div>

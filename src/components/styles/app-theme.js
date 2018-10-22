@@ -9,10 +9,6 @@ documentContainer.innerHTML = `
         --primary-color: #309ae0;
         --background-color: #eee;
         
-        --secondary-button-color: #3D5AFE;
-        
-        
-
         --app-primary-color: #309ae0; /* TODO: we should switch to --primary-color as it's used by polymer elements */
         --primary-color-darker: #4f8fba;
         --app-secondary-color: black;
@@ -32,6 +28,10 @@ documentContainer.innerHTML = `
         --menu-header-bg: #d6d8d9;
         --menu-selected-bg-color: #e8e8e8;
         --unsynced-item-bg-color: var(--secondary-error-color);
+        
+        --button-primary-bg-color: var(--primary-color);
+        --button-secondary-bg-color: #3D5AFE;
+        --button-primary-text-color: var(--light-primary-text-color);
 
         --paper-input-container-label: {
           color: var(--secondary-text-color, #737373);

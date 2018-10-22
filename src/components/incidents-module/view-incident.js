@@ -15,30 +15,23 @@ import { IncidentsBaseView } from './incidents-base-view.js';
  *
  */
 class ViewIncident extends IncidentsBaseView {
-  static get goToSubmitBtnTmpl() {
+
+  static get submitBtnTmpl() {
     // language=HTML
     return html`
       <paper-button raised
+                    hidden$="[[canNotSubmit(state.app.offline, incident.status, incident.unsynced, incident.id)]]"
                     on-tap="openSubmitConfirmation">
-            Submit
+        Submit
       </paper-button>
     `;
   }
 
-  static get goToEditBtnTmpl() {
+  static get submitIncidentTmpl() {
     // language=HTML
     return html`
-      <a href="/incidents/edit/[[incidentId]]" 
-         hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
-        <paper-button raised>
-          Edit
-        </paper-button>
-      </a>
       
-      <paper-button raised
-                on-tap="openSubmitConfirmation">
-        Submit
-      </paper-button>
+      ${this.submitBtnTmpl}
         
       <paper-dialog id="submitConfirm">
         <h2>Confirm Submit</h2>
@@ -49,6 +42,18 @@ class ViewIncident extends IncidentsBaseView {
         </div>
       </paper-dialog>
       `;
+  }
+
+  static get goToEditBtnTmpl() {
+    // language=HTML
+    return html`
+      <a href="/incidents/edit/[[incidentId]]"
+         hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
+        <paper-button raised>
+          Edit
+        </paper-button>
+      </a>
+    `;
   }
 
   connectedCallback() {
@@ -80,18 +85,14 @@ class ViewIncident extends IncidentsBaseView {
     return unsynced && isNaN(itemId);
   }
 
-  // canNotSubmit(offline, status) {
-  //   return status !== 'created' || offline;
-  // }
-
   showSuccessMessage() {
     this.store.dispatch(showSnackbar('Incident submitted'));
   }
 
-  // canNotSubmit(offline, status, unsynced, id) {
-  //   return !this.canEdit(offline, unsynced, id) ||
-  //       status !== 'created' || offline;
-  // }
+  canNotSubmit(offline, status, unsynced, id) {
+    return !this.canEdit(offline, unsynced, id) ||
+        status !== 'created' || offline;
+  }
 }
 
 window.customElements.define('view-incident', ViewIncident);

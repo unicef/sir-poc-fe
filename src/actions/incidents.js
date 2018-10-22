@@ -1,6 +1,6 @@
 import { makeRequest, prepareEndpoint } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
-import { objDiff } from '../components/common/utils.js';
+import { objDiff, isNumber } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
@@ -115,6 +115,8 @@ const addIncidentOffline = (newIncident, dispatch) => {
 
 
 export const addIncident = newIncident => (dispatch, getState) => {
+  newIncident = getSanitizedIncident(newIncident);
+
   if (getState().app.offline === true) {
     return addIncidentOffline(newIncident, dispatch);
   } else {
@@ -157,6 +159,8 @@ const editIncidentOffline = (incident, dispatch) => {
 };
 
 export const editIncident = incident => (dispatch, getState) => {
+  incident = getSanitizedIncident(incident);
+
   if (getState().app.offline === true) {
     editIncidentOffline(incident, dispatch);
   } else {
@@ -169,6 +173,8 @@ export const editIncident = incident => (dispatch, getState) => {
 };
 
 export const syncIncidentOnList = newIncident => (dispatch, getState) => {
+  newIncident = getSanitizedIncident(newIncident);
+
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     dispatch(editIncidentSuccess(result, newIncident.id));
     dispatch(syncIncidentImpacts(result.id, newIncident.id));
@@ -180,7 +186,9 @@ export const syncIncidentOnList = newIncident => (dispatch, getState) => {
   });
 };
 
-export const syncIncident = newIncident => (dispatch, getState) => {
+export const syncIncident = newIncident => (dispatch) => {
+  newIncident = getSanitizedIncident(newIncident);
+
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
     updatePath('/incidents/list/');
     dispatch(editIncidentSuccess(result, newIncident.id));
@@ -193,7 +201,7 @@ export const syncIncident = newIncident => (dispatch, getState) => {
   });
 };
 
-export const submitIncident = incident => (dispatch, state) => {
+export const submitIncident = incident => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
 
   return makeRequest(endpoint).then((result) => {
@@ -205,7 +213,7 @@ export const submitIncident = incident => (dispatch, state) => {
   });
 };
 
-export const approveIncident = incidentId => (dispatch, state) => {
+export const approveIncident = incidentId => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.approveIncident, {id: incidentId});
 
   return makeRequest(endpoint).then((result) => {
@@ -217,7 +225,7 @@ export const approveIncident = incidentId => (dispatch, state) => {
   });
 };
 
-export const rejectIncident = data => (dispatch, getState) => {
+export const rejectIncident = data => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.rejectIncident, {id: data.incident});
   return makeRequest(endpoint, data).then((result) => {
     dispatch(addCommentSuccess(result));
@@ -317,3 +325,12 @@ export const deleteIncidentLocally = incidentId => (dispatch, getState) => {
   dispatch(deleteIncidentFromRedux(incidentId));
   updatePath('/incidents/list/');
 };
+
+const getSanitizedIncident = (rawIncident) => {
+  let sanitizedIncident = JSON.parse(JSON.stringify(rawIncident));
+
+  sanitizedIncident.latitude = isNumber(sanitizedIncident.latitude)? sanitizedIncident.latitude : null;
+  sanitizedIncident.longitude = isNumber(sanitizedIncident.longitude)? sanitizedIncident.longitude : null;
+
+  return sanitizedIncident;
+}

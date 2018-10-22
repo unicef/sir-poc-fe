@@ -29,7 +29,7 @@ const SIR_MSAL_CONF = {
     },
     authority: 'https://login.microsoftonline.com/unicef.org',
     user_agent_app_config: {
-      redirectUri: window.location.href,
+      redirectUri: window.location.origin + '/dashboard',
       cacheLocation: 'localStorage'
     }
   }

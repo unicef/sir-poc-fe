@@ -143,7 +143,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   label="Auto complete staff member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
-                  options="[[staticData.users]]">
+                  options="[[staticData.users]]"
+                  selected="{{data.person.id}}">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -417,6 +418,11 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.set('data.person.first_name', event.detail.selectedItem.first_name);
     this.set('data.person.last_name', event.detail.selectedItem.last_name);
     this.set('data.person.email', event.detail.selectedItem.email);
+    this.set('data.person.nationality', event.detail.selectedItem.nationality);
+    this.set('data.person.gender', event.detail.selectedItem.gender);
+    this.set('data.person.date_of_birth', event.detail.selectedItem.date_of_birth);
+    this.set('data.person.index_number', event.detail.selectedItem.index_number);
+    this.set('data.person.job_title', event.detail.selectedItem.job_title);
   }
 
   _shouldShowCaptureForm(impactName) {

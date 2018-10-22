@@ -14,6 +14,7 @@ class AddEvent extends EventsBaseView {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new event';
+    this.hideReviewFields = true;
     this.set('event', this.state.events.draft);
   }
 

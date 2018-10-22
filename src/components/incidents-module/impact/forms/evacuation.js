@@ -235,8 +235,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
             </div>
           </div>
         </fieldset>
-        <paper-button on-tap="saveEvacuation">Save</button>
-        </paper-button>
+        <paper-button on-tap="saveEvacuation">Save</paper-button>
         <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
           Cancel
         </paper-button>

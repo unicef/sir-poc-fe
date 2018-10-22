@@ -69,10 +69,7 @@ class ViewIncident extends IncidentsBaseView {
     if (!offline) {
       return true;
     }
-    if (unsynced && isNaN(itemId)) {
-      return true;
-    }
-    return false;
+    return unsynced && isNaN(itemId);
   }
 
   canNotSubmit(offline, status) {

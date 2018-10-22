@@ -81,19 +81,6 @@ documentContainer.innerHTML = `
           color: red;
         }
 
-        paper-button {
-          background-color: var(--app-primary-color, #4285f4);
-          --paper-button: {
-            color: var(--light-primary-text-color, #fff);
-            font-weight: bold;
-            padding: 5px 10px;
-          };
-        }
-
-        paper-button iron-icon {
-          margin-right: 8px;
-        }
-
         etools-info-tooltip.info {
           --etools-tooltip-trigger-icon: {
             color: var(--primary-color);

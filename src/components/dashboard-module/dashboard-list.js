@@ -94,7 +94,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         <etools-data-table-row unsynced$="[[item.unsynced]]"
                                low-resolution-layout="[[lowResolutionLayout]]"
                                medium-resolution-layout="[[mediumResolutionLayout]]"
-                               created-last-week$="[[wasCreatedLastWeek(item)]]">
+                               created-last-week$="[[wasCreatedLastWeek(item.created_on)]]">
           <div slot="row-data" class="p-relative">
             <span class="col-data col-1" data-col-header-label="Case Number">
               <a href="/[[item.case_type]]s/view/[[item.id]]">[[item.case_number]]</a>
@@ -127,10 +127,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
-              <template is="dom-if" if="[[item.creation_date]]">
-                [[prettyDate(item.creation_date)]]
+              <template is="dom-if" if="[[item.created_on]]">
+                [[prettyDate(item.created_on)]]
               </template>
-              <template is="dom-if" if="[[!item.creation_date]]">
+              <template is="dom-if" if="[[!item.created_on]]">
                 N/A
               </template>
             </span>
@@ -258,12 +258,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     return status === 'approved';
   }
 
-  wasCreatedLastWeek(item) {
+  wasCreatedLastWeek(createdOn) {
     const date = new Date();
     const lastWeek = date.getDate() - 7;
-
-    const createdDate = item.case_type === 'event' ? item.start_date : item.creation_date;
-    return moment(createdDate).isAfter(moment().add(-7, 'days'));
+    return moment(createdOn).isAfter(moment().add(-7, 'days'));
   }
 
   _syncItem(item) {

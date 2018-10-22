@@ -19,9 +19,17 @@ documentContainer.innerHTML = `
         paper-button {
           margin: 8px 0;
           padding: 8px;
-          background-color: var(--primary-color, #4285f4);
-          color: var(--light-primary-text-color, #fff);
+          background-color: var(--button-primary-bg-color, #4285f4);
+          color: var(--button-primary-text-color, #fff);
           font-weight: bold;
+        }
+        
+        paper-button.secondary {
+          background-color: var(--button-secondary-bg-color, #4285f4);
+        }
+
+        paper-button.danger {
+          background-color: var(--primary-error-color);
         }
 
         paper-button iron-icon {

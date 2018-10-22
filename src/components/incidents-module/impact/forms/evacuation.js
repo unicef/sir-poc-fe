@@ -27,7 +27,7 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
-
+import '../../../common/review-fields.js';
 /**
  * @polymer
  * @customElement
@@ -175,67 +175,42 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
         </fieldset>
         <fieldset>
           <legend><h3>Impact details</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <etools-dropdown-lite
-                        id="category"
-                        label="Impact"
-                        readonly="[[readonly]]"
-                        options="[[staticData.impacts.evacuation]]"
-                        selected="{{data.impact}}"
-                        selected-item="{{selectedImpactType}}"
-                        required auto-validate
-                        error-message="Impact is required">
-                </etools-dropdown-lite>
-              </div>
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <etools-dropdown-lite
+                      id="category"
+                      label="Impact"
+                      readonly="[[readonly]]"
+                      options="[[staticData.impacts.evacuation]]"
+                      selected="{{data.impact}}"
+                      selected-item="{{selectedImpactType}}"
+                      required auto-validate
+                      error-message="Impact is required">
+              </etools-dropdown-lite>
             </div>
-            <div class="row-h flex-c">
-              <div class="col col-12">
-                <paper-textarea id="description"
-                                readonly$="[[readonly]]"
-                                label="Description"
-                                placeholder="&#8212;"
-                                value="{{data.description}}"
-                                required auto-validate
-                                error-message="Description is required">
-                </paper-textarea>
-              </div>
-            </div>
-            
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <paper-input id="created_by"
-                             label="Created by"
-                             placeholder="&#8212;"
-                             type="text"
-                             value="[[_getUsername(data.created_by_user_id)]]"
-                             readonly></paper-input>
-              </div>
-              <div class="col">
-                <datepicker-lite id="created_on"
-                                 label="Created on"
-                                 value="[[data.created_on]]"
-                                 readonly></datepicker-lite>
-              </div>
-              <div class="col col-3">
-                <paper-input id="last_edited_by"
-                             label="Last edited by"
-                             placeholder="&#8212;"
-                             type="text"
-                             readonly
-                             value="[[_getUsername(data.last_modify_user_id)]]"></paper-input>
-              </div>
-              <div class="col">
-                <datepicker-lite id="last_edited_on"
-                                 label="Last edited on"
-                                 value="[[event.last_modify_date]]"
-                                 readonly></datepicker-lite>
-              </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-textarea id="description"
+                              readonly$="[[readonly]]"
+                              label="Description"
+                              placeholder="&#8212;"
+                              value="{{data.description}}"
+                              required auto-validate
+                              error-message="Description is required">
+              </paper-textarea>
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="saveEvacuation">Save</button>
+
+        <fieldset hidden$="[[isNew]]">
+          <review-fields data="[[data]]"></review-fields>
+        </fieldset>
+
+        <paper-button on-tap="saveEvacuation">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -248,10 +223,6 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {}
       },
       isNew: {
         type: Boolean,
@@ -288,6 +259,8 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
     this.staticData = state.staticData;
     this.evacuations = state.incidents.evacuations;
     this.data.incident_id = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async saveEvacuation() {
@@ -297,16 +270,14 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
     }
     if (this.isNew) {
       result = await store.dispatch(addEvacuation(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncEvacuation(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editEvacuation(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this._goToIncidentImpacts();
       this.data = {};
     }
     if (result === false) {
@@ -335,18 +306,6 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
       this.data = JSON.parse(JSON.stringify(currentEvacuation)) || {};
       this.resetValidations();
     }
-  }
-
-  _getUsername(userId) {
-    if (userId === null || userId === undefined) {
-      return 'N/A';
-    }
-
-    let user = this.staticData.users.find(u => Number(u.id) === Number(userId));
-    if (user) {
-      return user.name;
-    }
-    return 'N/A';
   }
 
 }

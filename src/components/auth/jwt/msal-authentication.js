@@ -8,14 +8,15 @@
 
 const SIR_MSAL_CONF = {
   dev: {
-    client_id: '7ccab667-58ff-44de-b8fa-4e90c0ec6fde',
+    client_id: '6f55045b-7da9-48df-9277-f2a170e60df0',
     token_l_storage_key: 'sir-msal-token-dev',
     logger_config: {
       log_level: 'dev',
       msal_logger_corelation_id: 'SIR_APP_DEV'
     },
+    authority: null,
     user_agent_app_config: {
-      redirectUri: 'http://localhost:8081/login', // just for testing
+      redirectUri: 'http://localhost:8081/dashboard', // just for testing
       cacheLocation: 'localStorage'
     }
   },
@@ -26,6 +27,7 @@ const SIR_MSAL_CONF = {
       log_level: 'prod',
       msal_logger_corelation_id: 'SIR_APP'
     },
+    authority: 'https://login.microsoftonline.com/unicef.org',
     user_agent_app_config: {
       redirectUri: window.location.href,
       cacheLocation: 'localStorage'
@@ -61,7 +63,8 @@ class SirMsalAuthentication {
   }
 
   configureMsal() {
-    return new Msal.UserAgentApplication(this.config.client_id, 'https://login.microsoftonline.com/unicef.org', this.authCallback, this.msalConfigOptions());
+    return new Msal.UserAgentApplication(this.config.client_id, this.config.authority,
+        this.authCallback, this.msalConfigOptions());
   }
 
   msalConfigOptions() {

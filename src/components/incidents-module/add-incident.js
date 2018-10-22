@@ -19,17 +19,19 @@ class AddIncident extends IncidentsBaseView {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new incident';
+    this.hideReviewFields = true;
     this.set('incident', this.state.incidents.draft);
   }
 
   static get actionButtonsTemplate() {
     return html`
-      <paper-button raised
-                    on-click="saveAndAddImpact"
+      <paper-button class="secondary"
+                    raised
+                    on-tap="saveAndAddImpact"
                     disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-        Save and add impact
+        Add Impact
       </paper-button>
-      <paper-button raised on-click="resetForm">
+      <paper-button raised on-tap="resetForm">
         Reset data
       </paper-button>
     `;

@@ -20,6 +20,7 @@ import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
+import '../common/review-fields.js';
 import {validateAllRequired, resetRequiredValidations} from '../common/validations-helper.js';
 import {store} from '../../redux/store.js';
 import {selectIncident} from '../../reducers/incidents.js';
@@ -31,6 +32,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import {Endpoints} from '../../config/endpoints';
+import {updatePath} from "../common/navigation-helper";
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -64,6 +66,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         #get-location {
           margin-left: 16px;
         }
+        
+        .buttons-area paper-button:not(:first-child) {
+          margin-left: 4px;
+        }
 
       </style>
 
@@ -74,6 +80,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
+        
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            ${this.saveBtnTmpl}
+            ${this.submitBtnTmpl}
+          </div>
+        </div>
+        
         <fieldset>
           <legend><h3>Incident Details</h3></legend>
           <div>
@@ -171,9 +185,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <template is="dom-if" if="[[isSexualAssault(selectedIncidentSubcategory)]]">
               <div class="row-h flex-c">
                 <div class="alert-text">
-                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the 
-                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident 
-                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that 
+                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident
+                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that
                   all other information is VOLUNTARY.
                 </div>
               </div>
@@ -406,7 +420,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   </paper-input>
 
                   <paper-icon-button id="get-location"
-                                     on-click="getLocation"
+                                     on-tap="getLocation"
                                      title="Use device location"
                                      icon="device:gps-fixed">
                   </paper-icon-button>
@@ -416,42 +430,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
             </div>
           </div>
-          
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <paper-input id="created_by"
-                             label="Created by"
-                             placeholder="&#8212;"
-                             type="text"
-                             readonly
-                             value="[[_getUsername(incident.created_by)]]"></paper-input>
-              </div>
-              <div class="col">
-                <datepicker-lite id="created_on"
-                                 label="Created on"
-                                 value="[[incident.creation_date]]"
-                                 readonly></datepicker-lite>
-              </div>
-              <div class="col col-3">
-                <paper-input id="last_edited_by"
-                             label="Last edited by"
-                             placeholder="&#8212;"
-                             type="text"
-                             readonly
-                             value="[[_getUsername(incident.last_modify_user_id)]]"></paper-input>
-              </div>
-              <div class="col">
-                <datepicker-lite id="last_edited_on"
-                                 label="Last edited on"
-                                 value="[[incident.last_modify_date]]"
-                                 readonly></datepicker-lite>
-              </div>
-            </div>
-          </div>
-          
-          
 
+        </fieldset>
+        <fieldset>
+          <div hidden$="[[hideReviewFields]]">
+            <review-fields data="[[incident]]"></review-fields>
+          </div>
         </fieldset>
 
         <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly, incident)]]">
@@ -512,20 +496,38 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <warn-message message="Can't save, selected event must be synced first"></warn-message>
           </div>
 
-          <div class="row-h flex-c padd-top">
-            <div class="col col-12">
-              <paper-button raised
-                            on-click="save"
-                            disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-                Save
-              </paper-button>
-              ${this.actionButtonsTemplate}
-            </div>
-          </div>
         </template>
-        ${this.goToEditBtnTmpl}
+        
+        <div class="row-h flex-c padd-top buttons-area">
+          ${this.saveBtnTmpl}
+          ${this.actionButtonsTemplate}
+          ${this.goToEditBtnTmpl}
+          ${this.submitIncidentTmpl}
+          <paper-button class="danger" raised on-tap="_returnToIncidentsList">
+            Cancel
+          </paper-button>
+        </div>
       </div>
     `;
+  }
+
+  static get saveBtnTmpl() {
+    return html`
+      <paper-button raised
+                    on-tap="save"
+                    hidden$="[[readonly]]"
+                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+        Save as Draft
+      </paper-button>
+    `;
+  }
+
+  static get submitBtnTmpl() {
+    return html``;
+  }
+
+  static get submitIncidentTmpl() {
+    return html``;
   }
 
   static get goToEditBtnTmpl() {
@@ -563,6 +565,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: []
       },
       readonly: {
+        type: Boolean,
+        value: false
+      },
+      hideReviewFields: {
         type: Boolean,
         value: false
       },
@@ -823,15 +829,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return !(readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length));
   }
 
-  _getUsername(userId) {
-    if (userId === null || userId === undefined) {
-      return 'N/A';
-    }
-    let user = this.state.staticData.users.find(u => Number(u.id) === Number(userId));
-    if (user) {
-      return user.name;
-    }
-    return 'N/A';
+  _returnToIncidentsList() {
+    updatePath('/incidents/list/');
   }
 
 }

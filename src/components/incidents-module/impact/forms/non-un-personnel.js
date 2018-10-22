@@ -29,6 +29,7 @@ import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
 import { clearErrors } from '../../../../actions/errors.js';
+import '../../../common/review-fields.js';
 
 /**
  * @polymer
@@ -49,7 +50,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-      
+
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
@@ -89,15 +90,15 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
           </div>
         </fieldset>
-        
+
         <fieldset>
           <legend><h3>Impacted Non-UN Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
               <div class="alert-text">
-                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual 
-                assault subcategory are Impact, Description, and Country. The victim should be informed that 
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
+                assault subcategory are Impact, Description, and Country. The victim should be informed that
                 all other information is VOLUNTARY.
               </div>
             </div>
@@ -199,39 +200,15 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
           </div>
-            
-          <div class="row-h flex-c">
-            <div class="col col-3">
-              <paper-input id="created_by"
-                           label="Created by"
-                           placeholder="&#8212;"
-                           type="text"
-                           value="[[_getUsername(data.created_by_user_id)]]"
-                           readonly></paper-input>
-            </div>
-            <div class="col">
-              <datepicker-lite id="created_on"
-                               label="Created on"
-                               value="[[data.created_on]]"
-                               readonly></datepicker-lite>
-            </div>
-            <div class="col col-3">
-              <paper-input id="last_edited_by"
-                           label="Last edited by"
-                           placeholder="&#8212;"
-                           value="[[_getUsername(data.last_modify_user_id)]]"
-                           type="text"
-                           readonly></paper-input>
-            </div>
-            <div class="col">
-              <datepicker-lite id="last_edited_on"
-                               label="Last edited on"
-                               value="[[data.last_modify_date]]"
-                               readonly></datepicker-lite>
-            </div>
-          </div>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+
+        <fieldset hidden$="[[isNew]]">
+          <review-fields data="[[data]]"></review-fields>
+        </fieldset>
+        <paper-button on-tap="save">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -248,12 +225,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {
-          person: {}
-        }
       },
       modelForNew: {
         type: Object,
@@ -298,6 +269,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
     this.data.incident = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async save() {
@@ -309,16 +282,14 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editPersonnel(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident}/`);
+      this._goToIncidentImpacts();
       this.resetData();
     }
     if (result === false) {
@@ -356,18 +327,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       this.data = JSON.parse(JSON.stringify(workingItem));
       this.resetValidations();
     }
-  }
-
-  _getUsername(userId) {
-    if (userId === null || userId === undefined) {
-      return 'N/A';
-    }
-
-    let user = this.staticData.users.find(u => Number(u.id) === Number(userId));
-    if (user) {
-      return user.name;
-    }
-    return 'N/A';
   }
 
 }

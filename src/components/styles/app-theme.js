@@ -7,8 +7,9 @@ documentContainer.innerHTML = `
     <style>
       html {
         --primary-color: #309ae0;
+        --background-color: #eee;
 
-        --app-primary-color: #309ae0; /* TODO: we should switch to --promary-color as it's used by polymer elements */
+        --app-primary-color: #309ae0; /* TODO: we should switch to --primary-color as it's used by polymer elements */
         --primary-color-darker: #4f8fba;
         --app-secondary-color: black;
 

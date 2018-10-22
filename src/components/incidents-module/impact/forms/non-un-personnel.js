@@ -29,6 +29,7 @@ import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
 import { clearErrors } from '../../../../actions/errors.js';
+import '../../../common/review-fields.js';
 
 /**
  * @polymer
@@ -49,7 +50,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-      
+
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
@@ -82,15 +83,27 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
+                                required auto-validate
                                 value="{{data.description}}">
                 </paper-textarea>
               </div>
             </div>
           </div>
         </fieldset>
-        
+
         <fieldset>
           <legend><h3>Impacted Non-UN Personnel</h3></legend>
+
+          <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
+            <div class="row-h flex-c">
+              <div class="alert-text">
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
+                assault subcategory are Impact, Description, and Country. The victim should be informed that
+                all other information is VOLUNTARY.
+              </div>
+            </div>
+          </template>
+
           <div class="row-h flex-c">
             <div class="col col-3">
               <paper-input id="firstName"
@@ -98,7 +111,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                            readonly$="[[readonly]]"
                            label="First name"
                            value="{{data.person.first_name}}"
-                           required auto-validate
+                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="First name is required">
               </paper-input>
             </div>
@@ -108,7 +121,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                            readonly$="[[readonly]]"
                            label="Last name"
                            value="{{data.person.last_name}}"
-                           required auto-validate
+                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="Last name is required">
               </paper-input>
             </div>
@@ -119,7 +132,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                   readonly="[[readonly]]"
                   options="[[staticData.genders]]"
                   selected="{{data.person.gender}}"
-                  required auto-validate
+                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                   error-message="Gender is required">
               </etools-dropdown-lite>
             </div>
@@ -188,6 +201,10 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
           </div>
         </fieldset>
+
+        <fieldset hidden$="[[isNew]]">
+          <review-fields data="[[data]]"></review-fields>
+        </fieldset>
         <paper-button on-click="save">Save</paper-button>
       </div>
     `;
@@ -195,7 +212,10 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
   static get properties() {
     return {
-      selectedImpactType: Object,
+      selectedImpactType: {
+        type: Object,
+        value: {}
+      },
       staticData: Array,
       impactId: String,
       offline: Boolean,
@@ -234,7 +254,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
           '#firstName',
           '#lastName',
           '#gender',
-          '#impact'
+          '#impact',
+          '#description'
         ]
       }
     };
@@ -285,6 +306,14 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
   resetData() {
     this.data = JSON.parse(JSON.stringify(this.modelForNew));
+  }
+
+  isSexualAssault() {
+    if (this.selectedImpactType) {
+      return this.selectedImpactType.name === 'Sexually assaulted';
+    } else {
+      return false;
+    }
   }
 
   _computeIsNew(id) {

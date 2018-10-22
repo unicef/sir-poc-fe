@@ -19,6 +19,7 @@ class AddIncident extends IncidentsBaseView {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new incident';
+    this.hideReviewFields = true;
     this.set('incident', this.state.incidents.draft);
   }
 
@@ -63,6 +64,7 @@ class AddIncident extends IncidentsBaseView {
       this.resetForm();
       this.resetValidations();
       this.showSuccessMessage();
+      updatePath(`/incidents/edit/${createdId}`);
     }
   }
 

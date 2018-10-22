@@ -9,12 +9,7 @@ const IncidentModel = {
   reported: false,
   weapons_used: [],
   latitude: '',
-  longitude: '',
-  primary_person: {
-    first_name: '',
-    last_name: '',
-    type_of_contract: ''
-  }
+  longitude: ''
 };
 
 export const getIncidentModel = () => JSON.parse(JSON.stringify(IncidentModel));

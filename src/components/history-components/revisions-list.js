@@ -26,18 +26,18 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
         }
 
         etools-data-table-row[no-collapse] {
-          padding-left: 32px;
+          --list-row-wrapper-padding: 0 24px 0 56px;
         }
 
         .action {
           text-transform: capitalize;
         }
       </style>
-      
+
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
-      
+
       <div class="card list">
-        <etools-data-table-header id="listHeader" label="History of changes" 
+        <etools-data-table-header id="listHeader" label="History of changes"
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-3">
             Action
@@ -53,7 +53,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[history]]">
-          <etools-data-table-row no-collapse="[[isCreateAction(item.action)]]" 
+          <etools-data-table-row no-collapse="[[isCreateAction(item.action)]]"
                                  low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Action">
@@ -103,20 +103,10 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
 
   static get properties() {
     return {
-      history: Object,
+      lowResolutionLayout: Boolean,
+      history: Array,
       module: String,
-      workingItem: {
-        type: Object,
-        notify: true
-      },
-      action: {
-        type: String,
-        notify: true
-      },
-      users: {
-        type: Array
-      },
-      lowResolutionLayout: Boolean
+      users: Array
     };
   }
 

@@ -1,8 +1,8 @@
 /**
  @license
  */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
@@ -20,17 +20,18 @@ import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
-import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
-import { store } from '../../redux/store.js';
-import { selectIncident } from '../../reducers/incidents.js';
+import '../common/review-fields.js';
+import {validateAllRequired, resetRequiredValidations} from '../common/validations-helper.js';
+import {store} from '../../redux/store.js';
+import {selectIncident} from '../../reducers/incidents.js';
 
-import { fetchIncident } from '../../actions/incidents.js';
-import { clearErrors, serverError } from '../../actions/errors.js';
+import {fetchIncident} from '../../actions/incidents.js';
+import {clearErrors, serverError} from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import { Endpoints } from '../../config/endpoints';
+import {Endpoints} from '../../config/endpoints';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -60,13 +61,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         paper-input {
           width: 100%;
         }
-        
+
         #get-location {
           margin-left: 16px;
         }
 
       </style>
-      
+
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div class="card">
@@ -167,6 +168,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-info-tooltip>
               </div>
             </div>
+
+            <template is="dom-if" if="[[isSexualAssault(selectedIncidentSubcategory)]]">
+              <div class="row-h flex-c">
+                <div class="alert-text">
+                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident
+                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that
+                  all other information is VOLUNTARY.
+                </div>
+              </div>
+            </template>
 
             <template is="dom-if" if="[[isTrafficAccident(selectedIncidentSubcategory, staticData)]]" restamp>
               <div class="row-h flex-c">
@@ -294,131 +306,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </fieldset>
 
         <fieldset>
-          <legend><h3>Primary Person data</h3></legend>
-          <div>
-            <div class="row-h flex-c" hidden$="[[readonly]]">
-              <div class="col col-6">
-                <etools-dropdown-lite id="primaryPerson"
-                                      label="Auto complete primary person"
-                                      trigger-value-change-event
-                                      on-etools-selected-item-changed="_userSelected"
-                                      options="[[staticData.users]]"
-                                      readonly="[[readonly]]"
-                                      enable-none-option
-                                      error-message="Primary person is required">
-                </etools-dropdown-lite>
-              </div>
-            </div>
-
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <paper-input readonly$="[[readonly]]"
-                             id="primaryPersonFirstName"
-                             label="First Name"
-                             value="{{incident.primary_person.first_name}}"
-                             placeholder="&#8212;"
-                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
-                </paper-input>
-              </div>
-
-              <div class="col col-3">
-                <paper-input readonly$="[[readonly]]"
-                             id="primaryPersonLastName"
-                             label="Last Name"
-                             value="{{incident.primary_person.last_name}}"
-                             placeholder="&#8212;"
-                             required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate>
-                </paper-input>
-              </div>
-              <div class="col col-3">
-                <paper-input readonly$="[[readonly]]"
-                             id="indexNumber"
-                             label="Index Number"
-                             value="{{incident.primary_person.index_number}}"
-                             placeholder="&#8212;">
-                </paper-input>
-              </div>
-
-              <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      label="Agency"
-                                      options="[[staticData.agencies]]"
-                                      enable-none-option
-                                      selected="{{incident.primary_person.agency}}">
-                </etools-dropdown-lite>
-              </div>
-
-            </div>
-
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      id="gender"
-                                      label="Gender"
-                                      options="[[staticData.genders]]"
-                                      selected="{{incident.primary_person.gender}}"
-                                      placeholder="&#8212;"
-                                      required auto-validate>
-                </etools-dropdown-lite>
-              </div>
-              <div class="col col-3">
-                <etools-dropdown-lite readonly="[[readonly]]"
-                                      id="nationality"
-                                      label="Nationality"
-                                      options="[[staticData.nationalities]]"
-                                      selected="{{incident.primary_person.nationality}}"
-                                      enable-none-option
-                                      placeholder="&#8212;">
-                </etools-dropdown-lite>
-              </div>
-              <div class="col col-3">
-                <datepicker-lite id="dateOfBirth"
-                                readonly="[[readonly]]"
-                                value="{{incident.primary_person.date_of_birth}}"
-                                label="Date of Birth">
-                </datepicker-lite>
-              </div>
-              <div class="col col-3">
-                <paper-checkbox checked="{{incident.on_duty}}" disabled="[[readonly]]">On Duty</paper-checkbox>
-              </div>
-            </div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <paper-input readonly$="[[readonly]]"
-                             id="jobTitle"
-                             label="Job Title"
-                             value="{{incident.primary_person.job_title}}"
-                             placeholder="&#8212;">
-                </paper-input>
-              </div>
-              <div class="col col-3">
-                <paper-input readonly$="[[readonly]]"
-                             id="typeOfContract"
-                             label="Type of Contract"
-                             value="{{incident.primary_person.type_of_contract}}"
-                             placeholder="&#8212;"
-                             required auto-validate>
-                </paper-input>
-              </div>
-              <div class="col col-3">
-                <paper-input readonly$="[[readonly]]"
-                             id="contact"
-                             label="Contact"
-                             value="{{incident.primary_person.contact}}"
-                             placeholder="&#8212;">
-                </paper-input>
-              </div>
-              <div class="col col-3">
-                <paper-checkbox checked="{{incident.primary_person.un_official}}"
-                                disabled="[[readonly]]">
-                  UN Official
-                </paper-checkbox>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset>
           <legend><h3>When & Where</h3></legend>
           <div>
             <div class="row-h flex-c">
@@ -518,10 +405,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                               value="{{incident.longitude}}"
                               placeholder="&#8212;">
                   </paper-input>
-                  
+
                   <paper-icon-button id="get-location"
-                                     on-click="getLocation" 
-                                     title="Use device location" 
+                                     on-click="getLocation"
+                                     title="Use device location"
                                      icon="device:gps-fixed">
                   </paper-icon-button>
                 </div>
@@ -531,6 +418,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </div>
           </div>
 
+        </fieldset>
+        <fieldset>
+          <div hidden$="[[hideReviewFields]]">
+            <review-fields data="[[incident]]"></review-fields>
+          </div>
         </fieldset>
 
         <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly, incident)]]">
@@ -645,6 +537,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         type: Boolean,
         value: false
       },
+      hideReviewFields: {
+        type: Boolean,
+        value: false
+      },
       visible: {
         type: Boolean,
         value: false,
@@ -730,44 +626,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
-  _userSelected(event) {
-    if (!event.detail.selectedItem) {
-      return;
-    }
-
-    /* eslint-disable camelcase */
-    let {
-      agency,
-      contact,
-      date_of_birth,
-      first_name,
-      gender,
-      index_number,
-      job_title,
-      last_name,
-      nationality,
-      title,
-      type_of_contract,
-      un_official
-    } = event.detail.selectedItem;
-
-    this.set('incident.primary_person', {
-      agency,
-      contact,
-      date_of_birth,
-      first_name,
-      gender,
-      index_number,
-      job_title,
-      last_name,
-      nationality,
-      title,
-      type_of_contract,
-      un_official
-    });
-    /* eslint-enable camelcase */
-  }
-
   _stateChanged(state) {
     this.state = state;
 
@@ -835,7 +693,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   isSexualAssault(selectedIncidentSubcategory) {
     if (this.selectedIncidentSubcategory) {
-      return selectedIncidentSubcategory.name === 'Sexual assault' ? true : false;
+      return selectedIncidentSubcategory.name === 'Sexual assault';
     }
   }
 
@@ -888,6 +746,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   hideUploadBtn(readonly, offline, unsynced) {
     return readonly || offline || unsynced;
   }
+
   hideAttachmentsList(incident, att, attLenght) {
     if (!incident) {
       return true;
@@ -898,6 +757,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
     return false;
   }
+
   handleUploadedFiles(ev) {
     if (!ev.detail) {
       return;
@@ -935,10 +795,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!incidentId || isNaN(incidentId)) {
       return false;
     }
-    if (readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length)) {
-      return false;
-    }
-    return true;
+    return !(readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length));
   }
 
 }

@@ -4,7 +4,7 @@ import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
-import { serverError } from './errors.js';
+import { serverError, PLAIN_ERROR } from './errors.js';
 import { syncIncidentImpacts } from './incident-impacts.js';
 import * as ACTIONS from './constants.js';
 import { fetchIncidentEvacuations,
@@ -198,6 +198,29 @@ export const submitIncident = incident => (dispatch, state) => {
 
   return makeRequest(endpoint).then((result) => {
     dispatch(editIncidentSuccess(result, result.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+export const approveIncident = incidentId => (dispatch, state) => {
+  let endpoint = prepareEndpoint(Endpoints.approveIncident, {id: incidentId});
+
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(result, result.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+export const rejectIncident = data => (dispatch, getState) => {
+  let endpoint = prepareEndpoint(Endpoints.rejectIncident, {id: data.incident});
+  return makeRequest(endpoint, data).then((result) => {
+    dispatch(addCommentSuccess(result));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));

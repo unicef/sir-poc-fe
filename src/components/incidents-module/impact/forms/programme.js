@@ -27,7 +27,8 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
 import DateMixin from "../../../common/date-mixin.js";
-import {ImpactFormBase} from './impact-form-base.js';
+import { ImpactFormBase } from './impact-form-base.js';
+import '../../../common/review-fields.js';
 
 /**
  * @polymer
@@ -170,20 +171,22 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
         <fieldset>
           <legend><h3>Impact details</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-12">
-                <paper-textarea id="description"
-                                readonly$="[[readonly]]"
-                                label="Description"
-                                placeholder="&#8212;"
-                                value="{{data.description}}"
-                                required auto-validate
-                                error-message="This is required">
-                </paper-textarea>
-              </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-textarea id="description"
+                              readonly$="[[readonly]]"
+                              label="Description"
+                              placeholder="&#8212;"
+                              value="{{data.description}}"
+                              required auto-validate
+                              error-message="This is required">
+              </paper-textarea>
             </div>
           </div>
+        </fieldset>
+
+        <fieldset hidden$="[[isNew]]">
+          <review-fields data="[[data]]"></review-fields>
         </fieldset>
         <paper-button on-click="save">Save</paper-button>
       </div>

@@ -13,6 +13,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
+import '@polymer/iron-collapse/iron-collapse.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 
 import 'etools-data-table/etools-data-table.js';
@@ -72,37 +73,46 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      <iron-media-query query="(max-width: 1024px)" query-matches="{{showToggleFiltersBtn}}"></iron-media-query>
 
-      <div class="card filters">
-        <paper-input class="filter search-input"
-                     placeholder="Search by Description or Location"
-                     value="{{filters.q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+      <div class="card">
+        <iron-collapse id="collapse" opened>
+          <div class="filters">
+            <paper-input class="filter search-input"
+                        placeholder="Search by Description or Location"
+                        value="{{filters.q}}">
+              <iron-icon icon="search" slot="prefix"></iron-icon>
+            </paper-input>
 
-        <etools-dropdown-multi-lite class="filter sync-filter"
-                                    label="Sync status"
-                                    options="[[itemSyncStatusOptions]]"
-                                    selected-values="{{filters.syncStatus}}"
-                                    hide-search>
-        </etools-dropdown-multi-lite>
+            <etools-dropdown-multi-lite class="filter sync-filter"
+                                        label="Sync status"
+                                        options="[[itemSyncStatusOptions]]"
+                                        selected-values="{{filters.syncStatus}}"
+                                        hide-search>
+            </etools-dropdown-multi-lite>
 
-        <div class="col filter">
-          <datepicker-lite id="fromDate"
-                           value="{{filters.startDate}}"
-                           max-date="[[toDate(filters.endDate)]]"
-                           label="From">
-          </datepicker-lite>
+            <div class="col filter">
+              <datepicker-lite id="fromDate"
+                              value="{{filters.startDate}}"
+                              max-date="[[toDate(filters.endDate)]]"
+                              label="From">
+              </datepicker-lite>
+            </div>
+
+            <div class="col filter">
+              <datepicker-lite id="endDate"
+                              value="{{filters.endDate}}"
+                              min-date="[[toDate(filters.startDate)]]"
+                              label="To">
+              </datepicker-lite>
+            </div>
+          </div>
+        </iron-collapse>
+
+        <div class="filters-button" on-tap="_toggleFilters" hidden$="[[!showToggleFiltersBtn]]">
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          FILTERS
         </div>
-
-        <div class="col filter">
-          <datepicker-lite id="endDate"
-                           value="{{filters.endDate}}"
-                           min-date="[[toDate(filters.startDate)]]"
-                           label="To">
-          </datepicker-lite>
-        </div>
-
       </div>
 
       <div class="card list">
@@ -132,7 +142,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
             <div slot="row-data" class="p-relative">
               <span class="col-data col-1" data-col-header-label="Case Number">
                 <span class="truncate">
-                  <a href="/events/view/[[item.id]]">[[item.id]]</a>
+                  <a href="/events/view/[[item.id]]">[[item.case_number]]</a>
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Description">
@@ -329,6 +339,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
     filteredEvents = filteredEvents.filter(e => this._applyQFilter(e, q));
     filteredEvents = filteredEvents.filter(e => this._applyStatusFilter(e, this.filters.syncStatus));
     filteredEvents = filteredEvents.filter(e => this._applyDateFilter(e, startDate, endDate));
+
+    filteredEvents.sort((left, right) => {
+      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
+    });
 
     return this.applyPagination(filteredEvents);
   }

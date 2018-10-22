@@ -3,6 +3,7 @@
 */
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/paper-dialog/paper-dialog.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { showSnackbar } from '../../actions/app.js';
 import { submitIncident } from '../../actions/incidents.js';
@@ -25,18 +26,31 @@ class ViewIncident extends IncidentsBaseView {
             </paper-button>
           </a>
           <paper-button raised
-                    on-click="submit"
-                    hidden$="[[canNotSubmit(incident.event, state.app.offline, incidentId, incident.status)]]">
+                    on-click="openSubmitConfirmation"
+                    hidden$="[[canNotSubmit(state.app.offline, incident.status)]]">
             Submit
           </paper-button>
         </div>
-      </div>`;
+      </div>
+      <paper-dialog id="submitConfirm">
+        <h2>Confirm Submit</h2>
+        <p>Are you sure you want to submit this incident?</p>
+        <div class="buttons">
+          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
+          <paper-button class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>
+        </div>
+      </paper-dialog>
+      `;
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;
     this.title = 'View incident';
+  }
+
+  openSubmitConfirmation() {
+    this.shadowRoot.querySelector('#submitConfirm').opened = true;
   }
 
   async submit() {
@@ -55,18 +69,11 @@ class ViewIncident extends IncidentsBaseView {
     if (!offline) {
       return true;
     }
-    if (unsynced && isNaN(itemId)) {
-      return true;
-    }
-    return false;
+    return unsynced && isNaN(itemId);
   }
 
-  canNotSubmit(eventId, offline, incidentId, status) {
-    if (!this.canNotSave(eventId, offline, incidentId)) {
-      return false;
-    }
-
-    return status !== 'created';
+  canNotSubmit(offline, status) {
+    return status !== 'created' || offline;
   }
 
   showSuccessMessage() {

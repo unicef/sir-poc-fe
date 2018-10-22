@@ -14,6 +14,7 @@ import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
+import '../common/review-fields.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -92,6 +93,10 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
           </div>
         </div>
 
+        <div hidden$="[[hideReviewFields]]">
+          <review-fields data="[[event]]"></review-fields>
+        </div>
+
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
             <warn-message hidden$="[[!_eventHasTempIdOrNew(eventId)]]"
@@ -119,6 +124,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   static get actionButtonsTemplate() {
     return html``;
   }
+
   static get goToEditBtnTmpl() {
     return html``;
   }
@@ -129,6 +135,10 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
         type: Object
       },
       readonly: {
+        type: Boolean,
+        value: false
+      },
+      hideReviewFields: {
         type: Boolean,
         value: false
       },

@@ -13,20 +13,25 @@ import { loadAllStaticData } from './static-data.js';
 import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
 import * as ACTIONS from './constants.js';
+import {SirMsalAuth} from "../components/auth/jwt/msal-authentication";
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 
 let snackbarTimer;
 
-export const storeReady = () => (dispatch, getState) => {
-  let state = getState();
-  if (state && state.app && state.app.offline) {
-    return;
-  }
-
+export const requestPageLoadData = () => (dispatch) => {
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchAllIncidentData());
+};
+
+export const storeReady = () => (dispatch, getState) => {
+  let state = getState();
+  const isOffline = state && state.app && state.app.offline;
+  if (isOffline || !SirMsalAuth.tokenIsValid()) {
+    return;
+  }
+  dispatch(requestPageLoadData());
 };
 
 export const showSnackbar = text => (dispatch) => {
@@ -93,9 +98,6 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'history':
       import('../components/incidents-module/history/incident-history-controller.js');
       break;
-    case 'comments':
-      import('../components/incidents-module/incident-comments.js');
-      break;
     case 'review':
       import('../components/incidents-module/incident-review.js');
       break;
@@ -114,6 +116,9 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
   // Note: `polymer build` doesn't like string concatenation in the import
   // statement, so break it up.
   switch (selectedModule) {
+    case 'login':
+      import('../components/auth/sir-login.js');
+      break;
     case 'events':
       import('../components/events-module/events-controller.js');
       break;

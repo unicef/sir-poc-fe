@@ -73,9 +73,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      <iron-media-query query="(max-width: 1024px)" query-matches="{{showToggleFiltersBtn}}"></iron-media-query>
 
       <div class="card">
-        <iron-collapse id="collapse">
+        <iron-collapse id="collapse" opened>
           <div class="filters">
             <paper-input class="filter search-input"
                         placeholder="Search by Description or Location"
@@ -108,7 +109,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           </div>
         </iron-collapse>
 
-        <div class="filters-button" on-tap="_toggleFilters">
+        <div class="filters-button" on-tap="_toggleFilters" hidden$="[[!showToggleFiltersBtn]]">
           <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
           FILTERS
         </div>
@@ -141,7 +142,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
             <div slot="row-data" class="p-relative">
               <span class="col-data col-1" data-col-header-label="Case Number">
                 <span class="truncate">
-                  <a href="/events/view/[[item.id]]">[[item.id]]</a>
+                  <a href="/events/view/[[item.id]]">[[item.case_number]]</a>
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Description">
@@ -365,11 +366,6 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   _applyDateFilter(e, startDate, endDate) {
     return (moment(e.start_date).isBetween(startDate, endDate, null, '[]')) ||
         (moment(e.end_date).isBetween(startDate, endDate, null, '[]'));
-  }
-
-  _toggleFilters() {
-    this.$.collapse.toggle();
-    this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
   }
 
   isApproved(status) {

@@ -27,7 +27,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
-import { ImpactFormBase } from './impact-form-base.js';
+import {ImpactFormBase} from './impact-form-base.js';
 import { clearErrors } from '../../../../actions/errors.js';
 import '../../../common/review-fields.js';
 

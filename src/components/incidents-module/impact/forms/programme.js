@@ -264,6 +264,8 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.staticData = state.staticData;
     this.programmesList = state.incidents.programmes;
     this.data.incident_id = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   _updateSelectableCities(country) {
@@ -277,16 +279,14 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
     }
     if (this.isNew) {
       result = await store.dispatch(addProgramme(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncProgramme(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editProgramme(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this._goToIncidentImpacts();
       this.data = {};
     }
     if (result === false) {

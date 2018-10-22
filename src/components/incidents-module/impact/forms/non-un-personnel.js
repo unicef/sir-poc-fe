@@ -294,7 +294,9 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
-    this.data.incident_id = state.app.locationInfo.incidentId;
+    this.data.incident = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async save() {
@@ -306,16 +308,14 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editPersonnel(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this._goToIncidentImpacts();
       this.resetData();
     }
     if (result === false) {

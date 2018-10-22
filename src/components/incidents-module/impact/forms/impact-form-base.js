@@ -10,11 +10,15 @@ export class ImpactFormBase extends PolymerElement {
         type: Boolean,
         observer: '_visibilityChanged'
       },
+      incidentId: {
+        type: Number
+      },
       data: {
         type: Object,
         value: {
           person: {},
-          incident_id: null
+          // incident id (TODO: API should use incident_id for all impacts)
+          // incident: null
         }
       }
     };
@@ -33,7 +37,7 @@ export class ImpactFormBase extends PolymerElement {
   }
 
   _goToIncidentImpacts() {
-    updatePath(`/incidents/impact/${this.data.incident_id}/list/`);
+    updatePath(`/incidents/impact/${this.incidentId}/list/`);
   }
 
 }

@@ -35,6 +35,7 @@ import '../styles/required-fields-styles.js';
 import {Endpoints} from '../../config/endpoints';
 import {updatePath} from '../common/navigation-helper';
 import {showSnackbar} from '../../actions/app.js';
+import {SirMsalAuth} from '../auth/jwt/msal-authentication';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -445,7 +446,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <legend><h3>Related documents</h3></legend>
             <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
               <etools-upload-multi
-                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles">
+                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
+                  jwt-local-storage-key="[[jwtLocalStorageKey]]">
               </etools-upload-multi>
             </div>
             <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
@@ -609,7 +611,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: false,
         observer: 'pressCoverageChanged'
       },
-      lowResolutionLayout: Boolean
+      lowResolutionLayout: Boolean,
+      jwtLocalStorageKey: {
+        type: String,
+        value: ''
+      }
     };
   }
 
@@ -622,6 +628,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+    this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
   }
 
   incidentLoaded() {

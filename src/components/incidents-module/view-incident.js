@@ -30,9 +30,9 @@ class ViewIncident extends IncidentsBaseView {
   static get submitIncidentTmpl() {
     // language=HTML
     return html`
-      
+
       ${this.submitBtnTmpl}
-        
+
       <paper-dialog id="submitConfirm">
         <h2>Confirm Submit</h2>
         <p>Are you sure you want to submit this incident?</p>
@@ -48,7 +48,7 @@ class ViewIncident extends IncidentsBaseView {
     // language=HTML
     return html`
       <a href="/incidents/edit/[[incidentId]]"
-         hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
+         hidden$="[[canNotEdit(state.app.offline, incident.status, incident.unsynced, incident.id)]]">
         <paper-button raised>
           Edit
         </paper-button>
@@ -78,20 +78,17 @@ class ViewIncident extends IncidentsBaseView {
     }
   }
 
-  canEdit(offline, unsynced, itemId) {
-    if (!offline) {
-      return true;
-    }
-    return unsynced && isNaN(itemId);
-  }
-
   showSuccessMessage() {
     this.store.dispatch(showSnackbar('Incident submitted'));
   }
 
   canNotSubmit(offline, status, unsynced, id) {
-    return !this.canEdit(offline, unsynced, id) ||
-        status !== 'created' || offline;
+    return isNaN(id) || unsynced || status !== 'created' || offline;
+  }
+
+  canNotEdit(offline, status, unsynced, id) {
+    // conditions for editing and submitting are the same
+    return canNotSubmit(offline, status, unsynced, id);
   }
 }
 

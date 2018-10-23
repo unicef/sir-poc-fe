@@ -207,7 +207,10 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           <review-fields data="[[data]]"></review-fields>
         </fieldset>
 
-        <paper-button on-click="saveEvacuation">Save</button>
+        <paper-button on-tap="saveEvacuation">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -220,10 +223,6 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {}
       },
       isNew: {
         type: Boolean,
@@ -260,6 +259,8 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
     this.staticData = state.staticData;
     this.evacuations = state.incidents.evacuations;
     this.data.incident_id = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async saveEvacuation() {
@@ -269,16 +270,14 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
     }
     if (this.isNew) {
       result = await store.dispatch(addEvacuation(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncEvacuation(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editEvacuation(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this._goToIncidentImpacts();
       this.data = {};
     }
     if (result === false) {
@@ -308,7 +307,6 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
       this.resetValidations();
     }
   }
-
 
 }
 

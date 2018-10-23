@@ -20,7 +20,7 @@ const generateRequestConfigOptions = function(endpoint, data) {
       url: endpoint.url,
       method: endpoint.method,
       async: true,
-      handleAs: 'json',
+      handleAs: endpoint.handleAs || 'json',
       headers: _getRequestHeaders({}),
       body: data,
       withCredentials: endpoint.auth
@@ -146,4 +146,24 @@ export const prepareEndpoint = (endpoint, data) => {
   });
 
   return endpointCpy;
+};
+
+export const _handleBlobDataReceivedAndStartDownload = (blob, filename) => {
+  if (window.navigator.userAgent.indexOf('Trident/') > -1) {
+    window.navigator.msSaveBlob(blob, filename);
+  } else {
+    // create a blob url representing the data
+    let url = window.URL.createObjectURL(blob);
+    // attach blob url to anchor element with download attribute
+    let anchor = document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', filename);
+
+    //* anchor.click() doesn't work on ff, edge
+    anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 100);
+  }
 };

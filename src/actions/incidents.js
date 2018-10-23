@@ -14,6 +14,8 @@ import { fetchIncidentEvacuations,
          fetchIncidentPersonnel,
          fetchIncidentPremises } from './incident-impacts.js';
 
+import {showSnackbar} from '../actions/app.js';
+
 const editIncidentSuccess = (incident, id) => {
   return {
     type: ACTIONS.EDIT_INCIDENT_SUCCESS,
@@ -329,6 +331,8 @@ export const exportIncidents = (exportUrl, docType) => (dispatch, getState) => {
   makeRequest(incidentsExportReqOptions).then((blob) => {
     handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);
   }).catch((error) => {
-    dispatch(serverError(error));
+    // eslint-disable-next-line
+    console.error(error);
+    dispatch(showSnackbar('An error occurred on incidents export!'));
   });
 };

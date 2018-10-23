@@ -602,7 +602,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
     this.set('exportDocType', '');
 
-    store.dispatch(exportIncidents(csvDownloadUrl));
+    store.dispatch(exportIncidents(csvDownloadUrl, docType));
   }
 
 }

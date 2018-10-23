@@ -35,6 +35,14 @@ class EtoolsTabs extends PolymerElement {
           padding: 0 24px;
           min-width: 70px;
         }
+        
+        @media only screen and (max-width: 450px) {
+          paper-tab[link],
+          paper-tab {
+            --paper-tab-ink: var(--app-primary-color);
+            min-width: 14px;
+          }
+        }
 
         paper-tab .tab-content {
           color: var(--primary-text-color);

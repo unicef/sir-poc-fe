@@ -143,23 +143,20 @@ class SirMsalAuthentication {
   }
 
   getRequestsAuthHeader() {
-    if (!this.token) {
-      return {};
-    }
-    return {'Authorization': 'JWT ' + this.token};
+    return {'Authorization': 'JWT ' + (this.token ? this.token : this.getStoredToken())};
   }
 
-  decodeBase64Token() {
-    if (!this.token) {
+  decodeBase64Token(token) {
+    if (!token) {
       return null;
     }
-    let base64Url = this.token.split('.')[1];
+    let base64Url = token.split('.')[1];
     let base64 = base64Url.replace('-', '+').replace('_', '/');
     return JSON.parse(window.atob(base64));
   }
 
   tokenIsValid() {
-    let decodedToken = this.decodeBase64Token();
+    let decodedToken = this.decodeBase64Token(this.token);
     if (!decodedToken) {
       return false;
     }

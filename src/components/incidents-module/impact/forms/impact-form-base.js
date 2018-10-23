@@ -16,7 +16,7 @@ export class ImpactFormBase extends PolymerElement {
       data: {
         type: Object,
         value: {
-          person: {},
+          person: {}
           // incident id (TODO: API should use incident_id for all impacts)
           // incident: null
         }

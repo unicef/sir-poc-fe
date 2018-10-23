@@ -4,10 +4,10 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-button/paper-button.js';
 
 import {SirMsalAuth} from './jwt/msal-authentication.js';
-import {updatePath} from "../common/navigation-helper";
-import {requestPageLoadData} from "../../actions/app.js";
-import {connect} from "pwa-helpers/connect-mixin";
-import {store} from "../../redux/store";
+import {updatePath} from '../common/navigation-helper';
+import {requestPageLoadData} from '../../actions/app.js';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {store} from '../../redux/store';
 
 /**
  * @customElement

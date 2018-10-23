@@ -60,7 +60,6 @@ const incidents = (state = defaultState, action) => {
         ...state,
         list: getListWithoutItem(state.list, action.incidentId)
       };
-   ///////////////////////////////
     case ACTIONS.EDIT_EVACUATION_SUCCESS:
       return {
         ...state,

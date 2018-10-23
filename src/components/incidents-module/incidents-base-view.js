@@ -32,7 +32,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import {Endpoints} from '../../config/endpoints';
-import {updatePath} from "../common/navigation-helper";
+import {updatePath} from '../common/navigation-helper';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {

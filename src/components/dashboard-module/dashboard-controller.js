@@ -10,9 +10,6 @@ import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import './dashboard-list.js';
 
-import {SirMsalAuth} from '../auth/jwt/msal-authentication.js';
-import '../auth/sir-login.js';
-
 export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
     // language=HTML

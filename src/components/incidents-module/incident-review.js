@@ -283,8 +283,8 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     if (typeof successfull === 'boolean' && successfull) {
       this.restComment();
       store.dispatch(showSnackbar('Incident rejected'));
+      updatePath(`/incidents/list/`);
     }
-    updatePath(`/incidents/list/`);
   }
 
   async approve() {
@@ -292,8 +292,8 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
 
     if (typeof successfull === 'boolean' && successfull) {
       store.dispatch(showSnackbar('Incident approved'));
+      updatePath(`/incidents/list/`);
     }
-    updatePath(`/incidents/list/`);
   }
 
   _hideApproveButton(offline, status) {

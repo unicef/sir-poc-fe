@@ -87,6 +87,7 @@ class SirMsalAuthentication {
   }
 
   loggerCallback(logLevel, message, piiEnabled) {
+    // eslint-disable-next-line
     console.log(message);
   }
 
@@ -97,7 +98,8 @@ class SirMsalAuthentication {
       this.token = token;
     }
     else {
-      console.error(error + ":" + errorDesc);
+      // eslint-disable-next-line
+      console.error(error + ':' + errorDesc);
     }
   }
 
@@ -112,6 +114,7 @@ class SirMsalAuthentication {
           return token;
         })
         .catch((error) => {
+          // eslint-disable-next-line
           console.error(error);
           throw new Error('Login failed!');
         });

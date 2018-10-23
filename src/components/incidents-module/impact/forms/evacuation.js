@@ -1,7 +1,7 @@
 /**
  * @license
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -15,7 +15,6 @@ import {
 } from '../../../../actions/incident-impacts.js';
 import {store} from '../../../../redux/store.js';
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields

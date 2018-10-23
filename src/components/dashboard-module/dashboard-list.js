@@ -259,8 +259,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   wasCreatedLastWeek(createdOn) {
-    const date = new Date();
-    const lastWeek = date.getDate() - 7;
     return moment(createdOn).isAfter(moment().add(-7, 'days'));
   }
 

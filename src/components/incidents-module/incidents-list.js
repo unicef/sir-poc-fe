@@ -28,7 +28,7 @@ import {store} from '../../redux/store.js';
 import 'etools-date-time/datepicker-lite.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import {syncIncidentOnList} from '../../actions/incidents.js';
+import {syncIncidentOnList, exportIncidents} from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 import {updateAppState} from '../common/navigation-helper';
 import {getNameFromId} from '../common/utils.js';
@@ -598,11 +598,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!docType || docType === '') {
       return;
     }
-    const url = Endpoints['incidentsList'].url;
     const csvQStr = this._buildExportQueryString(docType);
-    const csvDownloadUrl = url + '?' + csvQStr;
+    const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
     this.set('exportDocType', '');
-    window.open(csvDownloadUrl, '_blank');
+
+    store.dispatch(exportIncidents(csvDownloadUrl, docType));
   }
 
 }

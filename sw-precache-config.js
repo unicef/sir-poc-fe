@@ -23,9 +23,5 @@ module.exports = {
       handler: 'fastest'
     }
   ],
-  navigateFallbackWhitelist: [
-    /^(?!\/admin\/)/,
-    /^(?!\/api\/)/,
-    /^(?!\/media\/)/,
-  ]
+  navigateFallbackWhitelist: [/^(?!\/admin\/)/]
 };

@@ -16,6 +16,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
+import {updatePath} from '../common/navigation-helper';
 
 /**
  * @polymer
@@ -283,6 +284,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
       this.restComment();
       store.dispatch(showSnackbar('Incident rejected'));
     }
+    updatePath(`/incidents/list/`);
   }
 
   async approve() {
@@ -291,6 +293,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     if (typeof successfull === 'boolean' && successfull) {
       store.dispatch(showSnackbar('Incident approved'));
     }
+    updatePath(`/incidents/list/`);
   }
 
   _hideApproveButton(offline, status) {

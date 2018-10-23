@@ -1,7 +1,7 @@
 
 import '@polymer/iron-ajax/iron-request.js';
 // import { redirectToAdminLogin } from './navigation-helper.js';
-import {SirMsalAuth} from "../auth/jwt/msal-authentication";
+import {SirMsalAuth} from '../auth/jwt/msal-authentication';
 
 // let ironRequestElem;
 
@@ -148,7 +148,7 @@ export const prepareEndpoint = (endpoint, data) => {
   return endpointCpy;
 };
 
-export const _handleBlobDataReceivedAndStartDownload = (blob, filename) => {
+export const handleBlobDataReceivedAndStartDownload = (blob, filename) => {
   if (window.navigator.userAgent.indexOf('Trident/') > -1) {
     window.navigator.msSaveBlob(blob, filename);
   } else {

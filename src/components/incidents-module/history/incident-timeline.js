@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { getNameFromId } from '../../common/utils.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import HistoryHelpers from '../../history-components/history-helpers.js';

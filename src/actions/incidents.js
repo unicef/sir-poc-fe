@@ -1,4 +1,5 @@
-import { makeRequest, prepareEndpoint } from '../components/common/request-helper.js';
+import {makeRequest, prepareEndpoint,
+  handleBlobDataReceivedAndStartDownload } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
 import { objDiff } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
@@ -316,4 +317,18 @@ export const deleteIncident = incidentId => (dispatch, getState) => {
 export const deleteIncidentLocally = incidentId => (dispatch, getState) => {
   dispatch(deleteIncidentFromRedux(incidentId));
   updatePath('/incidents/list/');
+};
+
+export const exportIncidents = (exportUrl, docType) => (dispatch, getState) => {
+  const incidentsExportReqOptions = Object.assign({}, Endpoints['incidentsList'],
+      {
+        url: exportUrl,
+        handleAs: 'blob'
+      }
+  );
+  makeRequest(incidentsExportReqOptions).then((blob) => {
+    handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);
+  }).catch((error) => {
+    dispatch(serverError(error));
+  });
 };

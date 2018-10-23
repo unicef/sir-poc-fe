@@ -28,9 +28,9 @@ import {store} from '../../redux/store.js';
 import 'etools-date-time/datepicker-lite.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import {syncIncidentOnList} from '../../actions/incidents.js';
+import {syncIncidentOnList, exportIncidents} from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import {updateAppState, updatePath} from '../common/navigation-helper';
+import {updateAppState} from '../common/navigation-helper';
 import {getNameFromId} from '../common/utils.js';
 import {Endpoints} from '../../config/endpoints.js';
 
@@ -41,8 +41,6 @@ import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
-import {makeRequest, _handleBlobDataReceivedAndStartDownload} from "../common/request-helper";
-import {scrollToTop} from "../common/content-container-helper";
 
 class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
   static get template() {
@@ -603,17 +601,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     const csvQStr = this._buildExportQueryString(docType);
     const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
     this.set('exportDocType', '');
-    const incidentsExportReqOptions = Object.assign({}, Endpoints['incidentsList'],
-        {
-          url: csvDownloadUrl,
-          handleAs: 'blob'
-        }
-    );
-    makeRequest(incidentsExportReqOptions).then((blob) => {
-      _handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);
-    }).catch((error) => {
-      console.error(error);
-    });
+
+    store.dispatch(exportIncidents(csvDownloadUrl));
   }
 
 }

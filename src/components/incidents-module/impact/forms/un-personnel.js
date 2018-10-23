@@ -30,7 +30,6 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -130,8 +129,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="row-h flex-c">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
-                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be informed that
-                all other information is VOLUNTARY.
+                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be 
+                informed that all other information is VOLUNTARY.
               </div>
             </div>
           </template>

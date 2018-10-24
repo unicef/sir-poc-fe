@@ -77,4 +77,4 @@ const getStaticDataByPath = (path, data) => {
 
 export const isNumber = (candidate) => {
   return !isNaN(parseFloat(candidate));
-}
+};

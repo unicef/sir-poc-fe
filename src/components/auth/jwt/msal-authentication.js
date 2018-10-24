@@ -14,20 +14,22 @@ const SIR_MSAL_CONF = {
       log_level: 'dev',
       msal_logger_corelation_id: 'SIR_APP_DEV'
     },
+    authority: null,
     user_agent_app_config: {
       redirectUri: 'http://localhost:8081/dashboard', // just for testing
       cacheLocation: 'localStorage'
     }
   },
   prod: {
-    client_id: 'ab828403-c7f7-4419-8dbf-b9e7832f9387',
+    client_id: '7ccab667-58ff-44de-b8fa-4e90c0ec6fde',
     token_l_storage_key: 'sir-msal-token',
     logger_config: {
       log_level: 'prod',
       msal_logger_corelation_id: 'SIR_APP'
     },
+    authority: 'https://login.microsoftonline.com/unicef.org',
     user_agent_app_config: {
-      redirectUri: window.location.href,
+      redirectUri: window.location.origin + '/dashboard',
       cacheLocation: 'localStorage'
     }
   }
@@ -61,7 +63,8 @@ class SirMsalAuthentication {
   }
 
   configureMsal() {
-    return new Msal.UserAgentApplication(this.config.client_id, null, this.authCallback, this.msalConfigOptions());
+    return new Msal.UserAgentApplication(this.config.client_id, this.config.authority,
+        this.authCallback, this.msalConfigOptions());
   }
 
   msalConfigOptions() {
@@ -84,6 +87,7 @@ class SirMsalAuthentication {
   }
 
   loggerCallback(logLevel, message, piiEnabled) {
+    // eslint-disable-next-line
     console.log(message);
   }
 
@@ -94,7 +98,8 @@ class SirMsalAuthentication {
       this.token = token;
     }
     else {
-      console.error(error + ":" + errorDesc);
+      // eslint-disable-next-line
+      console.error(error + ':' + errorDesc);
     }
   }
 
@@ -109,6 +114,7 @@ class SirMsalAuthentication {
           return token;
         })
         .catch((error) => {
+          // eslint-disable-next-line
           console.error(error);
           throw new Error('Login failed!');
         });
@@ -140,23 +146,20 @@ class SirMsalAuthentication {
   }
 
   getRequestsAuthHeader() {
-    if (!this.token) {
-      return {};
-    }
-    return {'Authorization': 'JWT ' + this.token};
+    return {'Authorization': 'JWT ' + (this.token ? this.token : this.getStoredToken())};
   }
 
-  decodeBase64Token() {
-    if (!this.token) {
+  decodeBase64Token(token) {
+    if (!token) {
       return null;
     }
-    let base64Url = this.token.split('.')[1];
+    let base64Url = token.split('.')[1];
     let base64 = base64Url.replace('-', '+').replace('_', '/');
     return JSON.parse(window.atob(base64));
   }
 
   tokenIsValid() {
-    let decodedToken = this.decodeBase64Token();
+    let decodedToken = this.decodeBase64Token(this.token);
     if (!decodedToken) {
       return false;
     }

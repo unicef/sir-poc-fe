@@ -74,3 +74,7 @@ const getStaticDataByPath = (path, data) => {
   let newData = data[pathPieces.shift()];
   return getStaticDataByPath(pathPieces.join('.'), newData);
 };
+
+export const isNumber = (candidate) => {
+  return !isNaN(parseFloat(candidate));
+}

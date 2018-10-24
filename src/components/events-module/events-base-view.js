@@ -20,7 +20,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import { resetFieldsValidations, validateFields } from '../common/validations-helper';
-import DateMixin from "../common/date-mixin.js";
+import DateMixin from '../common/date-mixin.js';
 
 export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {

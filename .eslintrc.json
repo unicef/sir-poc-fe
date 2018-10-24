@@ -32,6 +32,7 @@
     "moment": true,
     "require": true,
     "Promise": true,
-    "MyAppGlobals": true
+    "MyAppGlobals": true,
+    "Msal": true
   }
 }

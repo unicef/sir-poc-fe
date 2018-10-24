@@ -13,7 +13,7 @@ import { loadAllStaticData } from './static-data.js';
 import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
 import * as ACTIONS from './constants.js';
-import {SirMsalAuth} from "../components/auth/jwt/msal-authentication";
+import {SirMsalAuth} from '../components/auth/jwt/msal-authentication';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 

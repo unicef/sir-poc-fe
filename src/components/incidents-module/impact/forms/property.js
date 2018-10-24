@@ -1,7 +1,7 @@
 /**
  * @license
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -14,7 +14,6 @@ import {
 } from '../../../../actions/incident-impacts.js';
 import {store} from '../../../../redux/store.js';
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -124,7 +123,10 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
         <fieldset hidden$="[[isNew]]">
           <review-fields data="[[data]]"></review-fields>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+        <paper-button on-tap="save">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -137,10 +139,6 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {}
       },
       isNew: {
         type: Boolean,
@@ -168,6 +166,8 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
     this.staticData = state.staticData;
     this.propertiesList = state.incidents.properties;
     this.data.incident_id = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async save() {
@@ -177,16 +177,14 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
     }
     if (this.isNew) {
       result = await store.dispatch(addProperty(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncProperty(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editProperty(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this._goToIncidentImpacts();
       this.data = {};
     }
     if (result === false) {

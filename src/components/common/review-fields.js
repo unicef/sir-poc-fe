@@ -54,7 +54,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
   static get properties() {
     return {
       data: Object,
-      state: Object,
+      state: Object
     };
   }
 

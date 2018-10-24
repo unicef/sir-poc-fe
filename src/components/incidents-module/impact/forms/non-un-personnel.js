@@ -16,7 +16,6 @@ import {
 } from '../../../../actions/incident-impacts.js';
 import {store} from '../../../../redux/store.js';
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -28,7 +27,6 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -205,7 +203,10 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         <fieldset hidden$="[[isNew]]">
           <review-fields data="[[data]]"></review-fields>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+        <paper-button on-tap="save">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -222,12 +223,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {
-          person: {}
-        }
       },
       modelForNew: {
         type: Object,
@@ -272,6 +267,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
     this.data.incident = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async save() {
@@ -283,16 +280,14 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editPersonnel(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident}/`);
+      this._goToIncidentImpacts();
       this.resetData();
     }
     if (result === false) {

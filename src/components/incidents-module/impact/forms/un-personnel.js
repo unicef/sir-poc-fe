@@ -18,7 +18,6 @@ import {
 import {store} from '../../../../redux/store.js';
 
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -30,8 +29,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
-import { ImpactFormBase } from './impact-form-base.js';
-import { clearErrors } from '../../../../actions/errors.js';
+import {ImpactFormBase} from './impact-form-base.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -131,8 +129,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="row-h flex-c">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
-                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be informed that
-                all other information is VOLUNTARY.
+                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be 
+                informed that all other information is VOLUNTARY.
               </div>
             </div>
           </template>
@@ -144,8 +142,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   label="Auto complete staff member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
-                  options="[[staticData.users]]"
-                  selected="{{data.person.id}}">
+                  options="[[staticData.users]]">
               </etools-dropdown-lite>
             </div>
           </div>
@@ -280,7 +277,10 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         <fieldset hidden$="[[isNew]]">
           <review-fields data="[[data]]"></review-fields>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+        <paper-button raised on-tap="save">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -297,12 +297,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {
-          person: {}
-        }
       },
       modelForNew: {
         type: Object,
@@ -353,6 +347,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
     this.data.incident = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   isSexualAssault() {
@@ -372,16 +368,14 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editPersonnel(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident}/`);
+      this._goToIncidentImpacts();
       this.resetData();
     }
     if (result === false) {

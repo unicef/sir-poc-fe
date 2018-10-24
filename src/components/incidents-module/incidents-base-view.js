@@ -22,6 +22,7 @@ import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
 import {validateAllRequired, resetRequiredValidations} from '../common/validations-helper.js';
+import {makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/request-helper.js';
 import {store} from '../../redux/store.js';
 import {selectIncident} from '../../reducers/incidents.js';
 
@@ -32,6 +33,9 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import {Endpoints} from '../../config/endpoints';
+import {updatePath} from '../common/navigation-helper';
+import {showSnackbar} from '../../actions/app.js';
+import {SirMsalAuth} from '../auth/jwt/msal-authentication';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -66,6 +70,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           margin-left: 16px;
         }
 
+        .buttons-area paper-button:not(:first-child) {
+          margin-left: 4px;
+        }
+
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
@@ -75,6 +83,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
+
+        <div class="row-h flex-c">
+          <div class="col col-12">
+            ${this.saveBtnTmpl}
+            ${this.submitBtnTmpl}
+          </div>
+        </div>
+
         <fieldset>
           <legend><h3>Incident Details</h3></legend>
           <div>
@@ -407,7 +423,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                   </paper-input>
 
                   <paper-icon-button id="get-location"
-                                     on-click="getLocation"
+                                     on-tap="getLocation"
                                      title="Use device location"
                                      icon="device:gps-fixed">
                   </paper-icon-button>
@@ -430,7 +446,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <legend><h3>Related documents</h3></legend>
             <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
               <etools-upload-multi
-                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles">
+                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
+                  jwt-local-storage-key="[[jwtLocalStorageKey]]">
               </etools-upload-multi>
             </div>
             <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
@@ -452,7 +469,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                           title="[[getFilenameFromURL(item.attachment)]]"
                           data-col-header-label="File">
                       <span>
-                        <a href="[[item.attachment]]" target="_blank">
+                        <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
                            [[getFilenameFromURL(item.attachment)]]
                         </a>
                       </span>
@@ -483,20 +500,38 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <warn-message message="Can't save, selected event must be synced first"></warn-message>
           </div>
 
-          <div class="row-h flex-c padd-top">
-            <div class="col col-12">
-              <paper-button raised
-                            on-click="save"
-                            disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-                Save
-              </paper-button>
-              ${this.actionButtonsTemplate}
-            </div>
-          </div>
         </template>
-        ${this.goToEditBtnTmpl}
+
+        <div class="row-h flex-c padd-top buttons-area">
+          ${this.saveBtnTmpl}
+          ${this.actionButtonsTemplate}
+          ${this.goToEditBtnTmpl}
+          ${this.submitIncidentTmpl}
+          <paper-button class="danger" raised on-tap="_returnToIncidentsList">
+            Cancel
+          </paper-button>
+        </div>
       </div>
     `;
+  }
+
+  static get saveBtnTmpl() {
+    return html`
+      <paper-button raised
+                    on-tap="save"
+                    hidden$="[[readonly]]"
+                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+        Save as Draft
+      </paper-button>
+    `;
+  }
+
+  static get submitBtnTmpl() {
+    return html``;
+  }
+
+  static get submitIncidentTmpl() {
+    return html``;
   }
 
   static get goToEditBtnTmpl() {
@@ -576,7 +611,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: false,
         observer: 'pressCoverageChanged'
       },
-      lowResolutionLayout: Boolean
+      lowResolutionLayout: Boolean,
+      jwtLocalStorageKey: {
+        type: String,
+        value: ''
+      }
     };
   }
 
@@ -589,6 +628,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+    this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
   }
 
   incidentLoaded() {
@@ -796,6 +836,30 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return false;
     }
     return !(readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length));
+  }
+
+  _returnToIncidentsList() {
+    updatePath('/incidents/list/');
+  }
+
+  dwRelatedDoc(e) {
+    e.preventDefault();
+    let url = e.target.getAttribute('data-url');
+    if (!url) {
+      return;
+    }
+    let reqOptions = {
+      url: url,
+      handleAs: 'blob',
+      method: 'GET'
+    };
+    makeRequest(reqOptions).then((blob) => {
+      handleBlobDataReceivedAndStartDownload(blob, this.getFilenameFromURL(url));
+    }).catch((error) => {
+      // eslint-disable-next-line
+      console.error(error);
+      store.dispatch(showSnackbar('An error occurred on downloading!'));
+    });
   }
 
 }

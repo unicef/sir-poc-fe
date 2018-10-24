@@ -28,7 +28,7 @@ class AddIncident extends IncidentsBaseView {
       <paper-button class="secondary"
                     raised
                     on-tap="saveAndAddImpact"
-                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+                    disabled$="[[!canSave(incident.event, state.app.offline, incidentId)]]">
         Add Impact
       </paper-button>
       <paper-button raised on-tap="resetForm">

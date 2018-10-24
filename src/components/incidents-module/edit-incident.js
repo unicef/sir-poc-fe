@@ -52,7 +52,7 @@ class EditIncident extends IncidentsBaseView {
       return;
     }
 
-    if (this.canNotEdit(this.state.app.offline, incident.status, incident.unsynced)) {
+    if (!this.canEdit(this.state.app.offline, incident.status, incident.unsynced)) {
       updatePath(`/incidents/view/${incident.id}/`);
     }
   }

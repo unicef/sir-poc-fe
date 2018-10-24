@@ -520,7 +520,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       <paper-button raised
                     on-tap="save"
                     hidden$="[[readonly]]"
-                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+                    disabled$="[[!canSave(incident.event, state.app.offline, incidentId)]]">
         Save as Draft
       </paper-button>
     `;
@@ -747,19 +747,19 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   // Only edit of unsynced and add new is possible offline
-  canNotSave(eventId, offline, incidentId) {
+  canSave(eventId, offline, incidentId) {
     if (this.eventNotOk(eventId, offline)) {
-      return true;
+      return false;
     }
-    return (offline && !!incidentId && !isNaN(incidentId));
+    return !offline || !incidentId || isNaN(incidentId);
   }
 
-  canNotSubmit(offline, status, unsynced, id) {
-    return isNaN(id) || unsynced || status !== 'created' || offline;
+  canSubmit(offline, status, unsynced) {
+    return !unsynced && status === 'created' && !offline;
   }
 
-  canNotEdit(offline, status, unsynced) {
-    return !unsynced && (status !== 'created' || offline);
+  canEdit(offline, status, unsynced) {
+    return !!unsynced || (status === 'created' && !offline);
   }
 
   _hideInfoTooltip(...arg) {

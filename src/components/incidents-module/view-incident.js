@@ -20,7 +20,7 @@ class ViewIncident extends IncidentsBaseView {
     // language=HTML
     return html`
       <paper-button raised
-                    hidden$="[[canNotSubmit(state.app.offline, incident.status, incident.unsynced, incident.id)]]"
+                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]"
                     on-tap="openSubmitConfirmation">
         Submit
       </paper-button>
@@ -48,7 +48,7 @@ class ViewIncident extends IncidentsBaseView {
     // language=HTML
     return html`
       <a href="/incidents/edit/[[incidentId]]"
-         hidden$="[[canNotEdit(state.app.offline, incident.status, incident.unsynced)]]">
+         hidden$="[[!canEdit(state.app.offline, incident.status, incident.unsynced)]]">
         <paper-button raised>
           Edit
         </paper-button>

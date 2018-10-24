@@ -111,7 +111,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
           <div class="row-h flex-c">
             <div class="col col-12">
               <paper-button raised on-click="save"
-                            disabled$="[[canNotSave(eventId, state.app.offline)]]">Save</paper-button>
+                            disabled$="[[!canSave(eventId, state.app.offline)]]">Save</paper-button>
               ${this.actionButtonsTemplate}
             </div>
           </div>
@@ -194,8 +194,8 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   // Only edit of unsynced and add new is possible offline
-  canNotSave(eventId, offline) {
-    return (offline && !!eventId && !isNaN(eventId));
+  canSave(eventId, offline) {
+    return !offline || !eventId || isNaN(eventId);
   }
 
 

@@ -31,11 +31,15 @@ jobs:
           command: |
             export PATH=$PWD/node_modules/.bin:$PATH
 
+            # only for firefox-esr
+            sudo add-apt-repository ppa:mozillateam/ppa
+
             sudo sh -c "echo 'deb http://ftp.hr.debian.org/debian sid main' >> /etc/apt/sources.list"
             sudo apt-get update
 
             sudo apt-get install binutils
-            sudo apt-get install -t sid firefox
+            # esr because firefox 63 causes issues at the moment
+            sudo apt-get install -t sid firefox-esr
             firefox --version
 
             xvfb-run -a polymer test --skip-selenium-install

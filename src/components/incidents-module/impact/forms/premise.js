@@ -70,14 +70,14 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
             </div>
 
             <div class="col col-3">
-              <etools-dropdown-lite id="city"
-                                    label="City"
-                                    readonly="[[readonly]]"
-                                    options="[[staticData.cities]]"
-                                    selected="{{data.city}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <paper-input 
+                      id="city" 
+                      label="City" 
+                      readonly="[[readonly]]" 
+                      required 
+                      auto-validate 
+                      error-message="This is required">
+              </paper-input>
             </div>
 
             <div class="col col-3">

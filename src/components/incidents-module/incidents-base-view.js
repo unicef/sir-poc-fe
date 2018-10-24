@@ -754,10 +754,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return !offline || !incidentId || isNaN(incidentId);
   }
 
-  canSubmit(offline, status, unsynced) {
-    return !unsynced && status === 'created' && !offline;
-  }
-
   canEdit(offline, status, unsynced) {
     return !!unsynced || (status === 'created' && !offline);
   }

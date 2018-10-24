@@ -81,6 +81,10 @@ class ViewIncident extends IncidentsBaseView {
   showSuccessMessage() {
     this.store.dispatch(showSnackbar('Incident submitted'));
   }
+
+  canSubmit(offline, status, unsynced) {
+    return !unsynced && status === 'created' && !offline;
+  }
 }
 
 window.customElements.define('view-incident', ViewIncident);

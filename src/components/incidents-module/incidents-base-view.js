@@ -751,9 +751,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return isNaN(id) || unsynced || status !== 'created' || offline;
   }
 
-  canNotEdit(offline, status, unsynced, id) {
-    // conditions for editing and submitting are the same
-    return this.canNotSubmit(offline, status, unsynced, id);
+  canNotEdit(offline, status, unsynced) {
+    return (status !== 'created' && !unsynced) || (!unsynced && offline);
   }
 
   _hideInfoTooltip(...arg) {

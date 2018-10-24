@@ -48,7 +48,7 @@ class ViewIncident extends IncidentsBaseView {
     // language=HTML
     return html`
       <a href="/incidents/edit/[[incidentId]]"
-         hidden$="[[canNotEdit(state.app.offline, incident.status, incident.unsynced, incident.id)]]">
+         hidden$="[[canNotEdit(state.app.offline, incident.status, incident.unsynced)]]">
         <paper-button raised>
           Edit
         </paper-button>

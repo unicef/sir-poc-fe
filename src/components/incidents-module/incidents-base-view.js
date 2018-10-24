@@ -520,7 +520,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       <paper-button raised
                     on-tap="save"
                     hidden$="[[readonly]]"
-                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
+                    disabled$="[[!canSave(incident.event, state.app.offline, incidentId)]]">
         Save as Draft
       </paper-button>
     `;
@@ -550,7 +550,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       store: Object,
       incident: {
         type: Object,
-        observer: 'incidentLoaded'
+        observer: 'incidentChanged'
       },
       incidentId: {
         type: Number,
@@ -631,7 +631,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
   }
 
-  incidentLoaded() {
+  incidentChanged() {
     if (this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
@@ -747,11 +747,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   // Only edit of unsynced and add new is possible offline
-  canNotSave(eventId, offline, incidentId) {
+  canSave(eventId, offline, incidentId) {
     if (this.eventNotOk(eventId, offline)) {
-      return true;
+      return false;
     }
-    return (offline && !!incidentId && !isNaN(incidentId));
+    return !offline || !incidentId || isNaN(incidentId);
+  }
+
+  canEdit(offline, status, unsynced) {
+    return !!unsynced || (status === 'created' && !offline);
   }
 
   _hideInfoTooltip(...arg) {

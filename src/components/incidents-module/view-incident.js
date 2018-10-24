@@ -20,7 +20,7 @@ class ViewIncident extends IncidentsBaseView {
     // language=HTML
     return html`
       <paper-button raised
-                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced, incident.id)]]"
+                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]"
                     on-tap="openSubmitConfirmation">
         [[getLabel(incident.status)]]
       </paper-button>
@@ -48,7 +48,7 @@ class ViewIncident extends IncidentsBaseView {
     // language=HTML
     return html`
       <a href="/incidents/edit/[[incidentId]]"
-         hidden$="[[!canEdit(state.app.offline, incident.unsynced, incident.id)]]">
+         hidden$="[[!canEdit(state.app.offline, incident.status, incident.unsynced)]]">
         <paper-button raised>
           Edit
         </paper-button>
@@ -82,20 +82,12 @@ class ViewIncident extends IncidentsBaseView {
     }
   }
 
-  canEdit(offline, unsynced, itemId) {
-    if (!offline) {
-      return true;
-    }
-    return unsynced && isNaN(itemId);
-  }
-
   showSuccessMessage() {
     this.store.dispatch(showSnackbar('Incident submitted'));
   }
 
-  canNotSubmit(offline, status, unsynced, id) {
-    return !this.canEdit(offline, unsynced, id) ||
-        status !== 'created' || offline;
+  canSubmit(offline, status, unsynced) {
+    return !unsynced && status === 'created' && !offline;
   }
 
   canSubmit(offline, status, unsynced, id) {

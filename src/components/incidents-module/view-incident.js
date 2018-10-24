@@ -87,13 +87,9 @@ class ViewIncident extends IncidentsBaseView {
   }
 
   canSubmit(offline, status, unsynced) {
-    return !unsynced && status === 'created' && !offline;
+    return !unsynced && (status === 'created' || status === 'rejected') && !offline;
   }
 
-  canSubmit(offline, status, unsynced, id) {
-    return this.canEdit(offline, unsynced, id) ||
-        status === 'created' || status === 'rejected' || offline;
-  }
 }
 
 window.customElements.define('view-incident', ViewIncident);

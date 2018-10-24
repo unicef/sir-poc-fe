@@ -146,6 +146,12 @@ const editIncidentOnline = (incident, dispatch, state) => {
   let modifiedFields = objDiff(origIncident, incident);
   let endpoint = prepareEndpoint(Endpoints.editIncident, {id: incident.id});
 
+  if (modifiedFields && Object.keys(modifiedFields).length === 0) {
+    // no changes
+    dispatch(showSnackbar('There are no changes to save'));
+    return;
+  }
+
   makeRequest(endpoint, modifiedFields).then((result) => {
     updatePath('/incidents/list/');
     dispatch(fetchIncidents());
@@ -353,4 +359,4 @@ const getSanitizedIncident = (rawIncident) => {
   sanitizedIncident.longitude = isNumber(sanitizedIncident.longitude)? sanitizedIncident.longitude : null;
 
   return sanitizedIncident;
-}
+};

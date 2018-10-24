@@ -353,4 +353,4 @@ const getSanitizedIncident = (rawIncident) => {
   sanitizedIncident.longitude = isNumber(sanitizedIncident.longitude)? sanitizedIncident.longitude : null;
 
   return sanitizedIncident;
-}
+};

@@ -31,9 +31,6 @@ jobs:
           command: |
             export PATH=$PWD/node_modules/.bin:$PATH
 
-            # only for firefox-esr
-            sudo add-apt-repository ppa:mozillateam/ppa
-
             sudo sh -c "echo 'deb http://ftp.hr.debian.org/debian sid main' >> /etc/apt/sources.list"
             sudo apt-get update
 

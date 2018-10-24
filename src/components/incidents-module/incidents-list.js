@@ -229,12 +229,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                <template is="dom-if" if="[[isApproved(item.status)]]">
+                <template is="dom-if" if="[[!isDraft(item.status, item.unsynced)]]">
                   <a href="/incidents/view/[[item.id]]">
                     <iron-icon icon="assignment" title="View Incident"></iron-icon>
                   </a>
                 </template>
-                <template is="dom-if" if="[[!isApproved(item.status)]]">
+                <template is="dom-if" if="[[isDraft(item.status, item.unsynced)]]">
                   <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
@@ -550,8 +550,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     return offline && !incident.unsynced;
   }
 
-  isApproved(status) {
-    return status === 'approved';
+  isDraft(status, unsynced) {
+    return status === 'created' || unsynced;
   }
 
   getIncidentSubcategory(id) {

@@ -20,9 +20,9 @@ class ViewIncident extends IncidentsBaseView {
     // language=HTML
     return html`
       <paper-button raised
-                    hidden$="[[canNotSubmit(state.app.offline, incident.status, incident.unsynced, incident.id)]]"
+                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced, incident.id)]]"
                     on-tap="openSubmitConfirmation">
-        Submit
+        [[getLabel(incident.status)]]
       </paper-button>
     `;
   }
@@ -62,6 +62,10 @@ class ViewIncident extends IncidentsBaseView {
     this.title = 'View incident';
   }
 
+  getLabel(status) {
+    return status === 'created' ? 'Submit' : 'Resubmit';
+  }
+
   openSubmitConfirmation() {
     this.shadowRoot.querySelector('#submitConfirm').opened = true;
   }
@@ -92,6 +96,11 @@ class ViewIncident extends IncidentsBaseView {
   canNotSubmit(offline, status, unsynced, id) {
     return !this.canEdit(offline, unsynced, id) ||
         status !== 'created' || offline;
+  }
+
+  canSubmit(offline, status, unsynced, id) {
+    return this.canEdit(offline, unsynced, id) ||
+        status === 'created' || status === 'rejected' || offline;
   }
 }
 

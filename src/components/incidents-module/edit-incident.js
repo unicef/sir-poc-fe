@@ -29,8 +29,8 @@ class EditIncident extends IncidentsBaseView {
         <h2>Confirm Delete</h2>
         <p>Are you sure you want to delete this incident?</p>
         <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>No</paper-button>
-          <paper-button class="smaller" on-tap="deleteIncident" dialog-confirm autofocus>Yes</paper-button>
+          <paper-button raised class="white smaller" dialog-dismiss>No</paper-button>
+          <paper-button raised class="smaller" on-tap="deleteIncident" dialog-confirm autofocus>Yes</paper-button>
         </div>
     </paper-dialog>
     `;

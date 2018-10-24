@@ -37,8 +37,8 @@ class ViewIncident extends IncidentsBaseView {
         <h2>Confirm Submit</h2>
         <p>Are you sure you want to submit this incident?</p>
         <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
-          <paper-button class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>
+          <paper-button raised class="white smaller" dialog-dismiss>Cancel</paper-button>
+          <paper-button raised class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>
         </div>
       </paper-dialog>
       `;

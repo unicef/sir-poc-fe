@@ -144,7 +144,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             </etools-dropdown-lite>
 
             <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
-              <paper-button raised class="white-bg" slot="dropdown-trigger">
+              <paper-button raised class="white" slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
                 Export
               </paper-button>

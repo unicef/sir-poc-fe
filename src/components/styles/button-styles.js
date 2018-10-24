@@ -32,18 +32,22 @@ documentContainer.innerHTML = `
           background-color: var(--primary-error-color);
         }
 
-        paper-button iron-icon {
-          margin-right: 8px;
-        }
-
-        .white-bg {
-          background-color: white;
+        paper-button.white {
+          background-color: #ffffff;
           color: var(--primary-color, #309ae0);
         }
 
-        .smaller {
+        paper-button.smaller {
           font-size: 14px;
           padding: 0 8px;
+        }
+
+        paper-button.no-t-transform {
+          text-transform: none;
+        }
+
+        paper-button iron-icon {
+          margin-right: 8px;
         }
       </style>
     </template>

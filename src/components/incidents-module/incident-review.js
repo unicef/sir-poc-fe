@@ -234,9 +234,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
+
   }
 
   restComment() {

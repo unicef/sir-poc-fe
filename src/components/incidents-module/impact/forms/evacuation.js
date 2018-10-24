@@ -264,9 +264,9 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
 
   async saveEvacuation() {
     let result;
-    if (!validateFields(this, this.fieldsToValidateSelectors)) {
-      return;
-    }
+    // if (!validateFields(this, this.fieldsToValidateSelectors)) {
+    //   return;
+    // }
     if (this.isNew) {
       result = await store.dispatch(addEvacuation(this.data));
     } else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {

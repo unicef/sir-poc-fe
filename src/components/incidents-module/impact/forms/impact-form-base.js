@@ -25,9 +25,7 @@ export class ImpactFormBase extends PolymerElement {
   }
 
   _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    } else {
+    if (visible) {
       this.resetValidations();
     }
   }

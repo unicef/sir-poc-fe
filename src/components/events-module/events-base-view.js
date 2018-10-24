@@ -203,9 +203,6 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
     if (visible) {
       this.resetValidations();
     }
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
   }
 
   _stateChanged(state) {

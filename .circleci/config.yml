@@ -35,8 +35,7 @@ jobs:
             sudo apt-get update
 
             sudo apt-get install binutils
-            # esr because firefox 63 causes issues at the moment
-            sudo apt-get install -t sid firefox-esr
+            sudo apt-get install -t sid firefox
             firefox --version
 
             xvfb-run -a polymer test --skip-selenium-install

@@ -81,15 +81,6 @@ class ViewIncident extends IncidentsBaseView {
   showSuccessMessage() {
     this.store.dispatch(showSnackbar('Incident submitted'));
   }
-
-  canNotSubmit(offline, status, unsynced, id) {
-    return isNaN(id) || unsynced || status !== 'created' || offline;
-  }
-
-  canNotEdit(offline, status, unsynced, id) {
-    // conditions for editing and submitting are the same
-    return canNotSubmit(offline, status, unsynced, id);
-  }
 }
 
 window.customElements.define('view-incident', ViewIncident);

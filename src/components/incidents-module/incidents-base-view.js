@@ -548,7 +548,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       store: Object,
       incident: {
         type: Object,
-        observer: 'incidentLoaded'
+        observer: 'incidentChanged'
       },
       incidentId: {
         type: Number,
@@ -624,7 +624,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     super.connectedCallback();
   }
 
-  incidentLoaded() {
+  incidentChanged() {
     if (this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
@@ -745,6 +745,15 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       return true;
     }
     return (offline && !!incidentId && !isNaN(incidentId));
+  }
+
+  canNotSubmit(offline, status, unsynced, id) {
+    return isNaN(id) || unsynced || status !== 'created' || offline;
+  }
+
+  canNotEdit(offline, status, unsynced, id) {
+    // conditions for editing and submitting are the same
+    return this.canNotSubmit(offline, status, unsynced, id);
   }
 
   _hideInfoTooltip(...arg) {

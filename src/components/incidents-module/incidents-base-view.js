@@ -22,6 +22,7 @@ import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
 import {validateAllRequired, resetRequiredValidations} from '../common/validations-helper.js';
+import {makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/request-helper.js';
 import {store} from '../../redux/store.js';
 import {selectIncident} from '../../reducers/incidents.js';
 
@@ -33,6 +34,8 @@ import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import {Endpoints} from '../../config/endpoints';
 import {updatePath} from '../common/navigation-helper';
+import {showSnackbar} from '../../actions/app.js';
+import {SirMsalAuth} from '../auth/jwt/msal-authentication';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -66,7 +69,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         #get-location {
           margin-left: 16px;
         }
-        
+
         .buttons-area paper-button:not(:first-child) {
           margin-left: 4px;
         }
@@ -80,14 +83,14 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
-        
+
         <div class="row-h flex-c">
           <div class="col col-12">
             ${this.saveBtnTmpl}
             ${this.submitBtnTmpl}
           </div>
         </div>
-        
+
         <fieldset>
           <legend><h3>Incident Details</h3></legend>
           <div>
@@ -443,7 +446,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <legend><h3>Related documents</h3></legend>
             <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
               <etools-upload-multi
-                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles">
+                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
+                  jwt-local-storage-key="[[jwtLocalStorageKey]]">
               </etools-upload-multi>
             </div>
             <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
@@ -465,7 +469,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                           title="[[getFilenameFromURL(item.attachment)]]"
                           data-col-header-label="File">
                       <span>
-                        <a href="[[item.attachment]]" target="_blank">
+                        <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
                            [[getFilenameFromURL(item.attachment)]]
                         </a>
                       </span>
@@ -497,7 +501,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
 
         </template>
-        
+
         <div class="row-h flex-c padd-top buttons-area">
           ${this.saveBtnTmpl}
           ${this.actionButtonsTemplate}
@@ -607,7 +611,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: false,
         observer: 'pressCoverageChanged'
       },
-      lowResolutionLayout: Boolean
+      lowResolutionLayout: Boolean,
+      jwtLocalStorageKey: {
+        type: String,
+        value: ''
+      }
     };
   }
 
@@ -620,6 +628,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   connectedCallback() {
     this.store = store;
     super.connectedCallback();
+    this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
   }
 
   incidentLoaded() {
@@ -831,6 +840,26 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
   _returnToIncidentsList() {
     updatePath('/incidents/list/');
+  }
+
+  dwRelatedDoc(e) {
+    e.preventDefault();
+    let url = e.target.getAttribute('data-url');
+    if (!url) {
+      return;
+    }
+    let reqOptions = {
+      url: url,
+      handleAs: 'blob',
+      method: 'GET'
+    };
+    makeRequest(reqOptions).then((blob) => {
+      handleBlobDataReceivedAndStartDownload(blob, this.getFilenameFromURL(url));
+    }).catch((error) => {
+      // eslint-disable-next-line
+      console.error(error);
+      store.dispatch(showSnackbar('An error occurred on downloading!'));
+    });
   }
 
 }

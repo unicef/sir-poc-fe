@@ -759,7 +759,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   canNotEdit(offline, status, unsynced) {
-    return (status !== 'created' && !unsynced) || (!unsynced && offline);
+    return !unsynced && (status !== 'created' || offline);
   }
 
   _hideInfoTooltip(...arg) {

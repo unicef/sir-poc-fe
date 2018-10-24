@@ -121,7 +121,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
                       readonly="[[readonly]]" 
                       required 
                       auto-validate 
-                      error-message="This is required">
+                      error-message="From city is required">
               </paper-input>
             </div>
           </div>
@@ -167,7 +167,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
                       readonly="[[readonly]]" 
                       required 
                       auto-validate 
-                      error-message="This is required">
+                      error-message="To city is required">
               </paper-input>
             </div>
           </div>

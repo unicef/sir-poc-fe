@@ -76,7 +76,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
                       readonly="[[readonly]]" 
                       required 
                       auto-validate 
-                      error-message="This is required">
+                      error-message="City is required">
               </paper-input>
             </div>
 

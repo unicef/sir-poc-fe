@@ -632,7 +632,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   incidentChanged() {
-    if (this.incident.press_coverage) {
+    if (this.incident && this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
   }
@@ -647,6 +647,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
 
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
+    if (this.redirectIfNotEditable(this.incident, this.visible)) {
+      return;
+    }
+  }
+
+  redirectIfNotEditable(incident, visible) {
+    return false;
   }
 
   // It was created offline and not yet saved on server or new

@@ -1,3 +1,4 @@
+
 /**
 @license
 */
@@ -36,25 +37,21 @@ class EditIncident extends IncidentsBaseView {
     `;
   }
 
-  static get observers() {
-    return [
-      'checkIfEditable(incident, visible)'
-    ];
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.title = 'Edit incident';
   }
 
-  checkIfEditable(incident, visible) {
+  redirectIfNotEditable(incident, visible) {
     if (!incident || !visible) {
-      return;
+      return false;
     }
 
     if (!this.canEdit(this.state.app.offline, incident.status, incident.unsynced)) {
       updatePath(`/incidents/view/${incident.id}/`);
+      return true;
     }
+    return false;
   }
 
   save() {

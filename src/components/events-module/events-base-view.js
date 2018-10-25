@@ -9,7 +9,6 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-date-time/datepicker-lite.js';
 
-import { clearErrors } from '../../actions/errors.js';
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';

@@ -8,7 +8,6 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import { editIncident, approveIncident, rejectIncident, addComment } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
-import { clearErrors } from '../../actions/errors.js';
 import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';

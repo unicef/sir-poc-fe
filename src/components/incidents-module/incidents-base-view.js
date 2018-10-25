@@ -27,7 +27,7 @@ import {store} from '../../redux/store.js';
 import {selectIncident} from '../../reducers/incidents.js';
 
 import {fetchIncident} from '../../actions/incidents.js';
-import {clearErrors, serverError} from '../../actions/errors.js';
+import {serverError} from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';

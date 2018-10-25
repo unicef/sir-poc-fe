@@ -351,7 +351,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                               id="city" 
                               label="City" 
                               auto-validate 
-                              readonly="[[readonly]]" 
+                              readonly$="[[readonly]]" 
+                              value="{{incident.city}}"
                               required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" 
                               error-message="City is required">
                 

@@ -256,7 +256,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input 
                       id="dutyStationCity" 
                       label="Duty station city" 
-                      readonly="[[readonly]]" 
+                      readonly$="[[readonly]]"
+                      value="{{data.person.city}}"
                       required$="[[!isSexualAssault(selectedImpactType)]]" 
                       auto-validate 
                       error-message="Duty station city is required">

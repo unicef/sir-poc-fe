@@ -118,7 +118,8 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
               <paper-input 
                       id="fromCity" 
                       label="From city" 
-                      readonly="[[readonly]]" 
+                      readonly$="[[readonly]]" 
+                      value="{{data.from_city}}"
                       required 
                       auto-validate 
                       error-message="From city is required">
@@ -164,7 +165,8 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
               <paper-input 
                       id="toCity"
                       label="To city"
-                      readonly="[[readonly]]" 
+                      value="{{data.to_city}}"
+                      readonly$="[[readonly]]" 
                       required 
                       auto-validate 
                       error-message="To city is required">

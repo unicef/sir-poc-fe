@@ -192,7 +192,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <paper-input 
                       id="city" 
                       label="City" 
-                      readonly="[[readonly]]">
+                      value="{{data.person.city}}"
+                      readonly$="[[readonly]]">
               </paper-input>
             </div>
           </div>

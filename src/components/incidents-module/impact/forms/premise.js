@@ -73,7 +73,8 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
               <paper-input 
                       id="city" 
                       label="City" 
-                      readonly="[[readonly]]" 
+                      readonly$="[[readonly]]" 
+                      value="{{data.city}}"
                       required 
                       auto-validate 
                       error-message="City is required">

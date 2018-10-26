@@ -8,7 +8,6 @@ import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../../redux/store.js';
-import { clearErrors } from '../../../actions/errors.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';
 
@@ -38,7 +37,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
         .info h3 {
           margin: 0 8px 0 0;
         }
-        
+
         .info {
           margin-right: 24px;
         }
@@ -63,8 +62,8 @@ export class ImpactsView extends connect(store)(PolymerElement) {
 
       </style>
 
-      <div class="card error-card" hidden$="[[!errors.length]]">
-        <errors-box prepared-errors="{{errors}}"></errors-box>
+      <div class="card error-card">
+        <errors-box></errors-box>
       </div>
 
       <div class="card">
@@ -72,7 +71,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           <etools-info-tooltip class="info" theme="light">
             <h3 slot="field">UN Personnel</h3>
             <span slot="message">
-              Individuals covered by Chapter III of the UNSMS Security Policy Manual, Applicability of United 
+              Individuals covered by Chapter III of the UNSMS Security Policy Manual, Applicability of United
               Nations Security Management System, dated 08 April 2011 (Security Policy Manual, Chapter III)
             </span>
           </etools-info-tooltip>
@@ -91,8 +90,8 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           <etools-info-tooltip class="info" theme="light">
             <h3 slot="field">Non-UN Personnel</h3>
             <span slot="message">
-              Any person not defined as above as UN Personnel that is impacted by an incident in which a 
-              UN Personnel is the perpetrator. For instance, a non-UN person could be involved in a traffic 
+              Any person not defined as above as UN Personnel that is impacted by an incident in which a
+              UN Personnel is the perpetrator. For instance, a non-UN person could be involved in a traffic
               accident with a UN staff member, or could be a visitor to a UN building when an incident occurs.
             </span>
           </etools-info-tooltip>
@@ -136,9 +135,9 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           <etools-info-tooltip class="info" theme="light">
             <h3 slot="field">UN Premises (Facilities)</h3>
             <span slot="message">
-              Premises: any location occupied for living or working by UN Personnel, as identified 
-              by the Premises Policy.<br> Facilities: unoccupied property and/or other 
-              infrastructure used for UN services, such as water and food points, and communication 
+              Premises: any location occupied for living or working by UN Personnel, as identified
+              by the Premises Policy.<br> Facilities: unoccupied property and/or other
+              infrastructure used for UN services, such as water and food points, and communication
               repeater stations.
             </span>
           </etools-info-tooltip>
@@ -170,10 +169,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       state: Object,
       incident: Object,
       visible: Boolean,
-      errors: {
-        type: Array,
-        value: []
-      },
       incidentId: {
         type: Number,
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
@@ -220,9 +215,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
   }
 
   _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
   }
 }
 

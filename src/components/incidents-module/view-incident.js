@@ -22,7 +22,7 @@ class ViewIncident extends IncidentsBaseView {
       <paper-button raised
                     hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]"
                     on-tap="openSubmitConfirmation">
-        Submit
+        [[getLabel(incident.status)]]
       </paper-button>
     `;
   }
@@ -30,9 +30,9 @@ class ViewIncident extends IncidentsBaseView {
   static get submitIncidentTmpl() {
     // language=HTML
     return html`
-
+      
       ${this.submitBtnTmpl}
-
+        
       <paper-dialog id="submitConfirm">
         <h2>Confirm Submit</h2>
         <p>Are you sure you want to submit this incident?</p>
@@ -62,6 +62,10 @@ class ViewIncident extends IncidentsBaseView {
     this.title = 'View incident';
   }
 
+  getLabel(status) {
+    return status === 'created' ? 'Submit' : 'Resubmit';
+  }
+
   openSubmitConfirmation() {
     this.shadowRoot.querySelector('#submitConfirm').opened = true;
   }
@@ -83,8 +87,9 @@ class ViewIncident extends IncidentsBaseView {
   }
 
   canSubmit(offline, status, unsynced) {
-    return !unsynced && status === 'created' && !offline;
+    return !unsynced && (status === 'created' || status === 'rejected') && !offline;
   }
+
 }
 
 window.customElements.define('view-incident', ViewIncident);

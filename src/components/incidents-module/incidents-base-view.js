@@ -347,16 +347,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </div>
 
               <div class="col col-3">
-                <etools-dropdown-lite
-                            id="city"
-                            label="City"
-                            auto-validate
-                            readonly="[[readonly]]"
-                            options="[[staticData.cities]]"
-                            selected="{{incident.city}}"
-                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
-                            error-message="City is required">
-                </etools-dropdown-lite>
+                <paper-input
+                              id="city"
+                              label="City"
+                              auto-validate
+                              placeholder="&#8212;"
+                              readonly$="[[readonly]]"
+                              value="{{incident.city}}"
+                              required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
+                              error-message="City is required">
+
+                </paper-input>
               </div>
 
               <div class="col col-3">

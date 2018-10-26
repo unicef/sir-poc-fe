@@ -253,15 +253,16 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="dutyStationCity"
-                  label="Duty station city"
-                  readonly="[[readonly]]"
-                  options="[[staticData.cities]]"
-                  selected="{{data.person.city}}"
-                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
-                  error-message="Duty station city is required">
-              </etools-dropdown-lite>
+              <paper-input
+                      id="dutyStationCity"
+                      label="Duty station city"
+                      placeholder="&#8212;"
+                      readonly$="[[readonly]]"
+                      value="{{data.person.city}}"
+                      required$="[[!isSexualAssault(selectedImpactType)]]"
+                      auto-validate
+                      error-message="Duty station city is required">
+              </paper-input>
             </div>
             <div class="col col-3">
               <paper-input id="index"

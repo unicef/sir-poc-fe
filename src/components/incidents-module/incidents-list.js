@@ -206,7 +206,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </span>
               </span>
               <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
-                  <span>[[getNameFromId(item.city, 'cities')]]</span>
+                  <span>[[incident.city]]</span>
               </span>
               <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">

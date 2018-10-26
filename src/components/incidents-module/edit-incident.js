@@ -44,14 +44,12 @@ class EditIncident extends IncidentsBaseView {
 
   redirectIfNotEditable(incident, visible) {
     if (!incident || !visible) {
-      return false;
+      return;
     }
 
     if (!this.canEdit(this.state.app.offline, incident.status, incident.unsynced)) {
       updatePath(`/incidents/view/${incident.id}/`);
-      return true;
     }
-    return false;
   }
 
   save() {

@@ -647,9 +647,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
 
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
-    if (this.redirectIfNotEditable(this.incident, this.visible)) {
-      return;
-    }
+    this.redirectIfNotEditable(this.incident, this.visible);
   }
 
   redirectIfNotEditable(incident, visible) {

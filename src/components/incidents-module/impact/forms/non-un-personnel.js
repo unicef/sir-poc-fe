@@ -189,9 +189,10 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <paper-input 
-                      id="city" 
-                      label="City" 
+              <paper-input
+                      id="city"
+                      label="City"
+                      placeholder="&#8212;"
                       value="{{data.person.city}}"
                       readonly$="[[readonly]]">
               </paper-input>

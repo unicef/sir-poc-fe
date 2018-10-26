@@ -70,13 +70,14 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
             </div>
 
             <div class="col col-3">
-              <paper-input 
-                      id="city" 
-                      label="City" 
-                      readonly$="[[readonly]]" 
+              <paper-input
+                      id="city"
+                      label="City"
+                      placeholder="&#8212;"
+                      readonly$="[[readonly]]"
                       value="{{data.city}}"
-                      required 
-                      auto-validate 
+                      required
+                      auto-validate
                       error-message="City is required">
               </paper-input>
             </div>
@@ -151,7 +152,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
         <fieldset hidden$="[[isNew]]">
           <review-fields data="[[data]]"></review-fields>
         </fieldset>
-        
+
         <paper-button on-tap="save">Save</paper-button>
         <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
           Cancel

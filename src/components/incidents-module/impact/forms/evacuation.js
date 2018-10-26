@@ -115,13 +115,14 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <paper-input 
-                      id="fromCity" 
-                      label="From city" 
-                      readonly$="[[readonly]]" 
+              <paper-input
+                      id="fromCity"
+                      label="From city"
+                      placeholder="&#8212;"
+                      readonly$="[[readonly]]"
                       value="{{data.from_city}}"
-                      required 
-                      auto-validate 
+                      required
+                      auto-validate
                       error-message="From city is required">
               </paper-input>
             </div>
@@ -162,13 +163,13 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <paper-input 
+              <paper-input
                       id="toCity"
                       label="To city"
                       value="{{data.to_city}}"
-                      readonly$="[[readonly]]" 
-                      required 
-                      auto-validate 
+                      readonly$="[[readonly]]"
+                      required
+                      auto-validate
                       error-message="To city is required">
               </paper-input>
             </div>

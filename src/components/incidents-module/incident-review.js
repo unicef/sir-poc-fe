@@ -123,7 +123,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
           <div class="col col-12">
             <paper-button raised
                           on-click="save"
-                          hidden$="[[canNotSave(offline, incident.unsynced, incidentId)]]">
+                          hidden$="[[!canSave(offline, incident.unsynced, incidentId)]]">
               Save
             </paper-button>
           </div>
@@ -223,14 +223,14 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     store.dispatch(editIncident(this.incident));
   }
 
-  canNotSave() {
+  canSave() {
     if (this.offline) {
-      return true;
+      return false;
     }
     if (isNaN(this.incidentId) || (this.incident && this.incident.unsynced)) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   _visibilityChanged(visible) {

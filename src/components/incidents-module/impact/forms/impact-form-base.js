@@ -1,6 +1,4 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-import { clearErrors } from '../../../../actions/errors.js';
-import { store } from '../../../../redux/store.js';
 import {updatePath} from '../../../common/navigation-helper';
 
 export class ImpactFormBase extends PolymerElement {
@@ -16,7 +14,7 @@ export class ImpactFormBase extends PolymerElement {
       data: {
         type: Object,
         value: {
-          person: {},
+          person: {}
           // incident id (TODO: API should use incident_id for all impacts)
           // incident: null
         }
@@ -25,9 +23,7 @@ export class ImpactFormBase extends PolymerElement {
   }
 
   _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    } else {
+    if (visible) {
       this.resetValidations();
     }
   }

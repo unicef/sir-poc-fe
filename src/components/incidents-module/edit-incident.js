@@ -1,8 +1,10 @@
+
 /**
 @license
 */
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-dialog/paper-dialog.js';
+import { updatePath } from '../common/navigation-helper';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident, editAttachmentsNotes, deleteIncident,
   deleteIncidentLocally } from '../../actions/incidents.js';
@@ -38,6 +40,16 @@ class EditIncident extends IncidentsBaseView {
   connectedCallback() {
     super.connectedCallback();
     this.title = 'Edit incident';
+  }
+
+  redirectIfNotEditable(incident, visible) {
+    if (!incident || !visible) {
+      return;
+    }
+
+    if (!this.canEdit(this.state.app.offline, incident.status, incident.unsynced)) {
+      updatePath(`/incidents/view/${incident.id}/`);
+    }
   }
 
   save() {

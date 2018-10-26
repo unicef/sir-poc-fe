@@ -28,7 +28,7 @@ import {store} from '../../redux/store.js';
 import 'etools-date-time/datepicker-lite.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import {syncIncidentOnList} from '../../actions/incidents.js';
+import {syncIncidentOnList, exportIncidents} from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 import {updateAppState} from '../common/navigation-helper';
 import {getNameFromId} from '../common/utils.js';
@@ -206,7 +206,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </span>
               </span>
               <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
-                  <span>[[getNameFromId(item.city, 'cities')]]</span>
+                  <span>[[incident.city]]</span>
               </span>
               <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">
@@ -229,12 +229,12 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                <template is="dom-if" if="[[isApproved(item.status)]]">
+                <template is="dom-if" if="[[!isDraft(item.status, item.unsynced)]]">
                   <a href="/incidents/view/[[item.id]]">
                     <iron-icon icon="assignment" title="View Incident"></iron-icon>
                   </a>
                 </template>
-                <template is="dom-if" if="[[!isApproved(item.status)]]">
+                <template is="dom-if" if="[[isDraft(item.status, item.unsynced)]]">
                   <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
@@ -550,8 +550,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     return offline && !incident.unsynced;
   }
 
-  isApproved(status) {
-    return status === 'approved';
+  isDraft(status, unsynced) {
+    return status === 'created' || unsynced;
   }
 
   getIncidentSubcategory(id) {
@@ -598,11 +598,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!docType || docType === '') {
       return;
     }
-    const url = Endpoints['incidentsList'].url;
     const csvQStr = this._buildExportQueryString(docType);
-    const csvDownloadUrl = url + '?' + csvQStr;
+    const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
     this.set('exportDocType', '');
-    window.open(csvDownloadUrl, '_blank');
+
+    store.dispatch(exportIncidents(csvDownloadUrl, docType));
   }
 
 }

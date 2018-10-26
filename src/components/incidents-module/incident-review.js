@@ -8,7 +8,6 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import { editIncident, approveIncident, rejectIncident, addComment } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
-import { clearErrors } from '../../actions/errors.js';
 import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
@@ -16,6 +15,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
+import {updatePath} from '../common/navigation-helper';
 
 /**
  * @polymer
@@ -122,7 +122,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
           <div class="col col-12">
             <paper-button raised
                           on-click="save"
-                          hidden$="[[canNotSave(offline, incident.unsynced, incidentId)]]">
+                          hidden$="[[!canSave(offline, incident.unsynced, incidentId)]]">
               Save
             </paper-button>
           </div>
@@ -222,20 +222,18 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     store.dispatch(editIncident(this.incident));
   }
 
-  canNotSave() {
+  canSave() {
     if (this.offline) {
-      return true;
+      return false;
     }
     if (isNaN(this.incidentId) || (this.incident && this.incident.unsynced)) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
+
   }
 
   restComment() {
@@ -282,6 +280,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     if (typeof successfull === 'boolean' && successfull) {
       this.restComment();
       store.dispatch(showSnackbar('Incident rejected'));
+      updatePath(`/incidents/list/`);
     }
   }
 
@@ -290,6 +289,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
 
     if (typeof successfull === 'boolean' && successfull) {
       store.dispatch(showSnackbar('Incident approved'));
+      updatePath(`/incidents/list/`);
     }
   }
 

@@ -16,7 +16,6 @@ import {
 } from '../../../../actions/incident-impacts.js';
 import {store} from '../../../../redux/store.js';
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -28,7 +27,6 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
 import {ImpactFormBase} from './impact-form-base.js';
-import { clearErrors } from '../../../../actions/errors.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -191,13 +189,13 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="city"
-                  label="City"
-                  readonly="[[readonly]]"
-                  options="[[staticData.cities]]"
-                  selected="{{data.person.city}}">
-              </etools-dropdown-lite>
+              <paper-input
+                      id="city"
+                      label="City"
+                      placeholder="&#8212;"
+                      value="{{data.person.city}}"
+                      readonly$="[[readonly]]">
+              </paper-input>
             </div>
           </div>
         </fieldset>

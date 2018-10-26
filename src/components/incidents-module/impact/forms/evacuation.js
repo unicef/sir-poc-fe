@@ -1,7 +1,7 @@
 /**
  * @license
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {html} from '@polymer/polymer/polymer-element.js';
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
@@ -15,7 +15,6 @@ import {
 } from '../../../../actions/incident-impacts.js';
 import {store} from '../../../../redux/store.js';
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -116,14 +115,16 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite id="fromCity"
-                                    label="From city"
-                                    readonly="[[readonly]]"
-                                    options="[[staticData.cities]]"
-                                    selected="{{data.from_city}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <paper-input
+                      id="fromCity"
+                      label="From city"
+                      placeholder="&#8212;"
+                      readonly$="[[readonly]]"
+                      value="{{data.from_city}}"
+                      required
+                      auto-validate
+                      error-message="From city is required">
+              </paper-input>
             </div>
           </div>
           <div class="row-h flex-c">
@@ -162,14 +163,15 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite id="toCity"
-                                    label="To city"
-                                    readonly="[[readonly]]"
-                                    options="[[staticData.cities]]"
-                                    selected="{{data.to_city}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <paper-input
+                      id="toCity"
+                      label="To city"
+                      value="{{data.to_city}}"
+                      readonly$="[[readonly]]"
+                      required
+                      auto-validate
+                      error-message="To city is required">
+              </paper-input>
             </div>
           </div>
         </fieldset>

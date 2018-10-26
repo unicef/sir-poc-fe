@@ -189,8 +189,8 @@ export const syncIncidentOnList = newIncident => (dispatch, getState) => {
     dispatch(syncIncidentImpacts(result.id, newIncident.id));
     return true;
   }).catch((error) => {
-    dispatch(syncIncidentFail());
     updatePath('/incidents/edit/' + newIncident.id + '/');
+    setTimeout(() => dispatch(syncIncidentFail()));
     return false;
   });
 };

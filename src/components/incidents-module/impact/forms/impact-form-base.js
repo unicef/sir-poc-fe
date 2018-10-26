@@ -1,6 +1,4 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-import { clearErrors } from '../../../../actions/errors.js';
-import { store } from '../../../../redux/store.js';
 import {updatePath} from '../../../common/navigation-helper';
 
 export class ImpactFormBase extends PolymerElement {
@@ -25,9 +23,7 @@ export class ImpactFormBase extends PolymerElement {
   }
 
   _visibilityChanged(visible) {
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    } else {
+    if (visible) {
       this.resetValidations();
     }
   }

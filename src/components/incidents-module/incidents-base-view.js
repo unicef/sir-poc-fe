@@ -27,7 +27,7 @@ import {store} from '../../redux/store.js';
 import {selectIncident} from '../../reducers/incidents.js';
 
 import {fetchIncident} from '../../actions/incidents.js';
-import {clearErrors, serverError} from '../../actions/errors.js';
+import {serverError} from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -632,7 +632,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   incidentChanged() {
-    if (this.incident.press_coverage) {
+    if (this.incident && this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
   }
@@ -647,6 +647,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
 
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
+    this.redirectIfNotEditable(this.incident, this.visible);
+  }
+
+  redirectIfNotEditable(incident, visible) {
+    return false;
   }
 
   // It was created offline and not yet saved on server or new
@@ -661,9 +666,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (visible) {
       this.resetValidations();
     }
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
+
   }
 
   _stateChanged(state) {

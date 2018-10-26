@@ -16,12 +16,14 @@ import { IncidentsBaseView } from './incidents-base-view.js';
  */
 class ViewIncident extends IncidentsBaseView {
 
+  // on-tap="openSubmitConfirmation"
+
   static get submitBtnTmpl() {
     // language=HTML
     return html`
       <paper-button raised
-                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]"
-                    on-tap="openSubmitConfirmation">
+                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]" 
+                    on-tap="showSubmitConfirmationDialog">
         Submit
       </paper-button>
     `;
@@ -33,14 +35,25 @@ class ViewIncident extends IncidentsBaseView {
 
       ${this.submitBtnTmpl}
 
-      <paper-dialog id="submitConfirm">
-        <h2>Confirm Submit</h2>
-        <p>Are you sure you want to submit this incident?</p>
-        <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
-          <paper-button class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>
-        </div>
-      </paper-dialog>
+      <!--<paper-dialog id="submitConfirm">-->
+        <!--<h2>Confirm Submit</h2>-->
+        <!--<p>Are you sure you want to submit this incident?</p>-->
+        <!--<div class="buttons">-->
+          <!--<paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>-->
+          <!--<paper-button class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>-->
+        <!--</div>-->
+      <!--</paper-dialog>-->
+      
+      <!--<etools-dialog -->
+                    <!--id="submitConfirm" -->
+                    <!--opened="{{dialogOpened}}" -->
+                    <!--on-close="onCloseActionHandler" -->
+                    <!--ok-btn-text="Submit"-->
+                    <!--dialog-title="Confirm Submit" -->
+
+        <!--<p>Are you sure you want to submit this incident?</p>-->
+        <!---->
+      <!--</etools-dialog>-->
       `;
   }
 
@@ -56,14 +69,54 @@ class ViewIncident extends IncidentsBaseView {
     `;
   }
 
+  ready() {
+    super.ready();
+
+    this.submitWarningDialogContent = document.createElement('div');
+    this.submitWarningDialogContent.setAttribute('id', 'submitWarningContent');
+    // let submitWarningContent.innerHTML = 'Are you sure you want to submit this incident?';
+
+    const config = {
+      title: 'Confirm Submit',
+      size: 'sm',
+      okBtnText: 'Submit',
+      cancelBtnText: 'Cancel',
+      closeCallback: this._dialogConfirmationCallback.bind(this),
+      content: 'Are you sure you want to Submit this incident?'
+    };
+
+    this.warningDialog = this.createDialog(config);
+
+    // this.warningDialog = this.createDialog('Confirm Submit', 'sm', 'Submit', 'Cancel',
+    //     this._dialogConfirmationCallback.bind(this), 'Are you sure you want to Submit this incident?');
+
+    this.warningDialog.updateStyles({'--etools-dialog-confirm-btn-bg': 'var(--button-primary-bg-color)'});
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;
     this.title = 'View incident';
   }
 
-  openSubmitConfirmation() {
-    this.shadowRoot.querySelector('#submitConfirm').opened = true;
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeDialog(this.warningDialog);
+  }
+
+  showSubmitConfirmationDialog() {
+    if (!this.warningDialog) {
+      // console.log('warningDialog not created!', 'pmp partner status change');
+      return;
+    }
+
+    if (!this.submitWarningDialogContent) {
+      // console.log('#deleteWarningContent element not found!', 'pmp partner status change');
+      return;
+    }
+    let warningMessage = 'Are you sure you want to Submit this incident?';
+    this.submitWarningDialogContent.innerHTML = warningMessage;
+    this.warningDialog.opened = true;
   }
 
   async submit() {
@@ -84,6 +137,12 @@ class ViewIncident extends IncidentsBaseView {
 
   canSubmit(offline, status, unsynced) {
     return !unsynced && status === 'created' && !offline;
+  }
+
+  _dialogConfirmationCallback(event) {
+    if (event.detail.confirmed) {
+      this.submit();
+    }
   }
 }
 

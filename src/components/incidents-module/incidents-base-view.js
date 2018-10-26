@@ -36,8 +36,9 @@ import {Endpoints} from '../../config/endpoints';
 import {updatePath} from '../common/navigation-helper';
 import {showSnackbar} from '../../actions/app.js';
 import {SirMsalAuth} from '../auth/jwt/msal-authentication';
+import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
 
-export class IncidentsBaseView extends connect(store)(PolymerElement) {
+export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -615,6 +616,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       jwtLocalStorageKey: {
         type: String,
         value: ''
+      },
+      submitWarningDialogContent: {
+        type: Object
+      },
+      warningDialog: {
+        type: Object
       }
     };
   }

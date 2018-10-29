@@ -79,7 +79,7 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
             <div class="col col-2">
               <paper-input id="value"
                            readonly$="[[readonly]]"
-                           label="Value"
+                           label="Value ($USD)"
                            type="number"
                            placeholder="&#8212;"
                            value="{{data.value}}"

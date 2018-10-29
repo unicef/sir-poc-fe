@@ -62,7 +62,7 @@ export class PropertiesList extends connect(store)(PolymerElement) {
               <span class="col-data col-2" data-col-header-label="Type">
                 [[getNameFromId(item.property_type, 'propertyTypes')]]
               </span>
-              <span class="col-data col-2" data-col-header-label="Value">
+              <span class="col-data col-2" data-col-header-label="Value ($USD)">
                 [[item.value]]
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">

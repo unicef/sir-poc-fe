@@ -35,25 +35,6 @@ class ViewIncident extends IncidentsBaseView {
 
       ${this.submitBtnTmpl}
 
-      <!--<paper-dialog id="submitConfirm">-->
-        <!--<h2>Confirm Submit</h2>-->
-        <!--<p>Are you sure you want to submit this incident?</p>-->
-        <!--<div class="buttons">-->
-          <!--<paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>-->
-          <!--<paper-button class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>-->
-        <!--</div>-->
-      <!--</paper-dialog>-->
-      
-      <!--<etools-dialog -->
-                    <!--id="submitConfirm" -->
-                    <!--opened="{{dialogOpened}}" -->
-                    <!--on-close="onCloseActionHandler" -->
-                    <!--ok-btn-text="Submit"-->
-                    <!--dialog-title="Confirm Submit" -->
-
-        <!--<p>Are you sure you want to submit this incident?</p>-->
-        <!---->
-      <!--</etools-dialog>-->
       `;
   }
 
@@ -72,9 +53,8 @@ class ViewIncident extends IncidentsBaseView {
   ready() {
     super.ready();
 
-    this.submitWarningDialogContent = document.createElement('div');
-    this.submitWarningDialogContent.setAttribute('id', 'submitWarningContent');
-    // let submitWarningContent.innerHTML = 'Are you sure you want to submit this incident?';
+    const submitWarningDialogContent = document.createElement('span');
+    submitWarningDialogContent.innerHTML = 'Are you sure you want to submit this incident?';
 
     const config = {
       title: 'Confirm Submit',
@@ -82,13 +62,10 @@ class ViewIncident extends IncidentsBaseView {
       okBtnText: 'Submit',
       cancelBtnText: 'Cancel',
       closeCallback: this._dialogConfirmationCallback.bind(this),
-      content: 'Are you sure you want to Submit this incident?'
+      content: submitWarningDialogContent
     };
 
-    this.warningDialog = this.createDialog(config);
-
-    // this.warningDialog = this.createDialog('Confirm Submit', 'sm', 'Submit', 'Cancel',
-    //     this._dialogConfirmationCallback.bind(this), 'Are you sure you want to Submit this incident?');
+    this.warningDialog = this.createDynamicDialog(config);
 
     this.warningDialog.updateStyles({'--etools-dialog-confirm-btn-bg': 'var(--button-primary-bg-color)'});
   }
@@ -109,13 +86,6 @@ class ViewIncident extends IncidentsBaseView {
       // console.log('warningDialog not created!', 'pmp partner status change');
       return;
     }
-
-    if (!this.submitWarningDialogContent) {
-      // console.log('#deleteWarningContent element not found!', 'pmp partner status change');
-      return;
-    }
-    let warningMessage = 'Are you sure you want to Submit this incident?';
-    this.submitWarningDialogContent.innerHTML = warningMessage;
     this.warningDialog.opened = true;
   }
 

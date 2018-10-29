@@ -616,12 +616,6 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
       jwtLocalStorageKey: {
         type: String,
         value: ''
-      },
-      submitWarningDialogContent: {
-        type: Object
-      },
-      warningDialog: {
-        type: Object
       }
     };
   }

@@ -16,15 +16,13 @@ import { IncidentsBaseView } from './incidents-base-view.js';
  */
 class ViewIncident extends IncidentsBaseView {
 
-  // on-tap="openSubmitConfirmation"
-
   static get submitBtnTmpl() {
     // language=HTML
     return html`
       <paper-button raised
-                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]" 
-                    on-tap="showSubmitConfirmationDialog">
-        Submit
+                    hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]"
+                    on-tap="openSubmitConfirmation">
+        [[getLabel(incident.status)]]
       </paper-button>
     `;
   }
@@ -35,6 +33,14 @@ class ViewIncident extends IncidentsBaseView {
 
       ${this.submitBtnTmpl}
 
+      <paper-dialog id="submitConfirm">
+        <h2>Confirm Submit</h2>
+        <p>Are you sure you want to submit this incident?</p>
+        <div class="buttons">
+          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
+          <paper-button class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>
+        </div>
+      </paper-dialog>
       `;
   }
 
@@ -75,6 +81,13 @@ class ViewIncident extends IncidentsBaseView {
     this.title = 'View incident';
   }
 
+  getLabel(status) {
+    return status === 'created' ? 'Submit' : 'Resubmit';
+  }
+
+  openSubmitConfirmation() {
+    this.shadowRoot.querySelector('#submitConfirm').opened = true;
+  }
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeDialog(this.warningDialog);
@@ -105,7 +118,7 @@ class ViewIncident extends IncidentsBaseView {
   }
 
   canSubmit(offline, status, unsynced) {
-    return !unsynced && status === 'created' && !offline;
+    return !unsynced && (status === 'created' || status === 'rejected') && !offline;
   }
 
   _dialogConfirmationCallback(event) {

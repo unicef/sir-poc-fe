@@ -27,7 +27,7 @@ import {store} from '../../redux/store.js';
 import {selectIncident} from '../../reducers/incidents.js';
 
 import {fetchIncident} from '../../actions/incidents.js';
-import {clearErrors, serverError} from '../../actions/errors.js';
+import {serverError} from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -348,16 +348,17 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
               </div>
 
               <div class="col col-3">
-                <etools-dropdown-lite
-                            id="city"
-                            label="City"
-                            auto-validate
-                            readonly="[[readonly]]"
-                            options="[[staticData.cities]]"
-                            selected="{{incident.city}}"
-                            required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
-                            error-message="City is required">
-                </etools-dropdown-lite>
+                <paper-input
+                              id="city"
+                              label="City"
+                              auto-validate
+                              placeholder="&#8212;"
+                              readonly$="[[readonly]]"
+                              value="{{incident.city}}"
+                              required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
+                              error-message="City is required">
+
+                </paper-input>
               </div>
 
               <div class="col col-3">
@@ -633,7 +634,7 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
   }
 
   incidentChanged() {
-    if (this.incident.press_coverage) {
+    if (this.incident && this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
   }
@@ -648,6 +649,11 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
     }
 
     this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
+    this.redirectIfNotEditable(this.incident, this.visible);
+  }
+
+  redirectIfNotEditable(incident, visible) {
+    return false;
   }
 
   // It was created offline and not yet saved on server or new
@@ -662,9 +668,7 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
     if (visible) {
       this.resetValidations();
     }
-    if (visible === false) {
-      store.dispatch(clearErrors());
-    }
+
   }
 
   _stateChanged(state) {

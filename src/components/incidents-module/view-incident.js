@@ -21,7 +21,7 @@ class ViewIncident extends IncidentsBaseView {
     return html`
       <paper-button raised
                     hidden$="[[!canSubmit(state.app.offline, incident.status, incident.unsynced)]]"
-                    on-tap="openSubmitConfirmation">
+                    on-tap="showSubmitConfirmationDialog">
         [[getLabel(incident.status)]]
       </paper-button>
     `;
@@ -32,15 +32,7 @@ class ViewIncident extends IncidentsBaseView {
     return html`
 
       ${this.submitBtnTmpl}
-
-      <paper-dialog id="submitConfirm">
-        <h2>Confirm Submit</h2>
-        <p>Are you sure you want to submit this incident?</p>
-        <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
-          <paper-button class="smaller" on-tap="submit" dialog-confirm autofocus>Submit</paper-button>
-        </div>
-      </paper-dialog>
+  
       `;
   }
 
@@ -60,11 +52,12 @@ class ViewIncident extends IncidentsBaseView {
     super.ready();
 
     const submitWarningDialogContent = document.createElement('span');
-    submitWarningDialogContent.innerHTML = 'Are you sure you want to submit this incident?';
+    submitWarningDialogContent.innerHTML = 'Are you sure you want to '
+        + this.getLabel(this.incident.status).toLowerCase() + ' this incident?';
 
     const config = {
       size: 'sm',
-      okBtnText: 'Submit',
+      okBtnText: this.getLabel(this.incident.status),
       cancelBtnText: 'Cancel',
       closeCallback: this._dialogConfirmationCallback.bind(this),
       content: submitWarningDialogContent
@@ -81,16 +74,13 @@ class ViewIncident extends IncidentsBaseView {
     this.title = 'View incident';
   }
 
-  getLabel(status) {
-    return status === 'created' ? 'Submit' : 'Resubmit';
-  }
-
-  openSubmitConfirmation() {
-    this.shadowRoot.querySelector('#submitConfirm').opened = true;
-  }
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeDialog(this.warningDialog);
+  }
+
+  getLabel(status) {
+    return status === 'created' ? 'Submit' : 'Resubmit';
   }
 
   showSubmitConfirmationDialog() {

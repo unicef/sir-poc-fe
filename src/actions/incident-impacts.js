@@ -45,8 +45,10 @@ export const syncIncidentImpacts = (newId, oldId) => async (dispatch, getState) 
     });
 
     if (!allSuccessful) {
-      dispatch(plainErrors(['Some impacts could not be synced. Please review them individually and try again.']));
       updatePath(`/incidents/impact/${newId}/list/`);
+      setTimeout(() =>
+       dispatch(plainErrors(['Some impacts could not be synced. Please review them individually and try again.']))
+      );
     }
   });
 };

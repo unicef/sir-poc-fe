@@ -69,7 +69,7 @@ class MyApp extends connect(store)(PolymerElement) {
           color: #fff;
           background-color: var(--app-primary-color);
         }
-        
+
         app-header app-toolbar {
           @apply --layout-justified;
         }
@@ -85,7 +85,7 @@ class MyApp extends connect(store)(PolymerElement) {
           border-bottom: 1px solid rgba(0, 0, 0, 0.12);
           background-color: var(--menu-header-bg, #d6d8d9);
         }
-        
+
         #menu-header #app-logo {
           @apply --layout-horizontal;
           @apply --layout-center;
@@ -104,7 +104,7 @@ class MyApp extends connect(store)(PolymerElement) {
           margin-left: 8px;
           font-size: 14px;
         }
-        
+
         #menu-header #app-name span:last-child {
           color: var(--secondary-text-color);
           font-size: 13px;
@@ -142,11 +142,11 @@ class MyApp extends connect(store)(PolymerElement) {
           background-color: var(--menu-selected-bg-color);
           color: var(--app-primary-color);
         }
-        
+
         :host([page="login"]) app-drawer .drawer-list {
-          position: relative;  
+          position: relative;
         }
-        
+
         :host([page="login"]) app-drawer .drawer-list:after {
           position: absolute;
           content: "";
@@ -224,7 +224,7 @@ class MyApp extends connect(store)(PolymerElement) {
               <iron-icon icon="av:playlist-add"></iron-icon>
               <span>New Incident</span>
             </a>
-            
+
             <a class="menu-heading" href="[[rootPath]]admin/" target="_blank">
               <iron-icon icon="supervisor-account"></iron-icon>
               <span>Admin</span>
@@ -294,6 +294,7 @@ class MyApp extends connect(store)(PolymerElement) {
 
   _locationChanged(path, queryParams) {
     store.dispatch(updateLocationInfo(path, queryParams));
+    store.dispatch({type: 'CLEAR_ERRORS'});
   }
 
   pathsMatch(path1, path2) {

@@ -57,7 +57,6 @@ class ViewIncident extends IncidentsBaseView {
     submitWarningDialogContent.innerHTML = 'Are you sure you want to submit this incident?';
 
     const config = {
-      title: 'Confirm Submit',
       size: 'sm',
       okBtnText: 'Submit',
       cancelBtnText: 'Cancel',

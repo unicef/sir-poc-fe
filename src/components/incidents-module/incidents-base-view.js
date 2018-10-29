@@ -339,7 +339,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <etools-dropdown-lite id="country"
                                       readonly="[[readonly]]"
                                       label="Country"
-                                      options="[[staticData.countries]]"
+                                      options="[[_getCountriesForRegion(incident.region, staticData.countries)]]"
                                       selected="{{incident.country}}"
                                       required auto-validate
                                       error-message="Country is required">
@@ -691,6 +691,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }
   }
 
+  _getCountriesForRegion(selectedRegion, allCountries) {
+    if (!selectedRegion || !allCountries) {
+      return [];
+    }
+    return allCountries.filter(country => Number(country.region) === Number(selectedRegion));
+  }
+
   isTrafficAccident(incidentSubcategory) {
     if (!incidentSubcategory) {
       return false;
@@ -866,7 +873,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }).catch((error) => {
       // eslint-disable-next-line
       console.error(error);
-      store.dispatch(showSnackbar('An error occurred on downloading!'));
+      store.dispatch(showSnackbar('An error occurred while downloading'));
     });
   }
 

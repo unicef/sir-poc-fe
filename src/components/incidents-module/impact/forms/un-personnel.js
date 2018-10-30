@@ -248,7 +248,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   readonly="[[readonly]]"
                   options="[[staticData.countries]]"
                   selected="{{data.person.country}}"
-                  required auto-validate
+                  required$="[[!isSexualAssault(selectedImpactType)]]"
+                  auto-validate
                   error-message="Duty station country is required">
               </etools-dropdown-lite>
             </div>

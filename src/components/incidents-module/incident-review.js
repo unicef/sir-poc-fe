@@ -6,7 +6,7 @@ import '@polymer/paper-dialog/paper-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import { editIncident, approveIncident, rejectIncident, addComment } from '../../actions/incidents.js';
+import { editIncident, approveIncident, addComment } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
@@ -15,8 +15,8 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
-import {updatePath} from '../common/navigation-helper';
-
+import { updatePath } from '../common/navigation-helper';
+import './buttons/reject.js';
 /**
  * @polymer
  * @customElement
@@ -149,23 +149,14 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                                         on-click="openApproveConfirmation">
                 Approve
               </paper-button>
-              <paper-button class="btn" raised
-                                        hidden$="[[_hideRejectButton(offline, incident.status)]]"
-                                        on-click="openRejectConfirmation">
-                Reject
-              </paper-button>
+              <reject-button comment-text="[[commentText]]"
+                             incident="[[incident]]"
+                             on-tap="validateComment"
+                             hidden$="[[_hideRejectButton(offline, incident.status)]]">
+              </reject-button>
             </div>
           </div>
       </div>
-
-      <paper-dialog id="rejConfirm">
-        <h2>Confirm Reject</h2>
-        <p>Are you sure you want to reject this incident?</p>
-        <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
-          <paper-button class="smaller" on-tap="reject" dialog-confirm autofocus>Reject</paper-button>
-        </div>
-      </paper-dialog>
 
       <paper-dialog id="approveConfirm">
         <h2>Confirm Approve</h2>
@@ -193,11 +184,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
       },
       state: {
         type: Object
-      },
-      visible: {
-        type: Boolean,
-        value: false,
-        observer: '_visibilityChanged'
       },
       incident: Object
     };
@@ -232,29 +218,21 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     return true;
   }
 
-  _visibilityChanged(visible) {
-
-  }
-
   restComment() {
     this.commentText = '';
     this.$.commentText.invalid = false;
-  }
-
-  openRejectConfirmation() {
-    if (!this.$.commentText.validate()) {
-      return;
-    }
-    this.shadowRoot.querySelector('#rejConfirm').opened = true;
   }
 
   openApproveConfirmation() {
     this.shadowRoot.querySelector('#approveConfirm').opened = true;
   }
 
+  validateComment() {
+    return this.$.commentText.validate();
+  }
 
   async addComment() {
-    if (!this.$.commentText.validate()) {
+    if (!this.validateComment()) {
       return;
     }
 
@@ -267,20 +245,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     if (typeof successfull === 'boolean' && successfull) {
       this.restComment();
       store.dispatch(showSnackbar('Comment added'));
-    }
-  }
-
-  async reject() {
-    let data = {
-      incident: this.incidentId,
-      comment: this.commentText
-    };
-
-    let successfull = await store.dispatch(rejectIncident(data));
-    if (typeof successfull === 'boolean' && successfull) {
-      this.restComment();
-      store.dispatch(showSnackbar('Incident rejected'));
-      updatePath(`/incidents/list/`);
     }
   }
 
@@ -300,8 +264,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   _hideRejectButton(offline, status) {
     return status !== 'submitted' || offline;
   }
-
-
 }
 
 window.customElements.define(IncidentReview.is, IncidentReview);

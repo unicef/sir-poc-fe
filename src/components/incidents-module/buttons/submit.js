@@ -21,7 +21,7 @@ class SubmitButton extends ButtonsBaseClass {
           margin-left: 4px;
         }
       </style>
-      <paper-button raised on-tap="showSubmitConfirmationDialog">
+      <paper-button raised on-tap="openDialog">
         [[getLabel(incident.status)]]
       </paper-button>
       `;
@@ -45,13 +45,6 @@ class SubmitButton extends ButtonsBaseClass {
     let content = `Are you sure you want to ${this.getLabel(this.incident.status).toLowerCase()} this incident?`;
     let okText = this.getLabel(this.incident.status);
     this.createConfirmationDialog(content, this.dialogConfirmationCallback.bind(this), okText);
-  }
-
-  showSubmitConfirmationDialog() {
-    if (!this.warningDialog) {
-      return;
-    }
-    this.warningDialog.opened = true;
   }
 
   async submit() {

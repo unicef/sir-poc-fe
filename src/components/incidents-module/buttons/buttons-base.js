@@ -15,8 +15,7 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
       incident: {
         type: Object,
         observer: 'incidentChanged'
-      },
-      offline: Boolean
+      }
     };
   }
 
@@ -26,11 +25,10 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
   }
 
   _stateChanged(state) {
+    // TODO: after implementing all the buttons, check if anything from redux is needed.
     if (!state) {
       return;
     }
-
-    this.offline = state.app.offline;
   }
 
   incidentChanged() {
@@ -58,5 +56,12 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
     if (this.warningDialog) {
       this.removeDialog(this.warningDialog);
     }
+  }
+
+  openDialog() {
+    if (!this.warningDialog) {
+      return;
+    }
+    this.warningDialog.opened = true;
   }
 }

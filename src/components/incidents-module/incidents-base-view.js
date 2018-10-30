@@ -1,8 +1,8 @@
 /**
  @license
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
@@ -16,27 +16,27 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-date-time/time-input.js';
 
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
+import { makeRequest, handleBlobDataReceivedAndStartDownload  } from '../common/request-helper.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
-import {validateAllRequired, resetRequiredValidations} from '../common/validations-helper.js';
-import {makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/request-helper.js';
-import {store} from '../../redux/store.js';
-import {selectIncident} from '../../reducers/incidents.js';
+import { store } from '../../redux/store.js';
+import { selectIncident } from '../../reducers/incidents.js';
 
-import {fetchIncident} from '../../actions/incidents.js';
-import {serverError} from '../../actions/errors.js';
+import { fetchIncident } from '../../actions/incidents.js';
+import { serverError } from '../../actions/errors.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import {Endpoints} from '../../config/endpoints';
-import {updatePath} from '../common/navigation-helper';
-import {showSnackbar} from '../../actions/app.js';
-import {SirMsalAuth} from '../auth/jwt/msal-authentication';
-import {DynamicDialogMixin} from 'etools-dialog/dynamic-dialog-mixin.js';
+import { Endpoints } from '../../config/endpoints';
+import { updatePath } from '../common/navigation-helper';
+import { showSnackbar } from '../../actions/app.js';
+import { SirMsalAuth } from '../auth/jwt/msal-authentication';
+import { DynamicDialogMixin } from 'etools-dialog/dynamic-dialog-mixin.js';
 
 export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(PolymerElement)) {
   static get template() {
@@ -633,11 +633,6 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
     this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.cleanDialogs();
-  }
-
   incidentChanged() {
     if (this.incident && this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
@@ -877,26 +872,4 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
   }
 
 
-  createConfirmationDialog(content, okText, cancelText) {
-    const submitWarningDialogContent = document.createElement('span');
-    submitWarningDialogContent.innerHTML = content;
-
-    const config = {
-      size: 'sm',
-      okBtnText: okText || 'Ok',
-      cancelBtnText: cancelText || 'Cancel',
-      closeCallback: this._dialogConfirmationCallback.bind(this),
-      content: submitWarningDialogContent
-    };
-
-    this.warningDialog = this.createDynamicDialog(config);
-
-    this.warningDialog.updateStyles({'--etools-dialog-confirm-btn-bg': 'var(--button-primary-bg-color)'});
-  }
-
-  cleanDialogs() {
-    if (this.warningDialog) {
-      this.removeDialog(this.warningDialog);
-    }
-  }
 }

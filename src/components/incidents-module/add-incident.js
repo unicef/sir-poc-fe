@@ -65,7 +65,7 @@ class AddIncident extends IncidentsBaseView {
       this.resetForm();
       this.resetValidations();
       this.showSuccessMessage();
-      updatePath(`/incidents/edit/${createdId}`);
+      updatePath(`/incidents/view/${createdId}`);
     }
   }
 

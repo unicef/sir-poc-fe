@@ -53,7 +53,7 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
   }
 
   dialogConfirmationCallback(event) {
-    console.warn('Confirmation callback action not defined for' + this.is);
+    console.warn('Confirmation callback action not defined');
   }
 
   cleanDialogs() {

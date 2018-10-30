@@ -30,6 +30,7 @@ class RejectButton extends ButtonsBaseClass {
   static get is() {
     return 'reject-button';
   }
+
   static get properties() {
     return {
       ...super.properties,

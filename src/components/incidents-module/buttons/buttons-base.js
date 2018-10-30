@@ -1,15 +1,8 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { DynamicDialogMixin } from 'etools-dialog/dynamic-dialog-mixin.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
-export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerElement)) {
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.cleanDialogs();
-  }
-
+export class ButtonsBaseClass extends DynamicDialogMixin(PolymerElement) {
   static get properties() {
     return {
       incident: {
@@ -24,27 +17,25 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
     super.connectedCallback();
   }
 
-  _stateChanged(state) {
-    // TODO: after implementing all the buttons, check if anything from redux is needed.
-    if (!state) {
-      return;
-    }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.cleanDialogs();
   }
 
   incidentChanged() {
     // overwrite when needed
   }
 
-  createConfirmationDialog(content, okText, cancelText, callback) {
-    const submitWarningDialogContent = document.createElement('span');
-    submitWarningDialogContent.innerHTML = content;
+  createConfirmationDialog(warningText, okText, cancelText, callback) {
+    const dialogContent = document.createElement('span');
+    dialogContent.innerHTML = warningText;
 
     const config = {
       size: 'sm',
       okBtnText: okText || 'Ok',
       cancelBtnText: cancelText || 'Cancel',
       closeCallback: callback || this.dialogConfirmationCallback.bind(this),
-      content: submitWarningDialogContent
+      content: dialogContent
     };
 
     this.warningDialog = this.createDynamicDialog(config);
@@ -56,16 +47,16 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
     console.warn('Confirmation callback action not defined');
   }
 
-  cleanDialogs() {
-    if (this.warningDialog) {
-      this.removeDialog(this.warningDialog);
-    }
-  }
-
   openDialog() {
     if (!this.warningDialog) {
       return;
     }
     this.warningDialog.opened = true;
+  }
+
+  cleanDialogs() {
+    if (this.warningDialog) {
+      this.removeDialog(this.warningDialog);
+    }
   }
 }

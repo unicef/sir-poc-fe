@@ -79,12 +79,13 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
             <div class="col col-2">
               <paper-input id="value"
                            readonly$="[[readonly]]"
-                           label="Value ($USD)"
+                           label="Value in USD"
                            type="number"
                            placeholder="&#8212;"
                            value="{{data.value}}"
                            required
                            error-message="Value is required">
+                <span  slot="prefix">$</span>
               </paper-input>
             </div>
           </div>

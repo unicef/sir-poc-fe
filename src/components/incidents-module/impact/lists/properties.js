@@ -26,7 +26,7 @@ export class PropertiesList extends connect(store)(PolymerElement) {
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
 
       <div hidden$="[[!propertiesList.length]]">
-        <etools-data-table-header id="listHeader" no-title no-collapse 
+        <etools-data-table-header id="listHeader" no-title no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-3">
             Impact
@@ -38,7 +38,7 @@ export class PropertiesList extends connect(store)(PolymerElement) {
             Type
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
-            Value
+            Value in USD
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
             Actions
@@ -46,7 +46,7 @@ export class PropertiesList extends connect(store)(PolymerElement) {
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[propertiesList]]">
-          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]" 
+          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Impact">
@@ -62,8 +62,8 @@ export class PropertiesList extends connect(store)(PolymerElement) {
               <span class="col-data col-2" data-col-header-label="Type">
                 [[getNameFromId(item.property_type, 'propertyTypes')]]
               </span>
-              <span class="col-data col-2" data-col-header-label="Value ($USD)">
-                [[item.value]]
+              <span class="col-data col-2" data-col-header-label="Value in USD">
+                $[[item.value]]
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/incidents/impact/[[item.incident_id]]/property/[[item.id]]/"

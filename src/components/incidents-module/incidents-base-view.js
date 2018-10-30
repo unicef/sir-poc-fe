@@ -633,6 +633,11 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
     this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.cleanDialogs();
+  }
+
   incidentChanged() {
     if (this.incident && this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
@@ -871,4 +876,27 @@ export class IncidentsBaseView extends connect(store)(DynamicDialogMixin(Polymer
     });
   }
 
+
+  createConfirmationDialog(content, okText, cancelText) {
+    const submitWarningDialogContent = document.createElement('span');
+    submitWarningDialogContent.innerHTML = content;
+
+    const config = {
+      size: 'sm',
+      okBtnText: okText || 'Ok',
+      cancelBtnText: cancelText || 'Cancel',
+      closeCallback: this._dialogConfirmationCallback.bind(this),
+      content: submitWarningDialogContent
+    };
+
+    this.warningDialog = this.createDynamicDialog(config);
+
+    this.warningDialog.updateStyles({'--etools-dialog-confirm-btn-bg': 'var(--button-primary-bg-color)'});
+  }
+
+  cleanDialogs() {
+    if (this.warningDialog) {
+      this.removeDialog(this.warningDialog);
+    }
+  }
 }

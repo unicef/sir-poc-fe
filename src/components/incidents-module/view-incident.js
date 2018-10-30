@@ -3,7 +3,6 @@
 */
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
-import '@polymer/paper-dialog/paper-dialog.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { showSnackbar } from '../../actions/app.js';
 import { submitIncident } from '../../actions/incidents.js';
@@ -32,7 +31,7 @@ class ViewIncident extends IncidentsBaseView {
     return html`
 
       ${this.submitBtnTmpl}
-  
+
       `;
   }
 
@@ -48,39 +47,21 @@ class ViewIncident extends IncidentsBaseView {
     `;
   }
 
-  ready() {
-    super.ready();
-
-    const submitWarningDialogContent = document.createElement('span');
-    submitWarningDialogContent.innerHTML = 'Are you sure you want to '
-        + this.getLabel(this.incident.status).toLowerCase() + ' this incident?';
-
-    const config = {
-      size: 'sm',
-      okBtnText: this.getLabel(this.incident.status),
-      cancelBtnText: 'Cancel',
-      closeCallback: this._dialogConfirmationCallback.bind(this),
-      content: submitWarningDialogContent
-    };
-
-    this.warningDialog = this.createDynamicDialog(config);
-
-    this.warningDialog.updateStyles({'--etools-dialog-confirm-btn-bg': 'var(--button-primary-bg-color)'});
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;
     this.title = 'View incident';
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.removeDialog(this.warningDialog);
+    this.createSubmitConfirmationDialog();
   }
 
   getLabel(status) {
     return status === 'created' ? 'Submit' : 'Resubmit';
+  }
+
+  createSubmitConfirmationDialog() {
+    let content = `Are you sure you want to ${this.getLabel(this.incident.status).toLowerCase()} this incident?`;
+    let okText = this.getLabel(this.incident.status);
+    this.createConfirmationDialog(content, okText);
   }
 
   showSubmitConfirmationDialog() {

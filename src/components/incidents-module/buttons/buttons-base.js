@@ -20,6 +20,11 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
     };
   }
 
+  connectedCallback() {
+    this.store = store;
+    super.connectedCallback();
+  }
+
   _stateChanged(state) {
     if (!state) {
       return;

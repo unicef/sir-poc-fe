@@ -6,7 +6,7 @@ import '@polymer/paper-dialog/paper-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import { editIncident, approveIncident, addComment } from '../../actions/incidents.js';
+import { editIncident, addComment } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
@@ -17,6 +17,7 @@ import '../styles/shared-styles.js';
 import '../common/errors-box.js';
 import { updatePath } from '../common/navigation-helper';
 import './buttons/reject.js';
+import './buttons/approve.js';
 /**
  * @polymer
  * @customElement
@@ -144,11 +145,11 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                                         hidden$="[[offline]]">
                 Add comment
               </paper-button>
-              <paper-button class="btn" raised
-                                        hidden$="[[_hideApproveButton(offline, incident.status)]]"
-                                        on-click="openApproveConfirmation">
-                Approve
-              </paper-button>
+
+              <approve-button incident="[[incident]]"
+                              hidden$="[[_hideApproveButton(offline, incident.status)]]">
+              </approve-button>
+
               <reject-button comment-text="[[commentText]]"
                              incident="[[incident]]"
                              on-tap="validateComment"
@@ -157,15 +158,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             </div>
           </div>
       </div>
-
-      <paper-dialog id="approveConfirm">
-        <h2>Confirm Approve</h2>
-        <p>Are you sure you want to approve this incident?</p>
-        <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>Cancel</paper-button>
-          <paper-button class="smaller" on-tap="approve" dialog-confirm autofocus>Approve</paper-button>
-        </div>
-      </paper-dialog>
     `;
   }
 
@@ -223,10 +215,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     this.$.commentText.invalid = false;
   }
 
-  openApproveConfirmation() {
-    this.shadowRoot.querySelector('#approveConfirm').opened = true;
-  }
-
   validateComment() {
     return this.$.commentText.validate();
   }
@@ -245,15 +233,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
     if (typeof successfull === 'boolean' && successfull) {
       this.restComment();
       store.dispatch(showSnackbar('Comment added'));
-    }
-  }
-
-  async approve() {
-    let successfull = await store.dispatch(approveIncident(this.incidentId));
-
-    if (typeof successfull === 'boolean' && successfull) {
-      store.dispatch(showSnackbar('Incident approved'));
-      updatePath(`/incidents/list/`);
     }
   }
 

@@ -38,7 +38,7 @@ class ApproveButton extends ButtonsBaseClass {
   createApproveConfirmationDialog() {
     let content = `Are you sure you want to approve this incident?`;
     let okText = `Approve`;
-    this.createConfirmationDialog(content, this.dialogConfirmationCallback.bind(this), okText);
+    this.createConfirmationDialog(content, okText);
   }
 
   async approve() {

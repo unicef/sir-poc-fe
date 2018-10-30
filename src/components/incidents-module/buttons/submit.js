@@ -44,7 +44,7 @@ class SubmitButton extends ButtonsBaseClass {
   createSubmitConfirmationDialog() {
     let content = `Are you sure you want to ${this.getLabel(this.incident.status).toLowerCase()} this incident?`;
     let okText = this.getLabel(this.incident.status);
-    this.createConfirmationDialog(content, this.dialogConfirmationCallback.bind(this), okText);
+    this.createConfirmationDialog(content, okText);
   }
 
   async submit() {

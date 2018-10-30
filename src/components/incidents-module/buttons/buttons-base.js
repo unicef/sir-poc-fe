@@ -35,7 +35,7 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
     // overwrite when needed
   }
 
-  createConfirmationDialog(content, callback, okText, cancelText) {
+  createConfirmationDialog(content, okText, cancelText, callback) {
     const submitWarningDialogContent = document.createElement('span');
     submitWarningDialogContent.innerHTML = content;
 
@@ -43,13 +43,17 @@ export class ButtonsBaseClass extends connect(store)(DynamicDialogMixin(PolymerE
       size: 'sm',
       okBtnText: okText || 'Ok',
       cancelBtnText: cancelText || 'Cancel',
-      closeCallback: callback,
+      closeCallback: callback || this.dialogConfirmationCallback.bind(this),
       content: submitWarningDialogContent
     };
 
     this.warningDialog = this.createDynamicDialog(config);
 
     this.warningDialog.updateStyles({'--etools-dialog-confirm-btn-bg': 'var(--button-primary-bg-color)'});
+  }
+
+  dialogConfirmationCallback(event) {
+    console.warn('Confirmation callback action not defined for' + this.is);
   }
 
   cleanDialogs() {

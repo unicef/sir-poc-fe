@@ -53,7 +53,7 @@ class RejectButton extends ButtonsBaseClass {
   createRejectConfirmationDialog() {
     let content = `Are you sure you want to reject this incident?`;
     let okText = 'Reject';
-    this.createConfirmationDialog(content, this.dialogConfirmationCallback.bind(this), okText);
+    this.createConfirmationDialog(content, okText);
   }
 
   async reject() {

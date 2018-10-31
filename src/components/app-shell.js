@@ -32,6 +32,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
 // This element is connected to the Redux store.
 import './snack-bar/snack-bar.js';
+import './snack-bar/ios-shortcut-dialog.js';
 import { store } from '../redux/store.js';
 
 import { updatePath } from '../components/common/navigation-helper.js';
@@ -256,6 +257,7 @@ class MyApp extends connect(store)(PolymerElement) {
         <snack-bar active$="[[snackbarOpened]]">
           <span>[[snackbarText]]</span>
         </snack-bar>
+        <ios-shortcut-dialog></ios-shortcut-dialog>
       </app-drawer-layout>
     `;
   }

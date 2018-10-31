@@ -42,11 +42,6 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           margin-right: 24px;
         }
 
-        paper-button {
-          text-transform: none;
-          padding: 0 8px;
-        }
-
         .right {
           text-align: right;
         }
@@ -76,7 +71,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
             </span>
           </etools-info-tooltip>
           <paper-button raised
-              class="smaller"
+              class="no-t-transform smaller"
               on-click="_addUnPersonnel">
             <iron-icon icon="add"></iron-icon>
             Add UN Personnel
@@ -95,7 +90,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
               accident with a UN staff member, or could be a visitor to a UN building when an incident occurs.
             </span>
           </etools-info-tooltip>
-          <paper-button raised class="smaller" on-click="_addNonUn">
+          <paper-button raised class="no-t-transform smaller" on-click="_addNonUn">
             <iron-icon icon="add"></iron-icon>
             Add non-UN Personnel
           </paper-button>
@@ -106,7 +101,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal space-between">
           <h3>Evacuations</h3>
-          <paper-button raised class="smaller" on-click="_addEvacuation">
+          <paper-button raised class="no-t-transform smaller" on-click="_addEvacuation">
             <iron-icon icon="add"></iron-icon>
             Add Evacuation
           </paper-button>
@@ -122,7 +117,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
               UN Assets include equipment, vehicles and vessels.
             </span>
           </etools-info-tooltip>
-          <paper-button raised class="smaller" on-click="_addProperty">
+          <paper-button raised class="no-t-transform smaller" on-click="_addProperty">
             <iron-icon icon="add"></iron-icon>
             Add UN Property
           </paper-button>
@@ -141,7 +136,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
               repeater stations.
             </span>
           </etools-info-tooltip>
-          <paper-button raised class="smaller" on-click="_addPremise">
+          <paper-button raised class="no-t-transform smaller" on-click="_addPremise">
             <iron-icon icon="add"></iron-icon>
             Add Premise
           </paper-button>
@@ -153,7 +148,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
         <div class="layout-horizontal space-between">
           <h3>UN Programme</h3>
           <paper-button raised
-              class="smaller"
+              class="no-t-transform smaller"
               on-click="_addProgramme">
             <iron-icon icon="add"></iron-icon>
             Add Programme

@@ -9,7 +9,7 @@ class IosShortcutDialog extends PolymerElement {
   static get template() {
     return html`
       <style>
-        paper-dialog.size-position {
+        paper-dialog {
           position: fixed;
           bottom: 0;
           margin: 0;
@@ -24,7 +24,7 @@ class IosShortcutDialog extends PolymerElement {
           text-align: center;
         }
       </style>
-      <paper-dialog id="dialog" class="size-position">
+      <paper-dialog id="dialog">
         <p> Install this webapp on your device: Tap <img src="/images/safari_share.png"></img> and then Add to Homescreen </p>
       </paper-dialog>
     `;
@@ -42,18 +42,18 @@ class IosShortcutDialog extends PolymerElement {
   }
 
   checkIfIosAndOpenDialog() {
-    // Detects if device is on iOS
-    const isIos = () => {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      return /iphone|ipad|ipod/.test( userAgent );
-    }
-    // Detects if device is in standalone mode
-    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-
-    // Checks if should display install popup notification:
-    if (isIos() && !isInStandaloneMode()) {
+    if (this.isIos() && !this.isInStandaloneMode()) {
       this.$.dialog.open();
     }
+  }
+
+  isIos () {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    return /iphone|ipad|ipod/.test( userAgent );
+  }
+
+  isInStandaloneMode() {
+    return ('standalone' in window.navigator) && (window.navigator.standalone);
   }
 }
 

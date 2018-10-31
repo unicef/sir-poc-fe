@@ -14,7 +14,7 @@ const SIR_MSAL_CONF = {
       log_level: 'dev',
       msal_logger_corelation_id: 'SIR_APP_DEV'
     },
-    authority: null,
+    authority: 'https://login.microsoftonline.com/nikunicef.onmicrosoft.com',
     user_agent_app_config: {
       redirectUri: 'http://localhost:8081/dashboard', // just for testing
       cacheLocation: 'localStorage'

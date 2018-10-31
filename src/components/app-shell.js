@@ -25,6 +25,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
+import './styles/shared-styles.js';
 
 // basic stuff above, PWA stuff below
 
@@ -32,6 +33,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
 // This element is connected to the Redux store.
 import './snack-bar/snack-bar.js';
+import './snack-bar/ios-shortcut-dialog.js';
 import { store } from '../redux/store.js';
 
 import { updatePath } from '../components/common/navigation-helper.js';
@@ -56,7 +58,7 @@ class MyApp extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
-      <style>
+      <style include="shared-styles">
         :host {
           display: block;
         }
@@ -253,9 +255,12 @@ class MyApp extends connect(store)(PolymerElement) {
           </iron-pages>
 
         </app-header-layout>
-        <snack-bar active$="[[snackbarOpened]]">
-          <span>[[snackbarText]]</span>
-        </snack-bar>
+        <template is="dom-if" if="[[!_isOnLoginPage(page)]]">
+          <snack-bar active$="[[snackbarOpened]]">
+            <span>[[snackbarText]]</span>
+          </snack-bar>
+          <ios-shortcut-dialog></ios-shortcut-dialog>
+        </template>
       </app-drawer-layout>
     `;
   }
@@ -344,11 +349,14 @@ class MyApp extends connect(store)(PolymerElement) {
     }
   }
 
+  _isOnLoginPage() {
+    return this.page === 'login';
+  }
+
   _stateChanged(state) {
     if (!state) {
       return;
     }
-    // this.page = state.app.page;
     this.set('offline', state.app.offline);
     this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);

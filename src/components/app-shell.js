@@ -9,7 +9,6 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -27,34 +26,25 @@ import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
 
-// basic stuff above, PWA stuff below
-
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import { requestPageLoadData } from '../actions/app.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-// This element is connected to the Redux store.
+
 import './snack-bar/snack-bar.js';
 import './snack-bar/ios-shortcut-dialog.js';
 import { store } from '../redux/store.js';
 
 import { updatePath } from '../components/common/navigation-helper.js';
-// These are the actions needed by this element.
+
 import {
   updateOffline,
   lazyLoadModules,
   updateLocationInfo
 } from '../actions/app.js';
 
-import {SirMsalAuth} from './auth/jwt/msal-authentication.js';
+import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 
-// Gesture events like tap and track generated from touch will not be
-// preventable, allowing for better scrolling performance.
-setPassiveTouchGestures(true);
-
-// Set Polymer's root path to the same value we passed to our service worker
-// in `index.html`.
-setRootPath(MyAppGlobals.rootPath);
-
-class MyApp extends connect(store)(PolymerElement) {
+class AppShell extends connect(store)(PolymerElement) {
   static get template() {
     // language=HTML
     return html`
@@ -144,32 +134,6 @@ class MyApp extends connect(store)(PolymerElement) {
           background-color: var(--menu-selected-bg-color);
           color: var(--app-primary-color);
         }
-
-        :host([page="login"]) app-drawer .drawer-list {
-          position: relative;
-        }
-
-        :host([page="login"]) app-drawer .drawer-list:after {
-          position: absolute;
-          content: "";
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background-color: rgba(255, 255, 255, .7);
-        }
-
-        :host([page="login"]) #logout {
-          display: none;
-        }
-
-        :host([page="login"]) app-drawer a {
-          -webkit-filter: blur(2px);
-          -moz-filter: blur(2px);
-          -o-filter: blur(2px);
-          -ms-filter: blur(2px);
-          filter: blur(2px);
-        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -247,7 +211,6 @@ class MyApp extends connect(store)(PolymerElement) {
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <sir-login name="login"></sir-login>
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
             <dashboard-controller name="dashboard"></dashboard-controller>
@@ -255,12 +218,11 @@ class MyApp extends connect(store)(PolymerElement) {
           </iron-pages>
 
         </app-header-layout>
-        <template is="dom-if" if="[[!_isOnLoginPage(page)]]">
-          <snack-bar active$="[[snackbarOpened]]">
-            <span>[[snackbarText]]</span>
-          </snack-bar>
-          <ios-shortcut-dialog></ios-shortcut-dialog>
-        </template>
+
+        <snack-bar active$="[[snackbarOpened]]">
+          <span>[[snackbarText]]</span>
+        </snack-bar>
+        <ios-shortcut-dialog></ios-shortcut-dialog>
       </app-drawer-layout>
     `;
   }
@@ -274,7 +236,7 @@ class MyApp extends connect(store)(PolymerElement) {
       },
       validPages: {
         type: Array,
-        value: ['login', 'dashboard', 'events', 'incidents']
+        value: ['dashboard', 'events', 'incidents']
       },
       snackbarOpened: Boolean,
       snackbarText: String,
@@ -294,6 +256,7 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
+    store.dispatch(requestPageLoadData());
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
@@ -310,32 +273,12 @@ class MyApp extends connect(store)(PolymerElement) {
     if (this.page === page) {
       return;
     }
-    if (SirMsalAuth.tokenIsValid()) {
-      if (page === 'login') {
-        // no need to go to login page, go to landing page instead
-        updatePath('dashboard');
-      }
-      // if msal login token is valid proceed to requested page immediately
-      this._routePageChangedCallback(page);
-    } else {
-      // if no valid token found, request token.
-      // if no valid token is received then go to login page
-      SirMsalAuth.acquireTokenSilent()
-          .then(() => {
-            this._routePageChangedCallback(page);
-          })
-          .catch(() => {
-            updatePath('login');
-            this.page = 'login';
-          });
-    }
+
+    this._routePageChangedCallback(page);
   }
 
   _routePageChangedCallback(page) {
-    // Show the corresponding page according to the route.
-    // If no page was found in the route data, page will be an empty string.
-    // Show the dashboard in that case. And if the page doesn't exist, show 'view404'.
-    if (!page || page === 'login') {
+    if (!page) {
       updatePath('dashboard');
     } else if (this._isValidPage(page)) {
       this.page = page;
@@ -343,14 +286,9 @@ class MyApp extends connect(store)(PolymerElement) {
       this.page = 'view404';
     }
 
-    // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {
       this.$.drawer.close();
     }
-  }
-
-  _isOnLoginPage() {
-    return this.page === 'login';
   }
 
   _stateChanged(state) {
@@ -377,7 +315,6 @@ class MyApp extends connect(store)(PolymerElement) {
   _getPageTitle(page) {
     return !page ? '' : `SIR - ${page}`;
   }
-
 }
 
-window.customElements.define('app-shell', MyApp);
+window.customElements.define('app-shell', AppShell);

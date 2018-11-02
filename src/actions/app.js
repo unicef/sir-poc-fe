@@ -116,9 +116,6 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
   // Note: `polymer build` doesn't like string concatenation in the import
   // statement, so break it up.
   switch (selectedModule) {
-    case 'login':
-      import('../components/auth/sir-login.js');
-      break;
     case 'events':
       import('../components/events-module/events-controller.js');
       break;

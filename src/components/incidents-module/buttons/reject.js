@@ -6,6 +6,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { rejectIncident } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { updatePath } from '../../common/navigation-helper';
+import { hasPermission } from '../../common/utils';
 import { ButtonsBaseClass } from './buttons-base.js';
 import '../../styles/button-styles.js';
 
@@ -42,7 +43,7 @@ class RejectButton extends ButtonsBaseClass {
   }
 
   isDisabled(commentText) {
-    return !commentText.length;
+    return !commentText.length || !hasPermission('approve_incident');
   }
 
   incidentChanged() {

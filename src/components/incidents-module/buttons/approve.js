@@ -7,6 +7,7 @@ import { approveIncident } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { ButtonsBaseClass } from './buttons-base.js';
 import { updatePath } from '../../common/navigation-helper';
+import { hasPermission } from '../../common/utils';
 import '../../styles/button-styles.js';
 
 /**
@@ -19,7 +20,9 @@ class ApproveButton extends ButtonsBaseClass {
     return html`
       <style include="button-styles">
       </style>
-      <paper-button raised on-tap="openDialog">
+      <paper-button raised
+                    on-tap="openDialog"
+                    disabled$="[[!hasPermission('approve_incident')]]">
         Approve
       </paper-button>
       `;
@@ -27,6 +30,11 @@ class ApproveButton extends ButtonsBaseClass {
 
   static get is() {
     return 'approve-button';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.hasPermission = hasPermission;
   }
 
   incidentChanged() {

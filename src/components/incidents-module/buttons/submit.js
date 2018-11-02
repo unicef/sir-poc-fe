@@ -6,6 +6,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { submitIncident } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { ButtonsBaseClass } from './buttons-base.js';
+import { hasPermission } from '../../common/utils';
 import '../../styles/button-styles.js';
 
 /**
@@ -21,7 +22,9 @@ class SubmitButton extends ButtonsBaseClass {
           margin-left: 4px;
         }
       </style>
-      <paper-button raised on-tap="openDialog">
+      <paper-button raised
+                    disabled$="[[!hasPermission('submit_incident')]]"
+                    on-tap="openDialog">
         [[getLabel(incident.status)]]
       </paper-button>
       `;
@@ -29,6 +32,11 @@ class SubmitButton extends ButtonsBaseClass {
 
   static get is() {
     return 'submit-button';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.hasPermission = hasPermission;
   }
 
   incidentChanged() {

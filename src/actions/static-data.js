@@ -1,5 +1,6 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
+import { computePermissions } from './permissions-helpers.js';
 import * as ACTIONS from './constants.js';
 
 export const loadAllStaticData = () => (dispatch) => {
@@ -41,6 +42,8 @@ export const fetchAndStoreProfile = () => (dispatch, getState) => {
 };
 
 const receiveProfile = (profile) => {
+  profile.permissions = computePermissions(profile);
+
   return {
     type: ACTIONS.RECEIVE_PROFILE,
     profile

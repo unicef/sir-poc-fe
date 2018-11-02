@@ -16,6 +16,7 @@ import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
 import { updatePath } from '../common/navigation-helper';
+import { hasPermission } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';
 /**
@@ -46,7 +47,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite id="eodReview"
-                                  readonly="[[readonly]]"
+                                  readonly$="[[!canEdit('review_eod')]]"
                                   label="EOD review by"
                                   options="[[state.staticData.users]]"
                                   selected="{{incident.eod_review_by}}">
@@ -65,7 +66,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite id="dhrReview"
-                                  readonly="[[readonly]]"
+                                  readonly$="[[!canEdit('review_dhr')]]"
                                   label="DHR review by"
                                   options="[[state.staticData.users]]"
                                   selected="{{incident.dhr_review_by}}">
@@ -84,7 +85,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite id="dfamReview"
-                                  readonly="[[readonly]]"
+                                  readonly$="[[!canEdit('review_dfam')]]"
                                   label="DFAM review by"
                                   options="[[state.staticData.users]]"
                                   selected="{{incident.dfam_review_by}}">
@@ -103,7 +104,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         <div class="row-h flex-c">
           <div class="col col-6">
             <etools-dropdown-lite id="legalReview"
-                                  readonly="[[readonly]]"
+                                  readonly$="[[!canEdit('review_legal')]]"
                                   label="Legal review by"
                                   options="[[state.staticData.users]]"
                                   selected="{{incident.legal_review_by}}">
@@ -142,6 +143,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             <div class="col col-12">
               <paper-button class="btn" raised
                                         on-click="addComment"
+                                        disabled$="[[!canEdit('comment_incident')]]"
                                         hidden$="[[offline]]">
                 Add comment
               </paper-button>
@@ -184,6 +186,10 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   static get observers() {
     return [
     ];
+  }
+
+  canEdit(permissionName) {
+    return !this.readonly && hasPermission(permissionName);
   }
 
   _idChanged() {

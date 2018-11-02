@@ -19,8 +19,6 @@ import * as ACTIONS from './constants.js';
 let snackbarTimer;
 
 export const requestPageLoadData = () => (dispatch) => {
-  console.log('i have been called');
-
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchAllIncidentData());

@@ -27,7 +27,6 @@ import './styles/app-theme.js';
 import './styles/shared-styles.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { requestPageLoadData } from '../actions/app.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
 
 import './snack-bar/snack-bar.js';
@@ -256,7 +255,6 @@ class AppShell extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    store.dispatch(requestPageLoadData());
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 

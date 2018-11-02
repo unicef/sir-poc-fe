@@ -10,16 +10,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
-import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
+import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import * as ACTIONS from './constants.js';
-import {SirMsalAuth} from '../components/auth/jwt/msal-authentication';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 
 let snackbarTimer;
 
 export const requestPageLoadData = () => (dispatch) => {
+  console.log('i have been called');
+
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchAllIncidentData());
@@ -28,9 +29,10 @@ export const requestPageLoadData = () => (dispatch) => {
 export const storeReady = () => (dispatch, getState) => {
   let state = getState();
   const isOffline = state && state.app && state.app.offline;
-  if (isOffline || !SirMsalAuth.tokenIsValid()) {
+  if (isOffline) {
     return;
   }
+
   dispatch(requestPageLoadData());
 };
 

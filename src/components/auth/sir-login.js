@@ -55,7 +55,7 @@ class SirLogin extends PolymerElement {
 
       <iron-icon id="login-icon" icon="account-circle"></iron-icon>
       <div id="login-area">
-        <h1>Hello, there</h1>
+        <h1>Welcome to UNICEF SIR</h1>
         <p>Sign into your Microsoft Account</p>
         <paper-button raised on-tap="_login">Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
       </div>

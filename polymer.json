@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/components/landing-shell.js",
+  "shell": "src/components/app-loader.js",
   "sources": [
     "images/**/*"
   ],

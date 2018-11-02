@@ -12,7 +12,7 @@ setPassiveTouchGestures(true);
 // in `index.html`.
 setRootPath(MyAppGlobals.rootPath);
 
-class LandingShell extends PolymerElement {
+class AppLoader extends PolymerElement {
   static get template() {
     return html`
       <template is="dom-if" if="[[authorized]]">
@@ -25,7 +25,7 @@ class LandingShell extends PolymerElement {
   }
 
   static get is() {
-    return 'landing-shell';
+    return 'app-loader';
   }
 
   static get properties() {
@@ -74,4 +74,4 @@ class LandingShell extends PolymerElement {
   }
 }
 
-window.customElements.define(LandingShell.is, LandingShell);
+window.customElements.define(AppLoader.is, AppLoader);

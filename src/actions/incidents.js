@@ -214,8 +214,7 @@ export const submitIncident = incident => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
 
   return makeRequest(endpoint).then((result) => {
-    incident.status = 'submitted';
-    dispatch(editIncidentSuccess(incident, incident.id));
+    dispatch(editIncidentSuccess(result, result.id));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));
@@ -226,8 +225,7 @@ export const submitIncident = incident => (dispatch) => {
 export const rejectIncident = data => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.rejectIncident, {id: data.incident});
   return makeRequest(endpoint, data).then((result) => {
-    data.status = 'rejected';
-    dispatch(editIncidentSuccess(data, data.id));
+    dispatch(editIncidentSuccess(result, result.id));
     dispatch(addCommentSuccess(result));
     return true;
   }).catch((error) => {
@@ -240,8 +238,7 @@ export const approveIncident = incident => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.approveIncident, {id: incident.id});
 
   return makeRequest(endpoint).then((result) => {
-    incident.status = 'approved';
-    dispatch(editIncidentSuccess(incident, incident.id));
+    dispatch(editIncidentSuccess(result, result.id));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));

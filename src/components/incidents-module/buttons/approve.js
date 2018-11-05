@@ -22,7 +22,7 @@ class ApproveButton extends ButtonsBaseClass {
       </style>
       <paper-button raised
                     on-tap="openDialog"
-                    disabled$="[[!hasPermission('approve_incident')]]">
+                    hidden$="[[!hasPermission('approve_incident')]]">
         Approve
       </paper-button>
       `;
@@ -53,7 +53,7 @@ class ApproveButton extends ButtonsBaseClass {
     let successfull = await this.store.dispatch(approveIncident(this.incident));
 
     if (typeof successfull === 'boolean' && successfull) {
-      this.store.dispatch(showSnackbar('Incident approved'));
+      this.showSuccessMessage();
       updatePath(`/incidents/list/`);
     }
   }

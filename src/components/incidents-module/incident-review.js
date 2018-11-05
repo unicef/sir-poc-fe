@@ -5,7 +5,6 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-dialog/paper-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import '../common/etools-dropdown/etools-dropdown-lite.js';
 import { editIncident, addComment } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
@@ -16,9 +15,13 @@ import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
 import { updatePath } from '../common/navigation-helper';
-import { hasPermission } from '../common/utils';
+import { hasPermission, getNameFromId } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';
+import './buttons/review-eod.js';
+import './buttons/review-dhr.js';
+import './buttons/review-dfam.js';
+import './buttons/review-legal.js';
 /**
  * @polymer
  * @customElement
@@ -46,14 +49,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
       <div class="card">
         <div class="row-h flex-c">
           <div class="col col-6">
-            <etools-dropdown-lite id="eodReview"
-                                  readonly$="[[!canEdit('review_eod')]]"
-                                  label="EOD review by"
-                                  options="[[state.staticData.users]]"
-                                  selected="{{incident.eod_review_by}}">
-            </etools-dropdown-lite>
-          </div>
-          <div class="col col-6">
             <paper-input id="eodReviewDate"
                           placeholder="&#8212;"
                           readonly
@@ -62,16 +57,20 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[prettyDate(incident.eod_review_date)]]">
             </paper-input>
           </div>
+          <div class="col col-6" hidden$="[[_canReview(incident.eod_review_by, 'review_eod')]]">
+            <paper-input id="eodReviewBy"
+                          placeholder="&#8212;"
+                          readonly
+                          label="EOD review by"
+                          type="text"
+                          value="[[_getUserName(incident.eod_review_by)]]">
+            </paper-input>
+          </div>
+          <div class="col col-6" hidden$="[[!_canReview(incident.eod_review_by, 'review_eod')]]">
+            <review-eod-button incident="[[incident]]"></review-eod-button>
+          </div>
         </div>
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite id="dhrReview"
-                                  readonly$="[[!canEdit('review_dhr')]]"
-                                  label="DHR review by"
-                                  options="[[state.staticData.users]]"
-                                  selected="{{incident.dhr_review_by}}">
-            </etools-dropdown-lite>
-          </div>
           <div class="col col-6">
             <paper-input id="dhrReviewDate"
                           placeholder="&#8212;"
@@ -81,16 +80,20 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[prettyDate(incident.dhr_review_date)]]">
             </paper-input>
           </div>
+          <div class="col col-6" hidden$="[[_canReview(incident.dhr_review_by, 'review_dhr')]]">
+            <paper-input id="dhrReviewBy"
+                          placeholder="&#8212;"
+                          readonly
+                          label="DHR review by"
+                          type="text"
+                          value="[[_getUserName(incident.dhr_review_by)]]">
+            </paper-input>
+          </div>
+          <div class="col col-6" hidden$="[[!_canReview(incident.dhr_review_by, 'review_dhr')]]">
+            <review-dhr-button incident="[[incident]]"></review-dhr-button>
+          </div>
         </div>
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite id="dfamReview"
-                                  readonly$="[[!canEdit('review_dfam')]]"
-                                  label="DFAM review by"
-                                  options="[[state.staticData.users]]"
-                                  selected="{{incident.dfam_review_by}}">
-            </etools-dropdown-lite>
-          </div>
           <div class="col col-6">
             <paper-input id="dfamReviewDate"
                           placeholder="&#8212;"
@@ -100,16 +103,20 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[prettyDate(incident.dfam_review_date)]]">
             </paper-input>
           </div>
+          <div class="col col-6" hidden$="[[_canReview(incident.dfam_review_by, 'review_dfam')]]">
+            <paper-input id="dfamReviewBy"
+                          placeholder="&#8212;"
+                          readonly
+                          label="DFAM review by"
+                          type="text"
+                          value="[[_getUserName(incident.dfam_review_by)]]">
+            </paper-input>
+          </div>
+          <div class="col col-6" hidden$="[[!_canReview(incident.dfam_review_by, 'review_dfam')]]">
+            <review-dfam-button incident="[[incident]]"></review-dfam-button>
+          </div>
         </div>
         <div class="row-h flex-c">
-          <div class="col col-6">
-            <etools-dropdown-lite id="legalReview"
-                                  readonly$="[[!canEdit('review_legal')]]"
-                                  label="Legal review by"
-                                  options="[[state.staticData.users]]"
-                                  selected="{{incident.legal_review_by}}">
-            </etools-dropdown-lite>
-          </div>
           <div class="col col-6">
             <paper-input id="legalReviewDate"
                           placeholder="&#8212;"
@@ -118,6 +125,18 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           type="text"
                           value="[[prettyDate(incident.legal_review_date)]]">
             </paper-input>
+          </div>
+          <div class="col col-6" hidden$="[[_canReview(incident.legal_review_by, 'review_legal')]]">
+            <paper-input id="legalReviewBy"
+                          placeholder="&#8212;"
+                          readonly
+                          label="Legal review by"
+                          type="text"
+                          value="[[_getUserName(incident.legal_review_by)]]">
+            </paper-input>
+          </div>
+          <div class="col col-6" hidden$="[[!_canReview(incident.legal_review_by, 'review_legal')]]">
+            <review-legal-button incident="[[incident]]"></review-legal-button>
           </div>
         </div>
         <div class="row-h flex-c">
@@ -143,8 +162,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             <div class="col col-12">
               <paper-button class="btn" raised
                                         on-click="addComment"
-                                        disabled$="[[!canEdit('comment_incident')]]"
-                                        hidden$="[[offline]]">
+                                        hidden$="[[_hideCommentButton(offline)]]">
                 Add comment
               </paper-button>
 
@@ -186,10 +204,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   static get observers() {
     return [
     ];
-  }
-
-  canEdit(permissionName) {
-    return !this.readonly && hasPermission(permissionName);
   }
 
   _idChanged() {
@@ -248,6 +262,18 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
 
   _hideRejectButton(offline, status) {
     return status !== 'submitted' || offline;
+  }
+
+  _hideCommentButton(offline) {
+    return offline || this.readonly || !hasPermission('comment_incident');
+  }
+
+  _getUserName(id) {
+    return getNameFromId(id, 'users');
+  }
+
+  _canReview(reviewerId, permissionsKey) {
+    return hasPermission(permissionsKey) && !reviewerId;
   }
 }
 

@@ -49,6 +49,7 @@ export class ButtonsBaseClass extends DynamicDialogMixin(PolymerElement) {
 
   openDialog() {
     if (!this.warningDialog) {
+      console.warn('No warning dialog to open');
       return;
     }
     this.warningDialog.opened = true;

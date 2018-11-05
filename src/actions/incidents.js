@@ -223,6 +223,19 @@ export const submitIncident = incident => (dispatch) => {
   });
 };
 
+export const rejectIncident = data => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.rejectIncident, {id: data.incident});
+  return makeRequest(endpoint, data).then((result) => {
+    data.status = 'rejected';
+    dispatch(editIncidentSuccess(data, data.id));
+    dispatch(addCommentSuccess(result));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
 export const approveIncident = incident => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.approveIncident, {id: incident.id});
 
@@ -236,12 +249,43 @@ export const approveIncident = incident => (dispatch) => {
   });
 };
 
-export const rejectIncident = data => (dispatch) => {
-  let endpoint = prepareEndpoint(Endpoints.rejectIncident, {id: data.incident});
-  return makeRequest(endpoint, data).then((result) => {
-    data.status = 'rejected';
-    dispatch(editIncidentSuccess(data, data.id));
-    dispatch(addCommentSuccess(result));
+export const reviewIncidentEOD = incident => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.reviewIncidentEOD, {id: incident.id});
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(incident, incident.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+export const reviewIncidentDHR = incident => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.reviewIncidentDHR, {id: incident.id});
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(incident, incident.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+export const reviewIncidentDFAM = incident => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.reviewIncidentDFAM, {id: incident.id});
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(incident, incident.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
+export const reviewIncidentLegal = incident => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.reviewIncidentLegal, {id: incident.id});
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(incident, incident.id));
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));

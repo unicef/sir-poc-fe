@@ -21,8 +21,8 @@ class RejectButton extends ButtonsBaseClass {
       <style include="button-styles">
       </style>
       <paper-button raised
-                    on-tap="openDialog"
-                    disabled$="[[isDisabled(commentText)]]">
+                    on-tap="validate"
+                    hidden$="[[isHidden()]]">
         Reject
       </paper-button>
       `;
@@ -42,8 +42,14 @@ class RejectButton extends ButtonsBaseClass {
     }
   }
 
-  isDisabled(commentText) {
-    return !commentText.length || !hasPermission('approve_incident');
+  isHidden() {
+    return !hasPermission('approve_incident');
+  }
+
+  validate() {
+    if (this.commentText.length) {
+      this.openDialog();
+    }
   }
 
   incidentChanged() {

@@ -53,12 +53,28 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/submit/',
     method: 'PUT'
   },
+  rejectIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/reject/',
+    method: 'PUT'
+  },
   approveIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/approve/',
     method: 'PUT'
   },
-  rejectIncident: {
-    url: baseUrl + '/api/incidents/<%=id%>/reject/',
+  reviewIncidentEOD: {
+    url: baseUrl + '/api/incidents/<%=id%>/eod_review/',
+    method: 'PUT'
+  },
+  reviewIncidentDHR: {
+    url: baseUrl + '/api/incidents/<%=id%>/dhr_review/',
+    method: 'PUT'
+  },
+  reviewIncidentDFAM: {
+    url: baseUrl + '/api/incidents/<%=id%>/dfam_review/',
+    method: 'PUT'
+  },
+  reviewIncidentLegal: {
+    url: baseUrl + '/api/incidents/<%=id%>/legal_review/',
     method: 'PUT'
   },
   incidentsCommentsList: {

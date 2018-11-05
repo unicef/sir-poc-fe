@@ -23,8 +23,8 @@ class SubmitButton extends ButtonsBaseClass {
         }
       </style>
       <paper-button raised
-                    disabled$="[[!hasPermission('submit_incident')]]"
-                    on-tap="openDialog">
+                    on-tap="openDialog"
+                    hidden$="[[!hasPermission('submit_incident')]]">
         [[getLabel(incident.status)]]
       </paper-button>
       `;

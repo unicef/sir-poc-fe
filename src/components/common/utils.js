@@ -60,8 +60,9 @@ export const getNameFromId = (id, staticDataPath) => {
   if (!id) {
     return '';
   }
+
   let staticData = store.getState().staticData;
-  let result = getStaticDataByPath(staticDataPath, staticData).find(v => v.id === Number(id));
+  let result = getStaticDataByPath(staticDataPath, staticData).find(v => Number(v.id) === Number(id));
   return result ? result.name || '' : '';
 };
 

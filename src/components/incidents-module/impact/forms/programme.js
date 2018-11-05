@@ -52,7 +52,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       </style>
 
       <div class="card">
-        <h3> UN Programmes </h3>
+        <h3> UNICEF Programmes </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>

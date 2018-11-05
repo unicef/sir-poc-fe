@@ -32,7 +32,7 @@ export class ProgrammesList extends connect(store)(PolymerElement) {
             Owner
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
-            UN Programme
+            UNICEF Programme
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
             Impact
@@ -51,7 +51,7 @@ export class ProgrammesList extends connect(store)(PolymerElement) {
                   [[getNameFromId(item.agency, 'agencies')]]
                 </span>
               </span>
-              <span class="col-data col-3" data-col-header-label="UN Programme">
+              <span class="col-data col-3" data-col-header-label="UNICEF Programme">
                 <span class="truncate">
                   [[getNameFromId(item.programme_type, 'programmeTypes')]]
                 </span>

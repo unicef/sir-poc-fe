@@ -50,7 +50,7 @@ class ApproveButton extends ButtonsBaseClass {
   }
 
   async approve() {
-    let successfull = await this.store.dispatch(approveIncident(this.incident.id));
+    let successfull = await this.store.dispatch(approveIncident(this.incident));
 
     if (typeof successfull === 'boolean' && successfull) {
       this.store.dispatch(showSnackbar('Incident approved'));

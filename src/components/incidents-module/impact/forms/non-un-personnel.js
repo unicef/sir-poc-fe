@@ -90,7 +90,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         </fieldset>
 
         <fieldset>
-          <legend><h3>Impacted Non-UN Personnel</h3></legend>
+          <legend><h3>Impacted Non-UNICEF Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">

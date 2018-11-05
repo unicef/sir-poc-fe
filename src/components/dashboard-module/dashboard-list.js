@@ -21,7 +21,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
-        
+
         .col-data iron-icon {
           margin-right: 8px;
         }
@@ -263,10 +263,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
 
   _showSyncButton(unsynced, offline) {
     return unsynced && !offline;
-  }
-
-  _caseIs(givenType, expectedType) {
-    return givenType === expectedType;
   }
 }
 

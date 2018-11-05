@@ -123,7 +123,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </fieldset>
 
         <fieldset>
-          <legend><h3> Impacted UN personnel</h3></legend>
+          <legend><h3> Impacted UNICEF personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">

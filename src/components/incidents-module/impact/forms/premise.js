@@ -50,7 +50,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-        <h3> UN Premises </h3>
+        <h3> UNICEF Premises </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -99,7 +99,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite id="location"
-                                    label="UN Location"
+                                    label="UNICEF Location"
                                     readonly="[[readonly]]"
                                     options="[[staticData.unLocations]]"
                                     selected="{{data.un_location}}">

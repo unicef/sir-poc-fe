@@ -64,7 +64,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal space-between p-relative">
           <etools-info-tooltip class="info" theme="light">
-            <h3 slot="field">UN Personnel</h3>
+            <h3 slot="field">UNICEF Personnel</h3>
             <span slot="message">
               Individuals covered by Chapter III of the UNSMS Security Policy Manual, Applicability of United
               Nations Security Management System, dated 08 April 2011 (Security Policy Manual, Chapter III)
@@ -74,7 +74,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
               class="no-t-transform smaller"
               on-click="_addUnPersonnel">
             <iron-icon icon="add"></iron-icon>
-            Add UN Personnel
+            Add UNICEF Personnel
           </paper-button>
         </div>
         <un-personnel-list></un-personnel-list>
@@ -83,16 +83,16 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal space-between p-relative">
           <etools-info-tooltip class="info" theme="light">
-            <h3 slot="field">Non-UN Personnel</h3>
+            <h3 slot="field">Non-UNICEF Personnel</h3>
             <span slot="message">
-              Any person not defined as above as UN Personnel that is impacted by an incident in which a
-              UN Personnel is the perpetrator. For instance, a non-UN person could be involved in a traffic
-              accident with a UN staff member, or could be a visitor to a UN building when an incident occurs.
+              Any person not defined as above as UNICEF Personnel that is impacted by an incident in which a
+              UNICEF Personnel is the perpetrator. For instance, a non-UNICEF person could be involved in a traffic
+              accident with a UNICEF staff member, or could be a visitor to a UNICEF building when an incident occurs.
             </span>
           </etools-info-tooltip>
           <paper-button raised class="no-t-transform smaller" on-click="_addNonUn">
             <iron-icon icon="add"></iron-icon>
-            Add non-UN Personnel
+            Add Non-UNICEF Personnel
           </paper-button>
         </div>
         <non-un-personnel-list></non-un-personnel-list>
@@ -112,14 +112,14 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal space-between p-relative">
           <etools-info-tooltip class="info" theme="light">
-            <h3 slot="field">UN Property (Assets)</h3>
+            <h3 slot="field">UNICEF Property (Assets)</h3>
             <span slot="message">
-              UN Assets include equipment, vehicles and vessels.
+              UNICEF Assets include equipment, vehicles and vessels.
             </span>
           </etools-info-tooltip>
           <paper-button raised class="no-t-transform smaller" on-click="_addProperty">
             <iron-icon icon="add"></iron-icon>
-            Add UN Property
+            Add UNICEF Property
           </paper-button>
         </div>
         <properties-list></properties-list>
@@ -128,11 +128,11 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal space-between p-relative">
           <etools-info-tooltip class="info" theme="light">
-            <h3 slot="field">UN Premises (Facilities)</h3>
+            <h3 slot="field">UNICEF Premises (Facilities)</h3>
             <span slot="message">
-              Premises: any location occupied for living or working by UN Personnel, as identified
+              Premises: any location occupied for living or working by UNICEF Personnel, as identified
               by the Premises Policy.<br> Facilities: unoccupied property and/or other
-              infrastructure used for UN services, such as water and food points, and communication
+              infrastructure used for UNICEF services, such as water and food points, and communication
               repeater stations.
             </span>
           </etools-info-tooltip>
@@ -146,7 +146,7 @@ export class ImpactsView extends connect(store)(PolymerElement) {
 
       <div class="card">
         <div class="layout-horizontal space-between">
-          <h3>UN Programme</h3>
+          <h3>UNICEF Programme</h3>
           <paper-button raised
               class="no-t-transform smaller"
               on-click="_addProgramme">

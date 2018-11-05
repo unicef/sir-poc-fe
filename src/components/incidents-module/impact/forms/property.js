@@ -50,7 +50,7 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-        <h3> UN Property </h3>
+        <h3> UNICEF Property </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>

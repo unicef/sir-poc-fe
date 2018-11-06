@@ -34,7 +34,7 @@ export class PremisesList extends connect(store)(PolymerElement) {
             Facility
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
-            UN Location
+            UNICEF Location
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
             Impact
@@ -58,7 +58,7 @@ export class PremisesList extends connect(store)(PolymerElement) {
                   [[getNameFromId(item.premise_type, 'premisesTypes')]]
                 </span>
               </span>
-              <span class="col-data col-3" data-col-header-label="UN Location">
+              <span class="col-data col-3" data-col-header-label="UNICEF Location">
                 <span class="truncate">
                   [[getNameFromId(item.un_location, 'unLocations')]]
                 </span>

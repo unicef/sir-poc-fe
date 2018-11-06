@@ -1,19 +1,16 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-button/paper-button.js';
 
-import {SirMsalAuth} from './jwt/msal-authentication.js';
-import {updatePath} from '../common/navigation-helper';
-import {requestPageLoadData} from '../../actions/app.js';
-import {connect} from 'pwa-helpers/connect-mixin';
-import {store} from '../../redux/store';
+import { SirMsalAuth } from './jwt/msal-authentication.js';
+import { updatePath } from '../common/navigation-helper';
 
 /**
  * @customElement
  * @polymer
  */
-class SirLogin extends connect(store)(PolymerElement) {
+class SirLogin extends PolymerElement {
 
   // Define optional shadow DOM template
   static get template() {
@@ -47,7 +44,7 @@ class SirLogin extends connect(store)(PolymerElement) {
           height: 20px;
           margin-left: 8px;
         }
-        
+
         #login-icon {
           margin-right: 48px;
           width: 100px;
@@ -58,7 +55,7 @@ class SirLogin extends connect(store)(PolymerElement) {
 
       <iron-icon id="login-icon" icon="account-circle"></iron-icon>
       <div id="login-area">
-        <h1>Hello, there</h1>
+        <h1>Welcome to UNICEF SIR</h1>
         <p>Sign into your Microsoft Account</p>
         <paper-button raised on-tap="_login">Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
       </div>
@@ -67,21 +64,9 @@ class SirLogin extends connect(store)(PolymerElement) {
 
   _login() {
     SirMsalAuth.login().then(() => {
-      store.dispatch(requestPageLoadData());
-      this._goToLandingPage();
+      window.location.reload();
     });
   }
-
-  _goToLandingPage() {
-    updatePath('dashboard');
-  }
-
-  _stateChanged(state) {
-    if (!state) {
-      return;
-    }
-  }
-
 }
 
 window.customElements.define('sir-login', SirLogin);

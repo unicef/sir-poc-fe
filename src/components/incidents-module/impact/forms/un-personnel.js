@@ -123,7 +123,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </fieldset>
 
         <fieldset>
-          <legend><h3> Impacted UN personnel</h3></legend>
+          <legend><h3> Impacted UNICEF personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
@@ -142,10 +142,16 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   label="Auto complete staff member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
-                  options="[[staticData.users]]">
+                  options="[[staticData.users]]"
+                  disabled="[[!isUnicefStaff]]">
               </etools-dropdown-lite>
             </div>
+
+            <div class="col col-3">
+              <paper-checkbox checked="{{isUnicefStaff}}">Is this person UNICEF Staff?</paper-checkbox>
+            </div>
           </div>
+
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
@@ -318,6 +324,10 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           {id: 'On mission', name: 'On mission'},
           {id: 'On leave', name: 'On leave'}
         ]
+      },
+      isUnicefStaff: {
+        type: Boolean,
+        value: false
       },
       fieldsToValidateSelectors: {
         type: Array,

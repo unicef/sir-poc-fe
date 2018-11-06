@@ -90,7 +90,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         </fieldset>
 
         <fieldset>
-          <legend><h3>Impacted Non-UN Personnel</h3></legend>
+          <legend><h3>Impacted Non-UNICEF Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
@@ -165,7 +165,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <paper-textarea id="contact"
                               placeholder="&#8212;"
                               readonly$="[[readonly]]"
-                              label="Contact"
+                              label="Phone"
                               value="{{data.person.contact}}">
               </paper-textarea>
             </div>

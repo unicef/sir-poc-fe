@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/components/app-shell.js",
+  "shell": "src/components/app-loader.js",
   "sources": [
     "images/**/*"
   ],
@@ -20,6 +20,7 @@
   ],
   "extraDependencies": [
     "manifest.json",
+    "node_modules/msal/dist/msal.min.js",
     "node_modules/moment/min/moment.min.js",
     "node_modules/@webcomponents/webcomponentsjs/*.js",
     "!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",

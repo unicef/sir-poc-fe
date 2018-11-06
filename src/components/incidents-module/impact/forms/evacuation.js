@@ -1,8 +1,8 @@
 /**
  * @license
  */
-import {html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -13,8 +13,9 @@ import {
   editEvacuation,
   syncEvacuation
 } from '../../../../actions/incident-impacts.js';
-import {store} from '../../../../redux/store.js';
-import {scrollToTop} from '../../../common/content-container-helper.js';
+import { store } from '../../../../redux/store.js';
+import { getCountriesForRegion } from '../../../common/utils.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -25,7 +26,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
-import {ImpactFormBase} from './impact-form-base.js';
+import { ImpactFormBase } from './impact-form-base.js';
 import '../../../common/review-fields.js';
 /**
  * @polymer
@@ -81,6 +82,18 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
+              <paper-input id="noPersNational"
+                           type="number"
+                           min="0"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="No. of persons national"
+                           value="{{data.number_national}}"
+                           required auto-validate
+                           error-message="This is required">
+              </paper-input>
+            </div>
+            <div class="col col-3">
               <paper-input id="noPersInternational"
                            type="number"
                            min="0"
@@ -88,6 +101,20 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
                            readonly$="[[readonly]]"
                            label="No. of persons international"
                            value="{{data.number_international}}"
+                           required auto-validate
+                           error-message="This is required">
+              </paper-input>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <paper-input id="noDepNational"
+                           type="number"
+                           min="0"
+                           placeholder="&#8212;"
+                           readonly$="[[readonly]]"
+                           label="No. of dependants national"
+                           value="{{data.number_national_dependants}}"
                            required auto-validate
                            error-message="This is required">
               </paper-input>
@@ -104,11 +131,26 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
                            error-message="This is required">
               </paper-input>
             </div>
+          </div>
+
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <etools-dropdown-lite
+                  required
+                  id="fromRegion"
+                  label="From region"
+                  readonly="[[readonly]]"
+                  options="[[staticData.regions]]"
+                  selected="{{data.from_region}}"
+                  auto-validate
+                  error-message="From region is required">
+              </etools-dropdown-lite>
+            </div>
             <div class="col col-3">
               <etools-dropdown-lite id="fromCountry"
                                     label="From country"
                                     readonly="[[readonly]]"
-                                    options="[[staticData.countries]]"
+                                    options="[[getCountriesForRegion(data.from_region)]]"
                                     selected="{{data.from_country}}"
                                     required auto-validate
                                     error-message="This is required">
@@ -129,34 +171,22 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <paper-input id="noPersNational"
-                           type="number"
-                           min="0"
-                           placeholder="&#8212;"
-                           readonly$="[[readonly]]"
-                           label="No. of persons national"
-                           value="{{data.number_national}}"
-                           required auto-validate
-                           error-message="This is required">
-              </paper-input>
-            </div>
-            <div class="col col-3">
-              <paper-input id="noDepNational"
-                           type="number"
-                           min="0"
-                           placeholder="&#8212;"
-                           readonly$="[[readonly]]"
-                           label="No. of dependants national"
-                           value="{{data.number_national_dependants}}"
-                           required auto-validate
-                           error-message="This is required">
-              </paper-input>
+              <etools-dropdown-lite
+                  required
+                  id="toRegion"
+                  label="To region"
+                  readonly="[[readonly]]"
+                  options="[[staticData.regions]]"
+                  selected="{{data.to_region}}"
+                  auto-validate
+                  error-message="To region is required">
+              </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite id="toCountry"
                                     label="To country"
                                     readonly="[[readonly]]"
-                                    options="[[staticData.countries]]"
+                                    options="[[getCountriesForRegion(data.to_region)]]"
                                     selected="{{data.to_country}}"
                                     required auto-validate
                                     error-message="This is required">
@@ -238,10 +268,12 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           '#date',
           '#noPersInternational',
           '#noDepInternational',
-          '#fromCountry',
-          '#fromCity',
           '#noPersNational',
           '#noDepNational',
+          '#fromRegion',
+          '#toRegion',
+          '#fromCountry',
+          '#fromCity',
           '#toCountry',
           '#toCity',
           '#category',
@@ -255,6 +287,11 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
     return [
       '_idChanged(impactId)'
     ];
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.getCountriesForRegion = getCountriesForRegion;
   }
 
   _stateChanged(state) {

@@ -1,8 +1,8 @@
 /**
  * @license
  */
-import {html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -13,20 +13,21 @@ import {
   addPersonnel,
   editPersonnel,
   syncPersonnel
-} from '../../../../actions/incident-impacts.js';
-import {store} from '../../../../redux/store.js';
-import {scrollToTop} from '../../../common/content-container-helper.js';
+ } from '../../../../actions/incident-impacts.js';
+import { store } from '../../../../redux/store.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
   validateFields
-} from '../../../common/validations-helper.js';
+ } from '../../../common/validations-helper.js';
+import { getCountriesForRegion } from '../../../common/utils.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
-import {ImpactFormBase} from './impact-form-base.js';
+import { ImpactFormBase } from './impact-form-base.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -171,7 +172,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
           </div>
           <div class="row-h flex-c">
-            <div class="col col-6">
+            <div class="col col-3">
               <paper-input id="address"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
@@ -181,10 +182,21 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
+                  id="region"
+                  label="Region"
+                  readonly="[[readonly]]"
+                  options="[[staticData.regions]]"
+                  selected="{{data.person.region}}"
+                  auto-validate
+                  error-message="Duty station region is required">
+              </etools-dropdown-lite>
+            </div>
+            <div class="col col-3">
+              <etools-dropdown-lite
                   id="country"
                   label="Country"
                   readonly="[[readonly]]"
-                  options="[[staticData.countries]]"
+                  options="[[getCountriesForRegion(data.person.region)]]"
                   selected="{{data.person.country}}">
               </etools-dropdown-lite>
             </div>
@@ -260,6 +272,11 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     return [
       '_idChanged(impactId)'
     ];
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.getCountriesForRegion = getCountriesForRegion;
   }
 
   _stateChanged(state) {

@@ -15,27 +15,29 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-date-time/time-input.js';
-
-import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
-import { makeRequest, handleBlobDataReceivedAndStartDownload  } from '../common/request-helper.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
+
+import { Endpoints } from '../../config/endpoints';
+import { updatePath } from '../common/navigation-helper';
+import { SirMsalAuth } from '../auth/jwt/msal-authentication';
+import { objDiff, getCountriesForRegion } from '../common/utils.js';
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
+import { makeRequest, handleBlobDataReceivedAndStartDownload  } from '../common/request-helper.js';
+
 import { store } from '../../redux/store.js';
 import { selectIncident } from '../../reducers/incidents.js';
-
 import { fetchIncident } from '../../actions/incidents.js';
 import { serverError } from '../../actions/errors.js';
+import { showSnackbar } from '../../actions/app.js';
+
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import { Endpoints } from '../../config/endpoints';
-import { updatePath } from '../common/navigation-helper';
-import { showSnackbar } from '../../actions/app.js';
-import { SirMsalAuth } from '../auth/jwt/msal-authentication';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -339,7 +341,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <etools-dropdown-lite id="country"
                                       readonly="[[readonly]]"
                                       label="Country"
-                                      options="[[_getCountriesForRegion(incident.region, staticData.countries)]]"
+                                      options="[[getCountriesForRegion(incident.region, staticData.countries)]]"
                                       selected="{{incident.country}}"
                                       required auto-validate
                                       error-message="Country is required">
@@ -632,6 +634,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     this.store = store;
     super.connectedCallback();
     this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
+    this.getCountriesForRegion = getCountriesForRegion;
   }
 
   incidentChanged() {
@@ -691,13 +694,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     if (!selSubcategIsValid) {
       this.set('incident.incident_subcategory', null);
     }
-  }
-
-  _getCountriesForRegion(selectedRegion, allCountries) {
-    if (!selectedRegion || !allCountries) {
-      return [];
-    }
-    return allCountries.filter(country => Number(country.region) === Number(selectedRegion));
   }
 
   isTrafficAccident(incidentSubcategory) {

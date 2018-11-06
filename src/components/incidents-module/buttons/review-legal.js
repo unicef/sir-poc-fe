@@ -23,7 +23,7 @@ class ReviewLegalButton extends ButtonsBaseClass {
         }
       </style>
       <paper-button class="no-t-transform" raised on-tap="openDialog">
-        Mark as reviewed
+        Sign
       </paper-button>
       `;
   }
@@ -39,8 +39,8 @@ class ReviewLegalButton extends ButtonsBaseClass {
   }
 
   createReviewConfirmationDialog() {
-    let content = `Are you sure you want to mark this as reviewed?`;
-    let okText = `Mark as reviewed`;
+    let content = `Are you sure you want to sign this?`;
+    let okText = `Sign`;
     this.createConfirmationDialog(content, okText);
   }
 

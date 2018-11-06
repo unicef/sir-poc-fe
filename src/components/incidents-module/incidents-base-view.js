@@ -36,6 +36,7 @@ import { Endpoints } from '../../config/endpoints';
 import { updatePath } from '../common/navigation-helper';
 import { showSnackbar } from '../../actions/app.js';
 import { SirMsalAuth } from '../auth/jwt/msal-authentication';
+import { hasPermission } from '../common/utils.js';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -760,8 +761,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return !offline || !incidentId || isNaN(incidentId);
   }
 
-  canEdit(offline, status, unsynced) {
-    return !!unsynced || (status === 'created' && !offline);
+  canEdit(offline, status, unsynced)  {
+    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
+           (unsynced && hasPermission('add_incident'));
   }
 
   _hideInfoTooltip(...arg) {

@@ -2,12 +2,14 @@ export const Permissions = {
   'Country Field Security Advisers': {
     'add_incident': true,
     'edit_incident': true,
+    'delete_incident': true,
     'submit_incident': true,
     'export_incident': true,
   },
   'Regional Security Advisers': {
     'add_incident': true,
     'edit_incident': true,
+    'delete_incident': true,
     'submit_incident': true,
     'export_incident': true,
     'approve_incident': true
@@ -15,6 +17,7 @@ export const Permissions = {
   'Regional Security Advisers': {
     'add_incident': true,
     'edit_incident': true,
+    'delete_incident': true,
     'submit_incident': true,
     'export_incident': true,
     'approve_incident': true

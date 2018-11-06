@@ -5,6 +5,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
+import { hasPermission } from '../common/utils.js';
 import './buttons/submit.js';
 /**
  * @polymer
@@ -39,7 +40,7 @@ class ViewIncident extends IncidentsBaseView {
   }
 
   canSubmit(offline, status, unsynced) {
-    return !unsynced && (status === 'created' || status === 'rejected') && !offline;
+    return ['created', 'rejected'].indexOf(status) > -1 && !unsynced && !offline && hasPermission('submit_incident');
   }
 }
 

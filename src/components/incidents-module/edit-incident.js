@@ -5,6 +5,7 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-dialog/paper-dialog.js';
 import { updatePath } from '../common/navigation-helper';
+import { hasPermission } from '../common/utils.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident, editAttachmentsNotes, deleteIncident,
   deleteIncidentLocally } from '../../actions/incidents.js';
@@ -76,19 +77,21 @@ class EditIncident extends IncidentsBaseView {
 
   _showDelete(status, unsynced, offline, attachments) {
     if (attachments && attachments.length) {
-      return false;// bk err when there are att
+      return false;// back-end throws errors if attachement are present
+    }
+
+    if (unsynced) {
+      return true;
     }
 
     if (offline) {
-      if (unsynced) {
-        return true;
-      }
       return false;
     }
 
-    if (status === 'created' || unsynced) {
+    if (status === 'created' && hasPermission('delete_incident')) {
       return true;
     }
+
     return false;
   }
 

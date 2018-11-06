@@ -166,6 +166,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
               <paper-input
                       id="toCity"
                       label="To city"
+                      placeholder="&#8212;"
                       value="{{data.to_city}}"
                       readonly$="[[readonly]]"
                       required

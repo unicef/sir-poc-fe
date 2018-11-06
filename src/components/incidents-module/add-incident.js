@@ -23,7 +23,7 @@ class AddIncident extends IncidentsBaseView {
     this.set('incident', this.state.incidents.draft);
   }
 
-  static get actionButtonsTemplate() {
+  static get addImpactButtonTmpl() {
     return html`
       <paper-button class="secondary"
                     raised
@@ -31,6 +31,11 @@ class AddIncident extends IncidentsBaseView {
                     disabled$="[[!canSave(incident.event, state.app.offline, incidentId)]]">
         Add Impact
       </paper-button>
+    `;
+  }
+
+  static get resetButtonTmpl() {
+    return html`
       <paper-button raised on-tap="openResetConfirmation">
         Reset Data
       </paper-button>

@@ -70,6 +70,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           margin-left: 16px;
         }
 
+        .buttons-area {
+          justify-content: space-between;
+        }
+
         .buttons-area paper-button:not(:first-child) {
           margin-left: 4px;
         }
@@ -84,10 +88,18 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           <errors-box></errors-box>
         </div>
 
-        <div class="row-h flex-c">
-          <div class="col col-12">
+        <div class="row-h flex-c buttons-area">
+          <div>
             ${this.saveBtnTmpl}
-            ${this.submitBtnTmpl}
+            ${this.goToEditBtnTmpl}
+            ${this.submitIncidentTmpl}
+            ${this.addImpactButtonTmpl}
+          </div>
+          <div>
+            ${this.resetButtonTmpl}
+            <paper-button class="danger" raised on-tap="_returnToIncidentsList">
+              Cancel
+            </paper-button>
           </div>
         </div>
 
@@ -506,13 +518,18 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         </template>
 
         <div class="row-h flex-c padd-top buttons-area">
-          ${this.saveBtnTmpl}
-          ${this.actionButtonsTemplate}
-          ${this.goToEditBtnTmpl}
-          ${this.submitIncidentTmpl}
-          <paper-button class="danger" raised on-tap="_returnToIncidentsList">
-            Cancel
-          </paper-button>
+          <div>
+            ${this.saveBtnTmpl}
+            ${this.goToEditBtnTmpl}
+            ${this.submitIncidentTmpl}
+            ${this.addImpactButtonTmpl}
+          </div>
+          <div>
+            ${this.resetButtonTmpl}
+            <paper-button class="danger" raised on-tap="_returnToIncidentsList">
+              Cancel
+            </paper-button>
+          </div>
         </div>
       </div>
     `;
@@ -541,7 +558,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return html``;
   }
 
-  static get actionButtonsTemplate() {
+  static get addImpactButtonTmpl() {
+    return html``;
+  }
+
+  static get resetButtonTmpl() {
     return html``;
   }
 

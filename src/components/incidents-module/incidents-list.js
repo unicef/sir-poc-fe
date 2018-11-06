@@ -519,7 +519,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _showSyncButton(unsynced, offline) {
-    return unsynced && !offline;
+    return !offline && unsynced && hasPermission('add_incident');
   }
 
   _syncItem(incident) {

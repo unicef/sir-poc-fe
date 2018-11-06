@@ -226,7 +226,7 @@ export const rejectIncident = data => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.rejectIncident, {id: data.incident});
   return makeRequest(endpoint, data).then((result) => {
     dispatch(editIncidentSuccess(result, result.id));
-    dispatch(addCommentSuccess(result));
+    dispatch(fetchIncidentComments());
     return true;
   }).catch((error) => {
     dispatch(serverError(error.response));

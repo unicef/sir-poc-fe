@@ -387,6 +387,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                             label="Incident Time"
                             value="{{incident.incident_time}}"
                             required auto-validate
+                            hide-icon
                             error-message="Incident time is required">
                 </time-input>
               </div>

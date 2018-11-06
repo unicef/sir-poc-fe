@@ -97,6 +97,49 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             <div class="row-h flex-c p-relative">
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
+                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
+                                      selectedIncidentCategory.comment)]]">
+                  <etools-dropdown-lite id="incidentCat"
+                                        slot="field"
+                                        readonly="[[readonly]]"
+                                        label="Incident Category"
+                                        options="[[staticData.incidentCategories]]"
+                                        selected="{{incident.incident_category}}"
+                                        selected-item="{{selectedIncidentCategory}}"
+                                        required auto-validate
+                                        error-message="Incident category is required">
+                  </etools-dropdown-lite>
+                  <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
+                  </span>
+                </etools-info-tooltip>
+              </div>
+
+              <div class="col col-4">
+                <etools-info-tooltip class="info" open-on-click form-field-align
+                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
+                                      selectedIncidentSubcategory.comment)]]">
+                  <etools-dropdown-lite id="incidentSubcat"
+                                        slot="field"
+                                        readonly="[[readonly]]"
+                                        label="Incident Subcategory"
+                                        options="[[selectedIncidentCategory.subcategories]]"
+                                        selected="{{incident.incident_subcategory}}"
+                                        selected-item="{{selectedIncidentSubcategory}}"
+                                        required auto-validate
+                                        error-message="Incident subcategory is required">
+                  </etools-dropdown-lite>
+                  <span slot="message">
+                    [[selectedIncidentSubcategory.description]]
+                    <br>
+                    [[selectedIncidentSubcategory.comment]]
+                  </span>
+                </etools-info-tooltip>
+              </div>
+            </div>
+
+            <div class="row-h flex-c p-relative">
+              <div class="col col-4">
+                <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
                   <etools-dropdown-lite slot="field" readonly="[[readonly]]"
                                         label="Event"
@@ -138,49 +181,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                                         error-message="Target is required">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedTarget.description]]</span>
-                </etools-info-tooltip>
-              </div>
-            </div>
-
-            <div class="row-h flex-c p-relative">
-              <div class="col col-4">
-                <etools-info-tooltip class="info" open-on-click form-field-align
-                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
-                                      selectedIncidentCategory.comment)]]">
-                  <etools-dropdown-lite id="incidentCat"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Incident Category"
-                                        options="[[staticData.incidentCategories]]"
-                                        selected="{{incident.incident_category}}"
-                                        selected-item="{{selectedIncidentCategory}}"
-                                        required auto-validate
-                                        error-message="Incident category is required">
-                  </etools-dropdown-lite>
-                  <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
-                  </span>
-                </etools-info-tooltip>
-              </div>
-
-              <div class="col col-4">
-                <etools-info-tooltip class="info" open-on-click form-field-align
-                                    hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
-                                      selectedIncidentSubcategory.comment)]]">
-                  <etools-dropdown-lite id="incidentSubcat"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Incident Subcategory"
-                                        options="[[selectedIncidentCategory.subcategories]]"
-                                        selected="{{incident.incident_subcategory}}"
-                                        selected-item="{{selectedIncidentSubcategory}}"
-                                        required auto-validate
-                                        error-message="Incident subcategory is required">
-                  </etools-dropdown-lite>
-                  <span slot="message">
-                    [[selectedIncidentSubcategory.description]]
-                    <br>
-                    [[selectedIncidentSubcategory.comment]]
-                  </span>
                 </etools-info-tooltip>
               </div>
             </div>
@@ -484,6 +484,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 </etools-data-table-row>
               </template>
             </div>
+            Max individual file upload size is 10MB.
           </fieldset>
         </template>
 

@@ -7,7 +7,6 @@ import { approveIncident } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { ButtonsBaseClass } from './buttons-base.js';
 import { updatePath } from '../../common/navigation-helper';
-import { hasPermission } from '../../common/utils';
 import '../../styles/button-styles.js';
 
 /**
@@ -30,11 +29,6 @@ class ApproveButton extends ButtonsBaseClass {
 
   static get is() {
     return 'approve-button';
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.hasPermission = hasPermission;
   }
 
   incidentChanged() {

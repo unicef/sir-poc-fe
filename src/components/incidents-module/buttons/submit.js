@@ -6,7 +6,6 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { submitIncident } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { ButtonsBaseClass } from './buttons-base.js';
-import { hasPermission } from '../../common/utils';
 import '../../styles/button-styles.js';
 
 /**
@@ -32,11 +31,6 @@ class SubmitButton extends ButtonsBaseClass {
 
   static get is() {
     return 'submit-button';
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.hasPermission = hasPermission;
   }
 
   incidentChanged() {

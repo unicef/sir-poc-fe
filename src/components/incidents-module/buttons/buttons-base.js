@@ -1,6 +1,7 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { DynamicDialogMixin } from 'etools-dialog/dynamic-dialog-mixin.js';
 import { store } from '../../../redux/store.js';
+import { hasPermission } from '../../common/utils';
 
 export class ButtonsBaseClass extends DynamicDialogMixin(PolymerElement) {
   static get properties() {
@@ -8,6 +9,10 @@ export class ButtonsBaseClass extends DynamicDialogMixin(PolymerElement) {
       incident: {
         type: Object,
         observer: 'incidentChanged'
+      },
+      hasPermission: {
+        type: Function,
+        value: () => hasPermission
       }
     };
   }

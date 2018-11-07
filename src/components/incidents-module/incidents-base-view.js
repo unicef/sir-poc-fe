@@ -553,6 +553,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
+      lowResolutionLayout: Boolean,
       incident: {
         type: Object,
         observer: 'incidentChanged'
@@ -616,10 +617,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: false,
         observer: 'pressCoverageChanged'
       },
-      lowResolutionLayout: Boolean,
       jwtLocalStorageKey: {
         type: String,
         value: ''
+      },
+      getCountriesForRegion: {
+        type: Function,
+        value: () => getCountriesForRegion
       }
     };
   }
@@ -634,7 +638,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     this.store = store;
     super.connectedCallback();
     this.jwtLocalStorageKey = SirMsalAuth.config.token_l_storage_key;
-    this.getCountriesForRegion = getCountriesForRegion;
   }
 
   incidentChanged() {

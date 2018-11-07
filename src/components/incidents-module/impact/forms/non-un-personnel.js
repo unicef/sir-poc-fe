@@ -20,7 +20,6 @@ import {
   resetFieldsValidations,
   validateFields
  } from '../../../common/validations-helper.js';
-import { getCountriesForRegion } from '../../../common/utils.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 
 import '../../../styles/shared-styles.js';
@@ -272,11 +271,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     return [
       '_idChanged(impactId)'
     ];
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.getCountriesForRegion = getCountriesForRegion;
   }
 
   _stateChanged(state) {

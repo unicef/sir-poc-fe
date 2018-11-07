@@ -14,7 +14,6 @@ import {
   syncEvacuation
 } from '../../../../actions/incident-impacts.js';
 import { store } from '../../../../redux/store.js';
-import { getCountriesForRegion } from '../../../common/utils.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
@@ -287,11 +286,6 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
     return [
       '_idChanged(impactId)'
     ];
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.getCountriesForRegion = getCountriesForRegion;
   }
 
   _stateChanged(state) {

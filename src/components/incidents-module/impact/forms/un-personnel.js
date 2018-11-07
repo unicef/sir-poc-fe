@@ -24,7 +24,6 @@ import {
 } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import DateMixin from '../../../common/date-mixin.js';
-import { getCountriesForRegion } from '../../../common/utils.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -362,11 +361,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         ]
       }
     };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.getCountriesForRegion = getCountriesForRegion;
   }
 
   static get observers() {

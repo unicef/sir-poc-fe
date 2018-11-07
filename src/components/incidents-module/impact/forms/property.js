@@ -70,7 +70,7 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
             <div class="col col-2">
               <etools-dropdown-lite
                   id="property_type"
-                  label="Property type"
+                  label="Property Type"
                   readonly="[[readonly]]"
                   options="[[staticData.propertyTypes]]"
                   selected="{{data.property_type}}">
@@ -92,7 +92,7 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
 
         </fieldset>
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
+          <legend><h3>Impact Details</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite

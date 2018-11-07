@@ -54,7 +54,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         </div>
 
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
+          <legend><h3>Impact Details</h3></legend>
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
@@ -107,7 +107,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <paper-input id="firstName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="First name"
+                           label="First Name"
                            value="{{data.person.first_name}}"
                            required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="First name is required">
@@ -117,7 +117,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <paper-input id="lastName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Last name"
+                           label="Last Name"
                            value="{{data.person.last_name}}"
                            required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="Last name is required">
@@ -149,7 +149,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <datepicker-lite id="birthDate"
                                value="{{data.person.date_of_birth}}"
                                readonly="[[readonly]]"
-                               label="Date of birth">
+                               label="Date of Birth">
               </datepicker-lite>
             </div>
             <div class="col col-3">

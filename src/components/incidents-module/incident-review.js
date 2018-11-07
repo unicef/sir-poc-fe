@@ -46,6 +46,36 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
         <errors-box prepared-errors="{{errors}}"></errors-box>
       </div>
 
+      <div class="card" hidden$="[[_hideBottomCard(offline, incident.status)]]">
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-textarea label="Write your comment here" id="commentText"
+                              required auto-validate
+                              error-message="Please add a comment"
+                              value="{{commentText}}"></paper-textarea>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <approve-button incident="[[incident]]"
+                              hidden$="[[_hideApproveButton(offline, incident.status)]]">
+              </approve-button>
+              <reject-button comment-text="[[commentText]]"
+                             incident="[[incident]]"
+                             on-tap="validateComment"
+                             hidden$="[[_hideRejectButton(offline, incident.status)]]">
+              </reject-button>
+
+              <paper-button class="btn" raised
+                                        on-click="addComment"
+                                        hidden$="[[_hideCommentButton(offline)]]">
+                Add comment
+              </paper-button>
+
+            </div>
+          </div>
+      </div>
+
       <div class="card">
         <div class="row-h flex-c">
           <div class="col col-6">
@@ -139,35 +169,6 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
             <review-legal-button incident="[[incident]]"></review-legal-button>
           </div>
         </div>
-      </div>
-      <div class="card" hidden$="[[_hideBottomCard(offline, incident.status)]]">
-          <div class="row-h flex-c">
-            <div class="col col-12">
-              <paper-textarea label="Write your comment here" id="commentText"
-                              required auto-validate
-                              error-message="Please add a comment"
-                              value="{{commentText}}"></paper-textarea>
-            </div>
-          </div>
-          <div class="row-h flex-c">
-            <div class="col col-12">
-              <paper-button class="btn" raised
-                                        on-click="addComment"
-                                        hidden$="[[_hideCommentButton(offline)]]">
-                Add comment
-              </paper-button>
-
-              <approve-button incident="[[incident]]"
-                              hidden$="[[_hideApproveButton(offline, incident.status)]]">
-              </approve-button>
-
-              <reject-button comment-text="[[commentText]]"
-                             incident="[[incident]]"
-                             on-tap="validateComment"
-                             hidden$="[[_hideRejectButton(offline, incident.status)]]">
-              </reject-button>
-            </div>
-          </div>
       </div>
     `;
   }

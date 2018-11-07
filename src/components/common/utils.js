@@ -84,3 +84,12 @@ export const hasPermission = (permissionName) => {
   const userPermissions = store.getState().staticData.profile.permissions;
   return userPermissions && !!userPermissions[permissionName];
 };
+
+export const getCountriesForRegion = (regionId) => {
+  if (!regionId) {
+    return null;
+  }
+
+  let allCountries = store.getState().staticData.countries;
+  return allCountries.filter(country => Number(country.region) === Number(regionId));
+}

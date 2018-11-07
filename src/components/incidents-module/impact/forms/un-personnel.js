@@ -1,8 +1,8 @@
 /**
  * @license
  */
-import {html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -15,9 +15,9 @@ import {
   syncPersonnel
 } from '../../../../actions/incident-impacts.js';
 
-import {store} from '../../../../redux/store.js';
+import { store } from '../../../../redux/store.js';
 
-import {scrollToTop} from '../../../common/content-container-helper.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -29,7 +29,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
-import {ImpactFormBase} from './impact-form-base.js';
+import { ImpactFormBase } from './impact-form-base.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -238,13 +238,14 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
-                  id="category"
-                  label="Category"
+                  id="dutyStationRegion"
+                  label="Duty station region"
                   readonly="[[readonly]]"
-                  options="[[staticData.personnelCategories]]"
-                  selected="{{data.person.category}}"
-                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
-                  error-message="Category is required">
+                  options="[[staticData.regions]]"
+                  selected="{{data.person.region}}"
+                  required$="[[!isSexualAssault(selectedImpactType)]]"
+                  auto-validate
+                  error-message="Duty station region is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
@@ -252,7 +253,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   id="dutyStationCountry"
                   label="Duty station country"
                   readonly="[[readonly]]"
-                  options="[[staticData.countries]]"
+                  options="[[getCountriesForRegion(data.person.region)]]"
                   selected="{{data.person.country}}"
                   required$="[[!isSexualAssault(selectedImpactType)]]"
                   auto-validate
@@ -270,6 +271,19 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                       auto-validate
                       error-message="Duty station city is required">
               </paper-input>
+            </div>
+          </div>
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <etools-dropdown-lite
+                  id="category"
+                  label="Category"
+                  readonly="[[readonly]]"
+                  options="[[staticData.personnelCategories]]"
+                  selected="{{data.person.category}}"
+                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
+                  error-message="Category is required">
+              </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <paper-input id="index"
@@ -338,6 +352,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           '#nationality',
           '#gender',
           '#category',
+          '#dutyStationRegion',
           '#dutyStationCountry',
           '#dutyStationCity',
           '#status',

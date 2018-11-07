@@ -69,12 +69,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           width: 100%;
         }
 
-        #get-location {
-          margin-left: 16px;
-        }
-
         .buttons-area paper-button:not(:first-child) {
           margin-left: 4px;
+        }
+
+        #locationButton {
+          margin-top: 16px;
+          margin-bottom: 0;
         }
 
       </style>
@@ -413,27 +414,27 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </template>
 
               <template is="dom-if" if="[[!readonly]]">
-                <div class="col col-3">
+                <div class="col col-2">
                   <paper-input label="Latitude"
                               type="number"
                               value="{{incident.latitude}}"
                               placeholder="&#8212;">
                   </paper-input>
                 </div>
-                <div class="col col-3 layout-horizontal layout-center justified">
+                <div class="col col-2">
                   <paper-input label="Longitude"
                               type="number"
                               value="{{incident.longitude}}"
                               placeholder="&#8212;">
                   </paper-input>
-
-                  <paper-icon-button id="get-location"
-                                     on-tap="getLocation"
-                                     title="Use device location"
-                                     icon="device:gps-fixed">
-                  </paper-icon-button>
                 </div>
-
+                <div class="col col-2">
+                  <paper-button id="locationButton" raised on-tap="getLocation" class="white no-t-transform">
+                    <iron-icon icon="device:gps-fixed">
+                    </iron-icon>
+                    Use device location
+                  </paper-button>
+                </div>
               </template>
 
             </div>

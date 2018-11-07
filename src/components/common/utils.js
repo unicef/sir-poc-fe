@@ -82,5 +82,5 @@ export const isNumber = (candidate) => {
 
 export const hasPermission = (permissionName) => {
   const userPermissions = store.getState().staticData.profile.permissions;
-  return !!userPermissions[permissionName];
+  return userPermissions && !!userPermissions[permissionName];
 };

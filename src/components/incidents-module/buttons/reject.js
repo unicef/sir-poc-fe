@@ -6,6 +6,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { rejectIncident } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { updatePath } from '../../common/navigation-helper';
+import { hasPermission } from '../../common/utils';
 import { ButtonsBaseClass } from './buttons-base.js';
 import '../../styles/button-styles.js';
 
@@ -20,8 +21,8 @@ class RejectButton extends ButtonsBaseClass {
       <style include="button-styles">
       </style>
       <paper-button raised
-                    on-tap="openDialog"
-                    disabled$="[[isDisabled(commentText)]]">
+                    on-tap="validate"
+                    hidden$="[[isHidden()]]">
         Reject
       </paper-button>
       `;
@@ -41,8 +42,14 @@ class RejectButton extends ButtonsBaseClass {
     }
   }
 
-  isDisabled(commentText) {
-    return !commentText.length;
+  isHidden() {
+    return !hasPermission('approve_incident');
+  }
+
+  validate() {
+    if (this.commentText.length) {
+      this.openDialog();
+    }
   }
 
   incidentChanged() {

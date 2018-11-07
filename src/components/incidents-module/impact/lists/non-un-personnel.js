@@ -26,13 +26,13 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
 
       <div hidden$="[[!personnelList.length]]">
         <etools-data-table-header id="listHeader" no-title no-collapse low-resolution-layout="[[lowResolutionLayout]]">
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-2">
             Name
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
             Impact
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-6">
             Address
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -44,7 +44,7 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
           <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]" 
                                  low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
-              <span class="col-data col-4" data-col-header-label="Name">
+              <span class="col-data col-2" data-col-header-label="Name">
                 [[item.person.first_name]] [[item.person.last_name]]
               </span>
               <span class="col-data col-3" data-col-header-label="Impact">
@@ -52,8 +52,8 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
                   [[getNameFromId(item.impact, 'impacts.person')]]
                 </span>
               </span>
-              <span class="col-data col-4" data-col-header-label="Address">
-                  [[item.contact_address]]
+              <span class="col-data col-6" data-col-header-label="Address">
+                  [[item.person.address]], [[item.person.city]], [[getNameFromId(item.person.country, 'countries')]]
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/incidents/impact/[[item.incident]]/non-un/[[item.id]]/"

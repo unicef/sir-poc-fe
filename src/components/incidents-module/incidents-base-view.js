@@ -96,6 +96,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             ${this.addImpactButtonTmpl}
           </div>
           <div>
+            ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
             <paper-button class="danger" raised on-tap="_returnToIncidentsList">
               Cancel
@@ -525,6 +526,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             ${this.addImpactButtonTmpl}
           </div>
           <div>
+            ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
             <paper-button class="danger" raised on-tap="_returnToIncidentsList">
               Cancel
@@ -555,6 +557,10 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   static get goToEditBtnTmpl() {
+    return html``;
+  }
+
+  static get deleteDraftTmpl() {
     return html``;
   }
 

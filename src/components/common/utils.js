@@ -78,3 +78,12 @@ const getStaticDataByPath = (path, data) => {
 export const isNumber = (candidate) => {
   return !isNaN(parseFloat(candidate));
 };
+
+export const getCountriesForRegion = (regionId) => {
+  if (!regionId) {
+    return null;
+  }
+
+  let allCountries = store.getState().staticData.countries;
+  return allCountries.filter(country => Number(country.region) === Number(regionId));
+}

@@ -7,7 +7,9 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { getIncidentModel } from '../../models/incident-model';
-import { addIncident, setIncidentDraft } from '../../actions/incidents.js';
+import { addIncident,
+         setIncidentDraft,
+         updateAddedAttachmentIds } from '../../actions/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import { updatePath } from '../common/navigation-helper.js';
 /**
@@ -59,12 +61,11 @@ class AddIncident extends IncidentsBaseView {
     if (!this.validate()) {
       return;
     }
+
     let createdId = await this.store.dispatch(addIncident(this.incident));
     if (createdId) {
-      scrollToTop();
-      this.resetForm();
-      this.resetValidations();
-      this.showSuccessMessage();
+      this.store.dispatch(updateAddedAttachmentIds(createdId, this.incident.attachments));
+      this.handleSuccessfullCreation();
       updatePath(`/incidents/view/${createdId}`);
     }
   }
@@ -73,11 +74,19 @@ class AddIncident extends IncidentsBaseView {
     if (!this.validate()) {
       return;
     }
-    let incidentId = await this.store.dispatch(addIncident(this.incident));
-    if (incidentId) {
-      this.resetForm();
-      updatePath(`/incidents/impact/${incidentId}/list`);
+    let createdId = await this.store.dispatch(addIncident(this.incident));
+    if (createdId) {
+      this.store.dispatch(updateAddedAttachmentIds(createdId, this.incident.attachments));
+      this.handleSuccessfullCreation();
+      updatePath(`/incidents/impact/${createdId}/list`);
     }
+  }
+
+  handleSuccessfullCreation(incident) {
+    scrollToTop();
+    this.resetForm();
+    this.resetValidations();
+    this.showSuccessMessage();
   }
 
   resetForm() {

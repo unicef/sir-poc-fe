@@ -324,6 +324,22 @@ export const fetchIncident = id => (dispatch, getState) => {
   });
 };
 
+export const updateAddedAttachmentIds = (incidentId, attachments) => (dispatch, getState) => {
+  if (!attachments.length) {
+    return;
+  }
+  let operations = [];
+
+  attachments.forEach((attachment) => {
+    let endpoint = prepareEndpoint(Endpoints.editIncidentAttachments, {id: attachment.id});
+    operations.push(makeRequest(endpoint, {incident: incidentId}));
+  });
+
+  Promise.all(operations).catch((err) => {
+    dispatch(serverError(err.status === 500 ? 'There was an error updating Related Documents section' : err));
+  });
+}
+
 export const editAttachmentsNotes = incident => (dispatch, getState) => {
   if (getState().app.offline || incident.unsynced) {
     return Promise.resolve();

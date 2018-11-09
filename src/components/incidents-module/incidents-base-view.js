@@ -446,50 +446,50 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </fieldset>
 
-        <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly, incident)]]">
-          <fieldset>
-            <legend><h3>Related documents</h3></legend>
-            <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
-              <etools-upload-multi
-                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
-                  jwt-local-storage-key="[[jwtLocalStorageKey]]">
-              </etools-upload-multi>
-            </div>
-            <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
-              <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
+        <fieldset hidden$="[[hideRelatedDocsSection(readonly, state.app.offline, incident.unsynced, incident.attachments)]]">
+          <legend><h3>Related documents</h3></legend>
 
-                <etools-data-table-column class="col-4">
-                  File
-                </etools-data-table-column>
-                <etools-data-table-column class="col-7">
-                  Note
-                </etools-data-table-column>
+          <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
+            <etools-upload-multi
+                endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
+                jwt-local-storage-key="[[jwtLocalStorageKey]]">
+            </etools-upload-multi>
+          </div>
 
-              </etools-data-table-header>
+          <div hidden$="[[hideAttachmentsList(offline, incident, incident.attachments)]]">
+            <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
-              <template is="dom-repeat" items="[[incident.attachments]]">
-                <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
-                  <div slot="row-data">
-                    <span class="col-data col-4 break-word"
-                          title="[[getFilenameFromURL(item.attachment)]]"
-                          data-col-header-label="File">
-                      <span>
-                        <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
-                           [[getFilenameFromURL(item.attachment)]]
-                        </a>
-                      </span>
+              <etools-data-table-column class="col-4">
+                File
+              </etools-data-table-column>
+              <etools-data-table-column class="col-7">
+                Note
+              </etools-data-table-column>
+
+            </etools-data-table-header>
+
+            <template is="dom-repeat" items="[[incident.attachments]]">
+              <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
+                <div slot="row-data">
+                  <span class="col-data col-4 break-word"
+                        title="[[getFilenameFromURL(item.attachment)]]"
+                        data-col-header-label="File">
+                    <span>
+                      <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
+                          [[getFilenameFromURL(item.attachment)]]
+                      </a>
                     </span>
-                    <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
-                      <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
-                      </paper-input>
-                    </span>
-                  </div>
-                </etools-data-table-row>
-              </template>
-            </div>
-            Max individual file upload size is 10MB.
-          </fieldset>
-        </template>
+                  </span>
+                  <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
+                    <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
+                    </paper-input>
+                  </span>
+                </div>
+              </etools-data-table-row>
+            </template>
+          </div>
+          Max individual file upload size is 10MB.
+        </fieldset>
 
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
@@ -801,19 +801,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     };
   }
 
-  hideUploadBtn(readonly, offline, unsynced) {
-    return readonly || offline || unsynced;
+  hideUploadBtn() {
+    return this.incident && (this.readonly || this.state.app.offline || this.incident.unsynced);
   }
 
-  hideAttachmentsList(incident, att, attLenght) {
-    if (!incident) {
-      return true;
-    }
+  hideAttachmentsList() {
+    return this.incident &&
+      (this.state.app.offline || !this.incident.attachments || !this.incident.attachments.length);
+  }
 
-    if (!att || !att.length) {
-      return true;
-    }
-    return false;
+  hideRelatedDocsSection() {
+    return this.hideUploadBtn() && this.hideAttachmentsList();
   }
 
   handleUploadedFiles(ev) {
@@ -847,13 +845,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }, (error) => {
       console.warn('location fetch error:', error);
     });
-  }
-
-  _showRelatedDocsSection(incidentId, readonly, incident) {
-    if (!incidentId || isNaN(incidentId)) {
-      return false;
-    }
-    return !(readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length));
   }
 
   _returnToIncidentsList() {

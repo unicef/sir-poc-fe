@@ -57,7 +57,7 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/incidents/impact/[[item.incident]]/non-un/[[item.id]]/"
-                      title="Edit non-UN Personnel impact"
+                      title="Edit Non-UNICEF Personnel impact"
                       hidden$="[[_notEditable(item, offline)]]">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>

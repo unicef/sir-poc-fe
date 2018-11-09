@@ -1,8 +1,8 @@
 /**
  * @license
  */
-import {html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -13,22 +13,21 @@ import {
   addPersonnel,
   editPersonnel,
   syncPersonnel
-} from '../../../../actions/incident-impacts.js';
-import {store} from '../../../../redux/store.js';
-import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
+ } from '../../../../actions/incident-impacts.js';
+import { store } from '../../../../redux/store.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
   validateFields
-} from '../../../common/validations-helper.js';
+ } from '../../../common/validations-helper.js';
 import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
-import {ImpactFormBase} from './impact-form-base.js';
-import { clearErrors } from '../../../../actions/errors.js';
+import { ImpactFormBase } from './impact-form-base.js';
+import '../../../common/review-fields.js';
 
 /**
  * @polymer
@@ -49,13 +48,13 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-      
+
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
 
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
+          <legend><h3>Impact Details</h3></legend>
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
@@ -82,23 +81,35 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                                 readonly$="[[readonly]]"
                                 label="Description"
                                 placeholder="&#8212;"
+                                required auto-validate
                                 value="{{data.description}}">
                 </paper-textarea>
               </div>
             </div>
           </div>
         </fieldset>
-        
+
         <fieldset>
-          <legend><h3>Impacted Non-UN Personnel</h3></legend>
+          <legend><h3>Impacted Non-UNICEF Personnel</h3></legend>
+
+          <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
+            <div class="row-h flex-c">
+              <div class="alert-text">
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
+                assault subcategory are Impact, Description, and Country. The victim should be informed that
+                all other information is VOLUNTARY.
+              </div>
+            </div>
+          </template>
+
           <div class="row-h flex-c">
             <div class="col col-3">
               <paper-input id="firstName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="First name"
+                           label="First Name"
                            value="{{data.person.first_name}}"
-                           required auto-validate
+                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="First name is required">
               </paper-input>
             </div>
@@ -106,9 +117,9 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <paper-input id="lastName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Last name"
+                           label="Last Name"
                            value="{{data.person.last_name}}"
-                           required auto-validate
+                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="Last name is required">
               </paper-input>
             </div>
@@ -119,7 +130,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                   readonly="[[readonly]]"
                   options="[[staticData.genders]]"
                   selected="{{data.person.gender}}"
-                  required auto-validate
+                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                   error-message="Gender is required">
               </etools-dropdown-lite>
             </div>
@@ -138,7 +149,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <datepicker-lite id="birthDate"
                                value="{{data.person.date_of_birth}}"
                                readonly="[[readonly]]"
-                               label="Date of birth">
+                               label="Date of Birth">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -154,13 +165,13 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <paper-textarea id="contact"
                               placeholder="&#8212;"
                               readonly$="[[readonly]]"
-                              label="Contact"
+                              label="Phone"
                               value="{{data.person.contact}}">
               </paper-textarea>
             </div>
           </div>
           <div class="row-h flex-c">
-            <div class="col col-6">
+            <div class="col col-3">
               <paper-input id="address"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
@@ -170,44 +181,59 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                  id="country"
-                  label="Country"
+                  id="region"
+                  label="Region"
                   readonly="[[readonly]]"
-                  options="[[staticData.countries]]"
-                  selected="{{data.person.country}}">
+                  options="[[staticData.regions]]"
+                  selected="{{data.person.region}}"
+                  auto-validate
+                  error-message="Duty station region is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
               <etools-dropdown-lite
-                  id="city"
-                  label="City"
+                  id="country"
+                  label="Country"
                   readonly="[[readonly]]"
-                  options="[[staticData.cities]]"
-                  selected="{{data.person.city}}">
+                  options="[[getCountriesForRegion(data.person.region)]]"
+                  selected="{{data.person.country}}">
               </etools-dropdown-lite>
+            </div>
+            <div class="col col-3">
+              <paper-input
+                      id="city"
+                      label="City"
+                      placeholder="&#8212;"
+                      value="{{data.person.city}}"
+                      readonly$="[[readonly]]">
+              </paper-input>
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+
+        <fieldset hidden$="[[isNew]]">
+          <review-fields data="[[data]]"></review-fields>
+        </fieldset>
+        <paper-button on-tap="save">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
 
   static get properties() {
     return {
-      selectedImpactType: Object,
+      selectedImpactType: {
+        type: Object,
+        value: {}
+      },
       staticData: Array,
       impactId: String,
       offline: Boolean,
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {
-          person: {}
-        }
       },
       modelForNew: {
         type: Object,
@@ -234,7 +260,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
           '#firstName',
           '#lastName',
           '#gender',
-          '#impact'
+          '#impact',
+          '#description'
         ]
       }
     };
@@ -251,6 +278,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
     this.data.incident = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async save() {
@@ -262,16 +291,14 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident) && !this.offline) {
       result = await store.dispatch(syncPersonnel(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editPersonnel(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident}/`);
+      this._goToIncidentImpacts();
       this.resetData();
     }
     if (result === false) {
@@ -285,6 +312,14 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
   resetData() {
     this.data = JSON.parse(JSON.stringify(this.modelForNew));
+  }
+
+  isSexualAssault() {
+    if (this.selectedImpactType) {
+      return this.selectedImpactType.name === 'Sexually assaulted';
+    } else {
+      return false;
+    }
   }
 
   _computeIsNew(id) {

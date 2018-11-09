@@ -15,7 +15,6 @@ import {
 } from '../../../../actions/incident-impacts.js';
 import {store} from '../../../../redux/store.js';
 import {scrollToTop} from '../../../common/content-container-helper.js';
-import {updatePath} from '../../../common/navigation-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -26,8 +25,9 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
-import DateMixin from "../../../common/date-mixin.js";
-import {ImpactFormBase} from './impact-form-base.js';
+import DateMixin from '../../../common/date-mixin.js';
+import { ImpactFormBase } from './impact-form-base.js';
+import '../../../common/review-fields.js';
 
 /**
  * @polymer
@@ -52,7 +52,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       </style>
 
       <div class="card">
-        <h3> UN Programmes </h3>
+        <h3> UNICEF Programmes </h3>
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -62,7 +62,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite id="country"
-                                    label="Country of impact"
+                                    label="Country of Impact"
                                     readonly="[[readonly]]"
                                     options="[[staticData.countries]]"
                                     selected="{{data.country}}"
@@ -84,7 +84,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
             <div class="col col-3">
               <template is="dom-if" if="[[scopeIsCity(selectedScope)]]">
-                <etools-dropdown-lite label="Area impacted"
+                <etools-dropdown-lite label="Area Impacted"
                                       enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[selectableCities]]"
@@ -92,7 +92,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                 </etools-dropdown-lite>
               </template>
               <template is="dom-if" if="[[scopeIsCountry(selectedScope)]]">
-                <etools-dropdown-lite label="Area impacted"
+                <etools-dropdown-lite label="Area Impacted"
                                       enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[staticData.countries]]"
@@ -100,7 +100,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                 </etools-dropdown-lite>
               </template>
               <template is="dom-if" if="[[scopeIsOther(selectedScope)]]">
-                <etools-dropdown-lite label="Area impacted"
+                <etools-dropdown-lite label="Area Impacted"
                                       enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[staticData.programmeAreas]]"
@@ -117,7 +117,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                                value="{{data.start_date}}"
                                max-date="[[toDate(data.end_date)]]"
                                readonly="[[readonly]]"
-                               label="Start of impact">
+                               label="Start of Impact">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -125,7 +125,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                                value="{{data.end_date}}"
                                min-date="[[toDate(data.start_date)]]"
                                readonly="[[readonly]]"
-                               label="End of impact">
+                               label="End of Impact">
               </datepicker-lite>
             </div>
 
@@ -133,7 +133,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite id="impact"
-                                    label="Impact type"
+                                    label="Impact Type"
                                     readonly="[[readonly]]"
                                     options="[[staticData.impacts.property]]"
                                     selected="{{data.impact}}"
@@ -156,7 +156,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
             <div class="col col-3">
               <etools-dropdown-lite id="programmeType"
-                                    label="Programmes type"
+                                    label="Programme Type"
                                     readonly="[[readonly]]"
                                     options="[[staticData.programmeTypes]]"
                                     selected="{{data.programme_type}}"
@@ -169,23 +169,28 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </fieldset>
 
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-12">
-                <paper-textarea id="description"
-                                readonly$="[[readonly]]"
-                                label="Description"
-                                placeholder="&#8212;"
-                                value="{{data.description}}"
-                                required auto-validate
-                                error-message="This is required">
-                </paper-textarea>
-              </div>
+          <legend><h3>Impact Details</h3></legend>
+          <div class="row-h flex-c">
+            <div class="col col-12">
+              <paper-textarea id="description"
+                              readonly$="[[readonly]]"
+                              label="Description"
+                              placeholder="&#8212;"
+                              value="{{data.description}}"
+                              required auto-validate
+                              error-message="This is required">
+              </paper-textarea>
             </div>
           </div>
         </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+
+        <fieldset hidden$="[[isNew]]">
+          <review-fields data="[[data]]"></review-fields>
+        </fieldset>
+        <paper-button on-tap="save">Save</paper-button>
+        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
     `;
   }
@@ -199,10 +204,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {}
       },
       isNew: {
         type: Boolean,
@@ -234,6 +235,8 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.staticData = state.staticData;
     this.programmesList = state.incidents.programmes;
     this.data.incident_id = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   _updateSelectableCities(country) {
@@ -247,16 +250,14 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
     }
     if (this.isNew) {
       result = await store.dispatch(addProgramme(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncProgramme(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editProgramme(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this._goToIncidentImpacts();
       this.data = {};
     }
     if (result === false) {

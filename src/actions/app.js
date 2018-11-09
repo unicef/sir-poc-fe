@@ -10,23 +10,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
-import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
+import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import * as ACTIONS from './constants.js';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 
 let snackbarTimer;
 
-export const storeReady = () => (dispatch, getState) => {
-  let state = getState();
-  if (state && state.app && state.app.offline) {
-    return;
-  }
-
+export const requestPageLoadData = () => (dispatch) => {
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchAllIncidentData());
+};
+
+export const storeReady = () => (dispatch, getState) => {
+  let state = getState();
+  const isOffline = state && state.app && state.app.offline;
+  if (isOffline) {
+    return;
+  }
+
+  dispatch(requestPageLoadData());
 };
 
 export const showSnackbar = text => (dispatch) => {
@@ -92,9 +97,6 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
       break;
     case 'history':
       import('../components/incidents-module/history/incident-history-controller.js');
-      break;
-    case 'comments':
-      import('../components/incidents-module/incident-comments.js');
       break;
     case 'review':
       import('../components/incidents-module/incident-review.js');

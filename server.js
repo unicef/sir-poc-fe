@@ -34,10 +34,10 @@ function getSourcesPath(request) {
 
 if (isDevelopment) {
   // FOR DEVELOPMENT PURPROSES ONLY
-  // routes /api/ requests to 8080 so we can test the build with
+  // routes /api/ requests to 8081 so we can test the build with
   // the same back-end used for development
-  app.use('/api', proxy({target: 'http://localhost:8080'}));
-  console.log('dev mode, API calls routed to port 8080');// eslint-disable-line
+  app.use('/api', proxy({target: 'http://localhost:8081'}));
+  console.log('dev mode, API calls routed to port 8081');// eslint-disable-line
 }
 
 app.get(/.*service-worker\.js/, function(req, res) {

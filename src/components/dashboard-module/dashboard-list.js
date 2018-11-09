@@ -10,7 +10,8 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../redux/store.js';
 import { syncEventOnList } from '../../actions/events.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
-import { getNameFromId } from '../common/utils.js';
+import { getNameFromId, hasPermission } from '../common/utils.js';
+
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -21,7 +22,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
-        
+
         .col-data iron-icon {
           margin-right: 8px;
         }
@@ -77,7 +78,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           Status
         </etools-data-table-column>
         <etools-data-table-column class="col-2">
-          Date created
+          Date Created
         </etools-data-table-column>
         <etools-data-table-column class="col-2">
           Category
@@ -94,10 +95,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
         <etools-data-table-row unsynced$="[[item.unsynced]]"
                                low-resolution-layout="[[lowResolutionLayout]]"
                                medium-resolution-layout="[[mediumResolutionLayout]]"
-                               created-last-week$="[[wasCreatedLastWeek(item)]]">
+                               created-last-week$="[[wasCreatedLastWeek(item.created_on)]]">
           <div slot="row-data" class="p-relative">
             <span class="col-data col-1" data-col-header-label="Case Number">
-              <a href="/[[item.case_type]]s/view/[[item.id]]"> [[item.id]] </a>
+              <a href="/[[item.case_type]]s/view/[[item.id]]">[[item.case_number]]</a>
             </span>
             <span class="col-data col-1 capitalize" data-col-header-label="Case type">
               [[item.case_type]]
@@ -127,10 +128,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-2" data-col-header-label="Date created">
-              <template is="dom-if" if="[[item.creation_date]]">
-                [[prettyDate(item.creation_date)]]
+              <template is="dom-if" if="[[item.created_on]]">
+                [[prettyDate(item.created_on)]]
               </template>
-              <template is="dom-if" if="[[!item.creation_date]]">
+              <template is="dom-if" if="[[!item.created_on]]">
                 N/A
               </template>
             </span>
@@ -151,15 +152,14 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Actions">
-              <template is="dom-if" if="[[checkStatus(item.status)]]">
+              <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
                 <a href="/[[item.case_type]]s/view/[[item.id]]">
                   <iron-icon icon="assignment" title="View [[item.case_type]]"></iron-icon>
                 </a>
               </template>
-              <template is="dom-if" if="[[!checkStatus(item.status)]]">
+              <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
                 <a href="/[[item.case_type]]s/edit/[[item.id]]"
-                    title="Edit [[item.case_type]]"
-                    hidden$="[[_notEditable(item, offline)]]">
+                    title="Edit [[item.case_type]]">
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
               </template>
@@ -175,31 +175,6 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               <div class="row-h flex-c case-det case-det-desc">
                 <strong class="rdc-title inline">Description: </strong>[[item.description]]
               </div>
-              <template is="dom-if" if="[[_caseIs(item.case_type, 'event')]]">
-                <div class="row-h flex-c case-det case-det-loc">
-                  <strong class="rdc-title inline">Location: </strong>[[item.location]]
-                </div>
-              </template>
-              <template is="dom-if" if="[[_caseIs(item.case_type, 'incident')]]">
-                <div class="row-h flex-c case-det">
-                  <div class="col col-3">
-                    <strong class="rdc-title inline">Category: </strong>
-                    [[getNameFromId(item.incident_category, 'incidentCategories')]]
-                  </div>
-                  <div class="col col-3">
-                    <strong class="rdc-title inline">Region: </strong>
-                    [[getNameFromId(item.region, 'regions')]]
-                  </div>
-                  <div class="col col-3">
-                    <strong class="rdc-title inline">Country: </strong>
-                    [[getNameFromId(item.country, 'countries')]]
-                  </div>
-                  <div class="col col-3">
-                    <strong class="rdc-title inline">Person: </strong>
-                    [[item.primary_person.first_name]] [[item.primary_person.last_name]]
-                  </div>
-                </div>
-              </template>
             </div>
           </div>
         </etools-data-table-row>
@@ -258,16 +233,13 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     }
   }
 
-  checkStatus(status) {
-    return status === 'approved';
+  canEdit(status, unsynced, offline) {
+    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
+           (unsynced && hasPermission('add_incident'));
   }
 
-  wasCreatedLastWeek(item) {
-    const date = new Date();
-    const lastWeek = date.getDate() - 7;
-
-    const createdDate = item.case_type === 'event' ? item.start_date : item.creation_date;
-    return moment(createdDate).isAfter(moment().add(-7, 'days'));
+  wasCreatedLastWeek(createdOn) {
+    return moment(createdOn).isAfter(moment().add(-7, 'days'));
   }
 
   _syncItem(item) {
@@ -291,11 +263,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _showSyncButton(unsynced, offline) {
-    return unsynced && !offline;
-  }
-
-  _caseIs(givenType, expectedType) {
-    return givenType === expectedType;
+    return !offline && unsynced && hasPermission('add_incident');
   }
 }
 

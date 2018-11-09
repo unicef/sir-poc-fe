@@ -9,17 +9,17 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-date-time/datepicker-lite.js';
 
-import { clearErrors } from '../../actions/errors.js';
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
+import '../common/review-fields.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 import { resetFieldsValidations, validateFields } from '../common/validations-helper';
-import DateMixin from "../common/date-mixin.js";
+import DateMixin from '../common/date-mixin.js';
 
 export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   static get template() {
@@ -92,6 +92,10 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
           </div>
         </div>
 
+        <div hidden$="[[hideReviewFields]]">
+          <review-fields data="[[event]]"></review-fields>
+        </div>
+
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
             <warn-message hidden$="[[!_eventHasTempIdOrNew(eventId)]]"
@@ -106,7 +110,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
           <div class="row-h flex-c">
             <div class="col col-12">
               <paper-button raised on-click="save"
-                            disabled$="[[canNotSave(eventId, state.app.offline)]]">Save</paper-button>
+                            disabled$="[[!canSave(eventId, state.app.offline)]]">Save</paper-button>
               ${this.actionButtonsTemplate}
             </div>
           </div>
@@ -119,6 +123,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   static get actionButtonsTemplate() {
     return html``;
   }
+
   static get goToEditBtnTmpl() {
     return html``;
   }
@@ -129,6 +134,10 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
         type: Object
       },
       readonly: {
+        type: Boolean,
+        value: false
+      },
+      hideReviewFields: {
         type: Boolean,
         value: false
       },
@@ -184,17 +193,14 @@ export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   // Only edit of unsynced and add new is possible offline
-  canNotSave(eventId, offline) {
-    return (offline && !!eventId && !isNaN(eventId));
+  canSave(eventId, offline) {
+    return !offline || !eventId || isNaN(eventId);
   }
 
 
   _visibilityChanged(visible) {
     if (visible) {
       this.resetValidations();
-    }
-    if (visible === false) {
-      store.dispatch(clearErrors());
     }
   }
 

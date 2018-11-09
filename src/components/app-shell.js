@@ -9,7 +9,6 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -25,36 +24,31 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
-
-// basic stuff above, PWA stuff below
+import './styles/shared-styles.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-// This element is connected to the Redux store.
+
 import './snack-bar/snack-bar.js';
+import './snack-bar/ios-shortcut-dialog.js';
 import { store } from '../redux/store.js';
+import { hasPermission } from './common/utils.js';
 
 import { updatePath } from '../components/common/navigation-helper.js';
-// These are the actions needed by this element.
+
 import {
   updateOffline,
   lazyLoadModules,
   updateLocationInfo
 } from '../actions/app.js';
 
+import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 
-// Gesture events like tap and track generated from touch will not be
-// preventable, allowing for better scrolling performance.
-setPassiveTouchGestures(true);
-
-// Set Polymer's root path to the same value we passed to our service worker
-// in `index.html`.
-setRootPath(MyAppGlobals.rootPath);
-
-class MyApp extends connect(store)(PolymerElement) {
+class AppShell extends connect(store)(PolymerElement) {
   static get template() {
+    // language=HTML
     return html`
-      <style>
+      <style include="shared-styles">
         :host {
           display: block;
         }
@@ -68,6 +62,10 @@ class MyApp extends connect(store)(PolymerElement) {
           background-color: var(--app-primary-color);
         }
 
+        app-header app-toolbar {
+          @apply --layout-justified;
+        }
+
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
         }
@@ -79,7 +77,7 @@ class MyApp extends connect(store)(PolymerElement) {
           border-bottom: 1px solid rgba(0, 0, 0, 0.12);
           background-color: var(--menu-header-bg, #d6d8d9);
         }
-        
+
         #menu-header #app-logo {
           @apply --layout-horizontal;
           @apply --layout-center;
@@ -98,7 +96,7 @@ class MyApp extends connect(store)(PolymerElement) {
           margin-left: 8px;
           font-size: 14px;
         }
-        
+
         #menu-header #app-name span:last-child {
           color: var(--secondary-text-color);
           font-size: 13px;
@@ -159,7 +157,7 @@ class MyApp extends connect(store)(PolymerElement) {
           <div class="drawer-list">
             <a class="menu-heading"
               selected$="[[pathsMatch(page, 'dashboard')]]"
-              href="[[rootPath]]dashboard"> Dashboard </a>
+              href="[[rootPath]]dashboard">Dashboard</a>
 
             <a class="menu-heading"
               selected$="[[pathsMatch(page, 'events')]]"
@@ -188,11 +186,12 @@ class MyApp extends connect(store)(PolymerElement) {
             </a>
 
             <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
-              href="[[rootPath]]incidents/new/">
+              href="[[rootPath]]incidents/new/"
+              hidden$="[[!canAddIncidents(profile)]]">
               <iron-icon icon="av:playlist-add"></iron-icon>
               <span>New Incident</span>
             </a>
-            
+
             <a class="menu-heading" href="[[rootPath]]admin/" target="_blank">
               <iron-icon icon="supervisor-account"></iron-icon>
               <span>Admin</span>
@@ -207,7 +206,8 @@ class MyApp extends connect(store)(PolymerElement) {
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title="" class="capitalize">SIR - [[page]]</div>
+              <div class="capitalize">[[_getPageTitle(page)]]</div>
+              <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
             </app-toolbar>
           </app-header>
 
@@ -219,9 +219,11 @@ class MyApp extends connect(store)(PolymerElement) {
           </iron-pages>
 
         </app-header-layout>
+
         <snack-bar active$="[[snackbarOpened]]">
           <span>[[snackbarText]]</span>
         </snack-bar>
+        <ios-shortcut-dialog></ios-shortcut-dialog>
       </app-drawer-layout>
     `;
   }
@@ -235,7 +237,7 @@ class MyApp extends connect(store)(PolymerElement) {
       },
       validPages: {
         type: Array,
-        value: ['events', 'incidents', 'dashboard']
+        value: ['dashboard', 'events', 'incidents']
       },
       snackbarOpened: Boolean,
       snackbarText: String,
@@ -255,12 +257,12 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
   _locationChanged(path, queryParams) {
     store.dispatch(updateLocationInfo(path, queryParams));
+    store.dispatch({type: 'CLEAR_ERRORS'});
   }
 
   pathsMatch(path1, path2) {
@@ -268,10 +270,14 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _routePageChanged(page) {
-     // Show the corresponding page according to the route.
-     //
-     // If no page was found in the route data, page will be an empty string.
-     // Show the dashboard in that case. And if the page doesn't exist, show 'view404'.
+    if (this.page === page) {
+      return;
+    }
+
+    this._routePageChangedCallback(page);
+  }
+
+  _routePageChangedCallback(page) {
     if (!page) {
       updatePath('dashboard');
     } else if (this._isValidPage(page)) {
@@ -280,7 +286,6 @@ class MyApp extends connect(store)(PolymerElement) {
       this.page = 'view404';
     }
 
-    // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {
       this.$.drawer.close();
     }
@@ -290,8 +295,8 @@ class MyApp extends connect(store)(PolymerElement) {
     if (!state) {
       return;
     }
-    // this.page = state.app.page;
     this.set('offline', state.app.offline);
+    this.set('profile', state.staticData.profile);
     this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
@@ -304,6 +309,20 @@ class MyApp extends connect(store)(PolymerElement) {
     return this.validPages.indexOf(page) !== -1;
   }
 
+  _logout() {
+    SirMsalAuth.logout();
+  }
+
+  _getPageTitle(page) {
+    return !page ? '' : `SIR - ${page}`;
+  }
+
+  canAddIncidents(profile) {
+    if (!profile) {
+      return false;
+    }
+    return hasPermission('add_incident');
+  }
 }
 
-window.customElements.define('app-shell', MyApp);
+window.customElements.define('app-shell', AppShell);

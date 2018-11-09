@@ -7,7 +7,9 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { scrollToTop } from '../common/content-container-helper.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { getIncidentModel } from '../../models/incident-model';
-import { addIncident, setIncidentDraft } from '../../actions/incidents.js';
+import { addIncident,
+         setIncidentDraft,
+         updateAddedAttachmentIds } from '../../actions/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import { updatePath } from '../common/navigation-helper.js';
 /**
@@ -19,19 +21,35 @@ class AddIncident extends IncidentsBaseView {
     super.connectedCallback();
     this.readonly = false;
     this.title = 'Add new incident';
+    this.hideReviewFields = true;
     this.set('incident', this.state.incidents.draft);
   }
 
-  static get actionButtonsTemplate() {
+  static get addImpactButtonTmpl() {
     return html`
-      <paper-button raised
-                    on-click="saveAndAddImpact"
-                    disabled$="[[canNotSave(incident.event, state.app.offline, incidentId)]]">
-        Save and add impact
+      <paper-button class="secondary"
+                    raised
+                    on-tap="saveAndAddImpact"
+                    disabled$="[[!canSave(incident.event, state.app.offline, incidentId)]]">
+        Add Impact
       </paper-button>
-      <paper-button raised on-click="resetForm">
-        Reset data
+    `;
+  }
+
+  static get resetButtonTmpl() {
+    return html`
+      <paper-button raised on-tap="openResetConfirmation">
+        Reset Data
       </paper-button>
+
+      <paper-dialog id="resetConfirm">
+        <h2>Confirm Reset</h2>
+        <p>Are you sure you want to reset the data on this incident?</p>
+        <div class="buttons">
+          <paper-button raised class="white smaller" dialog-dismiss>No</paper-button>
+          <paper-button raised class="smaller" on-tap="resetForm" dialog-confirm autofocus>Yes</paper-button>
+        </div>
+      </paper-dialog>
     `;
   }
 
@@ -57,12 +75,12 @@ class AddIncident extends IncidentsBaseView {
     if (!this.validate()) {
       return;
     }
+
     let createdId = await this.store.dispatch(addIncident(this.incident));
     if (createdId) {
-      scrollToTop();
-      this.resetForm();
-      this.resetValidations();
-      this.showSuccessMessage();
+      this.store.dispatch(updateAddedAttachmentIds(createdId, this.incident.attachments));
+      this.handleSuccessfullCreation();
+      updatePath(`/incidents/view/${createdId}`);
     }
   }
 
@@ -70,11 +88,23 @@ class AddIncident extends IncidentsBaseView {
     if (!this.validate()) {
       return;
     }
-    let incidentId = await this.store.dispatch(addIncident(this.incident));
-    if (incidentId) {
-      this.resetForm();
-      updatePath(`/incidents/impact/${incidentId}/list`);
+    let createdId = await this.store.dispatch(addIncident(this.incident));
+    if (createdId) {
+      this.store.dispatch(updateAddedAttachmentIds(createdId, this.incident.attachments));
+      this.handleSuccessfullCreation();
+      updatePath(`/incidents/impact/${createdId}/list`);
     }
+  }
+
+  openResetConfirmation() {
+    this.shadowRoot.querySelector('#resetConfirm').opened = true;
+  }
+
+  handleSuccessfullCreation(incident) {
+    scrollToTop();
+    this.resetForm();
+    this.resetValidations();
+    this.showSuccessMessage();
   }
 
   resetForm() {

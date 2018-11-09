@@ -7,8 +7,8 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
@@ -19,19 +19,20 @@ import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-media-query/iron-media-query.js';
+import '@polymer/iron-collapse/iron-collapse.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
-
-import {store} from '../../redux/store.js';
 import 'etools-date-time/datepicker-lite.js';
+
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import {syncIncidentOnList} from '../../actions/incidents.js';
+import { syncIncidentOnList, exportIncidents } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import {updateAppState} from '../common/navigation-helper';
-import {getNameFromId} from '../common/utils.js';
-import {Endpoints} from '../../config/endpoints.js';
+import { updateAppState } from '../common/navigation-helper';
+import { getNameFromId, hasPermission } from '../common/utils.js';
+import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -58,6 +59,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           margin-right: 8px;
         }
 
+        .capitalize {
+          text-transform: capitalize;
+        }
+
         .sync-btn {
           color: var(--primary-color);
           cursor: pointer;
@@ -70,88 +75,97 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      <iron-media-query query="(max-width: 1024px)" query-matches="{{showToggleFiltersBtn}}"></iron-media-query>
 
-      <div class="card filters">
-        <paper-input class="filter search-input"
-                     placeholder="Search by Person Involved, City or Description"
-                     value="{{filters.q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+      <div class="card">
+        <iron-collapse id="collapse" opened>
+          <div class="filters">
+            <paper-input class="filter search-input"
+                        placeholder="Search by City or Description"
+                        value="{{filters.q}}">
+              <iron-icon icon="search" slot="prefix"></iron-icon>
+            </paper-input>
 
-        <etools-dropdown-multi-lite class="filter sync-filter"
-                                    label="Sync Status"
-                                    options="[[itemSyncStatusOptions]]"
-                                    selected-values="{{filters.syncStatus}}"
-                                    hide-search>
-        </etools-dropdown-multi-lite>
+            <etools-dropdown-multi-lite class="filter sync-filter"
+                                        label="Sync Status"
+                                        options="[[itemSyncStatusOptions]]"
+                                        selected-values="{{filters.syncStatus}}"
+                                        hide-search>
+            </etools-dropdown-multi-lite>
 
-        <datepicker-lite class="filter"
-                         value="{{filters.startDate}}"
-                         max-date="[[toDate(filters.endDate)]]"
-                         label="From"></datepicker-lite>
+            <datepicker-lite class="filter"
+                            value="{{filters.startDate}}"
+                            max-date="[[toDate(filters.endDate)]]"
+                            label="From"></datepicker-lite>
 
-        <datepicker-lite class="filter"
-                         value="{{filters.endDate}}"
-                         min-date="[[toDate(filters.startDate)]]"
-                         label="To"></datepicker-lite>
+            <datepicker-lite class="filter"
+                            value="{{filters.endDate}}"
+                            min-date="[[toDate(filters.startDate)]]"
+                            label="To"></datepicker-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Country"
-                              enable-none-option
-                              options="[[staticData.countries]]"
-                              selected="{{filters.country}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Country"
+                                  enable-none-option
+                                  options="[[staticData.countries]]"
+                                  selected="{{filters.country}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Incident Category"
-                              enable-none-option
-                              options="[[staticData.incidentCategories]]"
-                              selected="{{filters.incidentCategory}}"
-                              selected-item="{{selectedIncidentCategory}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Incident Category"
+                                  enable-none-option
+                                  options="[[staticData.incidentCategories]]"
+                                  selected="{{filters.incidentCategory}}"
+                                  selected-item="{{selectedIncidentCategory}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Incident Subcategory"
-                              enable-none-option
-                              disabled="[[!selectedIncidentCategory]]"
-                              options="[[selectedIncidentCategory.subcategories]]"
-                              selected="{{filters.incidentSubcategory}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Incident Subcategory"
+                                  enable-none-option
+                                  disabled="[[!selectedIncidentCategory]]"
+                                  options="[[selectedIncidentCategory.subcategories]]"
+                                  selected="{{filters.incidentSubcategory}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Events"
-                              enable-none-option
-                              options="[[events]]"
-                              selected="{{filters.event}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Events"
+                                  enable-none-option
+                                  options="[[events]]"
+                                  selected="{{filters.event}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Target"
-                              enable-none-option
-                              options="[[staticData.targets]]"
-                              selected="{{filters.target}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Target"
+                                  enable-none-option
+                                  options="[[staticData.targets]]"
+                                  selected="{{filters.target}}">
+            </etools-dropdown-lite>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Threat Category"
-                              enable-none-option
-                              options="[[staticData.threatCategories]]"
-                              selected="{{filters.threatCategory}}">
-        </etools-dropdown-lite>
+            <etools-dropdown-lite class="filter select"
+                                  label="Threat Category"
+                                  enable-none-option
+                                  options="[[staticData.threatCategories]]"
+                                  selected="{{filters.threatCategory}}">
+            </etools-dropdown-lite>
 
-        <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
-          <paper-button raised class="white-bg" slot="dropdown-trigger">
-            <iron-icon icon="file-download"></iron-icon>
-            Export
-          </paper-button>
-          <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
-            <paper-item doc-type="pdf">PDF</paper-item>
-            <paper-item doc-type="csv">CSV</paper-item>
-            <paper-item doc-type="xls">XLS</paper-item>
-            <paper-item doc-type="xlsx">XLSX</paper-item>
-          </paper-listbox>
-        </paper-menu-button>
+            <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
+              <paper-button raised class="white" slot="dropdown-trigger">
+                <iron-icon icon="file-download"></iron-icon>
+                Export
+              </paper-button>
+              <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
+                <paper-item doc-type="pdf">PDF</paper-item>
+                <paper-item doc-type="csv">CSV</paper-item>
+                <paper-item doc-type="xls">XLS</paper-item>
+                <paper-item doc-type="xlsx">XLSX</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+          </div>
+        </iron-collapse>
 
+        <div class="filters-button" on-tap="_toggleFilters" hidden$="[[!showToggleFiltersBtn]]">
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          FILTERS
+        </div>
       </div>
 
       <div class="card list">
@@ -159,7 +173,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                   label="Incidents"
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
-            Case number
+            Case Number
           </etools-data-table-column>
           <etools-data-table-column class="col-4">
             Description
@@ -187,7 +201,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             <div slot="row-data" class="p-relative">
               <span class="col-data col-1" data-col-header-label="Case number">
                 <span class="truncate">
-                  <a href="/incidents/view/[[item.id]]"> [[item.id]] </a>
+                  <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Case number">
@@ -196,7 +210,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </span>
               </span>
               <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
-                  <span>[[getNameFromId(item.city, 'cities')]]</span>
+                <span>[[item.city]]</span>
               </span>
               <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">
@@ -206,7 +220,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                     data-col-header-label="Incident Subcategory">
                 <span>[[getIncidentSubcategory(item.incident_subcategory)]]</span>
               </span>
-              <span class="col-data col-2" data-col-header-label="Status">
+              <span class="col-data col-2 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
                   [[item.status]]
                 </template>
@@ -219,13 +233,13 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                <template is="dom-if" if="[[isApproved(item.status)]]">
+                <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
                   <a href="/incidents/view/[[item.id]]">
                     <iron-icon icon="assignment" title="View Incident"></iron-icon>
                   </a>
                 </template>
-                <template is="dom-if" if="[[!isApproved(item.status)]]">
-                  <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
+                <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
+                  <a href="/incidents/edit/[[item.id]]" title="Edit Incident">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
                 </template>
@@ -238,24 +252,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
             <div slot="row-data-details">
               <div class="row-details-content flex-c">
                 <div class="row-h flex-c">
-                  <div class="col col-6">
-                    <strong class="rdc-title inline">Date created: </strong>
-                    <span>[[prettyDate(item.submitted_date)]]</span>
-                  </div>
-                  <div class="col col-6">
-                    <strong class="rdc-title inline">Date revised: </strong>
-                    <span>[[prettyDate(item.last_modify_date)]]</span>
-                  </div>
-                </div>
-
-                <div class="row-h flex-c">
-                  <div class="col col-6">
-                    <strong class="rdc-title inline">Long Description: </strong>
+                  <div class="col col-12">
+                    <strong class="rdc-title inline">Description: </strong>
                     <span>[[item.description]]</span>
-                  </div>
-                  <div class="col col-6">
-                    <strong class="rdc-title inline">Note: </strong>
-                    <span>[[item.note]]</span>
                   </div>
                 </div>
               </div>
@@ -462,6 +461,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         subcategory));
     filteredIncidents = filteredIncidents.filter(incident => this._applyThreatCategoryFilter(incident, threatCategory));
 
+    filteredIncidents.sort((left, right) => {
+      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
+    });
+
     return this.applyPagination(filteredIncidents);
   }
 
@@ -470,9 +473,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       return true;
     }
     q = q.toLowerCase();
-    let person = (incident.primary_person.first_name + ' ' + incident.primary_person.last_name).trim();
-    return person.toLowerCase().search(q) > -1 ||
-        String(incident.city).search(q) > -1 ||
+    return String(incident.city).search(q) > -1 ||
         String(incident.description).toLowerCase().search(q) > -1;
   }
 
@@ -522,7 +523,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _showSyncButton(unsynced, offline) {
-    return unsynced && !offline;
+    return !offline && unsynced && hasPermission('add_incident');
   }
 
   _syncItem(incident) {
@@ -534,12 +535,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     store.dispatch(syncIncidentOnList(element));
   }
 
-  notEditable(incident, offline) {
-    return offline && !incident.unsynced;
-  }
-
-  isApproved(status) {
-    return status === 'approved';
+  canEdit(status, unsynced, offline) {
+    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
+           (unsynced && hasPermission('add_incident'));
   }
 
   getIncidentSubcategory(id) {
@@ -573,6 +571,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
       incident_subcategory: this.filters.incidentSubcategory,
       incident_date__gt: this.filters.startDate,
       incident_date__lt: this.filters.endDate,
+      country: this.filters.country,
+      q: this.filters.q,
       event: this.filters.event,
       format: docType,
       target: this.filters.target,
@@ -584,11 +584,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!docType || docType === '') {
       return;
     }
-    const url = Endpoints['incidentsList'].url;
     const csvQStr = this._buildExportQueryString(docType);
-    const csvDownloadUrl = url + '?' + csvQStr;
+    const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
     this.set('exportDocType', '');
-    window.open(csvDownloadUrl, '_blank');
+
+    store.dispatch(exportIncidents(csvDownloadUrl, docType));
   }
 
 }

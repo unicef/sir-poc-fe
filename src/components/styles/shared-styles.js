@@ -23,8 +23,8 @@ documentContainer.innerHTML = `
           color: var(--primary-text-color);
           border-radius: 5px;
           background-color: #fff;
-          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 
-                      0 1px 5px 0 rgba(0, 0, 0, 0.12), 
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
                       0 3px 1px -2px rgba(0, 0, 0, 0.2);
         }
 
@@ -62,6 +62,7 @@ documentContainer.innerHTML = `
 
         a {
           text-decoration: none;
+          color: var(--primary-color);
         }
 
         *[hidden] {
@@ -76,17 +77,8 @@ documentContainer.innerHTML = `
           color: var(--warning-text-color, orange);
         }
 
-        paper-button {
-          background-color: var(--app-primary-color, #4285f4);
-          --paper-button: {
-            color: var(--light-primary-text-color, #fff);
-            font-weight: bold;
-            padding: 5px 10px;
-          };
-        }
-
-        paper-button iron-icon {
-          margin-right: 8px;
+        .alert-text {
+          color: var(--primary-error-color);
         }
 
         etools-info-tooltip.info {

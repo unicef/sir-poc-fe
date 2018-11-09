@@ -1,8 +1,11 @@
+
 /**
 @license
 */
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-dialog/paper-dialog.js';
+import { updatePath } from '../common/navigation-helper';
+import { hasPermission } from '../common/utils.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident, editAttachmentsNotes, deleteIncident,
   deleteIncidentLocally } from '../../actions/incidents.js';
@@ -16,7 +19,7 @@ class EditIncident extends IncidentsBaseView {
     return 'edit-incident';
   }
 
-  static get actionButtonsTemplate() {
+  static get deleteDraftTmpl() {
     return html`
       <paper-button raised
         hidden$="[[!_showDelete(incident.status, incident.unsynced, state.app.offline, incident.attachments)]]"
@@ -28,8 +31,8 @@ class EditIncident extends IncidentsBaseView {
         <h2>Confirm Delete</h2>
         <p>Are you sure you want to delete this incident?</p>
         <div class="buttons">
-          <paper-button class="white-bg smaller" dialog-dismiss>No</paper-button>
-          <paper-button class="smaller" on-tap="deleteIncident" dialog-confirm autofocus>Yes</paper-button>
+          <paper-button raised class="white smaller" dialog-dismiss>No</paper-button>
+          <paper-button raised class="smaller" on-tap="deleteIncident" dialog-confirm autofocus>Yes</paper-button>
         </div>
     </paper-dialog>
     `;
@@ -38,6 +41,16 @@ class EditIncident extends IncidentsBaseView {
   connectedCallback() {
     super.connectedCallback();
     this.title = 'Edit incident';
+  }
+
+  redirectIfNotEditable(incident, visible) {
+    if (!incident || !visible) {
+      return;
+    }
+
+    if (!this.canEdit(this.state.app.offline, incident.status, incident.unsynced)) {
+      updatePath(`/incidents/view/${incident.id}/`);
+    }
   }
 
   save() {
@@ -64,19 +77,21 @@ class EditIncident extends IncidentsBaseView {
 
   _showDelete(status, unsynced, offline, attachments) {
     if (attachments && attachments.length) {
-      return false;// bk err when there are att
+      return false;// back-end throws errors if attachement are present
+    }
+
+    if (unsynced) {
+      return true;
     }
 
     if (offline) {
-      if (unsynced) {
-        return true;
-      }
       return false;
     }
 
-    if (status === 'created' || unsynced) {
+    if (status === 'created' && hasPermission('delete_incident')) {
       return true;
     }
+
     return false;
   }
 

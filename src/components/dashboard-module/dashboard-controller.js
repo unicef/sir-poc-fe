@@ -4,6 +4,8 @@ import 'etools-date-time/datepicker-lite.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
+
+import '@polymer/paper-button/paper-button.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import './dashboard-list.js';
@@ -35,7 +37,7 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           @apply --layout-end;
           @apply --layout-center-justified;
         }
-        
+
         #statistics-between-and {
           margin: 0 24px 13px;
         }
@@ -45,14 +47,14 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
             @apply --layout-vertical;
             @apply --layout-center;
           }
-          
+
           #statistics-between-and {
             margin: 24px 0 0 0;
           }
         }
 
       </style>
-
+      
       <div class="card">
         <div class="row-h">
           <div class="col col-5 center-text">

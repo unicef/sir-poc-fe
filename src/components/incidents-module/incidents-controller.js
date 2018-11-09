@@ -83,7 +83,6 @@ class IncidentsController extends connect(store)(BaseController) {
         <view-incident name="view"></view-incident>
         <incident-review name="review"></incident-review>
         <impact-controller name="impact" route="{{subRoute}}"></impact-controller>
-        <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
     `;
@@ -148,7 +147,6 @@ class IncidentsController extends connect(store)(BaseController) {
 
   getTabs(offline, showEditTab, incidentId) {
     let hideHistory = this._unsyncedAndCreatedOffline(incidentId);
-    let hideComments = this._unsyncedAndCreatedOffline(incidentId);
     let hideReview = this.hideReviewTab();
     hideHistory = hideHistory || offline;
 
@@ -171,11 +169,6 @@ class IncidentsController extends connect(store)(BaseController) {
         name: 'review',
         tabLabel: 'REVIEW',
         hidden: hideReview
-      },
-      {
-        name: 'comments',
-        tabLabel: 'COMMENTS',
-        hidden: hideComments
       },
       {
         name: 'history',

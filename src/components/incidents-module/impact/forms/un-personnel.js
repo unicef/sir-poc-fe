@@ -57,7 +57,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </div>
 
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
+          <legend><h3>Impact Details</h3></legend>
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
@@ -123,7 +123,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </fieldset>
 
         <fieldset>
-          <legend><h3> Impacted UNICEF personnel</h3></legend>
+          <legend><h3> Impacted UNICEF Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
@@ -139,7 +139,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown-lite
                   id="autoCompleteUser"
-                  label="Auto complete staff member"
+                  label="Autocomplete Staff Member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
                   options="[[staticData.users]]"
@@ -168,7 +168,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input id="firstName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="First name"
+                           label="First Name"
                            value="{{data.person.first_name}}"
                            required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="First name is required">
@@ -178,7 +178,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input id="lastName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Last name"
+                           label="Last Name"
                            value="{{data.person.last_name}}"
                            required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="Last name is required">
@@ -202,7 +202,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <datepicker-lite id="birthDate"
                                value="{{data.person.date_of_birth}}"
                                readonly="[[readonly]]"
-                               label="Date of birth">
+                               label="Date of Birth">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -229,7 +229,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input id="index"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Index number"
+                           label="Index Number"
                            value="{{data.person.index_number}}">
               </paper-input>
             </div>
@@ -239,7 +239,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown-lite
                   id="dutyStationRegion"
-                  label="Duty station region"
+                  label="Duty Station Region"
                   readonly="[[readonly]]"
                   options="[[staticData.regions]]"
                   selected="{{data.person.region}}"
@@ -251,7 +251,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown-lite
                   id="dutyStationCountry"
-                  label="Duty station country"
+                  label="Duty Station Country"
                   readonly="[[readonly]]"
                   options="[[getCountriesForRegion(data.person.region)]]"
                   selected="{{data.person.country}}"
@@ -263,7 +263,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <paper-input
                       id="dutyStationCity"
-                      label="Duty station city"
+                      label="Duty Station City"
                       placeholder="&#8212;"
                       readonly$="[[readonly]]"
                       value="{{data.person.city}}"
@@ -289,7 +289,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input id="index"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Job title"
+                           label="Job Title"
                            value="{{data.person.job_title}}">
               </paper-input>
             </div>

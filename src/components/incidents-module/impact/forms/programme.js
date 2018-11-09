@@ -62,7 +62,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite id="country"
-                                    label="Country of impact"
+                                    label="Country of Impact"
                                     readonly="[[readonly]]"
                                     options="[[staticData.countries]]"
                                     selected="{{data.country}}"
@@ -84,7 +84,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
             <div class="col col-3">
               <template is="dom-if" if="[[scopeIsCity(selectedScope)]]">
-                <etools-dropdown-lite label="Area impacted"
+                <etools-dropdown-lite label="Area Impacted"
                                       enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[selectableCities]]"
@@ -92,7 +92,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                 </etools-dropdown-lite>
               </template>
               <template is="dom-if" if="[[scopeIsCountry(selectedScope)]]">
-                <etools-dropdown-lite label="Area impacted"
+                <etools-dropdown-lite label="Area Impacted"
                                       enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[staticData.countries]]"
@@ -100,7 +100,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                 </etools-dropdown-lite>
               </template>
               <template is="dom-if" if="[[scopeIsOther(selectedScope)]]">
-                <etools-dropdown-lite label="Area impacted"
+                <etools-dropdown-lite label="Area Impacted"
                                       enable-none-option
                                       readonly="[[readonly]]"
                                       options="[[staticData.programmeAreas]]"
@@ -117,7 +117,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                                value="{{data.start_date}}"
                                max-date="[[toDate(data.end_date)]]"
                                readonly="[[readonly]]"
-                               label="Start of impact">
+                               label="Start of Impact">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -125,7 +125,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                                value="{{data.end_date}}"
                                min-date="[[toDate(data.start_date)]]"
                                readonly="[[readonly]]"
-                               label="End of impact">
+                               label="End of Impact">
               </datepicker-lite>
             </div>
 
@@ -133,7 +133,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite id="impact"
-                                    label="Impact type"
+                                    label="Impact Type"
                                     readonly="[[readonly]]"
                                     options="[[staticData.impacts.property]]"
                                     selected="{{data.impact}}"
@@ -156,7 +156,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
             <div class="col col-3">
               <etools-dropdown-lite id="programmeType"
-                                    label="Programmes type"
+                                    label="Programme Type"
                                     readonly="[[readonly]]"
                                     options="[[staticData.programmeTypes]]"
                                     selected="{{data.programme_type}}"
@@ -169,7 +169,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </fieldset>
 
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
+          <legend><h3>Impact Details</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-12">
               <paper-textarea id="description"

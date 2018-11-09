@@ -78,7 +78,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           Status
         </etools-data-table-column>
         <etools-data-table-column class="col-2">
-          Date created
+          Date Created
         </etools-data-table-column>
         <etools-data-table-column class="col-2">
           Category

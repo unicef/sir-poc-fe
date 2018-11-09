@@ -53,7 +53,6 @@ class SirLogin extends PolymerElement {
         }
 
         #unicef-icon {
-          // margin: 8.3333px;
           width: 83.3333px;
           height: 83.3333px;
         }
@@ -68,9 +67,6 @@ class SirLogin extends PolymerElement {
           @apply --layout-horizontal;
           @apply --layout-center;
           text-align: center;
-          // flex-wrap: wrap;
-          // height: 100vh;
-          // justify-content: space-between;
         }
       </style>
 

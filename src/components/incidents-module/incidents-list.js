@@ -59,6 +59,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           margin-right: 8px;
         }
 
+        .capitalize {
+          text-transform: capitalize;
+        }
+
         .sync-btn {
           color: var(--primary-color);
           cursor: pointer;
@@ -169,7 +173,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                   label="Incidents"
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
-            Case number
+            Case Number
           </etools-data-table-column>
           <etools-data-table-column class="col-4">
             Description
@@ -206,7 +210,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </span>
               </span>
               <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
-                  <span>[[incident.city]]</span>
+                <span>[[item.city]]</span>
               </span>
               <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">
@@ -216,7 +220,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                     data-col-header-label="Incident Subcategory">
                 <span>[[getIncidentSubcategory(item.incident_subcategory)]]</span>
               </span>
-              <span class="col-data col-2" data-col-header-label="Status">
+              <span class="col-data col-2 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
                   [[item.status]]
                 </template>

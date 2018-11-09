@@ -19,7 +19,7 @@ class EditIncident extends IncidentsBaseView {
     return 'edit-incident';
   }
 
-  static get actionButtonsTemplate() {
+  static get deleteDraftTmpl() {
     return html`
       <paper-button raised
         hidden$="[[!_showDelete(incident.status, incident.unsynced, state.app.offline, incident.attachments)]]"

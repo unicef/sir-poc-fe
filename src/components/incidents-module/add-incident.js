@@ -25,7 +25,7 @@ class AddIncident extends IncidentsBaseView {
     this.set('incident', this.state.incidents.draft);
   }
 
-  static get actionButtonsTemplate() {
+  static get addImpactButtonTmpl() {
     return html`
       <paper-button class="secondary"
                     raised
@@ -33,9 +33,23 @@ class AddIncident extends IncidentsBaseView {
                     disabled$="[[!canSave(incident.event, state.app.offline, incidentId)]]">
         Add Impact
       </paper-button>
-      <paper-button raised on-tap="resetForm">
-        Reset data
+    `;
+  }
+
+  static get resetButtonTmpl() {
+    return html`
+      <paper-button raised on-tap="openResetConfirmation">
+        Reset Data
       </paper-button>
+
+      <paper-dialog id="resetConfirm">
+        <h2>Confirm Reset</h2>
+        <p>Are you sure you want to reset the data on this incident?</p>
+        <div class="buttons">
+          <paper-button raised class="white smaller" dialog-dismiss>No</paper-button>
+          <paper-button raised class="smaller" on-tap="resetForm" dialog-confirm autofocus>Yes</paper-button>
+        </div>
+      </paper-dialog>
     `;
   }
 
@@ -80,6 +94,10 @@ class AddIncident extends IncidentsBaseView {
       this.handleSuccessfullCreation();
       updatePath(`/incidents/impact/${createdId}/list`);
     }
+  }
+
+  openResetConfirmation() {
+    this.shadowRoot.querySelector('#resetConfirm').opened = true;
   }
 
   handleSuccessfullCreation(incident) {

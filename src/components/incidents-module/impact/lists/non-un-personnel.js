@@ -12,7 +12,6 @@ import { store } from '../../../../redux/store.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
-
 export class NonUnPersonnelList extends connect(store)(PolymerElement) {
   static get template() {
     return html`
@@ -53,7 +52,7 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
                 </span>
               </span>
               <span class="col-data col-6" data-col-header-label="Address">
-                  [[item.person.address]], [[item.person.city]], [[getNameFromId(item.person.country, 'countries')]]
+                  [[renderAddress(item)]]
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/incidents/impact/[[item.incident]]/non-un/[[item.id]]/"
@@ -88,6 +87,20 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
     this.getNameFromId = getNameFromId;
+  }
+
+  renderAddress(item) {
+    let addressArray = [];
+    if (item.person.address) {
+      addressArray.push(item.person.address);
+    }
+    if (item.person.city) {
+      addressArray.push(item.person.city);
+    }
+    if (item.person.country) {
+      addressArray.push(this.getNameFromId(item.person.country, 'countries'));
+    }
+    return addressArray.join(', ');
   }
 
   _stateChanged(state) {

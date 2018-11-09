@@ -108,7 +108,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
 
             <div class="col col-3">
               <etools-dropdown-lite id="premisesType"
-                                    label="Premises type"
+                                    label="Premises Type"
                                     readonly="[[readonly]]"
                                     options="[[staticData.premisesTypes]]"
                                     selected="{{data.premise_type}}"
@@ -120,7 +120,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
         </fieldset>
 
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
+          <legend><h3>Impact Details</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite

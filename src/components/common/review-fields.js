@@ -17,7 +17,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
       <div class="row-h flex-c">
         <div class="col col-3">
           <paper-input id="created_by"
-                        label="Created by"
+                        label="Created By"
                         placeholder="&#8212;"
                         type="text"
                         value="[[_getUsername(data.created_by_user_id)]]"
@@ -25,13 +25,13 @@ export class ReviewFields extends connect(store)(PolymerElement) {
         </div>
         <div class="col col-3">
           <datepicker-lite id="created_on"
-                            label="Created on"
+                            label="Created On"
                             value="[[data.created_on]]"
                             readonly></datepicker-lite>
         </div>
         <div class="col col-3">
           <paper-input id="last_edited_by"
-                        label="Last edited by"
+                        label="Last Edited By"
                         placeholder="&#8212;"
                         type="text"
                         readonly
@@ -39,7 +39,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
         </div>
         <div class="col col-3">
           <datepicker-lite id="last_edited_on"
-                            label="Last edited on"
+                            label="Last Edited On"
                             value="[[data.last_modify_date]]"
                             readonly></datepicker-lite>
         </div>

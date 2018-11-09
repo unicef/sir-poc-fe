@@ -34,9 +34,10 @@ class IncidentsController extends connect(store)(BaseController) {
           --paper-tabs: {
             font-size: 14px;
           }
+          z-index: 1;
           position: -webkit-sticky; /* Safari */
           position: sticky;
-          top: -1px;
+          top: -65px;
         }
 
         paper-tabs {

@@ -1,8 +1,8 @@
 /**
  * @license
  */
-import {html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -15,9 +15,9 @@ import {
   syncPersonnel
 } from '../../../../actions/incident-impacts.js';
 
-import {store} from '../../../../redux/store.js';
+import { store } from '../../../../redux/store.js';
 
-import {scrollToTop} from '../../../common/content-container-helper.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -29,7 +29,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/required-fields-styles.js';
 import '../../../styles/form-fields-styles.js';
-import {ImpactFormBase} from './impact-form-base.js';
+import { ImpactFormBase } from './impact-form-base.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -57,7 +57,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </div>
 
         <fieldset>
-          <legend><h3>Impact details</h3></legend>
+          <legend><h3>Impact Details</h3></legend>
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
@@ -123,7 +123,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         </fieldset>
 
         <fieldset>
-          <legend><h3> Impacted UNICEF personnel</h3></legend>
+          <legend><h3> Impacted UNICEF Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
             <div class="row-h flex-c">
@@ -139,7 +139,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown-lite
                   id="autoCompleteUser"
-                  label="Auto complete staff member"
+                  label="Autocomplete Staff Member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
                   options="[[staticData.users]]"
@@ -168,7 +168,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input id="firstName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="First name"
+                           label="First Name"
                            value="{{data.person.first_name}}"
                            required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="First name is required">
@@ -178,7 +178,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input id="lastName"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Last name"
+                           label="Last Name"
                            value="{{data.person.last_name}}"
                            required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
                            error-message="Last name is required">
@@ -202,7 +202,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <datepicker-lite id="birthDate"
                                value="{{data.person.date_of_birth}}"
                                readonly="[[readonly]]"
-                               label="Date of birth">
+                               label="Date of Birth">
               </datepicker-lite>
             </div>
             <div class="col col-3">
@@ -229,12 +229,50 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <paper-input id="index"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Index number"
+                           label="Index Number"
                            value="{{data.person.index_number}}">
               </paper-input>
             </div>
           </div>
 
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <etools-dropdown-lite
+                  id="dutyStationRegion"
+                  label="Duty Station Region"
+                  readonly="[[readonly]]"
+                  options="[[staticData.regions]]"
+                  selected="{{data.person.region}}"
+                  required$="[[!isSexualAssault(selectedImpactType)]]"
+                  auto-validate
+                  error-message="Duty station region is required">
+              </etools-dropdown-lite>
+            </div>
+            <div class="col col-3">
+              <etools-dropdown-lite
+                  id="dutyStationCountry"
+                  label="Duty Station Country"
+                  readonly="[[readonly]]"
+                  options="[[getCountriesForRegion(data.person.region)]]"
+                  selected="{{data.person.country}}"
+                  required$="[[!isSexualAssault(selectedImpactType)]]"
+                  auto-validate
+                  error-message="Duty station country is required">
+              </etools-dropdown-lite>
+            </div>
+            <div class="col col-3">
+              <paper-input
+                      id="dutyStationCity"
+                      label="Duty Station City"
+                      placeholder="&#8212;"
+                      readonly$="[[readonly]]"
+                      value="{{data.person.city}}"
+                      required$="[[!isSexualAssault(selectedImpactType)]]"
+                      auto-validate
+                      error-message="Duty station city is required">
+              </paper-input>
+            </div>
+          </div>
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-dropdown-lite
@@ -248,34 +286,10 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="dutyStationCountry"
-                  label="Duty station country"
-                  readonly="[[readonly]]"
-                  options="[[staticData.countries]]"
-                  selected="{{data.person.country}}"
-                  required$="[[!isSexualAssault(selectedImpactType)]]"
-                  auto-validate
-                  error-message="Duty station country is required">
-              </etools-dropdown-lite>
-            </div>
-            <div class="col col-3">
-              <paper-input
-                      id="dutyStationCity"
-                      label="Duty station city"
-                      placeholder="&#8212;"
-                      readonly$="[[readonly]]"
-                      value="{{data.person.city}}"
-                      required$="[[!isSexualAssault(selectedImpactType)]]"
-                      auto-validate
-                      error-message="Duty station city is required">
-              </paper-input>
-            </div>
-            <div class="col col-3">
               <paper-input id="index"
                            placeholder="&#8212;"
                            readonly$="[[readonly]]"
-                           label="Job title"
+                           label="Job Title"
                            value="{{data.person.job_title}}">
               </paper-input>
             </div>
@@ -338,6 +352,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           '#nationality',
           '#gender',
           '#category',
+          '#dutyStationRegion',
           '#dutyStationCountry',
           '#dutyStationCity',
           '#status',

@@ -23,7 +23,7 @@ documentContainer.innerHTML = `
           color: var(--button-primary-text-color, #fff);
           font-weight: bold;
         }
-        
+
         paper-button.secondary {
           background-color: var(--button-secondary-bg-color, #4285f4);
         }
@@ -49,6 +49,19 @@ documentContainer.innerHTML = `
         paper-button iron-icon {
           margin-right: 8px;
         }
+
+        paper-button[disabled]::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: .4;
+          z-index: -1;
+          background: #eee;
+        }
+
       </style>
     </template>
   </dom-module>`;

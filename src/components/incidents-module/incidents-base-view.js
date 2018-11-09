@@ -15,27 +15,30 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-date-time/time-input.js';
-
-import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
-import { makeRequest, handleBlobDataReceivedAndStartDownload  } from '../common/request-helper.js';
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
+
+import { Endpoints } from '../../config/endpoints';
+import { hasPermission } from '../common/utils.js';
+import { updatePath } from '../common/navigation-helper';
+import { SirMsalAuth } from '../auth/jwt/msal-authentication';
+import { objDiff, getCountriesForRegion } from '../common/utils.js';
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
+import { makeRequest, handleBlobDataReceivedAndStartDownload  } from '../common/request-helper.js';
+
 import { store } from '../../redux/store.js';
 import { selectIncident } from '../../reducers/incidents.js';
-
 import { fetchIncident } from '../../actions/incidents.js';
 import { serverError } from '../../actions/errors.js';
+import { showSnackbar } from '../../actions/app.js';
+
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import { Endpoints } from '../../config/endpoints';
-import { updatePath } from '../common/navigation-helper';
-import { showSnackbar } from '../../actions/app.js';
-import { SirMsalAuth } from '../auth/jwt/msal-authentication';
 
 export class IncidentsBaseView extends connect(store)(PolymerElement) {
   static get template() {
@@ -76,6 +79,11 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
 
         .buttons-area paper-button:not(:first-child) {
           margin-left: 4px;
+        }
+
+        #locationButton {
+          margin-top: 16px;
+          margin-bottom: 0;
         }
 
       </style>
@@ -352,7 +360,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
                 <etools-dropdown-lite id="country"
                                       readonly="[[readonly]]"
                                       label="Country"
-                                      options="[[staticData.countries]]"
+                                      options="[[getCountriesForRegion(incident.region, staticData.countries)]]"
                                       selected="{{incident.country}}"
                                       required auto-validate
                                       error-message="Country is required">
@@ -423,27 +431,27 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
               </template>
 
               <template is="dom-if" if="[[!readonly]]">
-                <div class="col col-3">
+                <div class="col col-2">
                   <paper-input label="Latitude"
                               type="number"
                               value="{{incident.latitude}}"
                               placeholder="&#8212;">
                   </paper-input>
                 </div>
-                <div class="col col-3 layout-horizontal layout-center justified">
+                <div class="col col-2">
                   <paper-input label="Longitude"
                               type="number"
                               value="{{incident.longitude}}"
                               placeholder="&#8212;">
                   </paper-input>
-
-                  <paper-icon-button id="get-location"
-                                     on-tap="getLocation"
-                                     title="Use device location"
-                                     icon="device:gps-fixed">
-                  </paper-icon-button>
                 </div>
-
+                <div class="col col-2">
+                  <paper-button id="locationButton" raised on-tap="getLocation" class="white no-t-transform">
+                    <iron-icon icon="device:gps-fixed">
+                    </iron-icon>
+                    Use device location
+                  </paper-button>
+                </div>
               </template>
 
             </div>
@@ -456,50 +464,50 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </fieldset>
 
-        <template is="dom-if" if="[[_showRelatedDocsSection(incidentId, readonly, incident)]]">
-          <fieldset>
-            <legend><h3>Related documents</h3></legend>
-            <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
-              <etools-upload-multi
-                  endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
-                  jwt-local-storage-key="[[jwtLocalStorageKey]]">
-              </etools-upload-multi>
-            </div>
-            <div hidden$="[[hideAttachmentsList(incident, incident.attachments, incident.attachments.length)]]">
-              <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
+        <fieldset hidden$="[[hideRelatedDocsSection(readonly, state.app.offline, incident.unsynced, incident.attachments)]]">
+          <legend><h3>Related documents</h3></legend>
 
-                <etools-data-table-column class="col-4">
-                  File
-                </etools-data-table-column>
-                <etools-data-table-column class="col-7">
-                  Note
-                </etools-data-table-column>
+          <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
+            <etools-upload-multi
+                endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
+                jwt-local-storage-key="[[jwtLocalStorageKey]]">
+            </etools-upload-multi>
+          </div>
 
-              </etools-data-table-header>
+          <div hidden$="[[hideAttachmentsList(offline, incident, incident.attachments)]]">
+            <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
-              <template is="dom-repeat" items="[[incident.attachments]]">
-                <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
-                  <div slot="row-data">
-                    <span class="col-data col-4 break-word"
-                          title="[[getFilenameFromURL(item.attachment)]]"
-                          data-col-header-label="File">
-                      <span>
-                        <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
-                           [[getFilenameFromURL(item.attachment)]]
-                        </a>
-                      </span>
+              <etools-data-table-column class="col-4">
+                File
+              </etools-data-table-column>
+              <etools-data-table-column class="col-7">
+                Note
+              </etools-data-table-column>
+
+            </etools-data-table-header>
+
+            <template is="dom-repeat" items="[[incident.attachments]]">
+              <etools-data-table-row no-collapse low-resolution-layout="[[lowResolutionLayout]]">
+                <div slot="row-data">
+                  <span class="col-data col-4 break-word"
+                        title="[[getFilenameFromURL(item.attachment)]]"
+                        data-col-header-label="File">
+                    <span>
+                      <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
+                          [[getFilenameFromURL(item.attachment)]]
+                      </a>
                     </span>
-                    <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
-                      <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
-                      </paper-input>
-                    </span>
-                  </div>
-                </etools-data-table-row>
-              </template>
-            </div>
-            Max individual file upload size is 10MB.
-          </fieldset>
-        </template>
+                  </span>
+                  <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
+                    <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
+                    </paper-input>
+                  </span>
+                </div>
+              </etools-data-table-row>
+            </template>
+          </div>
+          Max individual file upload size is 10MB.
+        </fieldset>
 
         <template is="dom-if" if="[[!readonly]]">
           <div class="row-h flex-c" hidden$="[[!state.app.offline]]">
@@ -578,6 +586,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
       title: String,
       state: Object,
       store: Object,
+      lowResolutionLayout: Boolean,
       incident: {
         type: Object,
         observer: 'incidentChanged'
@@ -641,10 +650,13 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
         value: false,
         observer: 'pressCoverageChanged'
       },
-      lowResolutionLayout: Boolean,
       jwtLocalStorageKey: {
         type: String,
         value: ''
+      },
+      getCountriesForRegion: {
+        type: Function,
+        value: () => getCountriesForRegion
       }
     };
   }
@@ -787,8 +799,9 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     return !offline || !incidentId || isNaN(incidentId);
   }
 
-  canEdit(offline, status, unsynced) {
-    return !!unsynced || (status === 'created' && !offline);
+  canEdit(offline, status, unsynced)  {
+    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
+           (unsynced && hasPermission('add_incident'));
   }
 
   _hideInfoTooltip(...arg) {
@@ -820,19 +833,17 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     };
   }
 
-  hideUploadBtn(readonly, offline, unsynced) {
-    return readonly || offline || unsynced;
+  hideUploadBtn() {
+    return this.incident && (this.readonly || this.state.app.offline || this.incident.unsynced);
   }
 
-  hideAttachmentsList(incident, att, attLenght) {
-    if (!incident) {
-      return true;
-    }
+  hideAttachmentsList() {
+    return this.incident &&
+      (this.state.app.offline || !this.incident.attachments || !this.incident.attachments.length);
+  }
 
-    if (!att || !att.length) {
-      return true;
-    }
-    return false;
+  hideRelatedDocsSection() {
+    return this.hideUploadBtn() && this.hideAttachmentsList();
   }
 
   handleUploadedFiles(ev) {
@@ -868,13 +879,6 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     });
   }
 
-  _showRelatedDocsSection(incidentId, readonly, incident) {
-    if (!incidentId || isNaN(incidentId)) {
-      return false;
-    }
-    return !(readonly && (!this.incident || !this.incident.attachments || !this.incident.attachments.length));
-  }
-
   _returnToIncidentsList() {
     updatePath('/incidents/list/');
   }
@@ -895,7 +899,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
     }).catch((error) => {
       // eslint-disable-next-line
       console.error(error);
-      store.dispatch(showSnackbar('An error occurred on downloading!'));
+      store.dispatch(showSnackbar('An error occurred while downloading'));
     });
   }
 

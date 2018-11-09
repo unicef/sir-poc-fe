@@ -60,8 +60,9 @@ export const getNameFromId = (id, staticDataPath) => {
   if (!id) {
     return '';
   }
+
   let staticData = store.getState().staticData;
-  let result = getStaticDataByPath(staticDataPath, staticData).find(v => v.id === Number(id));
+  let result = getStaticDataByPath(staticDataPath, staticData).find(v => Number(v.id) === Number(id));
   return result ? result.name || '' : '';
 };
 
@@ -78,3 +79,17 @@ const getStaticDataByPath = (path, data) => {
 export const isNumber = (candidate) => {
   return !isNaN(parseFloat(candidate));
 };
+
+export const hasPermission = (permissionName) => {
+  const userPermissions = store.getState().staticData.profile.permissions;
+  return userPermissions && !!userPermissions[permissionName];
+};
+
+export const getCountriesForRegion = (regionId) => {
+  if (!regionId) {
+    return null;
+  }
+
+  let allCountries = store.getState().staticData.countries;
+  return allCountries.filter(country => Number(country.region) === Number(regionId));
+}

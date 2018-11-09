@@ -1,5 +1,6 @@
 import { makeRequest } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
+import { computePermissions } from './permissions-helpers.js';
 import * as ACTIONS from './constants.js';
 
 export const loadAllStaticData = () => (dispatch) => {
@@ -23,6 +24,7 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreCrashTypes());
   dispatch(fetchAndStoreCountries());
   dispatch(fetchAndStoreAgencies());
+  dispatch(fetchAndStoreProfile());
   dispatch(fetchAndStoreRegions());
   dispatch(fetchAndStoreFactors());
   dispatch(fetchAndStoreTargets());
@@ -30,6 +32,22 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreCities());
   dispatch(fetchAndStoreUsers());
   dispatch(fetchAndStoreTeams());
+};
+
+export const fetchAndStoreProfile = () => (dispatch, getState) => {
+  makeRequest(Endpoints.myProfile).then((profile) => {
+    dispatch(receiveProfile(profile));
+  });
+
+};
+
+const receiveProfile = (profile) => {
+  profile.permissions = computePermissions(profile);
+
+  return {
+    type: ACTIONS.RECEIVE_PROFILE,
+    profile
+  };
 };
 
 export const fetchAndStoreIncidentCategories = () => (dispatch, getState) => {

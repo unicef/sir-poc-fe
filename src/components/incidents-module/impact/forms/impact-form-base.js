@@ -1,5 +1,6 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-import {updatePath} from '../../../common/navigation-helper';
+import { updatePath } from '../../../common/navigation-helper';
+import { getCountriesForRegion } from '../../../common/utils.js';
 
 export class ImpactFormBase extends PolymerElement {
   static get properties() {
@@ -18,6 +19,10 @@ export class ImpactFormBase extends PolymerElement {
           // incident id (TODO: API should use incident_id for all impacts)
           // incident: null
         }
+      },
+      getCountriesForRegion: {
+        type: Function,
+        value: () => getCountriesForRegion
       }
     };
   }

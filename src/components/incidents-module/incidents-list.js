@@ -7,8 +7,8 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
@@ -23,16 +23,16 @@ import '@polymer/iron-collapse/iron-collapse.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
-
-import {store} from '../../redux/store.js';
 import 'etools-date-time/datepicker-lite.js';
+
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
-import {syncIncidentOnList, exportIncidents} from '../../actions/incidents.js';
+import { syncIncidentOnList, exportIncidents } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import {updateAppState} from '../common/navigation-helper';
-import {getNameFromId} from '../common/utils.js';
-import {Endpoints} from '../../config/endpoints.js';
+import { updateAppState } from '../common/navigation-helper';
+import { getNameFromId, hasPermission } from '../common/utils.js';
+import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -57,6 +57,10 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
         .col-data iron-icon {
           margin-right: 8px;
+        }
+
+        .capitalize {
+          text-transform: capitalize;
         }
 
         .sync-btn {
@@ -169,7 +173,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                   label="Incidents"
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
-            Case number
+            Case Number
           </etools-data-table-column>
           <etools-data-table-column class="col-4">
             Description
@@ -206,7 +210,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </span>
               </span>
               <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
-                  <span>[[incident.city]]</span>
+                <span>[[item.city]]</span>
               </span>
               <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
                     data-col-header-label="Incident Category">
@@ -216,7 +220,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                     data-col-header-label="Incident Subcategory">
                 <span>[[getIncidentSubcategory(item.incident_subcategory)]]</span>
               </span>
-              <span class="col-data col-2" data-col-header-label="Status">
+              <span class="col-data col-2 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
                   [[item.status]]
                 </template>
@@ -229,13 +233,13 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                 </template>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
-                <template is="dom-if" if="[[!isDraft(item.status, item.unsynced)]]">
+                <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
                   <a href="/incidents/view/[[item.id]]">
                     <iron-icon icon="assignment" title="View Incident"></iron-icon>
                   </a>
                 </template>
-                <template is="dom-if" if="[[isDraft(item.status, item.unsynced)]]">
-                  <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
+                <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
+                  <a href="/incidents/edit/[[item.id]]" title="Edit Incident">
                     <iron-icon icon="editor:mode-edit"></iron-icon>
                   </a>
                 </template>
@@ -519,7 +523,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _showSyncButton(unsynced, offline) {
-    return unsynced && !offline;
+    return !offline && unsynced && hasPermission('add_incident');
   }
 
   _syncItem(incident) {
@@ -531,12 +535,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     store.dispatch(syncIncidentOnList(element));
   }
 
-  notEditable(incident, offline) {
-    return offline && !incident.unsynced;
-  }
-
-  isDraft(status, unsynced) {
-    return status === 'created' || unsynced;
+  canEdit(status, unsynced, offline) {
+    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
+           (unsynced && hasPermission('add_incident'));
   }
 
   getIncidentSubcategory(id) {

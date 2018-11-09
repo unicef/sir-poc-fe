@@ -15,7 +15,7 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
       </style>
 
       <a href="[[module]]/history/[[workingItem.data.id]]/list/" title="Go to changes list">
-        <paper-button raised class="white-bg smaller">
+        <paper-button raised class="white smaller">
           <iron-icon icon="list"></iron-icon>
           History List
         </paper-button>
@@ -24,7 +24,7 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
       <a href="[[module]]/history/[[workingItem.data.id]]/view/[[workingItem.id]]/"
            hidden$="[[_pageIs('view')]]"
            title="View entire [[_getLabel(module)]] at this version">
-        <paper-button raised class="white-bg smaller">
+        <paper-button raised class="white smaller">
           <iron-icon icon="assignment"></iron-icon>
            [[_getLabel(module)]] at this revision
         </paper-button>
@@ -33,7 +33,7 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
       <a href="[[module]]/history/[[workingItem.data.id]]/diff/[[workingItem.id]]/"
            hidden$="[[_shouldHideViewChangesButton(workingItem.change)]]"
            title="View changes from previous version">
-        <paper-button raised class="white-bg smaller">
+        <paper-button raised class="white smaller">
           <iron-icon icon="image:compare"></iron-icon>
           Changes from prev. version
         </paper-button>

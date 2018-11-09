@@ -10,7 +10,8 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../redux/store.js';
 import { syncEventOnList } from '../../actions/events.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
-import { getNameFromId } from '../common/utils.js';
+import { getNameFromId, hasPermission } from '../common/utils.js';
+
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -77,7 +78,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
           Status
         </etools-data-table-column>
         <etools-data-table-column class="col-2">
-          Date created
+          Date Created
         </etools-data-table-column>
         <etools-data-table-column class="col-2">
           Category
@@ -151,15 +152,14 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
               </template>
             </span>
             <span class="col-data col-1" data-col-header-label="Actions">
-              <template is="dom-if" if="[[checkStatus(item.status)]]">
+              <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
                 <a href="/[[item.case_type]]s/view/[[item.id]]">
                   <iron-icon icon="assignment" title="View [[item.case_type]]"></iron-icon>
                 </a>
               </template>
-              <template is="dom-if" if="[[!checkStatus(item.status)]]">
+              <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
                 <a href="/[[item.case_type]]s/edit/[[item.id]]"
-                    title="Edit [[item.case_type]]"
-                    hidden$="[[_notEditable(item, offline)]]">
+                    title="Edit [[item.case_type]]">
                   <iron-icon icon="editor:mode-edit"></iron-icon>
                 </a>
               </template>
@@ -233,8 +233,9 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     }
   }
 
-  checkStatus(status) {
-    return status === 'approved';
+  canEdit(status, unsynced, offline) {
+    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
+           (unsynced && hasPermission('add_incident'));
   }
 
   wasCreatedLastWeek(createdOn) {
@@ -262,7 +263,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _showSyncButton(unsynced, offline) {
-    return unsynced && !offline;
+    return !offline && unsynced && hasPermission('add_incident');
   }
 }
 

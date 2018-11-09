@@ -27,12 +27,12 @@ import './styles/app-theme.js';
 import './styles/shared-styles.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
-import { requestPageLoadData } from '../actions/app.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
 
 import './snack-bar/snack-bar.js';
 import './snack-bar/ios-shortcut-dialog.js';
 import { store } from '../redux/store.js';
+import { hasPermission } from './common/utils.js';
 
 import { updatePath } from '../components/common/navigation-helper.js';
 
@@ -186,7 +186,8 @@ class AppShell extends connect(store)(PolymerElement) {
             </a>
 
             <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
-              href="[[rootPath]]incidents/new/">
+              href="[[rootPath]]incidents/new/"
+              hidden$="[[!canAddIncidents(profile)]]">
               <iron-icon icon="av:playlist-add"></iron-icon>
               <span>New Incident</span>
             </a>
@@ -256,7 +257,6 @@ class AppShell extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    store.dispatch(requestPageLoadData());
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
@@ -296,6 +296,7 @@ class AppShell extends connect(store)(PolymerElement) {
       return;
     }
     this.set('offline', state.app.offline);
+    this.set('profile', state.staticData.profile);
     this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
@@ -314,6 +315,13 @@ class AppShell extends connect(store)(PolymerElement) {
 
   _getPageTitle(page) {
     return !page ? '' : `SIR - ${page}`;
+  }
+
+  canAddIncidents(profile) {
+    if (!profile) {
+      return false;
+    }
+    return hasPermission('add_incident');
   }
 }
 

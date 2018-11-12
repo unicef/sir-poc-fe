@@ -2,9 +2,8 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-button/paper-button.js';
-
+import '../styles/app-theme.js';
 import { SirMsalAuth } from './jwt/msal-authentication.js';
-import { updatePath } from '../common/navigation-helper';
 
 /**
  * @customElement

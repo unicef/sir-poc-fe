@@ -20,10 +20,10 @@ class SirLogin extends PolymerElement {
         :host {
           @apply --layout-horizontal;
           @apply --layout-center;
-
-          padding: 24px;
-          margin: 24px;
+          padding: 28px;
+          margin: 12px;
           color: var(--primary-text-color);
+          flex-wrap: wrap;
           border-radius: 5px;
           background-color: #fff;
           box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
@@ -51,9 +51,30 @@ class SirLogin extends PolymerElement {
           height: 100px;
           color: var(--primary-color);
         }
+
+        #unicef-icon {
+          width: 83.3333px;
+          height: 83.3333px;
+        }
+
+        #sir-icon {
+          margin-left: 8.3333px;
+          width: 83.3333px;
+          height: 83.3333px;
+        }
+
+        .icons {
+          @apply --layout-horizontal;
+          @apply --layout-center;
+          text-align: center;
+        }
       </style>
 
-      <iron-icon id="login-icon" icon="account-circle"></iron-icon>
+      <div class="icons">
+        <img src="../../../images/unicef_logo_round.png" id="unicef-icon"></img>
+        <img src="../../../images/manifest/icon-96x96.png" id="sir-icon"></img>
+        <iron-icon id="login-icon" icon="account-circle"></iron-icon>
+      </div>
       <div id="login-area">
         <h1>Welcome to UNICEF SIR</h1>
         <p>Sign into your Microsoft Account</p>

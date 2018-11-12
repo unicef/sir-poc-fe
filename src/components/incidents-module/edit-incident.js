@@ -3,9 +3,7 @@
 @license
 */
 import { html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/paper-dialog/paper-dialog.js';
 import { updatePath } from '../common/navigation-helper';
-import { hasPermission } from '../common/utils.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident,
          editAttachmentsNotes

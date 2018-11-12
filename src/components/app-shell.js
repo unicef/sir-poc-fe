@@ -134,6 +134,12 @@ class AppShell extends connect(store)(PolymerElement) {
           background-color: var(--menu-selected-bg-color);
           color: var(--app-primary-color);
         }
+        #logo {
+          width: 70%;
+          padding: 0 16px;
+          position: fixed;
+          bottom: 128px;
+        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -197,6 +203,7 @@ class AppShell extends connect(store)(PolymerElement) {
               <span>Admin</span>
             </a>
           </div>
+          <img id="logo" align="end" src="../../images/unicef_logo.png"></img>
 
         </app-drawer>
 

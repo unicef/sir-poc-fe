@@ -12,7 +12,6 @@ import { store } from '../../../../redux/store.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
-
 export class NonUnPersonnelList extends connect(store)(PolymerElement) {
   static get template() {
     return html`
@@ -26,13 +25,13 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
 
       <div hidden$="[[!personnelList.length]]">
         <etools-data-table-header id="listHeader" no-title no-collapse low-resolution-layout="[[lowResolutionLayout]]">
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-2">
             Name
           </etools-data-table-column>
           <etools-data-table-column class="col-3">
             Impact
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-6">
             Address
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -44,7 +43,7 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
           <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]" 
                                  low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
-              <span class="col-data col-4" data-col-header-label="Name">
+              <span class="col-data col-2" data-col-header-label="Name">
                 [[item.person.first_name]] [[item.person.last_name]]
               </span>
               <span class="col-data col-3" data-col-header-label="Impact">
@@ -52,8 +51,8 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
                   [[getNameFromId(item.impact, 'impacts.person')]]
                 </span>
               </span>
-              <span class="col-data col-4" data-col-header-label="Address">
-                  [[item.contact_address]]
+              <span class="col-data col-6" data-col-header-label="Address">
+                  [[renderAddress(item)]]
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                   <a href="/incidents/impact/[[item.incident]]/non-un/[[item.id]]/"
@@ -88,6 +87,20 @@ export class NonUnPersonnelList extends connect(store)(PolymerElement) {
   connectedCallback() {
     super.connectedCallback();
     this.getNameFromId = getNameFromId;
+  }
+
+  renderAddress(item) {
+    let addressArray = [];
+    if (item.person.address) {
+      addressArray.push(item.person.address);
+    }
+    if (item.person.city) {
+      addressArray.push(item.person.city);
+    }
+    if (item.person.country) {
+      addressArray.push(this.getNameFromId(item.person.country, 'countries'));
+    }
+    return addressArray.join(', ');
   }
 
   _stateChanged(state) {

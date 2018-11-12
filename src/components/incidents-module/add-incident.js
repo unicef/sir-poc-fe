@@ -12,6 +12,8 @@ import { addIncident,
          updateAddedAttachmentIds } from '../../actions/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import { updatePath } from '../common/navigation-helper.js';
+import './buttons/reset.js';
+
 /**
  * @polymer
  * @customElement
@@ -38,18 +40,8 @@ class AddIncident extends IncidentsBaseView {
 
   static get resetButtonTmpl() {
     return html`
-      <paper-button raised on-tap="openResetConfirmation">
-        Reset Data
-      </paper-button>
-
-      <paper-dialog id="resetConfirm">
-        <h2>Confirm Reset</h2>
-        <p>Are you sure you want to reset the data on this incident?</p>
-        <div class="buttons">
-          <paper-button raised class="white smaller" dialog-dismiss>No</paper-button>
-          <paper-button raised class="smaller" on-tap="resetForm" dialog-confirm autofocus>Yes</paper-button>
-        </div>
-      </paper-dialog>
+      <reset-button on-reset-incident="resetForm">
+      </reset-button>
     `;
   }
 
@@ -94,10 +86,6 @@ class AddIncident extends IncidentsBaseView {
       this.handleSuccessfullCreation();
       updatePath(`/incidents/impact/${createdId}/list`);
     }
-  }
-
-  openResetConfirmation() {
-    this.shadowRoot.querySelector('#resetConfirm').opened = true;
   }
 
   handleSuccessfullCreation(incident) {

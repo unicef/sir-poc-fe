@@ -8,6 +8,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-date-time/datepicker-lite.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import {
   addPersonnel,
@@ -72,16 +73,22 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                 </etools-dropdown-lite>
               </div>
               <div class="col col-3">
-                <etools-dropdown-lite
-                    id="impact"
-                    label="Impact"
-                    readonly="[[readonly]]"
-                    options="[[staticData.impacts.person]]"
-                    selected="{{data.impact}}"
-                    selected-item="{{selectedImpactType}}"
-                    required auto-validate
-                    error-message="Impact is required">
-                </etools-dropdown-lite>
+                <etools-info-tooltip class="info" open-on-click form-field-align
+                                     hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
+                  <etools-dropdown-lite
+                      id="impact"
+                      slot="field"
+                      label="Impact"
+                      readonly="[[readonly]]"
+                      options="[[staticData.impacts.person]]"
+                      selected="{{data.impact}}"
+                      selected-item="{{selectedImpactType}}"
+                      required auto-validate
+                      error-message="Impact is required">
+                  </etools-dropdown-lite>
+                  <span slot="message">[[selectedImpactType.description]]
+                  </span>
+                </etools-info-tooltip>
               </div>
               <template is="dom-if" if="[[_shouldShowNextOfKinCheckbox(selectedImpactType.name)]]">
                 <div class="col col-3">
@@ -417,6 +424,13 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   resetData() {
     this.data = JSON.parse(JSON.stringify(this.modelForNew));
     this.$.autoCompleteUser.selected = null;
+  }
+
+  _hideInfoTooltip(arg) {
+    if (!arg) {
+      return true;
+    }
+    return !typeof arg === 'string' && arg !== '';
   }
 
   _computeIsNew(id) {

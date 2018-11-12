@@ -7,6 +7,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import {
   addProgramme,
@@ -132,14 +133,21 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite id="impact"
-                                    label="Impact Type"
-                                    readonly="[[readonly]]"
-                                    options="[[staticData.impacts.property]]"
-                                    selected="{{data.impact}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-info-tooltip class="info" open-on-click form-field-align
+                                   hide-tooltip$="[[_hideInfoTooltip(selectedImpactItem.description)]]">
+                <etools-dropdown-lite id="impact"
+                                      slot="field"
+                                      label="Impact Type"
+                                      readonly="[[readonly]]"
+                                      options="[[staticData.impacts.property]]"
+                                      selected="{{data.impact}}"
+                                      selected-item="{{selectedImpactItem}}"
+                                      required auto-validate
+                                      error-message="This is required">
+                </etools-dropdown-lite>
+                <span slot="message">[[selectedImpactItem.description]]
+                </span>
+              </etools-info-tooltip>
             </div>
 
             <div class="col col-3">
@@ -200,6 +208,10 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       selectedScope: Object,
       staticData: Array,
       impactId: String,
+      selectedImpactItem: {
+        type: Object,
+        value: {}
+      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -271,6 +283,13 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
   _computeIsNew(id) {
     return id === 'new';
+  }
+
+  _hideInfoTooltip(arg) {
+    if (!arg) {
+      return true;
+    }
+    return !typeof arg === 'string' && arg !== '';
   }
 
   _idChanged(id) {

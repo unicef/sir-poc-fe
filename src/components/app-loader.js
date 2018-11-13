@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
 import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 import './auth/sir-login.js';
-import './app-shell.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -42,7 +41,7 @@ class AppLoader extends PolymerElement {
     this.checkAuth();
   }
 
-  checkAuth(page) {
+  checkAuth() {
     if (SirMsalAuth.tokenIsValid()) {
       this.authorizedCallback();
       return;
@@ -53,7 +52,8 @@ class AppLoader extends PolymerElement {
       .catch(this.unauthorizedCallback.bind(this));
   }
 
-  authorizedCallback() {
+  async authorizedCallback() {
+    await import('./app-shell.js');
     this.set('authorized', true);
     this.registerServiceWorker();
   }

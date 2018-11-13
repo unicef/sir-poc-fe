@@ -325,10 +325,11 @@ export const fetchIncident = id => (dispatch, getState) => {
 };
 
 export const updateAddedAttachmentIds = (incidentId, attachments) => (dispatch) => {
+  let operations = [];
+
   if (!attachments || !attachments.length) {
     return;
   }
-  let operations = [];
 
   attachments.forEach((attachment) => {
     let endpoint = prepareEndpoint(Endpoints.editIncidentAttachments, {id: attachment.id});

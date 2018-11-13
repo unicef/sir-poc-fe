@@ -1,4 +1,5 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { PermissionsBase } from '../../common/permissions-base-class';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
@@ -8,7 +9,7 @@ import HistoryHelpers from '../../history-components/history-helpers.js';
  * @polymer
  * @customElement
  */
-class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
+class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -187,9 +188,11 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PolymerElement)) {
     let tempTimeline = {};
     let finalTimeline = [];
 
-    comments.forEach((elem) => {
-      elem.action = 'comment';
-    });
+    if (this.hasPermission('view_comment')) {
+      comments.forEach((elem) => {
+        elem.action = 'comment';
+      });
+    }
 
     [...history, ...comments].forEach((elem) => {
       let year = this._getYear(elem.created);

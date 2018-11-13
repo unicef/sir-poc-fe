@@ -8,24 +8,25 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { PermissionsBase } from '../common/permissions-base-class';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-collapse/iron-collapse.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
-import {store} from '../../redux/store.js';
+import { store } from '../../redux/store.js';
 import PaginationMixin from '../common/pagination-mixin.js';
 import DateMixin from '../common/date-mixin.js';
 
-import {syncEventOnList} from '../../actions/events.js';
+import { syncEventOnList } from '../../actions/events.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
-import {updateAppState} from '../common/navigation-helper';
+import { updateAppState } from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import 'etools-date-time/datepicker-lite.js';
@@ -44,7 +45,7 @@ import '../styles/filters-styles.js';
  * @appliesMixin ListCommonMixin
  *
  */
-class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
+class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PermissionsBase)))) {
   static get template() {
     // language=HTML
     return html`
@@ -141,8 +142,11 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
           <etools-data-table-row unsynced$="[[item.unsynced]]" low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data" class="p-relative">
               <span class="col-data col-1" data-col-header-label="Case Number">
-                <span class="truncate">
+                <span class="truncate" hidden$="[[!hasPermission('view_event')]]">
                   <a href="/events/view/[[item.id]]">[[item.case_number]]</a>
+                </span>
+                <span class="truncate" hidden$="[[hasPermission('view_event')]]">
+                  [[item.case_number]]
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Description">
@@ -170,7 +174,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                 <template is="dom-if" if="[[isApproved(item.status)]]">
-                  <a href="/events/view/[[item.id]]">
+                  <a href="/events/view/[[item.id]]" hidden$="[[!hasPermission('view_event)]]">
                     <iron-icon icon="assignment" title="View Event"></iron-icon>
                   </a>
                 </template>
@@ -180,7 +184,10 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
                   </a>
                 </template>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <iron-icon icon="notification:sync" title="Sync Event" class="sync-btn"
+                  <iron-icon icon="notification:sync"
+                             title="Sync Event"
+                             class="sync-btn"
+                             hidden$="[[!hasPermission('add_event')]]"
                              on-click="_syncItem">
                   </iron-icon>
                 </template>
@@ -371,7 +378,7 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   }
 
   notEditable(event, offline) {
-    return offline && !event.unsynced;
+    return offline && !event.unsynced && !this.hasPermission('change_event');
   }
 
   // Outputs the query string for the list

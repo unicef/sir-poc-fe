@@ -1,7 +1,8 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { PermissionsBase } from '../../common/permissions-base-class';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { updatePath } from '../../common/navigation-helper.js';
 import { selectIncident } from '../../../reducers/incidents.js';
@@ -101,12 +102,12 @@ export class ImpactsView extends connect(store)(PolymerElement) {
       <div class="card">
         <div class="layout-horizontal space-between">
           <h3>Evacuations</h3>
-          <paper-button raised class="no-t-transform smaller" on-click="_addEvacuation">
+          <paper-button raised class="no-t-transform smaller" on-click="_addEvacuation" hidden$="[[!hasPermision('add_evacuationimpact')]]">
             <iron-icon icon="add"></iron-icon>
             Add Evacuation
           </paper-button>
         </div>
-        <evacuations-list></evacuations-list>
+        <evacuations-list hidden$="[[!hasPermission('view_evacuationimpact')]]"></evacuations-list>
       </div>
 
       <div class="card">

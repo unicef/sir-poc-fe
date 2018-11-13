@@ -208,13 +208,6 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
     resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
-  _hideInfoTooltip(arg) {
-    if (!arg) {
-      return true;
-    }
-    return !typeof arg === 'string' && arg !== '';
-  }
-
   _computeIsNew(id) {
     return id === 'new';
   }

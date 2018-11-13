@@ -134,18 +134,18 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div class="row-h flex-c">
             <div class="col col-3">
               <etools-info-tooltip class="info" open-on-click form-field-align
-                                   hide-tooltip$="[[_hideInfoTooltip(selectedImpactItem.description)]]">
+                                   hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
                 <etools-dropdown-lite id="impact"
                                       slot="field"
                                       label="Impact Type"
                                       readonly="[[readonly]]"
                                       options="[[staticData.impacts.property]]"
                                       selected="{{data.impact}}"
-                                      selected-item="{{selectedImpactItem}}"
+                                      selected-item="{{selectedImpactType}}"
                                       required auto-validate
                                       error-message="This is required">
                 </etools-dropdown-lite>
-                <span slot="message">[[selectedImpactItem.description]]
+                <span slot="message">[[selectedImpactType.description]]
                 </span>
               </etools-info-tooltip>
             </div>
@@ -208,10 +208,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       selectedScope: Object,
       staticData: Array,
       impactId: String,
-      selectedImpactItem: {
-        type: Object,
-        value: {}
-      },
       offline: Boolean,
       readonly: {
         type: Boolean,
@@ -283,13 +279,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
   _computeIsNew(id) {
     return id === 'new';
-  }
-
-  _hideInfoTooltip(arg) {
-    if (!arg) {
-      return true;
-    }
-    return !typeof arg === 'string' && arg !== '';
   }
 
   _idChanged(id) {

@@ -316,10 +316,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
   static get properties() {
     return {
-      selectedImpactType: {
-        type: Object,
-        value: {}
-      },
       staticData: Array,
       impactId: String,
       offline: Boolean,
@@ -424,13 +420,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   resetData() {
     this.data = JSON.parse(JSON.stringify(this.modelForNew));
     this.$.autoCompleteUser.selected = null;
-  }
-
-  _hideInfoTooltip(arg) {
-    if (!arg) {
-      return true;
-    }
-    return !typeof arg === 'string' && arg !== '';
   }
 
   _computeIsNew(id) {

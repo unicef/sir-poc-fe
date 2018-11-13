@@ -231,10 +231,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
   static get properties() {
     return {
-      selectedImpactType: {
-        type: Object,
-        value: {}
-      },
       staticData: Array,
       impactId: String,
       offline: Boolean,
@@ -331,13 +327,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
   _computeIsNew(id) {
     return id === 'new';
-  }
-
-  _hideInfoTooltip(arg) {
-    if (!arg) {
-      return true;
-    }
-    return !typeof arg === 'string' && arg !== '';
   }
 
   _idChanged(id) {

@@ -10,14 +10,15 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../redux/store.js';
 import { syncEventOnList } from '../../actions/events.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
-import { getNameFromId, hasPermission } from '../common/utils.js';
+import { PermissionsBase } from '../common/permissions-base-class.js';
+import { getNameFromId } from '../common/utils.js';
 
 import DateMixin from '../common/date-mixin.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import moment from 'moment';
 
-export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
+export class DashboardList extends connect(store)(DateMixin(PermissionsBase)) {
   static get template() {
     // language=HTML
     return html`
@@ -234,8 +235,8 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   canEdit(status, unsynced, offline) {
-    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
-           (unsynced && hasPermission('add_incident'));
+    return (status === 'created' && this.hasPermission('change_incident') && !offline) ||
+           (unsynced && this.hasPermission('add_incident'));
   }
 
   wasCreatedLastWeek(createdOn) {
@@ -263,7 +264,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _showSyncButton(unsynced, offline) {
-    return !offline && unsynced && hasPermission('add_incident');
+    return !offline && unsynced && this.hasPermission('add_incident');
   }
 }
 

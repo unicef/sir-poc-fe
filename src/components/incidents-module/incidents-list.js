@@ -31,7 +31,9 @@ import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList, exportIncidents } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 import { updateAppState } from '../common/navigation-helper';
-import { getNameFromId, hasPermission } from '../common/utils.js';
+import { getNameFromId } from '../common/utils.js';
+import { PermissionsBase } from '../common/permissions-base-class';
+
 import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -42,7 +44,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
+class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PermissionsBase)))) {
   static get template() {
     // language=HTML
     return html`
@@ -523,7 +525,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _showSyncButton(unsynced, offline) {
-    return !offline && unsynced && hasPermission('add_incident');
+    return !offline && unsynced && this.hasPermission('add_incident');
   }
 
   _syncItem(incident) {
@@ -536,8 +538,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   canEdit(status, unsynced, offline) {
-    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
-           (unsynced && hasPermission('add_incident'));
+    return (status === 'created' && this.hasPermission('change_incident') && !offline) ||
+           (unsynced && this.hasPermission('add_incident'));
   }
 
   getIncidentSubcategory(id) {

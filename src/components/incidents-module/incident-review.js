@@ -14,8 +14,9 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
+import { PermissionsBase } from '../common/permissions-base-class';
 import { updatePath } from '../common/navigation-helper';
-import { hasPermission, getNameFromId } from '../common/utils';
+import { getNameFromId } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';
 import './buttons/review-eod.js';
@@ -26,7 +27,7 @@ import './buttons/review-legal.js';
  * @polymer
  * @customElement
  */
-class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
+class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles form-fields-styles">
@@ -243,7 +244,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _hideCommentButton(offline) {
-    return offline || this.readonly || !hasPermission('comment_incident');
+    return offline || this.readonly || !this.hasPermission('comment_incident');
   }
 
   _hideBottomCard(offline, status) {
@@ -256,7 +257,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _canReview(offline, reviewerId, permissionsKey) {
-    return !offline && hasPermission(permissionsKey) && !reviewerId;
+    return !offline && this.hasPermission(permissionsKey) && !reviewerId;
   }
 }
 

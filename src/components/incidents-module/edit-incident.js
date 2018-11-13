@@ -5,7 +5,6 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-dialog/paper-dialog.js';
 import { updatePath } from '../common/navigation-helper';
-import { hasPermission } from '../common/utils.js';
 import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident, editAttachmentsNotes, deleteIncident,
   deleteIncidentLocally } from '../../actions/incidents.js';
@@ -88,7 +87,7 @@ class EditIncident extends IncidentsBaseView {
       return false;
     }
 
-    if (status === 'created' && hasPermission('delete_incident')) {
+    if (status === 'created' && this.hasPermission('delete_incident')) {
       return true;
     }
 

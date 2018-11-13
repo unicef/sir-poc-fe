@@ -834,11 +834,12 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   hideUploadBtn() {
-    return this.incident && (this.readonly || this.state.app.offline || this.incident.unsynced);
+    return this.incident && !this.hasPermission('add_attachment') &&
+           (this.readonly || this.state.app.offline || this.incident.unsynced);
   }
 
   hideAttachmentsList() {
-    return this.incident &&
+    return this.incident && !this.hasPermission('view_attachment') &&
       (this.state.app.offline || !this.incident.attachments || !this.incident.attachments.length);
   }
 

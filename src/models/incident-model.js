@@ -8,6 +8,7 @@ const IncidentModel = {
   note: '',
   reported: false,
   weapons_used: [],
+  attachments: [],
   latitude: '',
   longitude: ''
 };

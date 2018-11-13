@@ -2,19 +2,24 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import 'etools-date-time/datepicker-lite.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import ListCommonMixin from '../common/list-common-mixin.js';
 import { store } from '../../redux/store.js';
 import DateMixin from '../common/date-mixin.js';
+import '@polymer/iron-collapse/iron-collapse.js';
+import '@polymer/iron-icons/iron-icons.js';
 
 import '@polymer/paper-button/paper-button.js';
 import '../styles/shared-styles.js';
+import '../styles/filters-styles.js';
 import '../styles/grid-layout-styles.js';
 import './dashboard-list.js';
+// import { log } from 'util';
 
-export class DashboardController extends connect(store)(DateMixin(PolymerElement)) {
+export class DashboardController extends connect(store)(DateMixin(ListCommonMixin(PolymerElement))) {
   static get template() {
     // language=HTML
     return html`
-      <style include="shared-styles grid-layout-styles data-table-styles">
+      <style include="shared-styles grid-layout-styles data-table-styles filters-styles">
         :host {
           @apply --layout-vertical;
         }
@@ -23,23 +28,18 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           padding-top: 28px;
         }
 
-        .large-text {
-          width: 100%;
-          font-size: 72px;
-        }
-
         .center-text {
-          text-align: center;
+          justify-content: center;
         }
 
         .statistics-between {
           @apply --layout-horizontal;
-          @apply --layout-end;
-          @apply --layout-center-justified;
+          align-items: flex-end;
+          font-size: 20px;
         }
 
-        #statistics-between-and {
-          margin: 0 24px 13px;
+        .date-input {
+          margin: 0 24px;
         }
 
         @media screen and (max-width: 480px) {
@@ -49,39 +49,39 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           }
 
           #statistics-between-and {
-            margin: 24px 0 0 0;
+            position: relative;
+            top: 12px;
           }
         }
 
       </style>
+
+      <iron-media-query query="(max-width: 1024px)" query-matches="{{showToggleFiltersBtn}}"></iron-media-query>
       
       <div class="card">
-        <div class="row-h">
-          <div class="col col-5 center-text">
-            <div class="large-text"> [[filteredEvents.length]]</div>
-            Events between [[checkSelection(selectedStartDate)]] and [[checkSelection(selectedEndDate)]]
+        <iron-collapse id="collapse" opened>
+          <div class="row-h">
+            <div class="col col-12 statistics-between center-text">
+              Displaying incidents between 
+              <datepicker-lite class="date-input" value="{{selectedStartDate}}" 
+                              max-date="[[toDate(selectedEndDate)]]"></datepicker-lite>
+              <span id="statistics-between-and">and</span>
+              <datepicker-lite class="date-input" value="{{selectedEndDate}}" 
+                              min-date="[[toDate(selectedStartDate)]]"></datepicker-lite>
+            </div>
           </div>
-          <div class="col col-2"></div>
-          <div class="col col-5 center-text">
-            <div class="large-text"> [[filteredIncidents.length]]</div>
-            Incidents between [[checkSelection(selectedStartDate)]] and [[checkSelection(selectedEndDate)]]
-          </div>
-        </div>
+        </iron-collapse>
 
-        <div class="row-h statistics-between">
-          Show stastistics between
+        <div class="filters-button" on-tap="_toggleFilters" hidden$="[[!showToggleFiltersBtn]]">
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          DATE RANGE
         </div>
-        <div class="row-h statistics-between">
-          <datepicker-lite value="{{selectedStartDate}}" 
-                           max-date="[[toDate(selectedEndDate)]]"></datepicker-lite>
-          <span id="statistics-between-and">and</span>
-          <datepicker-lite value="{{selectedEndDate}}" 
-                           min-date="[[toDate(selectedStartDate)]]"></datepicker-lite>
-        </div>
+      </div>
 
+      <div class="card">
         <div class="row-h">
           <div class="col col-12">
-            <dashboard-list></dashboard-list>
+            <dashboard-list filtered-incidents=[[filteredIncidents]]></dashboard-list>
           </div>
         </div>
       </div>
@@ -106,10 +106,6 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
           return moment().subtract(1, 'years').format('YYYY-MM-DD');
         }
       },
-      filteredEvents: {
-        type: Array,
-        computed: 'getEventsForPeriod(events, selectedStartDate, selectedEndDate)'
-      },
       filteredIncidents: {
         type: Array,
         computed: 'getIncidentsForPeriod(incidents, selectedStartDate, selectedEndDate)'
@@ -122,29 +118,14 @@ export class DashboardController extends connect(store)(DateMixin(PolymerElement
       return;
     }
 
-    this.events = state.events.list;
     this.incidents = state.incidents.list;
     this.staticData = state.staticData;
   }
 
-  getEventsForPeriod(events, selectedStartDate, selectedEndDate) {
-    let filteredEvents = events.filter((event) => {
-      let evStart = moment(event.start_date);
-      let evEnd = moment(event.end_date);
-
-      let cond1 = evStart.isBetween(selectedStartDate, selectedEndDate, null, '[]');
-      let cond2 = evEnd.isBetween(selectedStartDate, selectedEndDate, null, '[]');
-
-      return cond1 || cond2;
-    });
-
-    return filteredEvents;
-  }
-
   getIncidentsForPeriod(incidents, selectedStartDate, selectedEndDate) {
-    let filteredIncidents = incidents.filter((incident) => {
-      return moment(incident.incident_date).isBetween(selectedStartDate, selectedEndDate, null, '[]');
-    });
+    let filteredIncidents = incidents.filter(
+      incident => moment(incident.incident_date).isBetween(selectedStartDate, selectedEndDate, null, '[]')
+    );
 
     return filteredIncidents;
   }

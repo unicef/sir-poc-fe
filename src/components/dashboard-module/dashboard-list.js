@@ -8,7 +8,6 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import { store } from '../../redux/store.js';
-import { syncEventOnList } from '../../actions/events.js';
 import { syncIncidentOnList } from '../../actions/incidents.js';
 import { getNameFromId, hasPermission } from '../common/utils.js';
 
@@ -62,7 +61,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
       <iron-media-query query="(min-width: 768px) and (max-width: 1024px)"
                         query-matches="{{mediumResolutionLayout}}"></iron-media-query>
 
-      <etools-data-table-header id="listHeader" label="Cases"
+      <etools-data-table-header id="listHeader" label="[[cases.length]] Incidents"
                                 low-resolution-layout="[[lowResolutionLayout]]"
                                 medium-resolution-layout="[[mediumResolutionLayout]]">
         <etools-data-table-column class="col-1">
@@ -188,8 +187,10 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
 
   static get properties() {
     return {
-      events: Array,
-      incidents: Array,
+      filteredIncidents: {
+        type: Array,
+        observer: '_updateFilteredIncidents'
+      },
       offline: Boolean,
       cases: Array,
       lowResolutionLayout: Boolean,
@@ -209,20 +210,17 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
 
     this.offline = state.app.offline;
     this.staticData = state.staticData;
+  }
 
-    this.events = state.events.list.map((event) => {
-      event.case_type = 'event';
-      return event;
-    });
-
-    this.incidents = state.incidents.list.map((incident) => {
+  _updateFilteredIncidents() {
+    let incidents = this.filteredIncidents.map((incident) => {
       incident.case_type = 'incident';
       return incident;
     });
 
-    this.cases = [...this.events, ...this.incidents].sort((left, right) => {
-      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
-    });
+    this.cases = incidents.sort(
+      (left, right) => moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date))
+    );
   }
 
   getIncidentSubcategory(id) {
@@ -248,14 +246,7 @@ export class DashboardList extends connect(store)(DateMixin(PolymerElement)) {
     }
 
     let element = item.model.__data.item;
-
-    if (element.case_type === 'incident') {
-      store.dispatch(syncIncidentOnList(element));
-    }
-
-    if (element.case_type === 'event') {
-      store.dispatch(syncEventOnList(element));
-    }
+    store.dispatch(syncIncidentOnList(element));
   }
 
   _notEditable(item, offline) {

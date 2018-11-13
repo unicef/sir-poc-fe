@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-import '@polymer/paper-dialog/paper-dialog.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import { addComment } from '../../actions/incidents.js';
@@ -14,7 +13,6 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
-import { updatePath } from '../common/navigation-helper';
 import { hasPermission, getNameFromId } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';

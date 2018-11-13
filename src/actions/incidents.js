@@ -88,7 +88,7 @@ export const deleteIncidentFromRedux = (incidentId) => {
   };
 };
 
-export const fetchAllIncidentData = () => (dispatch, getState) => {
+export const fetchAllIncidentData = () => (dispatch) => {
   dispatch(fetchIncidents());
   dispatch(fetchIncidentComments());
   dispatch(fetchIncidentPremises());
@@ -127,7 +127,7 @@ export const addIncident = newIncident => (dispatch, getState) => {
   }
 };
 
-const addCommentOnline = comment => (dispatch, getState) => {
+const addCommentOnline = comment => (dispatch) => {
   return makeRequest(Endpoints.addIncidentComment, comment).then((result) => {
     dispatch(addCommentSuccess(result));
     return true;
@@ -137,7 +137,7 @@ const addCommentOnline = comment => (dispatch, getState) => {
   });
 };
 
-export const addComment = comment => (dispatch, getState) => {
+export const addComment = comment => (dispatch) => {
   return dispatch(addCommentOnline(comment));
 };
 
@@ -181,7 +181,7 @@ export const editIncident = incident => (dispatch, getState) => {
   }
 };
 
-export const syncIncidentOnList = newIncident => (dispatch, getState) => {
+export const syncIncidentOnList = newIncident => (dispatch) => {
   newIncident = getSanitizedIncident(newIncident);
 
   return makeRequest(Endpoints.newIncident, newIncident).then((result) => {
@@ -324,11 +324,12 @@ export const fetchIncident = id => (dispatch, getState) => {
   });
 };
 
-export const updateAddedAttachmentIds = (incidentId, attachments) => (dispatch, getState) => {
-  if (!attachments.length) {
+export const updateAddedAttachmentIds = (incidentId, attachments) => (dispatch) => {
+  let operations = [];
+
+  if (!attachments || !attachments.length) {
     return;
   }
-  let operations = [];
 
   attachments.forEach((attachment) => {
     let endpoint = prepareEndpoint(Endpoints.editIncidentAttachments, {id: attachment.id});
@@ -382,21 +383,30 @@ export const editAttachmentsNotes = incident => (dispatch, getState) => {
         });
 };
 
-export const deleteIncident = incidentId => (dispatch, getState) => {
-  makeRequest(prepareEndpoint(Endpoints.deleteIncident, {id: incidentId})).then(() => {
-    dispatch(deleteIncidentLocally(incidentId));
+export const deleteIncident = incidentId => (dispatch) => {
+  if (isNaN(incidentId)) {
+    return dispatch(deleteIncidentLocally(incidentId));
+  } else {
+    return dispatch(deleteIncidentFromServer(incidentId));
+  }
+}
+
+export const deleteIncidentFromServer = incidentId => (dispatch) => {
+  return makeRequest(prepareEndpoint(Endpoints.deleteIncident, {id: incidentId})).then(() => {
+    return dispatch(deleteIncidentLocally(incidentId));
   }).catch((err) => {
     dispatch(serverError(err));
+    return false;
   });
 
 };
 
-export const deleteIncidentLocally = incidentId => (dispatch, getState) => {
+export const deleteIncidentLocally = incidentId => (dispatch) => {
   dispatch(deleteIncidentFromRedux(incidentId));
-  updatePath('/incidents/list/');
+  return true;
 };
 
-export const exportIncidents = (exportUrl, docType) => (dispatch, getState) => {
+export const exportIncidents = (exportUrl, docType) => (dispatch) => {
   const incidentsExportReqOptions = Object.assign({}, Endpoints['incidentsList'],
       {
         url: exportUrl,

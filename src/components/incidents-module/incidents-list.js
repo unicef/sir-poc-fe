@@ -202,8 +202,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
               <span class="col-data col-1" data-col-header-label="Case number">
-                <span class="truncate">
+                <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
                   <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
+                </span>
+                <span class="truncate" hidden$="[[hasPermission('view_incident')]]">
+                  [[item.case_number]]
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Case number">
@@ -236,7 +239,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                 <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
-                  <a href="/incidents/view/[[item.id]]">
+                  <a href="/incidents/view/[[item.id]]" hidden$="[[!hasPermission('view_incident')]]">
                     <iron-icon icon="assignment" title="View Incident"></iron-icon>
                   </a>
                 </template>

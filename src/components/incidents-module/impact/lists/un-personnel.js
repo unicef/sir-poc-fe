@@ -1,7 +1,8 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { PermissionsBase } from '../../../common/permissions-base-class';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
@@ -13,7 +14,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
 
-export class UnPersonnelList extends connect(store)(PolymerElement) {
+export class UnPersonnelList extends connect(store)(PermissionsBase) {
   static get template() {
     // language=HTML
     return html`
@@ -100,7 +101,7 @@ export class UnPersonnelList extends connect(store)(PolymerElement) {
   }
 
   _notEditable(item, offline) {
-    return offline && !item.unsynced;
+    return offline && !item.unsynced && !this.hasPermission('change_person');
   }
 }
 

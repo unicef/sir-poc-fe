@@ -13,7 +13,6 @@ import { store } from '../../../../redux/store.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
-
 export class EvacuationsList extends connect(store)(PermissionsBase) {
   static get template() {
     // language=HTML
@@ -128,7 +127,7 @@ export class EvacuationsList extends connect(store)(PermissionsBase) {
   }
 
   _notEditable(item, offline) {
-    return offline && !item.unsynced && !this.hasPermission('change_evacuationimpact');
+    return offline && !item.unsynced && !this.hasPermission('change_evacuation');
   }
 }
 

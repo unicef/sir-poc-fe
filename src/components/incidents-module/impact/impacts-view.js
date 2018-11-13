@@ -24,7 +24,7 @@ import './lists/premises.js';
  * @polymer
  * @customElement
  */
-export class ImpactsView extends connect(store)(PolymerElement) {
+export class ImpactsView extends connect(store)(PermissionsBase) {
   static get is() {
     return 'impacts-view';
   }
@@ -73,12 +73,13 @@ export class ImpactsView extends connect(store)(PolymerElement) {
           </etools-info-tooltip>
           <paper-button raised
               class="no-t-transform smaller"
-              on-click="_addUnPersonnel">
+              on-click="_addUnPersonnel"
+               hidden$="[[!hasPermision('add_person')]]">
             <iron-icon icon="add"></iron-icon>
             Add UNICEF Personnel
           </paper-button>
         </div>
-        <un-personnel-list></un-personnel-list>
+        <un-personnel-list hidden$="[[!hasPermission('view_person')]]"></un-personnel-list>
       </div>
 
       <div class="card">
@@ -91,23 +92,29 @@ export class ImpactsView extends connect(store)(PolymerElement) {
               accident with a UNICEF staff member, or could be a visitor to a UNICEF building when an incident occurs.
             </span>
           </etools-info-tooltip>
-          <paper-button raised class="no-t-transform smaller" on-click="_addNonUn">
+          <paper-button raised
+                        class="no-t-transform smaller"
+                        on-click="_addNonUn"
+                        hidden$="[[!hasPermision('add_person')]]">
             <iron-icon icon="add"></iron-icon>
             Add Non-UNICEF Personnel
           </paper-button>
         </div>
-        <non-un-personnel-list></non-un-personnel-list>
+        <non-un-personnel-list hidden$="[[!hasPermission('view_person')]]"></non-un-personnel-list>
       </div>
 
       <div class="card">
         <div class="layout-horizontal space-between">
           <h3>Evacuations</h3>
-          <paper-button raised class="no-t-transform smaller" on-click="_addEvacuation" hidden$="[[!hasPermision('add_evacuationimpact')]]">
+          <paper-button raised
+                        class="no-t-transform smaller"
+                        on-click="_addEvacuation"
+                        hidden$="[[!hasPermision('add_evacuation')]]">
             <iron-icon icon="add"></iron-icon>
             Add Evacuation
           </paper-button>
         </div>
-        <evacuations-list hidden$="[[!hasPermission('view_evacuationimpact')]]"></evacuations-list>
+        <evacuations-list hidden$="[[!hasPermission('view_evacuation')]]"></evacuations-list>
       </div>
 
       <div class="card">
@@ -118,12 +125,15 @@ export class ImpactsView extends connect(store)(PolymerElement) {
               UNICEF Assets include equipment, vehicles and vessels.
             </span>
           </etools-info-tooltip>
-          <paper-button raised class="no-t-transform smaller" on-click="_addProperty">
+          <paper-button raised
+                        class="no-t-transform smaller"
+                        on-click="_addProperty"
+                        hidden$="[[!hasPermision('add_property')]]">
             <iron-icon icon="add"></iron-icon>
             Add UNICEF Property
           </paper-button>
         </div>
-        <properties-list></properties-list>
+        <properties-list hidden$="[[!hasPermission('view_property')]]"></properties-list>
       </div>
 
       <div class="card">
@@ -137,25 +147,29 @@ export class ImpactsView extends connect(store)(PolymerElement) {
               repeater stations.
             </span>
           </etools-info-tooltip>
-          <paper-button raised class="no-t-transform smaller" on-click="_addPremise">
+          <paper-button raised
+                        class="no-t-transform smaller"
+                        on-click="_addPremise"
+                        hidden$="[[!hasPermision('add_premise')]]">
             <iron-icon icon="add"></iron-icon>
             Add Premise
           </paper-button>
         </div>
-        <premises-list></premises-list>
+        <premises-list hidden$="[[!hasPermission('view_premise')]]"></premises-list>
       </div>
 
       <div class="card">
         <div class="layout-horizontal space-between">
           <h3>UNICEF Programme</h3>
           <paper-button raised
-              class="no-t-transform smaller"
-              on-click="_addProgramme">
+                        class="no-t-transform smaller"
+                        on-click="_addProgramme"
+                        hidden$="[[!hasPermision('add_programme')]]">
             <iron-icon icon="add"></iron-icon>
             Add Programme
           </paper-button>
         </div>
-        <programmes-list></programmes-list>
+        <programmes-list hidden$="[[!hasPermission('view_programme')]]"></programmes-list>
       </div>
     `;
   }

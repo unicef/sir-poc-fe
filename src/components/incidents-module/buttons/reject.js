@@ -42,7 +42,7 @@ class RejectButton extends ButtonsBaseClass {
   }
 
   isHidden() {
-    return !this.hasPermission('approve_incident');
+    return !this.hasPermission('reject_incident');
   }
 
   validate() {

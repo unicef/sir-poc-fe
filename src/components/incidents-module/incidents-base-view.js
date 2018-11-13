@@ -464,7 +464,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
           </div>
         </fieldset>
 
-        <fieldset hidden$="[[hideRelatedDocsSection(readonly, state.app.offline, incident.unsynced, incident.attachments)]]">
+        <fieldset hidden$="[[hideRelatedDocsSection(readonly, state.app.offline, incident.unsynced, incident.attachments, incident.attachments.length)]]">
           <legend><h3>Related documents</h3></legend>
 
           <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
@@ -474,7 +474,7 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
             </etools-upload-multi>
           </div>
 
-          <div hidden$="[[hideAttachmentsList(offline, incident, incident.attachments)]]">
+          <div hidden$="[[hideAttachmentsList(offline, incident, incident.attachments, incident.attachments.length)]]">
             <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
               <etools-data-table-column class="col-4">

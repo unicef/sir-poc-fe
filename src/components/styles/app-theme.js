@@ -6,7 +6,7 @@ documentContainer.innerHTML = `
   <custom-style>
     <style>
       html {
-        --primary-color: #309ae0;
+        --primary-color: #1CABE2;
         --background-color: #eee;
         
         --app-primary-color: #309ae0; /* TODO: we should switch to --primary-color as it's used by polymer elements */

@@ -25,7 +25,7 @@ function getSourcesPath(request) {
 
   clientCapabilities = new Set(clientCapabilities); // eslint-disable-line
 
-  if (clientCapabilities.has('es2015')) {
+  if (clientCapabilities.has('modules') && clientCapabilities.has('es2015')) {
     return basedir + 'es6-bundled/';
   } else {
     return basedir + 'es5-bundled/';

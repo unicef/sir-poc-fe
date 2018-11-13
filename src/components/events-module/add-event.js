@@ -5,6 +5,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { addEvent, setEventDraft } from '../../actions/events.js';
+import { showSnackbar } from '../../actions/app.js';
 import { EventsBaseView } from './events-base-view.js';
 import { getEventModel } from '../../models/event-model.js';
 
@@ -48,6 +49,12 @@ class AddEvent extends EventsBaseView {
     if (!this.validate()) {
       return;
     }
+
+    if (!this.hasPermission('add_event')) {
+      showSnackbar('You do not have permission to add an event');
+      return;
+    }
+
     let successfull = await this.store.dispatch(addEvent(this.event));
     if (typeof successfull === 'boolean' && successfull) {
       this.resetForm();

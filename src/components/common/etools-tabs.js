@@ -26,20 +26,20 @@ class EtoolsTabs extends PolymerElement {
 
 
         paper-tabs {
-          --paper-tabs-selection-bar-color: var(--app-primary-color);
+          --paper-tabs-selection-bar-color: var(--primary-color);
         }
 
         paper-tab[link],
         paper-tab {
-          --paper-tab-ink: var(--app-primary-color);
+          --paper-tab-ink: var(--primary-color);
           padding: 0 24px;
           min-width: 70px;
         }
-        
+
         @media only screen and (max-width: 450px) {
           paper-tab[link],
           paper-tab {
-            --paper-tab-ink: var(--app-primary-color);
+            --paper-tab-ink: var(--primary-color);
             min-width: 14px;
           }
         }
@@ -50,7 +50,7 @@ class EtoolsTabs extends PolymerElement {
         }
 
         paper-tab.iron-selected .tab-content {
-          color: var(--app-primary-color);
+          color: var(--primary-color);
         }
       </style>
 

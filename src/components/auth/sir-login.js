@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-button/paper-button.js';
-import '../styles/app-theme.js';
 import { SirMsalAuth } from './jwt/msal-authentication.js';
 
 /**
@@ -21,7 +20,7 @@ class SirLogin extends PolymerElement {
           @apply --layout-center;
           padding: 28px;
           margin: 12px;
-          color: var(--primary-text-color);
+          color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
           flex-wrap: wrap;
           border-radius: 5px;
           background-color: #fff;
@@ -32,7 +31,7 @@ class SirLogin extends PolymerElement {
 
         paper-button {
           margin: 0;
-          background-color: var(--primary-color);
+          background-color: var(--primary-color, #1CABE2);
           color: var(--light-primary-text-color, #fff);
           font-weight: bold;
           padding: 5px 10px;
@@ -48,7 +47,7 @@ class SirLogin extends PolymerElement {
           margin-right: 48px;
           width: 100px;
           height: 100px;
-          color: var(--primary-color);
+          color: var(--primary-color, #1CABE2);
         }
 
         #unicef-icon {

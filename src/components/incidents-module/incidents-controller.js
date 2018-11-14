@@ -41,17 +41,17 @@ class IncidentsController extends connect(store)(BaseController) {
         }
 
         paper-tabs {
-          --paper-tabs-selection-bar-color: var(--app-primary-color);
+          --paper-tabs-selection-bar-color: var(--primary-color);
         }
 
         paper-tab[link],
         paper-tab {
-          --paper-tab-ink: var(--app-primary-color);
+          --paper-tab-ink: var(--primary-color);
           padding: 0 24px;
         }
 
         paper-tab.iron-selected {
-          color: var(--app-primary-color);
+          color: var(--primary-color);
         }
       </style>
 

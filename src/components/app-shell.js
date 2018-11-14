@@ -59,7 +59,7 @@ class AppShell extends connect(store)(PolymerElement) {
 
         app-header {
           color: #fff;
-          background-color: var(--app-primary-color);
+          background-color: var(--primary-color);
         }
 
         app-header app-toolbar {
@@ -120,7 +120,7 @@ class AppShell extends connect(store)(PolymerElement) {
           color: var(--secondary-text-color);
         }
         .drawer-list a.menu-heading[selected] {
-          color: var(--app-primary-color);
+          color: var(--primary-color);
         }
         .drawer-list a.menu-heading {
           padding: 0 24px;
@@ -132,7 +132,7 @@ class AppShell extends connect(store)(PolymerElement) {
         }
         .drawer-list a[selected]:not(.menu-heading) {
           background-color: var(--menu-selected-bg-color);
-          color: var(--app-primary-color);
+          color: var(--primary-color);
         }
         #logo {
           width: 70%;

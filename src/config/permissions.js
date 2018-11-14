@@ -38,6 +38,11 @@ export const allPermissions =  [
   "change_premise",
   "delete_premise",
 
+  "add_personincident",
+  "view_personincident",
+  "change_personincident",
+  "delete_personincident",
+
   "add_programme",
   "view_programme",
   "change_programme",

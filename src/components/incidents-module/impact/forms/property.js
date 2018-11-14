@@ -6,6 +6,7 @@ import {connect} from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import 'etools-info-tooltip/etools-info-tooltip.js';
 
 import {
   addProperty,
@@ -95,16 +96,22 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
           <legend><h3>Impact Details</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="category"
-                  label="Impact"
-                  readonly="[[readonly]]"
-                  options="[[staticData.impacts.property]]"
-                  selected="{{data.impact}}"
-                  selected-item="{{selectedImpactType}}"
-                  required auto-validate
-                  error-message="Impact is required">
-              </etools-dropdown-lite>
+              <etools-info-tooltip class="info" open-on-click form-field-align
+                                   hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
+                <etools-dropdown-lite
+                    id="category"
+                    slot="field"
+                    label="Impact"
+                    readonly="[[readonly]]"
+                    options="[[staticData.impacts.property]]"
+                    selected="{{data.impact}}"
+                    selected-item="{{selectedImpactType}}"
+                    required auto-validate
+                    error-message="Impact is required">
+                </etools-dropdown-lite>
+                <span slot="message">[[selectedImpactType.description]]
+                </span>
+              </etools-info-tooltip>
             </div>
           </div>
           <div class="row-h flex-c">
@@ -136,6 +143,10 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
     return {
       staticData: Array,
       impactId: String,
+      selectedImpactType: {
+        type: Object,
+        value: {}
+      },
       offline: Boolean,
       readonly: {
         type: Boolean,

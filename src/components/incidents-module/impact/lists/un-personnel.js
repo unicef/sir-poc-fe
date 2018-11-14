@@ -101,7 +101,7 @@ export class UnPersonnelList extends connect(store)(PermissionsBase) {
   }
 
   _notEditable(item, offline) {
-    return offline && !item.unsynced && !this.hasPermission('change_person');
+    return offline && !item.unsynced && !this.hasPermission('change_personincident');
   }
 }
 

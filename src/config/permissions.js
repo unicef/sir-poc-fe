@@ -33,11 +33,6 @@ export const allPermissions =  [
   "change_incidentattachment",
   "delete_incidentattachment",
 
-  "add_person",
-  "view_person",
-  "change_person",
-  "delete_person",
-
   "add_premise",
   "view_premise",
   "change_premise",
@@ -57,9 +52,4 @@ export const allPermissions =  [
   "view_traffic",
   "change_traffic",
   "delete_traffic",
-
-  "add_attachment",
-  "view_attachment",
-  "change_attachment",
-  "delete_attachment",
 ];

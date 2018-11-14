@@ -74,12 +74,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
               class="no-t-transform smaller"
               on-click="_addUnPersonnel"
-              hidden$="[[!hasPermission('add_person')]]">
+              hidden$="[[!hasPermission('add_personincident')]]">
             <iron-icon icon="add"></iron-icon>
             Add UNICEF Personnel
           </paper-button>
         </div>
-        <un-personnel-list hidden$="[[!hasPermission('view_person')]]"></un-personnel-list>
+        <un-personnel-list hidden$="[[!hasPermission('view_personincident')]]"></un-personnel-list>
       </div>
 
       <div class="card">
@@ -95,12 +95,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addNonUn"
-                        hidden$="[[!hasPermission('add_person')]]">
+                        hidden$="[[!hasPermission('add_personincident')]]">
             <iron-icon icon="add"></iron-icon>
             Add Non-UNICEF Personnel
           </paper-button>
         </div>
-        <non-un-personnel-list hidden$="[[!hasPermission('view_person')]]"></non-un-personnel-list>
+        <non-un-personnel-list hidden$="[[!hasPermission('view_personincident')]]"></non-un-personnel-list>
       </div>
 
       <div class="card">

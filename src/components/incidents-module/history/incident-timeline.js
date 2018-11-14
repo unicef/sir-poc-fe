@@ -2,8 +2,8 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { PermissionsBase } from '../../common/permissions-base-class';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
-import '../../styles/shared-styles.js';
 import HistoryHelpers from '../../history-components/history-helpers.js';
+import '../../styles/shared-styles.js';
 
 /**
  * @polymer

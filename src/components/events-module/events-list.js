@@ -378,7 +378,8 @@ class EventsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixi
   }
 
   notEditable(event, offline) {
-    return offline && !event.unsynced && !this.hasPermission('change_event');
+    return (!this.hasPermission('change_event') || offline) &&
+           (!event.unsynced || !this.hasPermission('add_event'));
   }
 
   // Outputs the query string for the list

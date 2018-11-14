@@ -1,7 +1,8 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { PermissionsBase } from '../../common/permissions-base-class';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/app-route/app-route.js';
 
@@ -10,6 +11,7 @@ import { store } from '../../../redux/store.js';
 
 import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { selectIncidentComments } from '../../../reducers/incidents.js';
+import { fetchIncidentComments } from '../../../actions/incidents.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
@@ -18,7 +20,7 @@ import '../../history-components/diff-view.js';
 import './incident-revision-view.js';
 import './incident-timeline.js';
 
-export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
+export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -81,6 +83,12 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PolymerElemen
     };
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.hasPermission('view_comment')) {
+      this.store.dispatch(fetchIncidentComments());
+    }
+  }
 
   static get observers() {
     return [

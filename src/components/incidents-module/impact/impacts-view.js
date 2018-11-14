@@ -74,7 +74,7 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
               class="no-t-transform smaller"
               on-click="_addUnPersonnel"
-               hidden$="[[!hasPermision('add_person')]]">
+              hidden$="[[!hasPermission('add_person')]]">
             <iron-icon icon="add"></iron-icon>
             Add UNICEF Personnel
           </paper-button>
@@ -95,7 +95,7 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addNonUn"
-                        hidden$="[[!hasPermision('add_person')]]">
+                        hidden$="[[!hasPermission('add_person')]]">
             <iron-icon icon="add"></iron-icon>
             Add Non-UNICEF Personnel
           </paper-button>
@@ -109,7 +109,7 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addEvacuation"
-                        hidden$="[[!hasPermision('add_evacuation')]]">
+                        hidden$="[[!hasPermission('add_evacuation')]]">
             <iron-icon icon="add"></iron-icon>
             Add Evacuation
           </paper-button>
@@ -128,7 +128,7 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addProperty"
-                        hidden$="[[!hasPermision('add_property')]]">
+                        hidden$="[[!hasPermission('add_property')]]">
             <iron-icon icon="add"></iron-icon>
             Add UNICEF Property
           </paper-button>
@@ -150,7 +150,7 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addPremise"
-                        hidden$="[[!hasPermision('add_premise')]]">
+                        hidden$="[[!hasPermission('add_premise')]]">
             <iron-icon icon="add"></iron-icon>
             Add Premise
           </paper-button>
@@ -164,7 +164,7 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addProgramme"
-                        hidden$="[[!hasPermision('add_programme')]]">
+                        hidden$="[[!hasPermission('add_programme')]]">
             <iron-icon icon="add"></iron-icon>
             Add Programme
           </paper-button>

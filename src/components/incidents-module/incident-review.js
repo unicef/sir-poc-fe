@@ -13,7 +13,9 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
-import { hasPermission, getNameFromId } from '../common/utils';
+import { PermissionsBase } from '../common/permissions-base-class';
+import { updatePath } from '../common/navigation-helper';
+import { getNameFromId } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';
 import './buttons/review-eod.js';
@@ -24,7 +26,7 @@ import './buttons/review-legal.js';
  * @polymer
  * @customElement
  */
-class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
+class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles form-fields-styles">
@@ -85,7 +87,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[prettyDate(incident.eod_review_date)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[_canReview(offline, incident.eod_review_by, 'review_eod')]]">
+          <div class="col col-6" hidden$="[[_canReview(offline, incident.eod_review_by, 'eod_review_incident')]]">
             <paper-input id="eodReviewBy"
                           placeholder="&#8212;"
                           readonly
@@ -94,7 +96,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[_getUserName(incident.eod_review_by)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[!_canReview(offline, incident.eod_review_by, 'review_eod')]]">
+          <div class="col col-6" hidden$="[[!_canReview(offline, incident.eod_review_by, 'eod_review_incident')]]">
             <review-eod-button incident="[[incident]]"></review-eod-button>
           </div>
         </div>
@@ -108,7 +110,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[prettyDate(incident.dhr_review_date)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[_canReview(offline, incident.dhr_review_by, 'review_dhr')]]">
+          <div class="col col-6" hidden$="[[_canReview(offline, incident.dhr_review_by, 'dhr_review_incident')]]">
             <paper-input id="dhrReviewBy"
                           placeholder="&#8212;"
                           readonly
@@ -117,7 +119,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[_getUserName(incident.dhr_review_by)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[!_canReview(offline, incident.dhr_review_by, 'review_dhr')]]">
+          <div class="col col-6" hidden$="[[!_canReview(offline, incident.dhr_review_by, 'dhr_review_incident')]]">
             <review-dhr-button incident="[[incident]]"></review-dhr-button>
           </div>
         </div>
@@ -131,7 +133,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[prettyDate(incident.dfam_review_date)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[_canReview(offline, incident.dfam_review_by, 'review_dfam')]]">
+          <div class="col col-6" hidden$="[[_canReview(offline, incident.dfam_review_by, 'dfam_review_incident')]]">
             <paper-input id="dfamReviewBy"
                           placeholder="&#8212;"
                           readonly
@@ -140,7 +142,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[_getUserName(incident.dfam_review_by)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[!_canReview(offline, incident.dfam_review_by, 'review_dfam')]]">
+          <div class="col col-6" hidden$="[[!_canReview(offline, incident.dfam_review_by, 'dfam_review_incident')]]">
             <review-dfam-button incident="[[incident]]"></review-dfam-button>
           </div>
         </div>
@@ -154,7 +156,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[prettyDate(incident.legal_review_date)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[_canReview(offline, incident.legal_review_by, 'review_legal')]]">
+          <div class="col col-6" hidden$="[[_canReview(offline, incident.legal_review_by, 'review_review_incident')]]">
             <paper-input id="legalReviewBy"
                           placeholder="&#8212;"
                           readonly
@@ -163,7 +165,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
                           value="[[_getUserName(incident.legal_review_by)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[!_canReview(offline, incident.legal_review_by, 'review_legal')]]">
+          <div class="col col-6" hidden$="[[!_canReview(offline, incident.legal_review_by, 'review_review_incident')]]">
             <review-legal-button incident="[[incident]]"></review-legal-button>
           </div>
         </div>
@@ -241,7 +243,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _hideCommentButton(offline) {
-    return offline || this.readonly || !hasPermission('comment_incident');
+    return offline || this.readonly || !this.hasPermission('add_comment');
   }
 
   _hideBottomCard(offline, status) {
@@ -254,7 +256,7 @@ class IncidentReview extends connect(store)(DateMixin(PolymerElement)) {
   }
 
   _canReview(offline, reviewerId, permissionsKey) {
-    return !offline && hasPermission(permissionsKey) && !reviewerId;
+    return !offline && this.hasPermission(permissionsKey) && !reviewerId;
   }
 }
 

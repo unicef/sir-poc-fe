@@ -51,7 +51,6 @@ class EditIncident extends IncidentsBaseView {
       this.store.dispatch(editIncident(this.incident));
     });
   }
-
 }
 
 window.customElements.define(EditIncident.is, EditIncident);

@@ -90,7 +90,6 @@ export const deleteIncidentFromRedux = (incidentId) => {
 
 export const fetchAllIncidentData = () => (dispatch) => {
   dispatch(fetchIncidents());
-  dispatch(fetchIncidentComments());
   dispatch(fetchIncidentPremises());
   dispatch(fetchIncidentPersonnel());
   dispatch(fetchIncidentProgrammes());

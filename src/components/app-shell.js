@@ -32,8 +32,7 @@ import { installOfflineWatcher } from 'pwa-helpers/network.js';
 import './snack-bar/snack-bar.js';
 import './snack-bar/ios-shortcut-dialog.js';
 import { store } from '../redux/store.js';
-import { hasPermission } from './common/utils.js';
-
+import { PermissionsBase } from './common/permissions-base-class.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 
 import {
@@ -44,7 +43,7 @@ import {
 
 import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 
-class AppShell extends connect(store)(PolymerElement) {
+class AppShell extends connect(store)(PermissionsBase) {
   static get template() {
     // language=HTML
     return html`
@@ -176,9 +175,10 @@ class AppShell extends connect(store)(PolymerElement) {
               </a>
 
             <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
-              href="[[rootPath]]events/new/">
-              <iron-icon icon="av:playlist-add"></iron-icon>
-              <span>New Event</span>
+              href="[[rootPath]]events/new/"
+              hidden$="[[!canAddEvents(profile)]]">
+                <iron-icon icon="av:playlist-add"></iron-icon>
+                <span>New Event</span>
             </a>
 
             <a class="menu-heading"
@@ -187,20 +187,20 @@ class AppShell extends connect(store)(PolymerElement) {
 
             <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]"
               href="[[rootPath]]incidents/list/">
-              <iron-icon icon="list"></iron-icon>
-              <span>Incidents List</span>
+                <iron-icon icon="list"></iron-icon>
+                <span>Incidents List</span>
             </a>
 
             <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
               href="[[rootPath]]incidents/new/"
               hidden$="[[!canAddIncidents(profile)]]">
-              <iron-icon icon="av:playlist-add"></iron-icon>
-              <span>New Incident</span>
+                  <iron-icon icon="av:playlist-add"></iron-icon>
+                  <span>New Incident</span>
             </a>
 
             <a class="menu-heading" href="[[rootPath]]admin/" target="_blank">
-              <iron-icon icon="supervisor-account"></iron-icon>
-              <span>Admin</span>
+                <iron-icon icon="supervisor-account"></iron-icon>
+                <span>Admin</span>
             </a>
           </div>
           <img id="logo" align="end" src="../../images/unicef_logo.png"></img>
@@ -328,7 +328,14 @@ class AppShell extends connect(store)(PolymerElement) {
     if (!profile) {
       return false;
     }
-    return hasPermission('add_incident');
+    return this.hasPermission('add_incident');
+  }
+
+  canAddEvents(profile) {
+    if (!profile) {
+      return false;
+    }
+    return this.hasPermission('add_event');
   }
 }
 

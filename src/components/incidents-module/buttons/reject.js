@@ -6,7 +6,6 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { rejectIncident } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { updatePath } from '../../common/navigation-helper';
-import { hasPermission } from '../../common/utils';
 import { ButtonsBaseClass } from './buttons-base.js';
 import '../../styles/button-styles.js';
 
@@ -43,7 +42,7 @@ class RejectButton extends ButtonsBaseClass {
   }
 
   isHidden() {
-    return !hasPermission('approve_incident');
+    return !this.hasPermission('reject_incident');
   }
 
   validate() {

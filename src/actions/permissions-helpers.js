@@ -1,20 +1,15 @@
-import { Permissions } from '../config/permissions.js';
+import { allPermissions } from '../config/permissions.js';
 
 export const computePermissions = (profile) => {
   let permissions = {};
-  if (!profile || !profile.teams) {
+  if (!profile || !profile.permissions) {
     return permissions;
   }
 
-  profile.teams.forEach((team) => {
-    if (!Permissions[team.name]) {
-      return;
+  allPermissions.forEach((elem) => {
+    if (profile.permissions.indexOf(elem) > -1) {
+      permissions[elem] = true;
     }
-
-    permissions = {
-      ...permissions,
-      ...Permissions[team.name]
-    };
   });
 
   return permissions;

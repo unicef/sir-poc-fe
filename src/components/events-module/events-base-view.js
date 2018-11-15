@@ -2,7 +2,8 @@
  @license
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { PermissionsBase } from '../common/permissions-base-class';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/paper-input/paper-textarea.js';
@@ -21,7 +22,7 @@ import '../styles/required-fields-styles.js';
 import { resetFieldsValidations, validateFields } from '../common/validations-helper';
 import DateMixin from '../common/date-mixin.js';
 
-export class EventsBaseView extends connect(store)(DateMixin(PolymerElement)) {
+export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
   static get template() {
     // language=HTML
     return html`

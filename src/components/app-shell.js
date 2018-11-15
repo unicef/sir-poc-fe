@@ -35,6 +35,7 @@ import { store } from '../redux/store.js';
 import { PermissionsBase } from './common/permissions-base-class.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 
+import { clearIncidentDraft } from '../actions/incidents.js';
 import {
   updateOffline,
   lazyLoadModules,
@@ -317,6 +318,7 @@ class AppShell extends connect(store)(PermissionsBase) {
   }
 
   _logout() {
+    store.dispatch(clearIncidentDraft());
     SirMsalAuth.logout();
   }
 

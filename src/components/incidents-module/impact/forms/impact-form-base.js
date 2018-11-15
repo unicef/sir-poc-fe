@@ -23,6 +23,10 @@ export class ImpactFormBase extends PolymerElement {
       getCountriesForRegion: {
         type: Function,
         value: () => getCountriesForRegion
+      },
+      selectedImpactType: {
+        type: Object,
+        value: {}
       }
     };
   }
@@ -39,6 +43,13 @@ export class ImpactFormBase extends PolymerElement {
 
   _goToIncidentImpacts() {
     updatePath(`/incidents/impact/${this.incidentId}/list/`);
+  }
+
+  _hideInfoTooltip(arg) {
+    if (!arg) {
+      return true;
+    }
+    return !typeof arg === 'string' && arg !== '';
   }
 
 }

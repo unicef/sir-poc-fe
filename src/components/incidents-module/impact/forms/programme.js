@@ -104,10 +104,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                 <paper-input label="Area Impacted"
                              placeholder="&#8212;"
                              value="{{data.area}}"
-                             readonly$="[[readonly]]"
-                             required
-                             auto-validate
-                             error-message="To city is required">
+                             readonly$="[[readonly]]">
                 </paper-input>
               </template>
             </div>

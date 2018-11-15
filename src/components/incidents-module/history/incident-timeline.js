@@ -1,15 +1,14 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { PermissionsBase } from '../../common/permissions-base-class';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../../redux/store.js';
 import HistoryHelpers from '../../history-components/history-helpers.js';
+import { getNameFromId } from '../../common/utils.js';
 import '../../styles/shared-styles.js';
 
 /**
  * @polymer
  * @customElement
  */
-class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
+class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -173,13 +172,6 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
     };
   }
 
-  _stateChanged(state) {
-    if (!state || !state.staticData || !state.app) {
-      return;
-    }
-    this.users = state.staticData.users;
-  }
-
   _computeTimline(history, comments) {
     if (typeof history === 'undefined' || typeof comments === 'undefined') {
       return;
@@ -239,11 +231,7 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
   }
 
   getUserName(userId, fallback) {
-    let user = this.users.find(u => u.id === Number(userId));
-    if (!user) {
-      return fallback || 'N/A';
-    }
-    return user.name;
+    return getNameFromId(userId, 'users') || fallback;
   }
 
   getChangedFileds(changesObj) {

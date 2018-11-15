@@ -142,7 +142,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
           </template>
 
-          <div class="row-h flex-c">
+          <div class="row-h flex-c" hidden$="[[offline]]">
             <div class="col col-3">
               <etools-dropdown-lite
                   id="autoCompleteUser"

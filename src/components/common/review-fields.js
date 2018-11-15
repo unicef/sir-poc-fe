@@ -1,13 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../redux/store.js';
+import { getNameFromId } from '../common/utils.js';
 
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/form-fields-styles.js';
 
-
-export class ReviewFields extends connect(store)(PolymerElement) {
+export class ReviewFields extends PolymerElement {
 
   static get template() {
     return html`
@@ -20,7 +18,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
                         label="Created By"
                         placeholder="&#8212;"
                         type="text"
-                        value="[[_getUsername(data.created_by_user_id)]]"
+                        value="[[getUserName(data.created_by_user_id)]]"
                         readonly></paper-input>
         </div>
         <div class="col col-3">
@@ -35,7 +33,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
                         placeholder="&#8212;"
                         type="text"
                         readonly
-                        value="[[_getUsername(data.last_modify_user_id)]]"></paper-input>
+                        value="[[getUserName(data.last_modify_user_id)]]"></paper-input>
         </div>
         <div class="col col-3">
           <datepicker-lite id="last_edited_on"
@@ -58,20 +56,8 @@ export class ReviewFields extends connect(store)(PolymerElement) {
     };
   }
 
-  _stateChanged(state) {
-    this.staticData = state.staticData;
-  }
-
-  _getUsername(userId) {
-    if (userId === null || userId === undefined) {
-      return 'N/A';
-    }
-
-    let user = this.staticData.users.find(u => Number(u.id) === Number(userId));
-    if (user) {
-      return user.name;
-    }
-    return 'N/A';
+  getUserName(userId) {
+    return getNameFromId(userId, 'users');
   }
 }
 

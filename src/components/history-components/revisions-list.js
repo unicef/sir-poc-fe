@@ -6,9 +6,8 @@ import '@polymer/iron-icons/image-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
 import 'etools-data-table';
-import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import { store } from '../../redux/store.js';
+import { getNameFromId } from '../common/utils.js';
 import DateMixin from '../common/date-mixin.js';
 import HistoryHelpers from './history-helpers.js';
 
@@ -16,7 +15,7 @@ import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 
 
-export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
+export class RevisionsList extends DateMixin(HistoryHelpers(PolymerElement)) {
   static get template() {
     // language=HTML
     return html`
@@ -110,13 +109,6 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
     };
   }
 
-  _stateChanged(state) {
-    if (!state || !state.staticData || !state.app) {
-      return;
-    }
-    this.users = state.staticData.users;
-  }
-
   isCreateAction(action) {
     return action === 'create';
   }
@@ -131,13 +123,8 @@ export class RevisionsList extends DateMixin(HistoryHelpers(connect(store)(Polym
   }
 
   getUserName(userId) {
-    let user = this.users.find(u => u.id === Number(userId));
-    if (!user) {
-      return 'N/A';
-    }
-    return user.first_name + ' ' + user.last_name;
+    return getNameFromId(userId, 'users');
   }
-
 }
 
 window.customElements.define(RevisionsList.is, RevisionsList);

@@ -93,7 +93,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="EOD review by"
                           type="text"
-                          value="[[_getUserName(incident.eod_review_by)]]">
+                          value="[[getUserName(incident.eod_review_by)]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.eod_review_by, 'eod_review_incident')]]">
@@ -116,7 +116,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="DHR review by"
                           type="text"
-                          value="[[_getUserName(incident.dhr_review_by)]]">
+                          value="[[getUserName(incident.dhr_review_by)]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.dhr_review_by, 'dhr_review_incident')]]">
@@ -139,7 +139,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="DFAM review by"
                           type="text"
-                          value="[[_getUserName(incident.dfam_review_by)]]">
+                          value="[[getUserName(incident.dfam_review_by)]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.dfam_review_by, 'dfam_review_incident')]]">
@@ -162,7 +162,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="Legal review by"
                           type="text"
-                          value="[[_getUserName(incident.legal_review_by)]]">
+                          value="[[getUserName(incident.legal_review_by)]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.legal_review_by, 'review_review_incident')]]">
@@ -251,7 +251,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
            this._hideRejectButton(offline, status) &&
            this._hideCommentButton(offline);
   }
-  _getUserName(id) {
+  getUserName(id) {
     return getNameFromId(id, 'users');
   }
 

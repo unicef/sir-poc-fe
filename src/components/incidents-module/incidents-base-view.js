@@ -22,7 +22,6 @@ import '../common/warn-message.js';
 import '../common/review-fields.js';
 
 import { Endpoints } from '../../config/endpoints';
-import { updatePath } from '../common/navigation-helper';
 import { PermissionsBase } from '../common/permissions-base-class';
 import { SirMsalAuth } from '../auth/jwt/msal-authentication';
 import { objDiff, getCountriesForRegion } from '../common/utils.js';
@@ -106,7 +105,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
-            <paper-button class="danger" raised on-tap="_returnToIncidentsList">
+            <paper-button class="danger" raised on-tap="_navigateBack">
               Cancel
             </paper-button>
           </div>
@@ -536,7 +535,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
-            <paper-button class="danger" raised on-tap="_returnToIncidentsList">
+            <paper-button class="danger" raised on-tap="_navigateBack">
               Cancel
             </paper-button>
           </div>
@@ -880,8 +879,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     });
   }
 
-  _returnToIncidentsList() {
-    updatePath('/incidents/list/');
+  _navigateBack() {
+    window.history.back();
   }
 
   dwRelatedDoc(e) {

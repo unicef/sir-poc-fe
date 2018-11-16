@@ -90,11 +90,12 @@ export const getCountriesForRegion = (regionId) => {
 }
 
 export const getUserName = (id) => {
-  if (!id) {
+  let state = store.getState();
+  if (!id || !state || !state.app || state.app.offline) {
     return '';
   }
 
-  let usersList = store.getState().users.list;
+  let usersList = state.users.list;
   let result = usersList.find(v => Number(v.id) === Number(id));
   return result ? result.name || '' : '';
 }

@@ -1,18 +1,20 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { getUserName } from '../common/utils.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { store } from '../../redux/store.js';
 
+import { getUserName } from '../common/utils.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/form-fields-styles.js';
 
-export class ReviewFields extends PolymerElement {
+export class ReviewFields extends connect(store)(PolymerElement) {
 
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles form-fields-styles">
       </style>
 
-      <div class="row-h flex-c">
+      <div class="row-h flex-c" hidden$="[[offline]]">
         <div class="col col-3">
           <paper-input id="created_by"
                         label="Created By"
@@ -37,9 +39,9 @@ export class ReviewFields extends PolymerElement {
         </div>
         <div class="col col-3">
           <datepicker-lite id="last_edited_on"
-                            label="Last Edited On"
-                            value="[[data.last_modify_date]]"
-                            readonly></datepicker-lite>
+                           label="Last Edited On"
+                           value="[[data.last_modify_date]]"
+                           readonly></datepicker-lite>
         </div>
       </div>
     `;
@@ -53,12 +55,22 @@ export class ReviewFields extends PolymerElement {
     return {
       data: Object,
       state: Object,
+      offline: Boolean,
       getUserName: {
         type: Function,
         value: () => getUserName
       }
     };
   }
+
+  _stateChanged(state) {
+    if (!state) {
+      return;
+    }
+
+    this.offline = state.app.offline;
+  }
+
 }
 
 window.customElements.define(ReviewFields.is, ReviewFields);

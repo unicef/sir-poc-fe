@@ -31,7 +31,9 @@ import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList, exportIncidents } from '../../actions/incidents.js';
 import ListCommonMixin from '../common/list-common-mixin.js';
 import { updateAppState } from '../common/navigation-helper';
-import { getNameFromId, hasPermission } from '../common/utils.js';
+import { getNameFromId } from '../common/utils.js';
+import { PermissionsBase } from '../common/permissions-base-class';
+
 import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
@@ -42,7 +44,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
+class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PermissionsBase)))) {
   static get template() {
     // language=HTML
     return html`
@@ -200,8 +202,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
               <span class="col-data col-1" data-col-header-label="Case number">
-                <span class="truncate">
+                <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
                   <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
+                </span>
+                <span class="truncate" hidden$="[[hasPermission('view_incident')]]">
+                  [[item.case_number]]
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Case number">
@@ -234,7 +239,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">
                 <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
-                  <a href="/incidents/view/[[item.id]]">
+                  <a href="/incidents/view/[[item.id]]" hidden$="[[!hasPermission('view_incident')]]">
                     <iron-icon icon="assignment" title="View Incident"></iron-icon>
                   </a>
                 </template>
@@ -523,7 +528,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   _showSyncButton(unsynced, offline) {
-    return !offline && unsynced && hasPermission('add_incident');
+    return !offline && unsynced && this.hasPermission('add_incident');
   }
 
   _syncItem(incident) {
@@ -536,8 +541,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   canEdit(status, unsynced, offline) {
-    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
-           (unsynced && hasPermission('add_incident'));
+    return (status === 'created' && this.hasPermission('change_incident') && !offline) ||
+           (unsynced && this.hasPermission('add_incident'));
   }
 
   getIncidentSubcategory(id) {

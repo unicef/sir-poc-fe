@@ -80,11 +80,6 @@ export const isNumber = (candidate) => {
   return !isNaN(parseFloat(candidate));
 };
 
-export const hasPermission = (permissionName) => {
-  const userPermissions = store.getState().staticData.profile.permissions;
-  return userPermissions && !!userPermissions[permissionName];
-};
-
 export const getCountriesForRegion = (regionId) => {
   if (!regionId) {
     return null;

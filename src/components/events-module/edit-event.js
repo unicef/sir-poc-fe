@@ -3,6 +3,7 @@
 */
 import { EventsBaseView } from './events-base-view.js';
 import { editEvent } from '../../actions/events.js';
+import { showSnackbar } from '../../actions/app.js';
 
 /**
  * @polymer
@@ -20,6 +21,11 @@ class EditEvent extends EventsBaseView {
 
   save() {
     if (!this.validate()) {
+      return;
+    }
+
+    if (!this.hasPermission('change_event')) {
+      showSnackbar('You do not have permission to edit an event');
       return;
     }
 

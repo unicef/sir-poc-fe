@@ -68,6 +68,11 @@ class AddIncident extends IncidentsBaseView {
       return;
     }
 
+    if (!this.hasPermission('add_incident')) {
+      showSnackbar('You do not have permission to add an incident');
+      return;
+    }
+
     let createdId = await this.store.dispatch(addIncident(this.incident));
     if (createdId) {
       this.store.dispatch(updateAddedAttachmentIds(createdId, this.incident.attachments));

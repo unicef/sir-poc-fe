@@ -22,8 +22,8 @@ import '../common/warn-message.js';
 import '../common/review-fields.js';
 
 import { Endpoints } from '../../config/endpoints';
-import { hasPermission } from '../common/utils.js';
 import { updatePath } from '../common/navigation-helper';
+import { PermissionsBase } from '../common/permissions-base-class';
 import { SirMsalAuth } from '../auth/jwt/msal-authentication';
 import { objDiff, getCountriesForRegion } from '../common/utils.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
@@ -40,7 +40,7 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
 
-export class IncidentsBaseView extends connect(store)(PolymerElement) {
+export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   static get template() {
     // language=HTML
     return html`
@@ -800,8 +800,8 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   canEdit(offline, status, unsynced)  {
-    return (status === 'created' && hasPermission('edit_incident') && !offline) ||
-           (unsynced && hasPermission('add_incident'));
+    return (status === 'created' && this.hasPermission('change_incident') && !offline) ||
+           (unsynced && this.hasPermission('add_incident'));
   }
 
   _hideInfoTooltip(...arg) {
@@ -834,11 +834,12 @@ export class IncidentsBaseView extends connect(store)(PolymerElement) {
   }
 
   hideUploadBtn() {
-    return this.incident && (this.readonly || this.state.app.offline || this.incident.unsynced);
+    return this.incident && !this.hasPermission('add_incidentattachment') &&
+           (this.readonly || this.state.app.offline || this.incident.unsynced);
   }
 
   hideAttachmentsList() {
-    return this.incident &&
+    return this.incident && !this.hasPermission('view_incidentattachment') &&
       (this.state.app.offline || !this.incident.attachments || !this.incident.attachments.length);
   }
 

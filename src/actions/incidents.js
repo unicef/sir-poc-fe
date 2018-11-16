@@ -81,6 +81,12 @@ export const setIncidentDraft = (incident) => {
   };
 };
 
+export const clearIncidentDraft = () => {
+  return {
+    type: ACTIONS.CLEAR_INCIDENT_DRAFT
+  };
+};
+
 export const deleteIncidentFromRedux = (incidentId) => {
   return {
     type: ACTIONS.DELETE_INCIDENT,
@@ -90,7 +96,6 @@ export const deleteIncidentFromRedux = (incidentId) => {
 
 export const fetchAllIncidentData = () => (dispatch) => {
   dispatch(fetchIncidents());
-  dispatch(fetchIncidentComments());
   dispatch(fetchIncidentPremises());
   dispatch(fetchIncidentPersonnel());
   dispatch(fetchIncidentProgrammes());

@@ -15,7 +15,7 @@ import '../styles/shared-styles.js';
 import '../common/errors-box.js';
 import { PermissionsBase } from '../common/permissions-base-class';
 import { updatePath } from '../common/navigation-helper';
-import { getNameFromId } from '../common/utils';
+import { getUserName } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';
 import './buttons/review-eod.js';
@@ -189,6 +189,10 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
       state: {
         type: Object
       },
+      getUserName: {
+        type: Function,
+        value: () => getUserName
+      },
       incident: Object
     };
   }
@@ -250,9 +254,6 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
     return this._hideApproveButton(offline, status) &&
            this._hideRejectButton(offline, status) &&
            this._hideCommentButton(offline);
-  }
-  getUserName(id) {
-    return getNameFromId(id, 'users');
   }
 
   _canReview(offline, reviewerId, permissionsKey) {

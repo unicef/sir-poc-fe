@@ -7,7 +7,7 @@ import '@polymer/iron-media-query/iron-media-query.js';
 
 import 'etools-data-table';
 
-import { getNameFromId } from '../common/utils.js';
+import { getUserName } from '../common/utils.js';
 import DateMixin from '../common/date-mixin.js';
 import HistoryHelpers from './history-helpers.js';
 
@@ -105,7 +105,10 @@ export class RevisionsList extends DateMixin(HistoryHelpers(PolymerElement)) {
       lowResolutionLayout: Boolean,
       history: Array,
       module: String,
-      users: Array
+      getUserName: {
+        type: Function,
+        value: () => getUserName
+      }
     };
   }
 
@@ -120,10 +123,6 @@ export class RevisionsList extends DateMixin(HistoryHelpers(PolymerElement)) {
     changes = changes.map(change => this.getLabelForField(change));
 
     return (changes.length > 0 ? changes: ['No changes']).join(', ');
-  }
-
-  getUserName(userId) {
-    return getNameFromId(userId, 'users');
   }
 }
 

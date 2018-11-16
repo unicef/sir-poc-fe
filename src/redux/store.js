@@ -18,6 +18,7 @@ import { persistStore, persistCombineReducers } from 'redux-persist';
 
 import { storeReady } from '../actions/app.js';
 import app from '../reducers/app.js';
+import users from '../reducers/users.js';
 import errors from '../reducers/errors.js';
 import events from '../reducers/events.js';
 import incidents from '../reducers/incidents.js';
@@ -32,11 +33,12 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
 const persistConfig = {
   key: 'sir-app',
   storage: getStorage(),
-  blacklist: ['errors', 'app']
+  blacklist: ['errors', 'app', 'users']
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {
   app,
+  users,
   errors,
   events,
   incidents,

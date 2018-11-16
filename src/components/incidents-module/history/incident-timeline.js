@@ -1,7 +1,7 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { PermissionsBase } from '../../common/permissions-base-class';
 import HistoryHelpers from '../../history-components/history-helpers.js';
-import { getNameFromId } from '../../common/utils.js';
+import { getUserName } from '../../common/utils.js';
 import '../../styles/shared-styles.js';
 
 /**
@@ -109,7 +109,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                   <template is="dom-repeat" items="[[workingDay.items]]">
                     <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
                       <div class="card">
-                        [[getUserName(item.by_user, item.by_user_display)]] added this incident.
+                        [[getUserName(item.by_user)]] added this incident.
                         <span title="View entire incident at this version">
                           <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
                             View original data
@@ -120,13 +120,13 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                     <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
                       <template is="dom-if" if="[[statusHasChanged(item.change)]]">
                         <div class="card">
-                          [[getUserName(item.by_user, item.by_user_display)]] [[item.change.status.after]] this <br>
+                          [[getUserName(item.by_user)]] [[item.change.status.after]] this <br>
                         </div>
                       </template>
 
                       <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
                         <div class="card">
-                          [[getUserName(item.by_user, item.by_user_display)]] changed fields:
+                          [[getUserName(item.by_user)]] changed fields:
                           <p> [[getChangedFileds(item.change)]] </p>
                           You can
                           <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
@@ -168,7 +168,11 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
     return {
       history: Array,
       comments: Array,
-      timeline: Array
+      timeline: Array,
+      getUserName: {
+        type: Function,
+        value: () => getUserName
+      }
     };
   }
 
@@ -228,10 +232,6 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
 
   statusHasChanged(changesObj) {
     return Object.keys(changesObj).indexOf('status') > -1;
-  }
-
-  getUserName(userId, fallback) {
-    return getNameFromId(userId, 'users') || fallback;
   }
 
   getChangedFileds(changesObj) {

@@ -1,5 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { getNameFromId } from '../common/utils.js';
+import { getUserName } from '../common/utils.js';
 
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -52,12 +52,12 @@ export class ReviewFields extends PolymerElement {
   static get properties() {
     return {
       data: Object,
-      state: Object
+      state: Object,
+      getUserName: {
+        type: Function,
+        value: () => getUserName
+      }
     };
-  }
-
-  getUserName(userId) {
-    return getNameFromId(userId, 'users');
   }
 }
 

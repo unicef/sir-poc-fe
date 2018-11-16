@@ -149,7 +149,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   label="Autocomplete Staff Member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
-                  options="[[staticData.users]]"
+                  options="[[users]]"
                   disabled="[[!isUnicefStaff]]">
               </etools-dropdown-lite>
             </div>
@@ -373,6 +373,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   }
 
   _stateChanged(state) {
+    this.users = state.users.list;
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;

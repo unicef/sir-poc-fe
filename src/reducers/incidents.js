@@ -20,6 +20,11 @@ const incidents = (state = defaultState, action) => {
         ...state,
         draft: action.incident
       };
+    case ACTIONS.CLEAR_INCIDENT_DRAFT:
+      return {
+        ...state,
+        draft: undefined
+      };
     case ACTIONS.RECEIVE_INCIDENTS:
       return {
         ...state,

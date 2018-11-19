@@ -42,12 +42,6 @@ export class ListBaseClass extends DateMixin(PaginationMixin(ListCommonMixin(Per
     ];
   }
 
-  _stateChanged(state) {
-    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
-      this.updateFilters(state.app.locationInfo.queryParams);
-    }
-  }
-
   initFilters() {
     console.warn('List filters not initiated!');
   }
@@ -55,6 +49,12 @@ export class ListBaseClass extends DateMixin(PaginationMixin(ListCommonMixin(Per
   _visibilityChanged(visible) {
     if (visible && this._lastQueryString !== '') {
       updateAppState(window.location.pathname, this._lastQueryString, false);
+    }
+  }
+
+  handleQueryParamsChange(queryParams) {
+    if (typeof queryParams !== 'undefined') {
+      this.updateFilters(queryParams);
     }
   }
 

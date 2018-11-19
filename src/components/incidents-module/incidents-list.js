@@ -315,15 +315,11 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     if (!state) {
       return;
     }
-    super._stateChanged(state);
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.listItems = state.incidents.list;
     this.threatCategories = state.staticData.threatCategories;
-
-    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
-      this.updateFilters(state.app.locationInfo.queryParams);
-    }
+    this.handleQueryParamsChange(state.app.locationInfo.queryParams);
 
     this.events = state.events.list.map((elem) => {
       elem.name = elem.description;

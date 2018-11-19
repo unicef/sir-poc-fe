@@ -136,8 +136,8 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="row-h flex-c">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
-                assault subcategory are Status, Impact, Description, and Duty Station Country. The victim should be
-                informed that all other information is VOLUNTARY.
+                assault subcategory are Status, Impact, Description, Duty Station Region, and Duty Station Country. 
+                The victim should be informed that all other information is VOLUNTARY.
               </div>
             </div>
           </template>
@@ -250,8 +250,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   readonly="[[readonly]]"
                   options="[[staticData.regions]]"
                   selected="{{data.person.region}}"
-                  required$="[[!isSexualAssault(selectedImpactType)]]"
-                  auto-validate
+                  required auto-validate
                   error-message="Duty station region is required">
               </etools-dropdown-lite>
             </div>
@@ -262,8 +261,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   readonly="[[readonly]]"
                   options="[[getCountriesForRegion(data.person.region)]]"
                   selected="{{data.person.country}}"
-                  required$="[[!isSexualAssault(selectedImpactType)]]"
-                  auto-validate
+                  required auto-validate
                   error-message="Duty station country is required">
               </etools-dropdown-lite>
             </div>

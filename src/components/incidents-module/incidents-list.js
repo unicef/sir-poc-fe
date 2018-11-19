@@ -418,10 +418,16 @@ export class IncidentsList extends connect(store)(DateMixin(PaginationMixin(List
     let filteredIncidents = JSON.parse(JSON.stringify(this.incidents));
     let allFilters = Object.keys(this.filters.handlers);
 
-    allFilters.forEach((key) => {
-      let value = this.filters.values[key];
-      let handler = this.filters.handlers[key];
-      filteredIncidents = handler(filteredIncidents, value);
+    filteredIncidents = filteredIncidents.filter((incident) => {
+      for (let i = 0; i < allFilters.length; i++) {
+        let key = allFilters[i];
+        let value = this.filters.values[key];
+        let handler = this.filters.handlers[key];
+        if (!handler(incident, value)) {
+          return false;
+        }
+      }
+      return true;
     });
 
     filteredIncidents.sort((left, right) => {
@@ -432,73 +438,53 @@ export class IncidentsList extends connect(store)(DateMixin(PaginationMixin(List
     this.filteredIncidents = this.applyPagination(filteredIncidents);
   }
 
-  static threatCategoryFilter(incidents, selectedThreatCategory) {
-    return incidents.filter((incident) => {
-      return selectedThreatCategory ? Number(incident.threat_category) === Number(selectedThreatCategory) : true;
-    });
+  static threatCategoryFilter(incident, selectedThreatCategory) {
+    return selectedThreatCategory ? Number(incident.threat_category) === Number(selectedThreatCategory) : true;
   }
 
-  static searchFilter(incidents, q) {
-    return incidents.filter((incident) => {
-      if (!q || q === '') {
-        return true;
-      }
-      q = q.toLowerCase();
-      return String(incident.city).search(q) > -1 ||
-          String(incident.description).toLowerCase().search(q) > -1;
-    });
+  static searchFilter(incident, q) {
+    if (!q || q === '') {
+      return true;
+    }
+    q = q.toLowerCase();
+    return String(incident.city).search(q) > -1 ||
+        String(incident.description).toLowerCase().search(q) > -1;
   }
 
-  static incidentCategoryFilter(incidents, selectedIncidentCategory) {
-    return incidents.filter((incident) => {
-      return selectedIncidentCategory ? Number(incident.incident_category) === Number(selectedIncidentCategory) : true;
-    });
+  static incidentCategoryFilter(incident, selectedIncidentCategory) {
+    return selectedIncidentCategory ? Number(incident.incident_category) === Number(selectedIncidentCategory) : true;
   }
 
-  static incidentSubcategoryFilter(incidents, selectedSubCategory) {
-    return incidents.filter((incident) => {
-      return selectedSubCategory ? Number(incident.incident_subcategory) === Number(selectedSubCategory) : true;
-    });
+  static incidentSubcategoryFilter(incident, selectedSubCategory) {
+    return selectedSubCategory ? Number(incident.incident_subcategory) === Number(selectedSubCategory) : true;
   }
 
-  static countryFilter(incidents, selectedCountry) {
-    return incidents.filter((incident) => {
-      return selectedCountry ? incident.country === Number(selectedCountry) : true;
-    });
+  static countryFilter(incident, selectedCountry) {
+    return selectedCountry ? incident.country === Number(selectedCountry) : true;
   }
 
-  static startDateFilter(incidents, startDate) {
-    return incidents.filter((incident) => {
-      return !startDate || new Date(incident.incident_date) > new Date(startDate);
-    });
+  static startDateFilter(incident, startDate) {
+    return !startDate || new Date(incident.incident_date) > new Date(startDate);
   }
 
-  static endDateFilter(incidents, endDate) {
-    return incidents.filter((incident) => {
-      return !endDate || new Date(incident.incident_date) < new Date(endDate);
-    });
+  static endDateFilter(incident, endDate) {
+    return !endDate || new Date(incident.incident_date) < new Date(endDate);
   }
 
-  static syncStatusFilter(incidents, selectedSyncStatuses) {
-    return incidents.filter((incident) => {
-      if (selectedSyncStatuses.length === 0) {
-        return true;
-      }
-      const eStatus = incident.unsynced ? 'unsynced' : 'synced';
-      return selectedSyncStatuses.some(s => s === eStatus);
-    });
+  static syncStatusFilter(incident, selectedSyncStatuses = []) {
+    if (selectedSyncStatuses.length === 0) {
+      return true;
+    }
+    const eStatus = incident.unsynced ? 'unsynced' : 'synced';
+    return selectedSyncStatuses.some(s => s === eStatus);
   }
 
-  static eventFilter(incidents, selectedEvent) {
-    return incidents.filter((incident) => {
-      return selectedEvent ? incident.event === selectedEvent : true;
-    });
+  static eventFilter(incident, selectedEvent) {
+    return selectedEvent ? incident.event === selectedEvent : true;
   }
 
-  static targetFilter(incidents, selectedTarget) {
-    return incidents.filter((incident) => {
-      return selectedTarget ? Number(incident.target) === Number(selectedTarget) : true;
-    });
+  static targetFilter(incident, selectedTarget) {
+    return selectedTarget ? Number(incident.target) === Number(selectedTarget) : true;
   }
 
   _showSyncButton(unsynced, offline) {

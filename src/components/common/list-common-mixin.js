@@ -34,7 +34,24 @@ const ListCommonMixin = superClass => class extends superClass {
     }
   }
 
-  // Outputs the query string for the list
+  deserializeFilters(query) {
+    let result = {};
+    Object.keys(query).forEach((key) => {
+      if (query[key].startsWith('|')) {
+        result[key] = query[key].substring(1).split('|');
+        return;
+      }
+
+      result[key] = query[key];
+    });
+
+    return result;
+  }
+
+  serializeFilters(filters) {
+    return this._buildUrlQueryString(filters);
+  }
+
   _buildUrlQueryString(filters) {
     let queryParams = [];
 
@@ -48,7 +65,7 @@ const ListCommonMixin = superClass => class extends superClass {
         switch (filterValType) {
           case 'array':
             if (filterValue.length > 0) {
-              filterUrlValue = filterValue.join('|');
+              filterUrlValue = '|' + filterValue.join('|');
             }
             break;
           case 'object':
@@ -57,7 +74,7 @@ const ListCommonMixin = superClass => class extends superClass {
             }
             break;
           default:
-            if (!(field === 'page' && filterValue === 1)) { // do not include page if page=1
+            if (field !== 'page' || filterValue !== 1) { // do not include page if page=1
               filterUrlValue = String(filterValue).trim();
             }
         }

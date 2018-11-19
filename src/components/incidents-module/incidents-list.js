@@ -375,10 +375,6 @@ export class IncidentsList extends connect(store)(DateMixin(PaginationMixin(List
   }
 
   _updateUrlQuery() {
-    if (!this.visible) {
-      return false;
-    }
-
     this.set('_lastQueryString', this._buildUrlQueryString(this.filters.values));
   }
 
@@ -415,6 +411,10 @@ export class IncidentsList extends connect(store)(DateMixin(PaginationMixin(List
   }
 
   filterData() {
+    if (!this.visible) {
+      return false;
+    }
+
     let filteredIncidents = JSON.parse(JSON.stringify(this.incidents));
     let allFilters = Object.keys(this.filters.handlers);
 

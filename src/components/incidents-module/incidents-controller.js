@@ -95,6 +95,10 @@ class IncidentsController extends connect(store)(BaseController) {
       route: Object,
       routeData: Object,
       isOffline: Boolean,
+      visible: {
+        type: Boolean,
+        observer: 'visibilityChanged'
+      },
       viewPageTabs: {
         type: Array,
         computed: 'getTabs(isOffline, showEditTab, incidentId)'
@@ -133,7 +137,16 @@ class IncidentsController extends connect(store)(BaseController) {
     }
   }
 
+  visibilityChanged(visible) {
+    if (!visible) {
+      this.page = '';
+    }
+  }
+
   pageChanged(page) {
+    if (page === '') {
+      return;
+    }
     if (page === 'history' && this.isOffline) {
       updatePath('/');
     }

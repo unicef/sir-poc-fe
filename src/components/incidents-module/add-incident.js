@@ -65,6 +65,7 @@ class AddIncident extends IncidentsBaseView {
 
   async save() {
     if (!this.validate()) {
+      showSnackbar('Please fill in all the required fields');
       return;
     }
 

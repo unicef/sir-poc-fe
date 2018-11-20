@@ -44,6 +44,7 @@ class EditIncident extends IncidentsBaseView {
 
   save() {
     if (!this.validate()) {
+      showSnackbar('Please check the highlighted fields');
       return;
     }
 

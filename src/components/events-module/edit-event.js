@@ -21,6 +21,7 @@ class EditEvent extends EventsBaseView {
 
   save() {
     if (!this.validate()) {
+      showSnackbar('Please check the highlighted fields');
       return;
     }
 

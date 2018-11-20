@@ -52,7 +52,6 @@ class ReviewEodButton extends ButtonsBaseClass {
 
   async markAsReviewed() {
     let successfull = await this.store.dispatch(reviewIncidentEOD(this.incident));
-    console.log(successfull);
 
     if (typeof successfull === 'boolean' && successfull) {
       this.showSuccessMessage();

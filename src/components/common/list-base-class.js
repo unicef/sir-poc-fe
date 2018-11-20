@@ -6,14 +6,14 @@ import { updateAppState } from './navigation-helper';
 export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   static get properties() {
     return {
-      _lastQueryString: {
+      lastQueryString: {
         type: String,
         value: '',
-        observer: '_queryStringChanged'
+        observer: 'queryStringChanged'
       },
       visible: {
         type: Boolean,
-        observer: '_visibilityChanged'
+        observer: 'visibilityChanged'
       },
       listItems: {
         type: Object,
@@ -49,9 +49,9 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     console.warn('List filters not initiated!');
   }
 
-  _visibilityChanged(visible) {
-    if (visible && this._lastQueryString !== '') {
-      updateAppState(window.location.pathname, this._lastQueryString, false);
+  visibilityChanged(visible) {
+    if (visible && this.lastQueryString !== '') {
+      this.addQueryStringToUrl();
     }
   }
 
@@ -61,16 +61,20 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     }
   }
 
-  _queryStringChanged(qs) {
+  queryStringChanged(qs) {
     if (!this.visible || !qs) {
       return false;
     }
 
-    updateAppState(window.location.pathname, qs, false);
+    this.addQueryStringToUrl();
   }
 
-  _updateUrlQuery() {
-    this.set('_lastQueryString', this.serializeFilters(this.filters.values));
+  addQueryStringToUrl() {
+      updateAppState(window.location.pathname, this.lastQueryString, false);
+  }
+
+  updateFiltersQueryString() {
+    this.set('lastQueryString', this.serializeFilters(this.filters.values));
   }
 
   updateFilters(queryParams) {
@@ -103,7 +107,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
       return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
     });
 
-    this._updateUrlQuery();
+    this.updateFiltersQueryString();
     this.filteredItems = this.applyPagination(filteredItems);
   }
 

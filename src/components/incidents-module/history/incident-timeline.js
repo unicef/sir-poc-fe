@@ -188,6 +188,8 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
       comments.forEach((elem) => {
         elem.action = 'comment';
       });
+    } else {
+      comments = [];
     }
 
     [...history, ...comments].forEach((elem) => {

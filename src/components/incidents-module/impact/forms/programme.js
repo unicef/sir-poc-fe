@@ -1,8 +1,9 @@
 /**
  @license
  */
-import {html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { ImpactFormBase } from './impact-form-base.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -14,8 +15,8 @@ import {
   editProgramme,
   syncProgramme
 } from '../../../../actions/incident-impacts.js';
-import {store} from '../../../../redux/store.js';
-import {scrollToTop} from '../../../common/content-container-helper.js';
+import { store } from '../../../../redux/store.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -27,7 +28,6 @@ import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
 import DateMixin from '../../../common/date-mixin.js';
-import { ImpactFormBase } from './impact-form-base.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -64,7 +64,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown-lite id="country"
                                     label="Country of Impact"
-                                    readonly="[[readonly]]"
+                                    readonly$="[[readonly]]"
                                     options="[[staticData.countries]]"
                                     selected="{{data.country}}"
                                     required auto-validate
@@ -75,39 +75,19 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown-lite id="scope"
                                     label="Geographical Scope"
-                                    readonly="[[readonly]]"
+                                    readonly$="[[readonly]]"
                                     options="[[staticData.programmeScopes]]"
                                     selected="{{data.scope}}"
-                                    selected-item="{{selectedScope}}"
                                     required auto-validate
                                     error-message="This is required">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">
-              <template is="dom-if" if="[[scopeIsCity(selectedScope)]]">
-                <etools-dropdown-lite label="Area Impacted"
-                                      enable-none-option
-                                      readonly="[[readonly]]"
-                                      options="[[selectableCities]]"
-                                      selected="{{data.area}}">
-                </etools-dropdown-lite>
-              </template>
-              <template is="dom-if" if="[[scopeIsCountry(selectedScope)]]">
-                <etools-dropdown-lite label="Area Impacted"
-                                      enable-none-option
-                                      readonly="[[readonly]]"
-                                      options="[[staticData.countries]]"
-                                      selected="{{data.area}}">
-                </etools-dropdown-lite>
-              </template>
-              <template is="dom-if" if="[[scopeIsOther(selectedScope)]]">
-                <etools-dropdown-lite label="Area Impacted"
-                                      enable-none-option
-                                      readonly="[[readonly]]"
-                                      options="[[staticData.programmeAreas]]"
-                                      selected="{{data.area}}">
-                </etools-dropdown-lite>
-              </template>
+              <paper-input label="Area Impacted"
+                            placeholder="&#8212;"
+                            value="{{data.area}}"
+                            readonly$="[[readonly]]">
+              </paper-input>
             </div>
           </div>
 
@@ -117,7 +97,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <datepicker-lite id="startDate"
                                value="{{data.start_date}}"
                                max-date="[[toDate(data.end_date)]]"
-                               readonly="[[readonly]]"
+                               readonly$="[[readonly]]"
                                label="Start of Impact">
               </datepicker-lite>
             </div>
@@ -125,7 +105,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <datepicker-lite id="endDate"
                                value="{{data.end_date}}"
                                min-date="[[toDate(data.start_date)]]"
-                               readonly="[[readonly]]"
+                               readonly$="[[readonly]]"
                                label="End of Impact">
               </datepicker-lite>
             </div>
@@ -138,7 +118,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                 <etools-dropdown-lite id="impact"
                                       slot="field"
                                       label="Impact Type"
-                                      readonly="[[readonly]]"
+                                      readonly$="[[readonly]]"
                                       options="[[staticData.impacts.property]]"
                                       selected="{{data.impact}}"
                                       selected-item="{{selectedImpactType}}"
@@ -154,7 +134,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
               <etools-dropdown-lite
                       id="agency"
                       label="Agency"
-                      readonly="[[readonly]]"
+                      readonly$="[[readonly]]"
                       options="[[staticData.agencies]]"
                       selected="{{data.agency}}"
                       required auto-validate
@@ -165,7 +145,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown-lite id="programmeType"
                                     label="Programme Type"
-                                    readonly="[[readonly]]"
+                                    readonly$="[[readonly]]"
                                     options="[[staticData.programmeTypes]]"
                                     selected="{{data.programme_type}}"
                                     required auto-validate
@@ -205,7 +185,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
   static get properties() {
     return {
-      selectedScope: Object,
       staticData: Array,
       impactId: String,
       offline: Boolean,
@@ -234,7 +213,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
   static get observers() {
     return [
       '_idChanged(impactId)',
-      '_updateSelectableCities(data.country)'
     ];
   }
 
@@ -245,10 +223,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.data.incident_id = state.app.locationInfo.incidentId;
     // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
     this.incidentId = state.app.locationInfo.incidentId;
-  }
-
-  _updateSelectableCities(country) {
-    this.selectableCities = this.staticData.cities.filter(elem => elem.country === country);
   }
 
   async save() {
@@ -292,19 +266,6 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       this.resetValidations();
     }
   }
-
-  scopeIsCity(scope) {
-    return scope && scope.name === 'City';
-  }
-
-  scopeIsCountry(scope) {
-    return scope && scope.name === 'Security level area';
-  }
-
-  scopeIsOther(scope) {
-    return !this.scopeIsCity(scope) && !this.scopeIsCountry(scope);
-  }
-
 }
 
 window.customElements.define(ProgrammeForm.is, ProgrammeForm);

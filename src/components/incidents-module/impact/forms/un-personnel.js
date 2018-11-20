@@ -9,6 +9,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import { showSnackbar } from '../../../../actions/app.js';
 
 import {
   addPersonnel,
@@ -392,6 +393,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      showSnackbar('Please check the highlighted fields');
       return;
     }
     this.data.person.un_official = true;

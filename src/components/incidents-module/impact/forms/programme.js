@@ -9,6 +9,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import { showSnackbar } from '../../../../actions/app.js';
 
 import {
   addProgramme,
@@ -228,6 +229,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      showSnackbar('Please check the highlighted fields');
       return;
     }
     if (this.isNew) {

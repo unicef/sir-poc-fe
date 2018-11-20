@@ -7,6 +7,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
+import { showSnackbar } from '../../../../actions/app.js';
 
 import {
   addEvacuation,
@@ -300,6 +301,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
   async saveEvacuation() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      showSnackbar('Please check the highlighted fields');
       return;
     }
     if (this.isNew) {

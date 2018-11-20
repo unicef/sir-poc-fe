@@ -1,19 +1,20 @@
 /**
  * @license
  */
-import {html} from '@polymer/polymer/polymer-element.js';
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import { showSnackbar } from '../../../../actions/app.js';
 
 import {
   addPremise,
   editPremise,
   syncPremise
 } from '../../../../actions/incident-impacts.js';
-import {store} from '../../../../redux/store.js';
-import {scrollToTop} from '../../../common/content-container-helper.js';
+import { store } from '../../../../redux/store.js';
+import { scrollToTop } from '../../../common/content-container-helper.js';
 import {
   resetFieldsValidations,
   validateFields
@@ -24,7 +25,7 @@ import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
-import {ImpactFormBase} from './impact-form-base.js';
+import { ImpactFormBase } from './impact-form-base.js';
 import '../../../common/review-fields.js';
 
 /**
@@ -206,6 +207,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      showSnackbar('Please check the highlighted fields');
       return;
     }
     if (this.isNew) {

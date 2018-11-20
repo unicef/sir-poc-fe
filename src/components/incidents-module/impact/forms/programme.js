@@ -229,7 +229,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
-      showSnackbar('Please check the highlighted fields');
+      store.dispatch(showSnackbar('Please check the highlighted fields'));
       return;
     }
     if (this.isNew) {

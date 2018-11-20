@@ -289,7 +289,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
-      showSnackbar('Please check the highlighted fields');
+      store.dispatch(showSnackbar('Please check the highlighted fields'));
       return;
     }
     this.data.person.un_official = false;

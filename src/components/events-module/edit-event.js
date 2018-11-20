@@ -21,12 +21,12 @@ class EditEvent extends EventsBaseView {
 
   save() {
     if (!this.validate()) {
-      showSnackbar('Please check the highlighted fields');
+      this.store.dispatch(showSnackbar('Please check the highlighted fields'));
       return;
     }
 
     if (!this.hasPermission('change_event')) {
-      showSnackbar('You do not have permission to edit an event');
+      this.store.dispatch(showSnackbar('You do not have permission to edit an event'));
       return;
     }
 

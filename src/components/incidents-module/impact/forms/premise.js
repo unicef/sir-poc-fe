@@ -207,7 +207,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
-      showSnackbar('Please check the highlighted fields');
+      store.dispatch(showSnackbar('Please check the highlighted fields'));
       return;
     }
     if (this.isNew) {

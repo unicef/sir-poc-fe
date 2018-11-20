@@ -8,6 +8,7 @@ import { IncidentsBaseView } from './incidents-base-view.js';
 import { editIncident,
          editAttachmentsNotes
        } from '../../actions/incidents.js';
+import { showSnackbar } from '../../actions/app.js';
 import './buttons/delete.js';
 
 /**
@@ -44,7 +45,7 @@ class EditIncident extends IncidentsBaseView {
 
   save() {
     if (!this.validate()) {
-      showSnackbar('Please check the highlighted fields');
+      this.store.dispatch(showSnackbar('Please check the highlighted fields'));
       return;
     }
 

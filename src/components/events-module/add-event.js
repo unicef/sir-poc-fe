@@ -47,12 +47,12 @@ class AddEvent extends EventsBaseView {
 
   async save() {
     if (!this.validate()) {
-      showSnackbar('Please fill in all the required fields');
+      this.store.dispatch(showSnackbar('Please fill in all the required fields'));
       return;
     }
 
     if (!this.hasPermission('add_event')) {
-      showSnackbar('You do not have permission to add an event');
+      this.store.dispatch(showSnackbar('You do not have permission to add an event'));
       return;
     }
 

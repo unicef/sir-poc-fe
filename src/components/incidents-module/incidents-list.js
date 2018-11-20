@@ -302,7 +302,10 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         type: Object,
         value: {}
       },
-      lowResolutionLayout: Boolean
+      getNameFromId: {
+        type: Function,
+        value: () => getNameFromId
+      }
     };
   }
 

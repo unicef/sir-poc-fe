@@ -113,6 +113,9 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
               <paper-button raised on-click="save"
                             disabled$="[[!canSave(eventId, state.app.offline)]]">Save</paper-button>
               ${this.actionButtonsTemplate}
+              <paper-button class="danger" raised on-tap="_navigateBack">
+                Cancel
+              </paper-button>
             </div>
           </div>
         </template>
@@ -215,5 +218,9 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
 
   resetValidations() {
     resetFieldsValidations(this, this.fieldsToValidateSelectors);
+  }
+
+  _navigateBack() {
+    window.history.back();
   }
 }

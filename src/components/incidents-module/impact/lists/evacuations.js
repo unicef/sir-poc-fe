@@ -106,18 +106,17 @@ export class EvacuationsList extends connect(store)(PermissionsBase) {
 
   static get properties() {
     return {
+      lowResolutionLayout: Boolean,
       offline: Boolean,
       evacuationsList: {
         type: Array,
         value: []
       },
-      lowResolutionLayout: Boolean
+      getNameFromId: {
+        type: Function,
+        value: () => getNameFromId
+      }
     };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.getNameFromId = getNameFromId;
   }
 
   _stateChanged(state) {

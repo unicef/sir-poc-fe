@@ -104,7 +104,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
             <div class="row-h flex-c">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
-                assault subcategory are Impact, Description, and Country. The victim should be informed that
+                assault subcategory are Impact, Description, Region, and Country. The victim should be informed that
                 all other information is VOLUNTARY.
               </div>
             </div>
@@ -194,7 +194,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                   readonly="[[readonly]]"
                   options="[[staticData.regions]]"
                   selected="{{data.person.region}}"
-                  auto-validate
+                  required auto-validate
                   error-message="Duty station region is required">
               </etools-dropdown-lite>
             </div>
@@ -203,6 +203,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                   id="country"
                   label="Country"
                   readonly="[[readonly]]"
+                  required
                   options="[[getCountriesForRegion(data.person.region)]]"
                   selected="{{data.person.country}}">
               </etools-dropdown-lite>

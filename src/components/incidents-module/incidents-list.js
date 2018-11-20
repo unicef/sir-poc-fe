@@ -279,6 +279,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
   static get properties() {
     return {
+      lowResolutionLayout: Boolean,
       incidents: {
         type: Object,
         value: []
@@ -342,13 +343,15 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         type: Object,
         value: {}
       },
-      lowResolutionLayout: Boolean
+      getNameFromId: {
+        type: Function,
+        value: () => getNameFromId
+      }
     };
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.getNameFromId = getNameFromId;
     this.store = store;
   }
 

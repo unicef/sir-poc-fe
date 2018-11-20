@@ -194,13 +194,12 @@ export class DashboardList extends connect(store)(DateMixin(PermissionsBase)) {
       offline: Boolean,
       cases: Array,
       lowResolutionLayout: Boolean,
-      mediumResolutionLayout: Boolean
+      mediumResolutionLayout: Boolean,
+      getNameFromId: {
+        type: Function,
+        value: () => getNameFromId
+      }
     };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.getNameFromId = getNameFromId;
   }
 
   _stateChanged(state) {

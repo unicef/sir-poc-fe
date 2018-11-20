@@ -9,6 +9,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import { showSnackbar } from '../../../../actions/app.js';
 
 import {
   addPersonnel,
@@ -142,14 +143,14 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             </div>
           </template>
 
-          <div class="row-h flex-c">
+          <div class="row-h flex-c" hidden$="[[offline]]">
             <div class="col col-3">
               <etools-dropdown-lite
                   id="autoCompleteUser"
                   label="Autocomplete Staff Member"
                   trigger-value-change-event
                   on-etools-selected-item-changed="_userSelected"
-                  options="[[staticData.users]]"
+                  options="[[users]]"
                   disabled="[[!isUnicefStaff]]">
               </etools-dropdown-lite>
             </div>
@@ -371,6 +372,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   }
 
   _stateChanged(state) {
+    this.users = state.users.list;
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;
@@ -390,6 +392,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      store.dispatch(showSnackbar('Please check the highlighted fields'));
       return;
     }
     this.data.person.un_official = true;

@@ -1,15 +1,14 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { PermissionsBase } from '../../common/permissions-base-class';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../../../redux/store.js';
 import HistoryHelpers from '../../history-components/history-helpers.js';
+import { getUserName } from '../../common/utils.js';
 import '../../styles/shared-styles.js';
 
 /**
  * @polymer
  * @customElement
  */
-class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
+class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -110,7 +109,7 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
                   <template is="dom-repeat" items="[[workingDay.items]]">
                     <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
                       <div class="card">
-                        [[getUserName(item.by_user, item.by_user_display)]] added this incident.
+                        [[getUserName(item.by_user)]] added this incident.
                         <span title="View entire incident at this version">
                           <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
                             View original data
@@ -121,13 +120,13 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
                     <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
                       <template is="dom-if" if="[[statusHasChanged(item.change)]]">
                         <div class="card">
-                          [[getUserName(item.by_user, item.by_user_display)]] [[item.change.status.after]] this <br>
+                          [[getUserName(item.by_user)]] [[item.change.status.after]] this <br>
                         </div>
                       </template>
 
                       <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
                         <div class="card">
-                          [[getUserName(item.by_user, item.by_user_display)]] changed fields:
+                          [[getUserName(item.by_user)]] changed fields:
                           <p> [[getChangedFileds(item.change)]] </p>
                           You can
                           <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
@@ -169,15 +168,12 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
     return {
       history: Array,
       comments: Array,
-      timeline: Array
+      timeline: Array,
+      getUserName: {
+        type: Function,
+        value: () => getUserName
+      }
     };
-  }
-
-  _stateChanged(state) {
-    if (!state || !state.staticData || !state.app) {
-      return;
-    }
-    this.users = state.staticData.users;
   }
 
   _computeTimline(history, comments) {
@@ -192,6 +188,8 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
       comments.forEach((elem) => {
         elem.action = 'comment';
       });
+    } else {
+      comments = [];
     }
 
     [...history, ...comments].forEach((elem) => {
@@ -236,14 +234,6 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
 
   statusHasChanged(changesObj) {
     return Object.keys(changesObj).indexOf('status') > -1;
-  }
-
-  getUserName(userId, fallback) {
-    let user = this.users.find(u => u.id === Number(userId));
-    if (!user) {
-      return fallback || 'N/A';
-    }
-    return user.name;
   }
 
   getChangedFileds(changesObj) {

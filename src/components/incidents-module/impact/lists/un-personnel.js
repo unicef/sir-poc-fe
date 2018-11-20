@@ -79,18 +79,17 @@ export class UnPersonnelList extends connect(store)(PermissionsBase) {
 
   static get properties() {
     return {
+      lowResolutionLayout: Boolean,
       offline: Boolean,
       personnelList: {
         type: Array,
         value: []
       },
-      lowResolutionLayout: Boolean
+      getNameFromId: {
+        type: Function,
+        value: () => getNameFromId
+      }
     };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.getNameFromId = getNameFromId;
   }
 
   _stateChanged(state) {

@@ -406,7 +406,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   }
 
   canEdit(status, unsynced, offline) {
-    return (status === 'created' && this.hasPermission('change_incident') && !offline) ||
+    return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
            (unsynced && this.hasPermission('add_incident'));
   }
 

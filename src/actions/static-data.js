@@ -30,7 +30,6 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreTargets());
   dispatch(fetchAndStoreWeapons());
   dispatch(fetchAndStoreCities());
-  dispatch(fetchAndStoreUsers());
   dispatch(fetchAndStoreTeams());
 };
 
@@ -190,24 +189,6 @@ const receiveWeapons = (weapons) => {
   return {
     type: ACTIONS.RECEIVE_WEAPONS,
     weapons
-  };
-};
-
-export const fetchAndStoreUsers = () => (dispatch, getState) => {
-  makeRequest(Endpoints.users).then((result) => {
-    dispatch(receiveUsers(result || []));
-  });
-};
-
-const receiveUsers = (users) => {
-  users = users.map((elem) => {
-    elem.name = elem.first_name + ' ' + elem.last_name;
-    return elem;
-  });
-
-  return {
-    type: ACTIONS.RECEIVE_USERS,
-    users
   };
 };
 

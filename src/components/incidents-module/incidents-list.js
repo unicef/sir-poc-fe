@@ -319,7 +319,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     this.staticData = state.staticData;
     this.listItems = state.incidents.list;
     this.threatCategories = state.staticData.threatCategories;
-    this.handleQueryParamsChange(state.app.locationInfo.queryParams);
 
     this.events = state.events.list.map((elem) => {
       elem.name = elem.description;

@@ -236,7 +236,6 @@ class EventsList extends connect(store)(ListBaseClass) {
 
     this.offline = state.app.offline;
     this.listItems = state.events.list;
-    this.handleQueryParamsChange(state.app.locationInfo.queryParams);
   }
 
   initFilters() {

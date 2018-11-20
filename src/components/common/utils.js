@@ -56,16 +56,6 @@ export const objDiff = (object1, object2) => {
   }, {});
 };
 
-export const getNameFromId = (id, staticDataPath) => {
-  if (!id) {
-    return '';
-  }
-
-  let staticData = store.getState().staticData;
-  let result = getStaticDataByPath(staticDataPath, staticData).find(v => Number(v.id) === Number(id));
-  return result ? result.name || '' : '';
-};
-
 const getStaticDataByPath = (path, data) => {
   if (path.indexOf('.') === -1) {
     return data[path];
@@ -74,6 +64,16 @@ const getStaticDataByPath = (path, data) => {
   let pathPieces = path.split('.');
   let newData = data[pathPieces.shift()];
   return getStaticDataByPath(pathPieces.join('.'), newData);
+};
+
+export const getNameFromId = (id, staticDataPath) => {
+  if (!id) {
+    return '';
+  }
+
+  let staticData = store.getState().staticData;
+  let result = getStaticDataByPath(staticDataPath, staticData).find(v => Number(v.id) === Number(id));
+  return result ? result.name || '' : '';
 };
 
 export const isNumber = (candidate) => {
@@ -87,4 +87,16 @@ export const getCountriesForRegion = (regionId) => {
 
   let allCountries = store.getState().staticData.countries;
   return allCountries.filter(country => Number(country.region) === Number(regionId));
+}
+
+export const getUrlParams = (search = ``) => {
+    if (!search.length) return {};
+    let hashes = search.slice(search.indexOf('?') + 1).split('&')
+    let params = {}
+    hashes.map(hash => {
+        let [key, val] = hash.split('=')
+        params[key] = decodeURIComponent(val)
+    })
+
+    return params
 }

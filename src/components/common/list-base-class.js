@@ -2,6 +2,7 @@ import { PermissionsBase } from './permissions-base-class';
 import PaginationMixin from './pagination-mixin';
 import DateMixin from './date-mixin';
 import { updateAppState } from './navigation-helper';
+import { getUrlParams } from './utils.js';
 
 export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   static get properties() {
@@ -44,6 +45,10 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
       'filterData(filters.values.*)'
     ];
   }
+  connectedCallback() {
+    super.connectedCallback();
+    this.loadFiltersFromQueryParams();
+  }
 
   initFilters() {
     console.warn('List filters not initiated!');
@@ -51,13 +56,8 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
 
   visibilityChanged(visible) {
     if (visible && this.lastQueryString !== '') {
+      // reinstates old filters when navigating back to the list
       this.addQueryStringToUrl();
-    }
-  }
-
-  handleQueryParamsChange(queryParams) {
-    if (typeof queryParams !== 'undefined') {
-      this.updateFilters(queryParams);
     }
   }
 
@@ -70,17 +70,18 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   addQueryStringToUrl() {
-      updateAppState(window.location.pathname, this.lastQueryString, false);
+    updateAppState(window.location.pathname, this.lastQueryString, false);
+  }
+
+  loadFiltersFromQueryParams() {
+    let queryParams = getUrlParams(window.location.search);
+    if (typeof queryParams !== 'undefined') {
+      this.set('filters.values', this.deserializeFilters(queryParams));
+    }
   }
 
   updateFiltersQueryString() {
     this.set('lastQueryString', this.serializeFilters(this.filters.values));
-  }
-
-  updateFilters(queryParams) {
-    if (queryParams && this.visible) {
-      this.set('filters.values', this.deserializeFilters(queryParams));
-    }
   }
 
   filterData() {

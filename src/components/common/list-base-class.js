@@ -2,7 +2,7 @@ import { PermissionsBase } from './permissions-base-class';
 import PaginationMixin from './pagination-mixin';
 import DateMixin from './date-mixin';
 import { updateAppState } from './navigation-helper';
-import { getUrlParams } from './utils.js';
+import { store } from '../../redux/store.js';
 
 export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   static get properties() {
@@ -52,7 +52,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   loadFiltersFromQueryParams() {
-    let queryParams = getUrlParams(window.location.search);
+    let queryParams = store.getState().app.locationInfo.queryParams;
     if (typeof queryParams !== 'undefined') {
       this.set('filters.values', this.deserializeFilters(queryParams));
     }

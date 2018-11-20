@@ -88,15 +88,3 @@ export const getCountriesForRegion = (regionId) => {
   let allCountries = store.getState().staticData.countries;
   return allCountries.filter(country => Number(country.region) === Number(regionId));
 }
-
-export const getUrlParams = (search = ``) => {
-    if (!search.length) return {};
-    let hashes = search.slice(search.indexOf('?') + 1).split('&')
-    let params = {}
-    hashes.map(hash => {
-        let [key, val] = hash.split('=')
-        params[key] = decodeURIComponent(val)
-    })
-
-    return params
-}

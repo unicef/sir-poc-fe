@@ -1,5 +1,4 @@
 import { PermissionsBase } from './permissions-base-class';
-import ListCommonMixin from './list-common-mixin';
 import PaginationMixin from './pagination-mixin';
 import DateMixin from './date-mixin';
 import { updateAppState } from './navigation-helper';

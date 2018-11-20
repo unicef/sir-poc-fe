@@ -192,6 +192,8 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
       comments.forEach((elem) => {
         elem.action = 'comment';
       });
+    } else {
+      comments = [];
     }
 
     [...history, ...comments].forEach((elem) => {
@@ -240,7 +242,7 @@ class IncidentTimeline extends connect(store)(HistoryHelpers(PermissionsBase)) {
 
   getUserName(userId, fallback) {
     let user = this.users.find(u => u.id === Number(userId));
-    if (!user) {
+    if (!user || !user.name) {
       return fallback || 'N/A';
     }
     return user.name;

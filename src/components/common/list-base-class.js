@@ -4,7 +4,7 @@ import PaginationMixin from './pagination-mixin';
 import DateMixin from './date-mixin';
 import { updateAppState } from './navigation-helper';
 
-export class ListBaseClass extends DateMixin(PaginationMixin(ListCommonMixin(PermissionsBase))) {
+export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   static get properties() {
     return {
       _lastQueryString: {
@@ -23,13 +23,17 @@ export class ListBaseClass extends DateMixin(PaginationMixin(ListCommonMixin(Per
       filteredItems: {
         type: Array
       },
-      // this should be redefined by children
       filters: {
         type: Object,
         value: {
           values: {},
           handlers: {}
         }
+      },
+      showToggleFiltersBtn: {
+        type: Boolean,
+        value: false,
+        observer: '_showToggleFiltersBtnChanged'
       }
     };
   }
@@ -67,7 +71,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(ListCommonMixin(Per
   }
 
   _updateUrlQuery() {
-    this.set('_lastQueryString', this._buildUrlQueryString(this.filters.values));
+    this.set('_lastQueryString', this.serializeFilters(this.filters.values));
   }
 
   updateFilters(queryParams) {
@@ -104,4 +108,70 @@ export class ListBaseClass extends DateMixin(PaginationMixin(ListCommonMixin(Per
     this.filteredItems = this.applyPagination(filteredItems);
   }
 
+  _showToggleFiltersBtnChanged(show) {
+    if (!this.$.collapse) {
+      return;
+    }
+    if ((show && this.$.collapse.opened) || (!show && !this.$.collapse.opened)) {
+      this._toggleFilters();
+    }
+  }
+
+  _toggleFilters() {
+    if (this.$.collapse) {
+      this.$.collapse.toggle();
+    }
+    if (this.$.toggleIcon) {
+      this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
+    }
+  }
+
+  deserializeFilters(query) {
+    let result = {};
+    Object.keys(query).forEach((key) => {
+      if (query[key].startsWith('|')) {
+        result[key] = query[key].substring(1).split('|');
+        return;
+      }
+
+      result[key] = query[key];
+    });
+
+    return result;
+  }
+
+  serializeFilters(filters) {
+    let queryParams = [];
+
+    for (let field in filters) {
+      if (filters[field]) {
+        let filterValue = filters[field];
+        let filterUrlValue;
+
+        let filterValType = filterValue instanceof Array ? 'array' : typeof filterValue;
+
+        switch (filterValType) {
+          case 'array':
+            if (filterValue.length > 0) {
+              filterUrlValue = '|' + filterValue.join('|');
+            }
+            break;
+          case 'object':
+            if (field === 'sort' && filterValue.field && filterValue.direction) {
+              filterUrlValue = filterValue.field + '.' + filterValue.direction;
+            }
+            break;
+          default:
+            if (field !== 'page' || filterValue !== 1) { // do not include page if page=1
+              filterUrlValue = String(filterValue).trim();
+            }
+        }
+
+        if (filterUrlValue) {
+          queryParams.push(field + '=' + filterUrlValue);
+        }
+      }
+    }
+    return queryParams.join('&');
+  }
 }

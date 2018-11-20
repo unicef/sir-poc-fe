@@ -432,7 +432,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   }
 
   _getExportQueryString(docType) {
-    return this._buildUrlQueryString({
+    return this.serializeFilters({
       incident_category: this.filters.values.incidentCategory,
       incident_subcategory: this.filters.values.incidentSubcategory,
       incident_date__gt: this.filters.values.startDate,

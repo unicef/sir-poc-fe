@@ -86,7 +86,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
   connectedCallback() {
     super.connectedCallback();
     if (this.hasPermission('view_comment')) {
-      this.store.dispatch(fetchIncidentComments());
+      store.dispatch(fetchIncidentComments());
     }
   }
 

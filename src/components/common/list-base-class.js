@@ -45,9 +45,17 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
       'filterData(filters.values.*)'
     ];
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.loadFiltersFromQueryParams();
+  }
+
+  loadFiltersFromQueryParams() {
+    let queryParams = getUrlParams(window.location.search);
+    if (typeof queryParams !== 'undefined') {
+      this.set('filters.values', this.deserializeFilters(queryParams));
+    }
   }
 
   initFilters() {
@@ -71,17 +79,6 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
 
   addQueryStringToUrl() {
     updateAppState(window.location.pathname, this.lastQueryString, false);
-  }
-
-  loadFiltersFromQueryParams() {
-    let queryParams = getUrlParams(window.location.search);
-    if (typeof queryParams !== 'undefined') {
-      this.set('filters.values', this.deserializeFilters(queryParams));
-    }
-  }
-
-  updateFiltersQueryString() {
-    this.set('lastQueryString', this.serializeFilters(this.filters.values));
   }
 
   filterData() {
@@ -110,6 +107,10 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
 
     this.updateFiltersQueryString();
     this.filteredItems = this.applyPagination(filteredItems);
+  }
+
+  updateFiltersQueryString() {
+    this.set('lastQueryString', this.serializeFilters(this.filters.values));
   }
 
   _showToggleFiltersBtnChanged(show) {

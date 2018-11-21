@@ -219,7 +219,7 @@ class AppShell extends connect(store)(PermissionsBase) {
             </app-toolbar>
           </app-header>
 
-          <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+          <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
             <dashboard-controller name="dashboard"></dashboard-controller>

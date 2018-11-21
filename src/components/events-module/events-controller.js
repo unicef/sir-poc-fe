@@ -97,6 +97,10 @@ class EventsController extends connect(store)(BaseController) {
       showEditTab: {
         type: Boolean,
         value: false
+      },
+      visible: {
+        type: Boolean,
+        observer: 'visibilityChanged'
       }
     };
   }
@@ -131,7 +135,6 @@ class EventsController extends connect(store)(BaseController) {
     ];
   }
 
-
   tabClicked(e) {
     if (this.page === 'history') {
       this.navigateToHistoryList();
@@ -143,7 +146,16 @@ class EventsController extends connect(store)(BaseController) {
     this.set('subrouteData.subsection', null);
   }
 
+  visibilityChanged(visible) {
+    if (!visible) {
+      this.page = '';
+    }
+  }
+
   pageChanged(page) {
+    if (page === '') {
+      return;
+    }
     if (page === 'edit') {
       this.showEditTab = true;
     }

@@ -56,16 +56,6 @@ export const objDiff = (object1, object2) => {
   }, {});
 };
 
-export const getNameFromId = (id, staticDataPath) => {
-  if (!id) {
-    return '';
-  }
-
-  let staticData = store.getState().staticData;
-  let result = getStaticDataByPath(staticDataPath, staticData).find(v => Number(v.id) === Number(id));
-  return result ? result.name || '' : '';
-};
-
 const getStaticDataByPath = (path, data) => {
   if (path.indexOf('.') === -1) {
     return data[path];
@@ -74,6 +64,16 @@ const getStaticDataByPath = (path, data) => {
   let pathPieces = path.split('.');
   let newData = data[pathPieces.shift()];
   return getStaticDataByPath(pathPieces.join('.'), newData);
+};
+
+export const getNameFromId = (id, staticDataPath) => {
+  if (!id) {
+    return '';
+  }
+
+  let staticData = store.getState().staticData;
+  let result = getStaticDataByPath(staticDataPath, staticData).find(v => Number(v.id) === Number(id));
+  return result ? result.name || '' : '';
 };
 
 export const isNumber = (candidate) => {

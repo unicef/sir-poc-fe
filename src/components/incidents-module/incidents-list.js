@@ -7,7 +7,8 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { ListBaseClass } from '../common/list-base-class.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import '@polymer/iron-icons/iron-icons.js';
@@ -26,25 +27,19 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import { store } from '../../redux/store.js';
-import PaginationMixin from '../common/pagination-mixin.js';
-import DateMixin from '../common/date-mixin.js';
 import { syncIncidentOnList, exportIncidents } from '../../actions/incidents.js';
-import ListCommonMixin from '../common/list-common-mixin.js';
-import { updateAppState } from '../common/navigation-helper';
 import { getNameFromId } from '../common/utils.js';
-import { PermissionsBase } from '../common/permissions-base-class';
 
 import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PermissionsBase)))) {
+class IncidentsList extends connect(store)(ListBaseClass) {
   static get template() {
     // language=HTML
     return html`
@@ -84,39 +79,39 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           <div class="filters">
             <paper-input class="filter search-input"
                         placeholder="Search by City or Description"
-                        value="{{filters.q}}">
+                        value="{{filters.values.q}}">
               <iron-icon icon="search" slot="prefix"></iron-icon>
             </paper-input>
 
             <etools-dropdown-multi-lite class="filter sync-filter"
                                         label="Sync Status"
                                         options="[[itemSyncStatusOptions]]"
-                                        selected-values="{{filters.syncStatus}}"
+                                        selected-values="{{filters.values.syncStatus}}"
                                         hide-search>
             </etools-dropdown-multi-lite>
 
             <datepicker-lite class="filter"
-                            value="{{filters.startDate}}"
-                            max-date="[[toDate(filters.endDate)]]"
+                            value="{{filters.values.startDate}}"
+                            max-date="[[toDate(filters.values.endDate)]]"
                             label="From"></datepicker-lite>
 
             <datepicker-lite class="filter"
-                            value="{{filters.endDate}}"
-                            min-date="[[toDate(filters.startDate)]]"
+                            value="{{filters.values.endDate}}"
+                            min-date="[[toDate(filters.values.startDate)]]"
                             label="To"></datepicker-lite>
 
             <etools-dropdown-lite class="filter select"
                                   label="Country"
                                   enable-none-option
                                   options="[[staticData.countries]]"
-                                  selected="{{filters.country}}">
+                                  selected="{{filters.values.country}}">
             </etools-dropdown-lite>
 
             <etools-dropdown-lite class="filter select"
                                   label="Incident Category"
                                   enable-none-option
                                   options="[[staticData.incidentCategories]]"
-                                  selected="{{filters.incidentCategory}}"
+                                  selected="{{filters.values.incidentCategory}}"
                                   selected-item="{{selectedIncidentCategory}}">
             </etools-dropdown-lite>
 
@@ -125,28 +120,28 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
                                   enable-none-option
                                   disabled="[[!selectedIncidentCategory]]"
                                   options="[[selectedIncidentCategory.subcategories]]"
-                                  selected="{{filters.incidentSubcategory}}">
+                                  selected="{{filters.values.incidentSubcategory}}">
             </etools-dropdown-lite>
 
             <etools-dropdown-lite class="filter select"
                                   label="Events"
                                   enable-none-option
                                   options="[[events]]"
-                                  selected="{{filters.event}}">
+                                  selected="{{filters.values.event}}">
             </etools-dropdown-lite>
 
             <etools-dropdown-lite class="filter select"
                                   label="Target"
                                   enable-none-option
                                   options="[[staticData.targets]]"
-                                  selected="{{filters.target}}">
+                                  selected="{{filters.values.target}}">
             </etools-dropdown-lite>
 
             <etools-dropdown-lite class="filter select"
                                   label="Threat Category"
                                   enable-none-option
                                   options="[[staticData.threatCategories]]"
-                                  selected="{{filters.threatCategory}}">
+                                  selected="{{filters.values.threatCategory}}">
             </etools-dropdown-lite>
 
             <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
@@ -197,7 +192,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
+        <template id="rows" is="dom-repeat" items="[[filteredItems]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
@@ -279,23 +274,14 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
   static get properties() {
     return {
-      lowResolutionLayout: Boolean,
-      incidents: {
-        type: Object,
-        value: []
-      },
+      threatCategories: Array,
+      staticData: Object,
+      offline: Boolean,
+      store: Object,
+      state: Object,
       events: {
         type: Array,
         value: []
-      },
-      threatCategories: Array,
-      offline: Boolean,
-      filteredIncidents: {
-        type: Array,
-        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, ' +
-            'filters.syncStatus.length, filters.startDate, filters.endDate, filters.country, ' +
-            'filters.incidentCategory, _queryParamsInitComplete, filters.event, filters.target, ' +
-            'filters.incidentSubcategory, filters.threatCategory)'
       },
       itemSyncStatusOptions: {
         type: Array,
@@ -304,36 +290,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      store: Object,
-      state: Object,
-      staticData: Object,
-      filters: {
-        type: Object,
-        value: {
-          incidentCategory: null,
-          incidentSubcategory: null,
-          country: null,
-          startDate: null,
-          endDate: null,
-          syncStatus: [],
-          q: null,
-          event: null,
-          target: null,
-          threatCategory: null
-        }
-      },
-      _queryParams: {
-        type: Object,
-        observer: '_queryParamsChanged'
-      },
-      _queryParamsInitComplete: Boolean,
-      _lastQueryString: {
-        type: String,
-        value: ''
-      },
-      visible: {
-        type: Boolean,
-        observer: '_visibilityChanged'
+      getNameFromId: {
+        type: Function,
+        value: () => getNameFromId
       },
       exportDocType: {
         type: String,
@@ -351,92 +310,17 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
   }
 
   connectedCallback() {
+    this.initFilters(); //causes slow filter init if not first
     super.connectedCallback();
-    this.store = store;
-  }
-
-  _updateUrlQuery() {
-    if (!this.visible) {
-      return false;
-    }
-    this.set('_lastQueryString', this._buildQueryString());
-    updateAppState('/incidents/list', this._lastQueryString, false);
-  }
-
-  _visibilityChanged(visible) {
-    if (this._queryParamsInitComplete) {
-      if (visible && this._lastQueryString !== '') {
-        updateAppState('/incidents/list', this._lastQueryString, false);
-      }
-    }
-  }
-
-  _queryParamsChanged(params) {
-    if (params && this.visible) {
-      if (params.q && params.q !== this.filters.q) {
-        this.set('filters.q', params.q);
-      }
-
-      if (params.incidentCategory && params.incidentCategory !== this.filters.incidentCategory) {
-        this.set('filters.incidentCategory', Number(params.incidentCategory));
-      }
-
-      if (params.country && params.country !== this.filters.country) {
-        this.set('filters.country', params.country);
-      }
-
-      if (params.start) {
-        this.set('filters.startDate', params.start);
-      }
-
-      if (params.end) {
-        this.set('filters.endDate', params.end);
-      }
-
-      if (params.synced) {
-        if (params.synced.indexOf('|') > -1) {
-          this.set('filters.syncStatus', params.synced.split('|'));
-        } else {
-          this.set('filters.syncStatus', [params.synced]);
-        }
-      }
-
-      if (params.incident_category) {
-        this.set('filters.incidentCategory', params.incident_category);
-      }
-
-      if (params.incident_subcategory) {
-        this.set('filters.incidentSubcategory', params.incident_subcategory);
-      }
-
-      if (params.event) {
-        this.set('filters.event', params.event);
-      }
-
-      if (params.target) {
-        this.set('filters.target', params.target);
-      }
-
-      if (params.threat_category) {
-        this.set('filters.threatCategory', params.threat_category);
-      }
-
-      this.set('_queryParamsInitComplete', true);
-    }
   }
 
   _stateChanged(state) {
     if (!state) {
       return;
     }
-
-    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
-      this._queryParams = state.app.locationInfo.queryParams;
-    }
-
     this.offline = state.app.offline;
     this.staticData = state.staticData;
-    this.incidents = state.incidents.list;
+    this.listItems = state.incidents.list;
     this.threatCategories = state.staticData.threatCategories;
 
     this.events = state.events.list.map((elem) => {
@@ -445,38 +329,76 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     });
   }
 
-  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country,
-              incidentCategory, qParamsInit, event, target, subcategory, threatCategory) {
-
-    if (!qParamsInit || !(incidents instanceof Array && incidents.length > 0)) {
-      return [];
-    }
-
-    this._updateUrlQuery();
-
-    let filteredIncidents = JSON.parse(JSON.stringify(incidents));
-
-    filteredIncidents = filteredIncidents.filter(incident => this._applyQFilter(incident, q));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyStatusFilter(incident,
-        this.filters.syncStatus));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyDateFilter(incident, startDate, endDate));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyCountryFilter(incident, country));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentCategoryFilter(incident,
-        incidentCategory));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyEventFilter(incident, event));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyTargetFilter(incident, target));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentSubcategoryFilter(incident,
-        subcategory));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyThreatCategoryFilter(incident, threatCategory));
-
-    filteredIncidents.sort((left, right) => {
-      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
-    });
-
-    return this.applyPagination(filteredIncidents);
+  initFilters() {
+    this.filters = {
+      values: {
+        incidentSubcategory: null,
+        incidentCategory: null,
+        threatCategory: null,
+        syncStatus: [],
+        startDate: null,
+        endDate: null,
+        country: null,
+        target: null,
+        event: null,
+        q: null
+      },
+      handlers: {
+        incidentSubcategory: this.incidentSubcategoryFilter,
+        incidentCategory: this.incidentCategoryFilter,
+        threatCategory: this.threatCategoryFilter,
+        syncStatus: this.syncStatusFilter,
+        startDate: this.startDateFilter,
+        endDate: this.endDateFilter,
+        country: this.countryFilter,
+        target: this.targetFilter,
+        event: this.eventFilter,
+        q: this.searchFilter
+      }
+    };
   }
 
-  _applyQFilter(incident, q) {
+  incidentSubcategoryFilter(incident, selectedSubCategory) {
+    return selectedSubCategory ? Number(incident.incident_subcategory) === Number(selectedSubCategory) : true;
+  }
+
+  incidentCategoryFilter(incident, selectedIncidentCategory) {
+    return selectedIncidentCategory ? Number(incident.incident_category) === Number(selectedIncidentCategory) : true;
+  }
+
+  threatCategoryFilter(incident, selectedThreatCategory) {
+    return selectedThreatCategory ? Number(incident.threat_category) === Number(selectedThreatCategory) : true;
+  }
+
+  syncStatusFilter(incident, selectedSyncStatuses = []) {
+    if (selectedSyncStatuses.length === 0) {
+      return true;
+    }
+    const eStatus = incident.unsynced ? 'unsynced' : 'synced';
+    return selectedSyncStatuses.some(s => s === eStatus);
+  }
+
+  startDateFilter(incident, startDate) {
+    return !startDate || new Date(incident.incident_date) > new Date(startDate);
+  }
+
+  endDateFilter(incident, endDate) {
+    return !endDate || new Date(incident.incident_date) < new Date(endDate);
+  }
+
+  countryFilter(incident, selectedCountry) {
+    return selectedCountry ? incident.country === Number(selectedCountry) : true;
+  }
+
+  targetFilter(incident, selectedTarget) {
+    return selectedTarget ? Number(incident.target) === Number(selectedTarget) : true;
+  }
+
+  eventFilter(incident, selectedEvent) {
+    return selectedEvent ? incident.event === selectedEvent : true;
+  }
+
+  searchFilter(incident, q) {
     if (!q || q === '') {
       return true;
     }
@@ -485,49 +407,9 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         String(incident.description).toLowerCase().search(q) > -1;
   }
 
-  _applyStatusFilter(incident, selectedSyncStatuses) {
-    if (selectedSyncStatuses.length === 0 || selectedSyncStatuses.length === this.itemSyncStatusOptions.length) {
-      return true;
-    }
-    const eStatus = incident.unsynced ? 'unsynced' : 'synced';
-    return selectedSyncStatuses.some(s => s === eStatus);
-  }
-
-  _applyDateFilter(incident, startDate, endDate) {
-
-    if (startDate && new Date(incident.incident_date) <= new Date(startDate)) {
-      return false;
-    }
-
-    if (endDate && new Date(incident.incident_date) >= new Date(endDate)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  _applyCountryFilter(incident, selectedCountry) {
-    return selectedCountry ? incident.country === Number(selectedCountry) : true;
-  }
-
-  _applyIncidentCategoryFilter(incident, selectedIncidentCategory) {
-    return selectedIncidentCategory ? incident.incident_category === Number(selectedIncidentCategory) : true;
-  }
-
-  _applyIncidentSubcategoryFilter(incident, selectedSubCategory) {
-    return selectedSubCategory ? incident.incident_subcategory === Number(selectedSubCategory) : true;
-  }
-
-  _applyEventFilter(incident, selectedEvent) {
-    return selectedEvent ? incident.event === selectedEvent : true;
-  }
-
-  _applyTargetFilter(incident, selectedTarget) {
-    return selectedTarget ? incident.target === Number(selectedTarget) : true;
-  }
-
-  _applyThreatCategoryFilter(incident, selectedThreatCategory) {
-    return selectedThreatCategory ? incident.threat_category === Number(selectedThreatCategory) : true;
+  canEdit(status, unsynced, offline) {
+    return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
+           (unsynced && this.hasPermission('add_incident'));
   }
 
   _showSyncButton(unsynced, offline) {
@@ -543,11 +425,6 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     store.dispatch(syncIncidentOnList(element));
   }
 
-  canEdit(status, unsynced, offline) {
-    return (status === 'created' && this.hasPermission('change_incident') && !offline) ||
-           (unsynced && this.hasPermission('add_incident'));
-  }
-
   getIncidentSubcategory(id) {
     if (id) {
       let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
@@ -556,35 +433,18 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     }
   }
 
-  // Outputs the query string for the list
-  _buildQueryString() {
-    return this._buildUrlQueryString({
-      incident_category: this.filters.incidentCategory,
-      incident_subcategory: this.filters.incidentSubcategory,
-      country: this.filters.country,
-      start: this.filters.startDate,
-      end: this.filters.endDate,
-      synced: this.filters.syncStatus,
-      q: this.filters.q,
-      event: this.filters.event,
-      target: this.filters.target,
-      threat_category: this.filters.threatCategory
-    });
-  }
-
-  // Outputs the query string for the export
-  _buildExportQueryString(docType) {
-    return this._buildUrlQueryString({
-      incident_category: this.filters.incidentCategory,
-      incident_subcategory: this.filters.incidentSubcategory,
-      incident_date__gt: this.filters.startDate,
-      incident_date__lt: this.filters.endDate,
-      country: this.filters.country,
-      q: this.filters.q,
-      event: this.filters.event,
+  _getExportQueryString(docType) {
+    return this.serializeFilters({
+      incident_category: this.filters.values.incidentCategory,
+      incident_subcategory: this.filters.values.incidentSubcategory,
+      incident_date__gt: this.filters.values.startDate,
+      incident_date__lt: this.filters.values.endDate,
+      country: this.filters.values.country,
+      q: this.filters.values.q,
+      event: this.filters.values.event,
       format: docType,
-      target: this.filters.target,
-      threat_category: this.filters.threatCategory
+      target: this.filters.values.target,
+      threat_category: this.filters.values.threatCategory
     });
   }
 
@@ -592,7 +452,7 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     if (!docType || docType === '') {
       return;
     }
-    const csvQStr = this._buildExportQueryString(docType);
+    const csvQStr = this._getExportQueryString(docType);
     const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
     this.set('exportDocType', '');
 

@@ -16,7 +16,7 @@ const SIR_MSAL_CONF = {
     },
     authority: 'https://login.microsoftonline.com/nikunicef.onmicrosoft.com',
     user_agent_app_config: {
-      redirectUri: 'http://localhost:8081/dashboard', // just for testing
+      redirectUri: 'http://localhost:8081/', // just for testing
       cacheLocation: 'localStorage'
     }
   },
@@ -29,7 +29,7 @@ const SIR_MSAL_CONF = {
     },
     authority: 'https://login.microsoftonline.com/unicef.org',
     user_agent_app_config: {
-      redirectUri: window.location.origin + '/dashboard',
+      redirectUri: window.location.origin + '/',
       cacheLocation: 'localStorage'
     }
   }

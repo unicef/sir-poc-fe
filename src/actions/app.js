@@ -124,9 +124,6 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
     case 'incidents':
       import('../components/incidents-module/incidents-controller.js');
       break;
-    case 'dashboard':
-      import('../components/dashboard-module/dashboard-controller.js');
-      break;
     case 'view404':
       import('../components/non-found-module/404.js');
       break;

@@ -96,11 +96,12 @@ export const deleteIncidentFromRedux = (incidentId) => {
 
 export const fetchAllIncidentData = () => (dispatch) => {
   dispatch(fetchIncidents());
-  dispatch(fetchIncidentPremises());
-  dispatch(fetchIncidentPersonnel());
-  dispatch(fetchIncidentProgrammes());
-  dispatch(fetchIncidentProperties());
   dispatch(fetchIncidentEvacuations());
+  dispatch(fetchIncidentProperties());
+  dispatch(fetchIncidentProgrammes());
+  dispatch(fetchIncidentPersonnel());
+  dispatch(fetchIncidentPremises());
+  dispatch(fetchIncidentComments());
 };
 
 const addIncidentOnline = (newIncident, dispatch) => {
@@ -304,7 +305,11 @@ export const fetchIncidents = () => (dispatch, getState) => {
 };
 
 export const fetchIncidentComments = () => (dispatch, getState) => {
-  if (getState().app.offline !== true) {
+  let state = getState();
+  if (state.app.offline === true || !state.staticData.profile.permissions) {
+    return;
+  }
+  if(state.staticData.profile.permissions['view_comment']) {
     makeRequest(Endpoints.incidentsCommentsList).then((result) => {
       dispatch(receiveIncidentComments(result));
     });

@@ -162,27 +162,6 @@ class AppShell extends connect(store)(PermissionsBase) {
 
           <div class="drawer-list">
             <a class="menu-heading"
-              selected$="[[pathsMatch(page, 'dashboard')]]"
-              href="[[rootPath]]dashboard">Dashboard</a>
-
-            <a class="menu-heading"
-              selected$="[[pathsMatch(page, 'events')]]"
-              href="[[rootPath]]events/list/">Events</a>
-
-            <a selected$="[[pathsMatch(route.path, '/events/list/')]]"
-              href="[[rootPath]]events/list/">
-                <iron-icon icon="list"></iron-icon>
-                <span>Events List</span>
-              </a>
-
-            <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
-              href="[[rootPath]]events/new/"
-              hidden$="[[!canAddEvents(profile)]]">
-                <iron-icon icon="av:playlist-add"></iron-icon>
-                <span>New Event</span>
-            </a>
-
-            <a class="menu-heading"
               selected$="[[pathsMatch(page, 'incidents')]]"
               href="[[rootPath]]incidents/list/">Incidents</a>
 
@@ -197,6 +176,23 @@ class AppShell extends connect(store)(PermissionsBase) {
               hidden$="[[!canAddIncidents(profile)]]">
                   <iron-icon icon="av:playlist-add"></iron-icon>
                   <span>New Incident</span>
+            </a>
+
+            <a class="menu-heading"
+              selected$="[[pathsMatch(page, 'events')]]"
+              href="[[rootPath]]events/list/">Events</a>
+
+            <a selected$="[[pathsMatch(route.path, '/events/list/')]]"
+              href="[[rootPath]]events/list/">
+                <iron-icon icon="list"></iron-icon>
+                <span>Events List</span>
+            </a>
+
+            <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
+              href="[[rootPath]]events/new/"
+              hidden$="[[!canAddEvents(profile)]]">
+                <iron-icon icon="av:playlist-add"></iron-icon>
+                <span>New Event</span>
             </a>
 
             <a class="menu-heading" href="[[rootPath]]admin/" target="_blank">
@@ -222,7 +218,6 @@ class AppShell extends connect(store)(PermissionsBase) {
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
-            <dashboard-controller name="dashboard"></dashboard-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 
@@ -245,7 +240,7 @@ class AppShell extends connect(store)(PermissionsBase) {
       },
       validPages: {
         type: Array,
-        value: ['dashboard', 'events', 'incidents']
+        value: ['events', 'incidents']
       },
       snackbarOpened: Boolean,
       snackbarText: String,
@@ -287,7 +282,7 @@ class AppShell extends connect(store)(PermissionsBase) {
 
   _routePageChangedCallback(page) {
     if (!page) {
-      updatePath('dashboard');
+      updatePath('incidents/list/');
     } else if (this._isValidPage(page)) {
       this.page = page;
     } else {

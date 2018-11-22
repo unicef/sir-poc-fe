@@ -110,7 +110,7 @@ class AppShell extends connect(store)(PermissionsBase) {
           @apply --layout-horizontal;
           @apply --layout-center;
           font-weight: normal;
-          padding: 0 32px;
+          padding: 0 30px;
           text-decoration: none;
           color: var(--primary-text-color);
           line-height: 40px;
@@ -168,7 +168,10 @@ class AppShell extends connect(store)(PermissionsBase) {
             <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]"
               href="[[rootPath]]incidents/list/">
                 <iron-icon icon="list"></iron-icon>
-                <span>Incidents List</span>
+                <span> Incidents List </span>
+                <small hidden$="[[!getNewIncidentsCount(incidents, incidents.length)]]">
+                  &nbsp;([[getNewIncidentsCount(incidents, incidents.length)]] new)
+                </small>
             </a>
 
             <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
@@ -298,8 +301,10 @@ class AppShell extends connect(store)(PermissionsBase) {
     if (!state) {
       return;
     }
+    this.set('state', state);
     this.set('offline', state.app.offline);
     this.set('profile', state.staticData.profile);
+    this.set('incidents', state.incidents.list);
     this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
@@ -334,6 +339,20 @@ class AppShell extends connect(store)(PermissionsBase) {
     }
     return this.hasPermission('add_event');
   }
+
+  getNewIncidentsCount() {
+    if (!this.profile || !this.profile.last_login) {
+      return '';
+    }
+
+    let lastLogin = this.profile.last_login;
+    let filteredIncidents = this.incidents.filter((incident) => {
+      return moment(incident.created_on).isAfter(moment(lastLogin));
+    });
+
+    return filteredIncidents.length;
+  }
+
 }
 
 window.customElements.define('app-shell', AppShell);

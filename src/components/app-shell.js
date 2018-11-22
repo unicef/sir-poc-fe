@@ -169,8 +169,8 @@ class AppShell extends connect(store)(PermissionsBase) {
               href="[[rootPath]]incidents/list/">
                 <iron-icon icon="list"></iron-icon>
                 <span> Incidents List </span>
-                <small hidden$="[[!getNewIncidentsCount(incidents, incidents.length)]]">
-                  &nbsp;([[getNewIncidentsCount(incidents, incidents.length)]] new)
+                <small hidden$="[[!getNewCaseCount(incidents)]]">
+                  &nbsp;([[getNewCaseCount(incidents)]] new)
                 </small>
             </a>
 
@@ -189,6 +189,9 @@ class AppShell extends connect(store)(PermissionsBase) {
               href="[[rootPath]]events/list/">
                 <iron-icon icon="list"></iron-icon>
                 <span>Events List</span>
+                <small hidden$="[[!getNewCaseCount(events)]]">
+                  &nbsp;([[getNewCaseCount(events)]] new)
+                </small>
             </a>
 
             <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
@@ -301,9 +304,10 @@ class AppShell extends connect(store)(PermissionsBase) {
     if (!state) {
       return;
     }
-    this.set('state', state);
+
     this.set('offline', state.app.offline);
     this.set('profile', state.staticData.profile);
+    this.set('events', state.events.list);
     this.set('incidents', state.incidents.list);
     this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
@@ -340,17 +344,17 @@ class AppShell extends connect(store)(PermissionsBase) {
     return this.hasPermission('add_event');
   }
 
-  getNewIncidentsCount() {
+  getNewCaseCount(allCases) {
     if (!this.profile || !this.profile.last_login) {
       return '';
     }
 
     let lastLogin = this.profile.last_login;
-    let filteredIncidents = this.incidents.filter((incident) => {
+    let filteredCases = allCases.filter((incident) => {
       return moment(incident.created_on).isAfter(moment(lastLogin));
     });
 
-    return filteredIncidents.length;
+    return filteredCases.length;
   }
 
 }

@@ -1,4 +1,4 @@
-import {makeRequest, prepareEndpoint,
+import { makeRequest, prepareEndpoint,
   handleBlobDataReceivedAndStartDownload } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
 import { objDiff, isNumber } from '../components/common/utils.js';
@@ -14,7 +14,7 @@ import { fetchIncidentEvacuations,
          fetchIncidentPersonnel,
          fetchIncidentPremises } from './incident-impacts.js';
 
-import {showSnackbar} from '../actions/app.js';
+import { showSnackbar } from '../actions/app.js';
 
 const editIncidentSuccess = (incident, id) => {
   return {

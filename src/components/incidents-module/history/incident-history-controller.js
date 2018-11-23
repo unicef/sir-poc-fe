@@ -11,7 +11,6 @@ import { store } from '../../../redux/store.js';
 
 import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { selectIncidentComments } from '../../../reducers/incidents.js';
-import { fetchIncidentComments } from '../../../actions/incidents.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
@@ -81,13 +80,6 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
       route: Object,
       state: Object
     };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    if (this.hasPermission('view_comment')) {
-      store.dispatch(fetchIncidentComments());
-    }
   }
 
   static get observers() {

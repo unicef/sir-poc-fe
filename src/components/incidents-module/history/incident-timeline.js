@@ -3,7 +3,7 @@ import { PermissionsBase } from '../../common/permissions-base-class';
 import HistoryHelpers from '../../history-components/history-helpers.js';
 import { getUserName } from '../../common/utils.js';
 import '../../styles/shared-styles.js';
-
+import { store } from '../../../redux/store.js';
 /**
  * @polymer
  * @customElement
@@ -36,6 +36,12 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
           padding: 0 4px;
           position: relative;
           top: -13px;
+        }
+
+        .card.new:before {
+          content: "New";
+          font-weight: bold;
+          color: var(--notification-icon-color);
         }
 
         section.timeline-outer {
@@ -108,7 +114,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                   </div>
                   <template is="dom-repeat" items="[[workingDay.items]]">
                     <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
-                      <div class="card">
+                      <div class$="[[getCardClass(item)]]">
                         [[getUserName(item.by_user)]] added this incident.
                         <span title="View entire incident at this version">
                           <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
@@ -119,13 +125,13 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                     </template>
                     <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
                       <template is="dom-if" if="[[statusHasChanged(item.change)]]">
-                        <div class="card">
+                        <div class$="[[getCardClass(item)]]">
                           [[getUserName(item.by_user)]] [[item.change.status.after]] this <br>
                         </div>
                       </template>
 
                       <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
-                        <div class="card">
+                        <div class$="[[getCardClass(item)]]">
                           [[getUserName(item.by_user)]] changed fields:
                           <p> [[getChangedFileds(item.change)]] </p>
                           You can
@@ -140,7 +146,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                       </template>
                     </template>
                     <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
-                      <div class="card">
+                      <div class$="[[getCardClass(item)]]">
                         [[getUserName(item.last_modify_user_id)]] commented on this:
                         <p> [[item.comment]] </p>
                       </div>
@@ -169,11 +175,18 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
       history: Array,
       comments: Array,
       timeline: Array,
+      profile: Object,
       getUserName: {
         type: Function,
         value: () => getUserName
       }
     };
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    let state = store.getState();
+    this.profile = state.staticData.profile;
   }
 
   _computeTimline(history, comments) {
@@ -183,6 +196,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
 
     let tempTimeline = {};
     let finalTimeline = [];
+    let userLastLogin = moment(this.profile.last_login);
 
     if (this.hasPermission('view_comment')) {
       comments.forEach((elem) => {
@@ -195,6 +209,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
     [...history, ...comments].forEach((elem) => {
       let year = this._getYear(elem.created);
       let created = this._getDate(elem.created);
+      elem.is_new = moment(elem.created).isAfter(userLastLogin);
       tempTimeline[year] = tempTimeline[year] || {};
       tempTimeline[year][created] = tempTimeline[year][created] || [];
       tempTimeline[year][created].push(elem);
@@ -247,6 +262,10 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
 
   isCurrentYear(year) {
     return moment().format('YYYY') === year;
+  }
+
+  getCardClass(item) {
+    return item.is_new ? 'card new': 'card';
   }
 }
 

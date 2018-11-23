@@ -11,7 +11,7 @@ import { ListBaseClass } from '../common/list-base-class.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
 import '@polymer/paper-input/paper-input.js';
@@ -69,6 +69,14 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           display: inherit;
         }
 
+        .notification-tooltip {
+          color: var(--notification-icon-color);
+        }
+
+        iron-icon.smaller {
+          --iron-icon-width: 20px;
+          --iron-icon-height: 20px;
+        }
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
@@ -169,10 +177,10 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         <etools-data-table-header id="listHeader"
                                   label="Incidents"
                                   low-resolution-layout="[[lowResolutionLayout]]">
-          <etools-data-table-column class="col-1">
+          <etools-data-table-column class="col-2">
             Case Number
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Description
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -196,15 +204,40 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
-              <span class="col-data col-1" data-col-header-label="Case number">
+              <span class="col-data col-2" data-col-header-label="Case number">
                 <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
                   <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
                 </span>
                 <span class="truncate" hidden$="[[hasPermission('view_incident')]]">
                   [[item.case_number]]
                 </span>
+
+                <etools-info-tooltip class="notification-tooltip"
+                                     hidden$="[[!showNewIncidentTooltip(item)]]"
+                                     custom-icon
+                                     open-on-click>
+                  <span slot="custom-icon"><iron-icon icon="av:fiber-new"></iron-icon></span>
+                  <span slot="message"> This incident has been added since your last login </span>
+                </etools-info-tooltip>
+
+                <etools-info-tooltip class="notification-tooltip"
+                                     hidden$="[[!showNewCommentsTooltip(item)]]"
+                                     custom-icon
+                                     open-on-click>
+                  <span slot="custom-icon"><iron-icon class="smaller" icon="editor:insert-comment"></iron-icon></span>
+                  <span slot="message"> New comments have been added since your last login </span>
+                </etools-info-tooltip>
+
+                <etools-info-tooltip class="notification-tooltip"
+                                     hidden$="[[!showNewChangesTooltip(item)]]"
+                                     custom-icon
+                                     open-on-click>
+                  <span slot="custom-icon"><iron-icon class="smaller" icon="build"></iron-icon></span>
+                  <span slot="message"> This incident has been changed since your last login </span>
+                </etools-info-tooltip>
+
               </span>
-              <span class="col-data col-4" data-col-header-label="Case number">
+              <span class="col-data col-3" data-col-header-label="Case number">
                 <span class="truncate">
                   [[item.description]]
                 </span>
@@ -318,6 +351,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     if (!state) {
       return;
     }
+    this.state = state;
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.listItems = state.incidents.list;
@@ -459,6 +493,39 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     store.dispatch(exportIncidents(csvDownloadUrl, docType));
   }
 
+  showNewIncidentTooltip(incident) {
+    if (!incident.id || !this.state || !this.state.app || this.state.app.offilne) {
+      return false;
+    }
+
+    let lastLogin = this.state.staticData.profile.last_login;
+    return moment(incident.created_on).isAfter(moment(lastLogin));
+  }
+
+  showNewChangesTooltip(incident) {
+    if (!incident.id || !this.state || !this.state.app || this.state.app.offilne) {
+      return false;
+    }
+
+    let lastLogin = this.state.staticData.profile.last_login;
+    let modifiedAfterLastLogin = moment(incident.last_modify_date).isAfter(moment(lastLogin));
+    return modifiedAfterLastLogin && !this.showNewIncidentTooltip(incident);
+  }
+
+  showNewCommentsTooltip(incident) {
+    if (!incident.id || !this.state || !this.state.app || this.state.app.offilne) {
+      return false;
+    }
+
+    let lastLogin = this.state.staticData.profile.last_login;
+    let allComments = this.state.incidents.comments;
+    let newCommentsForIncident = allComments.filter(c => {
+      return Number(c.incident) === Number(incident.id) &&
+            moment(c.created_on).isAfter(moment(lastLogin));
+    });
+
+    return newCommentsForIncident.length > 0;
+  }
 }
 
 window.customElements.define('incidents-list', IncidentsList);

@@ -32,15 +32,17 @@ documentContainer.innerHTML = `
         --button-primary-bg-color: var(--primary-color);
         --button-secondary-bg-color: #3D5AFE;
         --button-primary-text-color: var(--light-primary-text-color);
+        --notification-icon-color: #EF6C00;
+        --list-primary-color: var(--primary-color);
 
         --paper-input-container-label: {
           color: var(--secondary-text-color, #737373);
         };
+
         --paper-input-container-label-floating: {
           color: var(--secondary-text-color, #737373);
         }
 
-        --list-primary-color: var(--primary-color);
       }
     </style>
   </custom-style>`;

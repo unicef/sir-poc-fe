@@ -110,7 +110,7 @@ class AppShell extends connect(store)(PermissionsBase) {
           @apply --layout-horizontal;
           @apply --layout-center;
           font-weight: normal;
-          padding: 0 32px;
+          padding: 0 30px;
           text-decoration: none;
           color: var(--primary-text-color);
           line-height: 40px;
@@ -168,7 +168,10 @@ class AppShell extends connect(store)(PermissionsBase) {
             <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]"
               href="[[rootPath]]incidents/list/">
                 <iron-icon icon="list"></iron-icon>
-                <span>Incidents List</span>
+                <span> Incidents List </span>
+                <small hidden$="[[!getNewCaseCount(incidents)]]">
+                  &nbsp;([[getNewCaseCount(incidents)]] new)
+                </small>
             </a>
 
             <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
@@ -186,6 +189,9 @@ class AppShell extends connect(store)(PermissionsBase) {
               href="[[rootPath]]events/list/">
                 <iron-icon icon="list"></iron-icon>
                 <span>Events List</span>
+                <small hidden$="[[!getNewCaseCount(events)]]">
+                  &nbsp;([[getNewCaseCount(events)]] new)
+                </small>
             </a>
 
             <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
@@ -298,8 +304,11 @@ class AppShell extends connect(store)(PermissionsBase) {
     if (!state) {
       return;
     }
+
     this.set('offline', state.app.offline);
     this.set('profile', state.staticData.profile);
+    this.set('events', state.events.list);
+    this.set('incidents', state.incidents.list);
     this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
@@ -334,6 +343,20 @@ class AppShell extends connect(store)(PermissionsBase) {
     }
     return this.hasPermission('add_event');
   }
+
+  getNewCaseCount(allCases) {
+    if (!this.profile || !this.profile.last_login) {
+      return '';
+    }
+
+    let lastLogin = this.profile.last_login;
+    let filteredCases = allCases.filter((incident) => {
+      return moment(incident.created_on).isAfter(moment(lastLogin));
+    });
+
+    return filteredCases.length;
+  }
+
 }
 
 window.customElements.define('app-shell', AppShell);

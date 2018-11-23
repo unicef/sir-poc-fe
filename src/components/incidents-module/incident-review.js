@@ -156,7 +156,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           value="[[prettyDate(incident.legal_review_date)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[_canReview(offline, incident.legal_review_by, 'review_review_incident')]]">
+          <div class="col col-6" hidden$="[[_canReview(offline, incident.legal_review_by, 'legal_review_incident')]]">
             <paper-input id="legalReviewBy"
                           placeholder="&#8212;"
                           readonly
@@ -165,7 +165,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           value="[[getUserName(incident.legal_review_by)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[!_canReview(offline, incident.legal_review_by, 'review_review_incident')]]">
+          <div class="col col-6" hidden$="[[!_canReview(offline, incident.legal_review_by, 'legal_review_incident')]]">
             <review-legal-button incident="[[incident]]"></review-legal-button>
           </div>
         </div>

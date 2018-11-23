@@ -40,7 +40,7 @@ class SubmitButton extends ButtonsBaseClass {
   }
 
   getLabel(status) {
-    return status === 'created' ? 'Submit' : 'Resubmit';
+    return 'Submit';
   }
 
   createSubmitConfirmationDialog() {

@@ -41,7 +41,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
         .card.new:before {
           content: "New";
           font-weight: bold;
-          color: var(--primary-color-darker);
+          color: var(--notification-icon-color);
         }
 
         section.timeline-outer {

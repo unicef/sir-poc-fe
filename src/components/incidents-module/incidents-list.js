@@ -70,7 +70,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         }
 
         .notification-tooltip {
-          color: var(--primary-color-darker);
+          color: var(--notification-icon-color);
         }
 
         iron-icon.smaller {

@@ -10,7 +10,8 @@ export class ImpactFormBase extends PolymerElement {
         observer: '_visibilityChanged'
       },
       incidentId: {
-        type: Number
+        type: Number,
+        observer: '_incidentIdChanged'
       },
       data: {
         type: Object,
@@ -52,4 +53,9 @@ export class ImpactFormBase extends PolymerElement {
     return !typeof arg === 'string' && arg !== '';
   }
 
+  _incidentIdChanged(newId) {
+    if (newId) {
+      this.data = {};
+    }
+  }
 }

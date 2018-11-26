@@ -34,11 +34,12 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'eod_review_by': 'EOD review by',
           'dfam_review_by': 'DFAM review by',
           'legal_review_by': 'Legal review by',
-          'staff_wellbeing_review_by': 'Staff Wellbeing review by',
           'threat_category': 'Threat Category',
           'incident_category': 'Incident Category',
           'contributing_factor': 'Contributing Factor',
-          'incident_SUBcategory': 'Incident Subcategory'
+          'incident_SUBcategory': 'Incident Subcategory',
+          'staff_wellbeing_review_by': 'Staff Wellbeing review by',
+          'staff_wellbeing_review_date': 'Staff Wellbeing review date',
         }
       }
     };

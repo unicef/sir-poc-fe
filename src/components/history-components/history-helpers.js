@@ -37,7 +37,9 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'threat_category': 'Threat Category',
           'incident_category': 'Incident Category',
           'contributing_factor': 'Contributing Factor',
-          'incident_SUBcategory': 'Incident Subcategory'
+          'incident_SUBcategory': 'Incident Subcategory',
+          'staff_wellbeing_review_by': 'Staff Wellbeing review by',
+          'staff_wellbeing_review_date': 'Staff Wellbeing review date',
         }
       }
     };

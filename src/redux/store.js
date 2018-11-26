@@ -50,6 +50,15 @@ export const store = createStore(
   persistedReducer,
   compose(applyMiddleware(thunk))
 );
+
 // storeReady() gets called after the old state is loaded from storage
 // any data pushed to redux before this callback fires will be overwritten by the old state
-export const persistor = persistStore(store, null, () => store.dispatch(storeReady()));
+
+const persistorReady = () => new Promise((resolve, reject) => {
+  persistStore(store, null, () => resolve(true));
+});
+
+export const initStore = async () => {
+  await persistorReady();
+  store.dispatch(storeReady());
+}

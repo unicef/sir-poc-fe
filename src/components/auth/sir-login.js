@@ -20,7 +20,7 @@ class SirLogin extends PolymerElement {
           @apply --layout-center;
           padding: 28px;
           margin: 12px;
-          color: var(--primary-text-color, rgba(0, 0, 0, 0.87));
+          color: rgba(0, 0, 0, 0.87);
           flex-wrap: wrap;
           border-radius: 5px;
           background-color: #fff;
@@ -31,8 +31,8 @@ class SirLogin extends PolymerElement {
 
         paper-button {
           margin: 0;
-          background-color: var(--primary-color, #1CABE2);
-          color: var(--light-primary-text-color, #fff);
+          background-color: #1CABE2;
+          color: #fff;
           font-weight: bold;
           padding: 5px 10px;
         }
@@ -47,7 +47,7 @@ class SirLogin extends PolymerElement {
           margin-right: 48px;
           width: 100px;
           height: 100px;
-          color: var(--primary-color, #1CABE2);
+          color: #1CABE2;
         }
 
         #unicef-icon {

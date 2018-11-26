@@ -22,6 +22,7 @@ import './buttons/review-eod.js';
 import './buttons/review-dhr.js';
 import './buttons/review-dfam.js';
 import './buttons/review-legal.js';
+import './buttons/review-wellbeing.js';
 /**
  * @polymer
  * @customElement
@@ -167,6 +168,29 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.legal_review_by, 'legal_review_incident')]]">
             <review-legal-button incident="[[incident]]"></review-legal-button>
+          </div>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-6">
+            <paper-input id="staffWellbeingReviewDate"
+                          placeholder="&#8212;"
+                          readonly
+                          label="Staff Wellbeing review date"
+                          type="text"
+                          value="[[prettyDate(incident.staff_wellbeing_review_date)]]">
+            </paper-input>
+          </div>
+          <div class="col col-6" hidden$="[[_canReview(offline, incident.staff_wellbeing_review_by, 'staff_wellbeing_review_incident')]]">
+            <paper-input id="staffWellbeingReviewBy"
+                          placeholder="&#8212;"
+                          readonly
+                          label="Staff Wellbeing review by"
+                          type="text"
+                          value="[[getUserName(incident.staff_wellbeing_review_by)]]">
+            </paper-input>
+          </div>
+          <div class="col col-6" hidden$="[[!_canReview(offline, incident.staff_wellbeing_review_by, 'staff_wellbeing_review_incident')]]">
+            <review-wellbeing-button incident="[[incident]]"></review-wellbeing-button>
           </div>
         </div>
       </div>

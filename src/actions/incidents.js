@@ -296,6 +296,17 @@ export const reviewIncidentLegal = incident => (dispatch) => {
   });
 };
 
+export const reviewIncidentStaffWellbeing = incident => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.reviewIncidentStaffWellbeing, {id: incident.id});
+  return makeRequest(endpoint).then((result) => {
+    dispatch(editIncidentSuccess(incident, incident.id));
+    return true;
+  }).catch((error) => {
+    dispatch(serverError(error.response));
+    return false;
+  });
+};
+
 export const fetchIncidents = () => (dispatch, getState) => {
   if (getState().app.offline !== true) {
     makeRequest(Endpoints.incidentsList).then((result) => {

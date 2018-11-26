@@ -27,6 +27,7 @@ export const allPermissions =  [
   "dhr_review_incident",
   "eod_review_incident",
   "legal_review_incident",
+  "staff_wellbeing_review_incident",
 
   "add_incidentattachment",
   "view_incidentattachment",

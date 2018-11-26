@@ -77,6 +77,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/legal_review/',
     method: 'PUT'
   },
+  reviewIncidentStaffWellbeing: {
+    url: baseUrl + '/api/incidents/<%=id%>/staff_wellbeing_review/',
+    method: 'PUT'
+  },
   incidentsCommentsList: {
     url: baseUrl + '/api/comments/',
     method: 'GET'

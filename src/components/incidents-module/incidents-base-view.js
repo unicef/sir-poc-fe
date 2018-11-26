@@ -799,7 +799,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   canEdit(offline, status, unsynced)  {
-    return (status === 'created' && this.hasPermission('change_incident') && !offline) ||
+    return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
            (unsynced && this.hasPermission('add_incident'));
   }
 

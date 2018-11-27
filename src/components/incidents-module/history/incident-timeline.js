@@ -130,7 +130,14 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                         </div>
                       </template>
 
+                      <template is="dom-if" if="[[isSignOperation(item.change)]]">
+                        <div class$="[[getCardClass(item)]]">
+                          [[getUserName(item.by_user)]] signed this on behalf of [[getTypeOfSignature(item.change)]]<br>
+                        </div>
+                      </template>
+
                       <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
+                      <template is="dom-if" if="[[!isSignOperation(item.change)]]">
                         <div class$="[[getCardClass(item)]]">
                           [[getUserName(item.by_user)]] changed fields:
                           <p> [[getChangedFileds(item.change)]] </p>
@@ -143,6 +150,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                             view the entire incident at this revision
                           </a>
                         </div>
+                      </template>
                       </template>
                     </template>
                     <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
@@ -249,6 +257,45 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
 
   statusHasChanged(changesObj) {
     return Object.keys(changesObj).indexOf('status') > -1;
+  }
+
+  isSignOperation(changesObj) {
+    let keys = Object.keys(changesObj);
+    if (keys.length !== 3) {
+      return false;
+    }
+
+    keys = keys.filter((key) => {
+      if (key.endsWith('review_by')) {
+        return false;
+      }
+      if (key.endsWith('review_date')) {
+        return false;
+      }
+      if (key === 'version') {
+        return false;
+      }
+      return true;
+    });
+
+    return keys.length === 0;
+  }
+
+  getTypeOfSignature(changesObj) {
+    let keys = Object.keys(changesObj);
+    switch(true) {
+      case keys.indexOf('staff_wellbeing_review_by') > -1:
+        return 'Staff Wellbeing';
+      case keys.indexOf('legal_review_by') > -1:
+        return 'Legal';
+      case keys.indexOf('dhr_review_by') > -1:
+        return 'DHR';
+      case keys.indexOf('dfam_review_by') > -1:
+        return 'DFAM';
+      case keys.indexOf('eod_review_by') > -1:
+        return 'EOD';
+    }
+    return 'N/A';
   }
 
   getChangedFileds(changesObj) {

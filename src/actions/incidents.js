@@ -362,6 +362,15 @@ export const updateAddedAttachmentIds = (incidentId, attachments) => (dispatch) 
   });
 }
 
+export const deleteIncidentAttachment = attachmentId => (dispatch) => {
+  return makeRequest(prepareEndpoint(Endpoints.deleteIncidentAttachment, {id: attachmentId})).then((result) => {
+    return true;
+  }).catch((err) => {
+    dispatch(serverError(err));
+    return false;
+  });
+}
+
 export const editAttachmentsNotes = incident => (dispatch, getState) => {
   if (getState().app.offline || incident.unsynced) {
     return Promise.resolve();

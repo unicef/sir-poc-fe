@@ -38,6 +38,7 @@ import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
+import './buttons/delete-attachment';
 
 export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   static get template() {
@@ -500,6 +501,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                   <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
                     <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
                     </paper-input>
+
+                    <delete-attachment-button hidden$="[[!canDeleteAttachment(incident.status, offline, readonly)]]"
+                                              on-remove-attachment="removeAttachment"
+                                              attachment="[[item]]">
+                    </delete-attachment-button>
                   </span>
                 </div>
               </etools-data-table-row>
@@ -837,6 +843,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
            (this.readonly || this.state.app.offline || this.incident.unsynced);
   }
 
+  canDeleteAttachment() {
+    return this.incident && this.hasPermission('delete_incidentattachment') &&
+          !this.readonly && !this.state.app.offline && this.incident.status === 'created';
+  }
+
   hideAttachmentsList() {
     return this.incident && !this.hasPermission('view_incidentattachment') &&
       (this.state.app.offline || !this.incident.attachments || !this.incident.attachments.length);
@@ -844,6 +855,18 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
   hideRelatedDocsSection() {
     return this.hideUploadBtn() && this.hideAttachmentsList();
+  }
+
+  removeAttachment(ev) {
+    if (!ev.detail) {
+      return;
+    }
+
+    let newAttachments = this.incident.attachments.filter((att) => {
+      return Number(ev.detail.id) !== Number(att.id);
+    });
+
+    this.set('incident.attachments', newAttachments);
   }
 
   handleUploadedFiles(ev) {

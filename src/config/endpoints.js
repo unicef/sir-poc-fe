@@ -121,6 +121,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_attachments/<%=id%>/',
     method: 'PATCH'
   },
+  deleteIncidentAttachment: {
+    url: baseUrl + '/api/incident_attachments/<%=id%>/',
+    method: 'DELETE'
+  },
   addIncidentPremise: {
     url: baseUrl + '/api/incident_premises/',
     method: 'POST'

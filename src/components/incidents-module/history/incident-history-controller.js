@@ -11,6 +11,7 @@ import { store } from '../../../redux/store.js';
 
 import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { selectIncidentComments } from '../../../reducers/incidents.js';
+import { fetchImpactsHistory } from '../../../actions/incident-impacts.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
@@ -135,8 +136,22 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
     makeRequest(endpoint).then((response) => {
       this.history = response;
     });
+
+    this.fetchImpactHistory();
   }
 
+  async fetchImpactHistory() {
+    console.log('fetching for evacuations 1,2');
+    let ids = {};
+
+    ids.evacuation = [1, 2];
+    ids.property = [1];
+    ids.programme = [1];
+    ids.personnel = [1];
+    ids.premise = [1];
+
+    console.log(await store.dispatch(fetchImpactsHistory(ids)));
+  }
 }
 
 window.customElements.define(IncidentHistory.is, IncidentHistory);

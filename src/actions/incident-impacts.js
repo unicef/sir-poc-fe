@@ -614,3 +614,112 @@ const syncPersonnelList = (newId, oldId) => (dispatch, getState) => {
 
   return operations;
 };
+
+export const fetchImpactsHistory = ids => async (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return {};
+  }
+
+  return [
+    ...await dispatch(FetchEvacuationsHistory(ids.evacuation)),
+    ...await dispatch(FetchPropertiesHistory(ids.property)),
+    ...await dispatch(FetchProgrammesHistory(ids.programme)),
+    ...await dispatch(FetchPersonnelHistory(ids.personnel)),
+    ...await dispatch(FetchPremisesHistory(ids.premise)),
+  ];
+};
+
+const FetchEvacuationsHistory = (ids) => async (dispatch) => {
+  let allHistoryItems = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    let impactId = ids[i];
+    let endpoint = prepareEndpoint(Endpoints.getIncidentEvacuationHistory, {id: impactId});
+    let result = await makeRequest(endpoint);
+
+    result.forEach((value, key) => {
+      result[key].impact_id = impactId;
+      result[key].impact_type = 'evacuation';
+    });
+
+    allHistoryItems = [...allHistoryItems, ...result];
+  };
+
+  return allHistoryItems;
+};
+
+const FetchPropertiesHistory = (ids) => async (dispatch) => {
+  let allHistoryItems = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    let impactId = ids[i];
+    let endpoint = prepareEndpoint(Endpoints.getIncidentPropertyHistory, {id: impactId});
+    let result = await makeRequest(endpoint);
+
+    result.forEach((value, key) => {
+      result[key].impact_id = impactId;
+      result[key].impact_type = 'property';
+    });
+
+    allHistoryItems = [...allHistoryItems, ...result];
+  };
+
+  return allHistoryItems;
+};
+
+const FetchPremisesHistory = (ids) => async (dispatch) => {
+  let allHistoryItems = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    let impactId = ids[i];
+    let endpoint = prepareEndpoint(Endpoints.getIncidentPremiseHistory, {id: impactId});
+    let result = await makeRequest(endpoint);
+
+    result.forEach((value, key) => {
+      result[key].impact_id = impactId;
+      result[key].impact_type = 'premise';
+    });
+
+    allHistoryItems = [...allHistoryItems, ...result];
+  };
+
+  return allHistoryItems;
+};
+
+const FetchProgrammesHistory = (ids) => async (dispatch) => {
+  let allHistoryItems = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    let impactId = ids[i];
+    let endpoint = prepareEndpoint(Endpoints.getIncidentProgrammeHistory, {id: impactId});
+    let result = await makeRequest(endpoint);
+
+    result.forEach((value, key) => {
+      result[key].impact_id = impactId;
+      result[key].impact_type = 'programme';
+    });
+
+    allHistoryItems = [...allHistoryItems, ...result];
+  };
+
+  return allHistoryItems;
+};
+
+const FetchPersonnelHistory = (ids) => async (dispatch) => {
+  let allHistoryItems = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    let impactId = ids[i];
+    let endpoint = prepareEndpoint(Endpoints.getIncidentPersonnelHistory, {id: impactId});
+    let result = await makeRequest(endpoint);
+
+    result.forEach((value, key) => {
+      result[key].impact_id = impactId;
+      result[key].impact_type = 'personnel';
+    });
+
+    allHistoryItems = [...allHistoryItems, ...result];
+  };
+
+  return allHistoryItems;
+};

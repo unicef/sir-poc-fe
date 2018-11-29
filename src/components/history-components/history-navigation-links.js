@@ -3,7 +3,7 @@ import HistoryHelpers from './history-helpers.js';
 import '@polymer/iron-icons/image-icons.js';
 import '../styles/shared-styles.js';
 
-export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
+export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
 
   static get template() {
     return html`
@@ -21,7 +21,7 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
         </paper-button>
       </a>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/view/[[workingItem.id]]/"
+      <a href="[[module]]/history/[[workingItem.data.id]]/[[viewUrl]]/[[workingItem.id]]/"
            hidden$="[[_pageIs('view')]]"
            title="View entire [[_getLabel(module)]] at this version">
         <paper-button raised class="white smaller">
@@ -41,15 +41,15 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
     `;
   }
 
-  static get is() {
-    return 'history-navigation-links';
-  }
-
   static get properties() {
     return {
       page: String,
       module: String,
-      workingItem: Object
+      workingItem: Object,
+      viewUrl: {
+        type: String,
+        value: 'view'
+      }
     };
   }
 
@@ -73,5 +73,3 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
     }
   }
 }
-
-window.customElements.define(HistoryNavigationLinks.is, HistoryNavigationLinks);

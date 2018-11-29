@@ -16,9 +16,9 @@ import { Endpoints } from '../../../config/endpoints.js';
 import '../../styles/shared-styles.js';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
-import '../../history-components/diff-view.js';
-import './incident-revision-view.js';
+import './revision-view-elements/incident-revision-view.js';
 import './incident-timeline.js';
+import './diff-view.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
   static get template() {
@@ -46,12 +46,12 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                            comments="[[comments]]"
                            history="[[history]]">
         </incident-timeline>
-        <diff-view name="diff"
-                   module="incidents"
-                   working-item="[[workingItem]]">
-        </diff-view>
-        <incident-revision-view name="view"
-                        working-item="[[workingItem]]">
+        <incident-diff-view name="diff"
+                            view-url="incident-view"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
+        <incident-revision-view name="view-incident"
+                                working-item="[[workingItem]]">
         </incident-revision-view>
       </iron-pages>
     `;

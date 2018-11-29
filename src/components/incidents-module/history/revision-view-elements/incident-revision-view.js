@@ -1,10 +1,10 @@
 /**
 @license
 */
-import { IncidentsBaseView } from '../incidents-base-view.js';
+import { IncidentsBaseView } from '../../incidents-base-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
-import '../../history-components/history-navigation-links.js';
-import '../../history-components/styles.js';
+import '../../../history-components/styles.js';
+import '../history-navigation-links.js';
 
 /**
  * @polymer
@@ -28,8 +28,8 @@ class IncidentRevisionView extends IncidentsBaseView {
       }
     };
   }
-  static get getTitleTemplate() {
 
+  static get getTitleTemplate() {
     return html`
       <style include="history-common-styles"></style>
       <div class="layout-horizontal space-between flex-c">
@@ -38,8 +38,11 @@ class IncidentRevisionView extends IncidentsBaseView {
         </div>
 
         <div class="nav-buttons">
-          <history-navigation-links page="view" module="incidents" working-item="[[workingItem]]">
-          </history-navigation-links>
+          <incident-history-navigation-links page="view"
+                                             view-url="view-incident"
+                                             module="incidents"
+                                             working-item="[[workingItem]]">
+          </incident-history-navigation-links>
         </div>
       </div>
     `;

@@ -17,7 +17,7 @@ class IncidentCreatedCard extends TimelineCardBase {
         <div class$="[[getCardClass(item)]]">
           [[getUserName(item.by_user)]] added this incident.
           <span title="View entire incident at this version">
-            <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
+            <a href="/incidents/history/[[item.data.id]]/view-incident/[[item.id]]">
               View original data
             </a>
           </span>

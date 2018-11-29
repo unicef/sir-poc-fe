@@ -21,7 +21,7 @@ class IncidentChangedCard extends TimelineCardBase {
           view the changes
         </a>
         or
-        <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
+        <a href="/incidents/history/[[item.data.id]]/view-incident/[[item.id]]">
           view the entire incident at this revision
         </a>
       </div>

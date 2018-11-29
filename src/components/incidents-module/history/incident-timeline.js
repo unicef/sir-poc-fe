@@ -110,10 +110,13 @@ class IncidentTimeline extends PermissionsBase {
                     <b>[[workingDay.date.day]]</b>
                     [[workingDay.date.month]]
                   </div>
+
                   <template is="dom-repeat" items="[[workingDay.items]]">
+
                     <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
                       <incident-created-card item="[[item]]"></incident-created-card>
                     </template>
+
                     <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
                       <template is="dom-if" if="[[statusHasChanged(item.change)]]">
                         <incident-status-changed-card item="[[item]]"></incident-status-changed-card>
@@ -129,9 +132,20 @@ class IncidentTimeline extends PermissionsBase {
                       </template>
                       </template>
                     </template>
+
                     <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
-                        <incident-commented-card item="[[item]]"></incident-commented-card>
+                      <incident-commented-card item="[[item]]"></incident-commented-card>
                     </template>
+
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_impact')]]">
+                      <h2> IMPACT CREATED </h2>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_impact')]]">
+                      <h2> IMPACT UPDATED </h2>
+                    </template>
+
                   </template>
                 </li>
               </template>

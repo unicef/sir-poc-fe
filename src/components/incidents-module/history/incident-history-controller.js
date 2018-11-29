@@ -47,7 +47,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                            history="[[history]]">
         </incident-timeline>
         <incident-diff-view name="diff"
-                            view-url="incident-view"
+                            view-url="view-incident"
                             working-item="[[workingItem]]">
         </incident-diff-view>
         <incident-revision-view name="view-incident"

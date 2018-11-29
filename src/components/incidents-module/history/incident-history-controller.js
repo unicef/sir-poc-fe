@@ -131,26 +131,25 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
     this.comments = JSON.parse(JSON.stringify(selectIncidentComments(this.state))) || [];
   }
 
-  _fetchHistory() {
+  async _fetchHistory() {
     let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id: this.incidentId});
-    makeRequest(endpoint).then((response) => {
-      this.history = response;
-    });
-
-    this.fetchImpactHistory();
+    let incidentHistory = await makeRequest(endpoint);
+    let impactHistory  = await this.fetchImpactHistory();
+    this.history = [...incidentHistory, ...impactHistory];
   }
 
-  async fetchImpactHistory() {
-    console.log('fetching for evacuations 1,2');
-    let ids = {};
+  getImpactIds() {
+    let premise = this.state.incidents.premises.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
+    let property = this.state.incidents.properties.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
+    let personnel = this.state.incidents.personnel.filter(elem => '' + elem.incident === this.incidentId).map(elem => elem.id);
+    let programme = this.state.incidents.programmes.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
+    let evacuation = this.state.incidents.evacuations.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
 
-    ids.evacuation = [1, 2];
-    ids.property = [1];
-    ids.programme = [1];
-    ids.personnel = [1];
-    ids.premise = [1];
+    return {premise, property, personnel, programme, evacuation};
+  }
 
-    console.log(await store.dispatch(fetchImpactsHistory(ids)));
+  fetchImpactHistory() {
+    return store.dispatch(fetchImpactsHistory(this.getImpactIds()));
   }
 }
 

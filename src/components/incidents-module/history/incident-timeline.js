@@ -138,7 +138,7 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
 
                       <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
                       <template is="dom-if" if="[[!isSignOperation(item.change)]]">
-                        <div class$="[[getCardClass(item)]]">
+                        <div class$="[[getCardClass(item)]]" hidden$="[[!hasChangedFields(item.change)]]">
                           [[getUserName(item.by_user)]] changed fields:
                           <p> [[getChangedFileds(item.change)]] </p>
                           You can
@@ -305,6 +305,12 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
     changes = changes.map(change => this.getLabelForField(change));
 
     return (changes.length > 0 ? changes: ['No changes found']).join(', ');
+  }
+
+  hasChangedFields(changesObj) {
+    let changes = Object.keys(changesObj);
+    // length 1 because version is always present
+    return changes.length !== 1;
   }
 
   isCurrentYear(year) {

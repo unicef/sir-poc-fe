@@ -638,6 +638,7 @@ const FetchEvacuationsHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
+      result[key].action += '_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'evacuation';
     });
@@ -657,6 +658,7 @@ const FetchPropertiesHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
+      result[key].action += '_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'property';
     });
@@ -676,6 +678,7 @@ const FetchPremisesHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
+      result[key].action += '_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'premise';
     });
@@ -695,6 +698,7 @@ const FetchProgrammesHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
+      result[key].action += '_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'programme';
     });
@@ -714,6 +718,7 @@ const FetchPersonnelHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
+      result[key].action += '_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'personnel';
     });

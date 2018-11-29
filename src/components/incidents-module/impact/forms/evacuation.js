@@ -51,7 +51,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-        <h3> Evacuation </h3>
+        ${this.getTitleTemplate}
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -245,6 +245,12 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           Cancel
         </paper-button>
       </div>
+    `;
+  }
+
+  static get getTitleTemplate() {
+    return html`
+      <h3> Evacuation </h3>
     `;
   }
 

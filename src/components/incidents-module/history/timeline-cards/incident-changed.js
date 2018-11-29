@@ -17,7 +17,7 @@ class IncidentChangedCard extends TimelineCardBase {
         [[getUserName(item.by_user)]] changed fields:
         <p> [[getChangedFileds(item.change)]] </p>
         You can
-        <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
+        <a href="/incidents/history/[[item.data.id]]/diff-incident/[[item.id]]">
           view the changes
         </a>
         or

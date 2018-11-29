@@ -30,7 +30,7 @@ export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
         </paper-button>
       </a>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/diff/[[workingItem.id]]/"
+      <a href="[[module]]/history/[[workingItem.data.id]]/[[diffUrl]]/[[workingItem.id]]/"
            hidden$="[[_shouldHideViewChangesButton(workingItem.change)]]"
            title="View changes from previous version">
         <paper-button raised class="white smaller">
@@ -49,6 +49,10 @@ export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
       viewUrl: {
         type: String,
         value: 'view'
+      },
+      diffUrl: {
+        type: String,
+        value: 'diff'
       }
     };
   }

@@ -51,7 +51,7 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-        <h3> UNICEF Premises </h3>
+        ${this.getTitleTemplate}
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -159,6 +159,12 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
           Cancel
         </paper-button>
       </div>
+    `;
+  }
+
+  static get getTitleTemplate() {
+    return html`
+      <h3> UNICEF Premises </h3>
     `;
   }
 

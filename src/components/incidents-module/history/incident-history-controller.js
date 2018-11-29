@@ -46,11 +46,12 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                            comments="[[comments]]"
                            history="[[history]]">
         </incident-timeline>
-        <incident-diff-view name="diff"
+        <incident-diff-view name="diff-incident"
                             view-url="view-incident"
                             working-item="[[workingItem]]">
         </incident-diff-view>
         <incident-revision-view name="view-incident"
+                                diff-url="diff-incident"
                                 working-item="[[workingItem]]">
         </incident-revision-view>
       </iron-pages>

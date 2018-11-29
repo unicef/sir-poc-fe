@@ -39,7 +39,7 @@ class IncidentRevisionView extends IncidentsBaseView {
 
         <div class="nav-buttons">
           <incident-history-navigation-links page="view"
-                                             view-url="view-incident"
+                                             diff-url="diff-incident"
                                              module="incidents"
                                              working-item="[[workingItem]]">
           </incident-history-navigation-links>

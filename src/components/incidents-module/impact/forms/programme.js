@@ -54,7 +54,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
       </style>
 
       <div class="card">
-        <h3> UNICEF Programmes </h3>
+        ${this.getTitleTemplate}
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -181,6 +181,12 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
           Cancel
         </paper-button>
       </div>
+    `;
+  }
+
+  static get getTitleTemplate() {
+    return html`
+      <h3> UNICEF Programmes </h3>
     `;
   }
 

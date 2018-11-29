@@ -50,7 +50,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       </style>
 
       <div class="card">
-
+        ${this.getTitleTemplate}
         <div class="layout-horizontal">
           <errors-box></errors-box>
         </div>
@@ -229,6 +229,10 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         </paper-button>
       </div>
     `;
+  }
+
+  static get getTitleTemplate() {
+    return html``;
   }
 
   static get properties() {

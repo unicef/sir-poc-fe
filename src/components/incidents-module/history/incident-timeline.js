@@ -137,7 +137,7 @@ class IncidentTimeline extends PermissionsBase {
                       <incident-commented-card item="[[item]]"></incident-commented-card>
                     </template>
 
-
+<!--
                     <template is="dom-if" if="[[actionIs(item.action, 'create_impact')]]">
                       <h2> IMPACT CREATED </h2>
                     </template>
@@ -145,7 +145,7 @@ class IncidentTimeline extends PermissionsBase {
                     <template is="dom-if" if="[[actionIs(item.action, 'update_impact')]]">
                       <h2> IMPACT UPDATED </h2>
                     </template>
-
+-->
                   </template>
                 </li>
               </template>

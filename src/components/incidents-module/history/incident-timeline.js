@@ -10,6 +10,8 @@ import './timeline-cards/incident-created';
 import './timeline-cards/incident-signed';
 import './timeline-cards/evacuation-created';
 import './timeline-cards/evacuation-changed';
+import './timeline-cards/property-created';
+import './timeline-cards/property-changed';
 /**
  * @polymer
  * @customElement
@@ -145,6 +147,14 @@ class IncidentTimeline extends PermissionsBase {
 
                     <template is="dom-if" if="[[actionIs(item.action, 'update_evacuation_impact')]]">
                       <evacuation-changed-card item="[[item]]"></evacuation-changed-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_property_impact')]]">
+                      <property-created-card item="[[item]]"></property-created-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_property_impact')]]">
+                      <property-changed-card item="[[item]]"></property-changed-card>
                     </template>
 
                   </template>

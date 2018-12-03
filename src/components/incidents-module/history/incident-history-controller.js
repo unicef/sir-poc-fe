@@ -22,6 +22,9 @@ import './revision-view-elements/incident-diff-view.js';
 import './revision-view-elements/evacuation-revision-view.js';
 import './revision-view-elements/evacuation-diff-view.js';
 
+import './revision-view-elements/property-revision-view.js';
+import './revision-view-elements/property-diff-view.js';
+
 import './incident-timeline.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
@@ -66,6 +69,13 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
         <evacuation-revision-view name="view-evacuation"
                                   working-item="[[workingItem]]">
         </evacuation-revision-view>
+
+        <property-diff-view name="diff-property"
+                              working-item="[[workingItem]]">
+        </property-diff-view>
+        <property-revision-view name="view-property"
+                                  working-item="[[workingItem]]">
+        </property-revision-view>
 
       </iron-pages>
     `;
@@ -116,10 +126,12 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
       this.set('routeData.section', 'list');
     }
   }
+
   _getWorkingSectionFromRoute() {
     // turns diff-x and view-x into x
     return this.routeData.section.substr(5);
   }
+
   _computeWorkingItem(revId, history, routeSection) {
     if (!revId || !history) {
       return;
@@ -134,6 +146,18 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
 
         case 'evacuation':
           return item.impact_type === 'evacuation' && Number(item.id) === Number(revId);
+
+        case 'property':
+          return item.impact_type === 'property' && Number(item.id) === Number(revId);
+
+        case 'premise':
+          return item.impact_type === 'premise' && Number(item.id) === Number(revId);
+
+        case 'programme':
+          return item.impact_type === 'programme' && Number(item.id) === Number(revId);
+
+        case 'personnel':
+          return item.impact_type === 'personnel' && Number(item.id) === Number(revId);
 
         default:
           return false;

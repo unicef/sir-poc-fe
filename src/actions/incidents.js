@@ -461,3 +461,15 @@ const getSanitizedIncident = (rawIncident) => {
 
   return sanitizedIncident;
 };
+
+export const fetchIncidentHistory = id => async (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return;
+  }
+  if (isNaN(id)) {
+    updatePath('/incidents/list/');
+    return;
+  }
+  let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id});
+  return await makeRequest(endpoint);
+};

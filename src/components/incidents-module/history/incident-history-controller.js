@@ -9,16 +9,20 @@ import '@polymer/app-route/app-route.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
-import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { selectIncidentComments } from '../../../reducers/incidents.js';
 import { fetchImpactsHistory } from '../../../actions/incident-impacts.js';
-import { Endpoints } from '../../../config/endpoints.js';
+import { fetchIncidentHistory } from '../../../actions/incidents.js';
 import '../../styles/shared-styles.js';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
+
 import './revision-view-elements/incident-revision-view.js';
+import './revision-view-elements/incident-diff-view.js';
+
+import './revision-view-elements/evacuation-revision-view.js';
+import './revision-view-elements/evacuation-diff-view.js';
+
 import './incident-timeline.js';
-import './diff-view.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
   static get template() {
@@ -46,14 +50,23 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                            comments="[[comments]]"
                            history="[[history]]">
         </incident-timeline>
+
+
         <incident-diff-view name="diff-incident"
-                            view-url="view-incident"
                             working-item="[[workingItem]]">
         </incident-diff-view>
         <incident-revision-view name="view-incident"
-                                diff-url="diff-incident"
                                 working-item="[[workingItem]]">
         </incident-revision-view>
+
+
+        <evacuation-diff-view name="diff-evacuation"
+                              working-item="[[workingItem]]">
+        </evacuation-diff-view>
+        <evacuation-revision-view name="view-evacuation"
+                                  working-item="[[workingItem]]">
+        </evacuation-revision-view>
+
       </iron-pages>
     `;
   }
@@ -87,7 +100,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
   static get observers() {
     return [
       '_routeChanged(routeData.section)',
-      '_revisionIdChanged(subRouteData.revisionId, history)'
+      '_computeWorkingItem(subRouteData.revisionId, history, subRouteData.subsection)'
     ];
   }
 
@@ -103,12 +116,30 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
       this.set('routeData.section', 'list');
     }
   }
-
-  _revisionIdChanged(revId, history) {
+  _getWorkingSectionFromRoute() {
+    // turns diff-x and view-x into x
+    return this.routeData.section.substr(5);
+  }
+  _computeWorkingItem(revId, history, routeSection) {
     if (!revId || !history) {
       return;
     }
-    let workingItem = history.find(item => item.id === Number(revId));
+
+    let section = this._getWorkingSectionFromRoute();
+
+    let workingItem = history.find((item) => {
+      switch (section) {
+        case 'incident':
+          return !item.impact_type && Number(item.id) === Number(revId);
+
+        case 'evacuation':
+          return item.impact_type === 'evacuation' && Number(item.id) === Number(revId);
+
+        default:
+          return false;
+      }
+    });
+
     this.set('workingItem', workingItem);
   }
 
@@ -133,8 +164,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
   }
 
   async _fetchHistory() {
-    let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id: this.incidentId});
-    let incidentHistory = await makeRequest(endpoint);
+    let incidentHistory = await store.dispatch(fetchIncidentHistory(this.incidentId));
     let impactHistory  = await this.fetchImpactHistory();
     this.history = [...incidentHistory, ...impactHistory];
   }
@@ -145,8 +175,8 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
     let personnel = this.state.incidents.personnel.filter(elem => '' + elem.incident === this.incidentId).map(elem => elem.id);
     let programme = this.state.incidents.programmes.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
     let evacuation = this.state.incidents.evacuations.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
-
-    return {premise, property, personnel, programme, evacuation};
+    let incident = this.incidentId;
+    return {premise, property, personnel, programme, evacuation, incident};
   }
 
   fetchImpactHistory() {

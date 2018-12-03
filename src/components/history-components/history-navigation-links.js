@@ -14,14 +14,14 @@ export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
         }
       </style>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/list/" title="Go to changes list">
+      <a href="[[module]]/history/[[getIncidentId(workingItem)]]/list/" title="Go to changes list">
         <paper-button raised class="white smaller">
           <iron-icon icon="list"></iron-icon>
           History List
         </paper-button>
       </a>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/[[viewUrl]]/[[workingItem.id]]/"
+      <a href="[[module]]/history/[[getIncidentId(workingItem)]]/[[viewUrl]]/[[workingItem.id]]/"
            hidden$="[[_pageIs('view')]]"
            title="View entire [[_getLabel(module)]] at this version">
         <paper-button raised class="white smaller">
@@ -30,7 +30,7 @@ export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
         </paper-button>
       </a>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/[[diffUrl]]/[[workingItem.id]]/"
+      <a href="[[module]]/history/[[getIncidentId(workingItem)]]/[[diffUrl]]/[[workingItem.id]]/"
            hidden$="[[_shouldHideViewChangesButton(workingItem.change)]]"
            title="View changes from previous version">
         <paper-button raised class="white smaller">
@@ -75,5 +75,9 @@ export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
     if (module === 'incidents') {
       return 'incident';
     }
+  }
+
+  getIncidentId(workingItem) {
+    return workingItem.incident_id || workingItem.data.id;
   }
 }

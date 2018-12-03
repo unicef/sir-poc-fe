@@ -626,7 +626,10 @@ export const fetchImpactsHistory = ids => async (dispatch, getState) => {
     ...await dispatch(FetchProgrammesHistory(ids.programme)),
     ...await dispatch(FetchPersonnelHistory(ids.personnel)),
     ...await dispatch(FetchPremisesHistory(ids.premise)),
-  ];
+  ].map((elem) => {
+    elem.incident_id = ids.incident;
+    return elem;
+  });
 };
 
 const FetchEvacuationsHistory = (ids) => async (dispatch) => {
@@ -638,7 +641,7 @@ const FetchEvacuationsHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
-      result[key].action += '_impact';
+      result[key].action += '_evacuation_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'evacuation';
     });
@@ -658,7 +661,7 @@ const FetchPropertiesHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
-      result[key].action += '_impact';
+      result[key].action += '_property_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'property';
     });
@@ -678,7 +681,7 @@ const FetchPremisesHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
-      result[key].action += '_impact';
+      result[key].action += '_premise_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'premise';
     });
@@ -698,7 +701,7 @@ const FetchProgrammesHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
-      result[key].action += '_impact';
+      result[key].action += '_programme_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'programme';
     });
@@ -718,7 +721,7 @@ const FetchPersonnelHistory = (ids) => async (dispatch) => {
     let result = await makeRequest(endpoint);
 
     result.forEach((value, key) => {
-      result[key].action += '_impact';
+      result[key].action += '_personnel_impact';
       result[key].impact_id = impactId;
       result[key].impact_type = 'personnel';
     });

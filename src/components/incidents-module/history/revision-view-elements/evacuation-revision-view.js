@@ -1,7 +1,7 @@
 /**
 @license
 */
-import { IncidentsBaseView } from '../../incidents-base-view.js';
+import { EvacuationForm } from '../../impact/forms/evacuation.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import '../../../history-components/styles.js';
 import '../incident-history-navigation-links.js';
@@ -10,14 +10,14 @@ import '../incident-history-navigation-links.js';
  * @polymer
  * @customElement
  */
-class IncidentRevisionView extends IncidentsBaseView {
+class EvacuationRevisionView extends EvacuationForm {
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;
   }
 
   static get is() {
-    return 'incident-revision-view';
+    return 'evacuation-revision-view';
   }
 
   static get properties() {
@@ -34,13 +34,13 @@ class IncidentRevisionView extends IncidentsBaseView {
       <style include="history-common-styles"></style>
       <div class="layout-horizontal space-between flex-c">
         <div>
-          <h2> View incident at this revision </h2>
+          <h2> View evacuation at this revision </h2>
         </div>
 
         <div class="nav-buttons">
           <incident-history-navigation-links page="view"
-                                             diff-url="diff-incident"
                                              module="incidents"
+                                             diff-url="diff-evacuation"
                                              working-item="[[workingItem]]">
           </incident-history-navigation-links>
         </div>
@@ -58,8 +58,9 @@ class IncidentRevisionView extends IncidentsBaseView {
     if (!workingItem) {
       return;
     }
-    this.incident = workingItem.data;
+
+    this.data = workingItem.data;
   }
 }
 
-window.customElements.define(IncidentRevisionView.is, IncidentRevisionView);
+window.customElements.define(EvacuationRevisionView.is, EvacuationRevisionView);

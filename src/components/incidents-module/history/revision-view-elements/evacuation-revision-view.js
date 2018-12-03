@@ -13,6 +13,7 @@ import '../incident-history-navigation-links.js';
 class EvacuationRevisionView extends EvacuationForm {
   connectedCallback() {
     super.connectedCallback();
+    this.hideCancelBtn = true;
     this.readonly = true;
   }
 

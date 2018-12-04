@@ -10,7 +10,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
 import { selectIncidentComments } from '../../../reducers/incidents.js';
-import { fetchImpactsHistory } from '../../../actions/incident-impacts.js';
+import { fetchHistoryOfImpacts } from '../../../actions/incident-impacts.js';
 import { fetchIncidentHistory } from '../../../actions/incidents.js';
 import '../../styles/shared-styles.js';
 
@@ -242,7 +242,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
   }
 
   fetchImpactHistory() {
-    return store.dispatch(fetchImpactsHistory(this.getImpactIds()));
+    return store.dispatch(fetchHistoryOfImpacts(this.getImpactIds()));
   }
 
   personnelIsUn(item) {

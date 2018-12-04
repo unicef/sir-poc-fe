@@ -615,7 +615,7 @@ const syncPersonnelList = (newId, oldId) => (dispatch, getState) => {
   return operations;
 };
 
-export const fetchImpactsHistory = ids => async (dispatch, getState) => {
+export const fetchHistoryOfImpacts = ids => async (dispatch, getState) => {
   if (getState().app.offline === true) {
     return {};
   }
@@ -645,7 +645,7 @@ const fetchImpactHistory = (ids, endpoint, impactType) => async (dispatch) => {
       result[key].impact_type = impactType;
     });
 
-    allHistoryItems = [...allHistoryItems, ...result];
+    allHistoryItems = allHistoryItems.concat(result);
   };
 
   return allHistoryItems;

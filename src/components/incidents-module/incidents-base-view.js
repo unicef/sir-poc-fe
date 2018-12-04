@@ -38,6 +38,7 @@ import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
+import './buttons/delete-attachment';
 
 export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   static get template() {
@@ -85,6 +86,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           margin-bottom: 0;
         }
 
+        delete-attachment-button {
+          margin-left: 8px;
+        }
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
@@ -496,6 +500,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                           [[getFilenameFromURL(item.attachment)]]
                       </a>
                     </span>
+                    <delete-attachment-button hidden$="[[!canDeleteAttachment(incident.status, offline, readonly)]]"
+                                              on-remove-attachment="removeAttachment"
+                                              attachment="[[item]]">
+                    </delete-attachment-button>
+
                   </span>
                   <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
                     <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
@@ -833,8 +842,14 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   hideUploadBtn() {
-    return this.incident && !this.hasPermission('add_incidentattachment') &&
-           (this.readonly || this.state.app.offline || this.incident.unsynced);
+    return this.incident &&
+           (this.readonly || this.state.app.offline || this.incident.unsynced) ||
+           !this.hasPermission('add_incidentattachment');
+  }
+
+  canDeleteAttachment() {
+    return this.incident && this.hasPermission('delete_incidentattachment') &&
+          !this.readonly && !this.state.app.offline && this.incident.status === 'created';
   }
 
   hideAttachmentsList() {
@@ -844,6 +859,18 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
   hideRelatedDocsSection() {
     return this.hideUploadBtn() && this.hideAttachmentsList();
+  }
+
+  removeAttachment(ev) {
+    if (!ev.detail) {
+      return;
+    }
+
+    let newAttachments = this.incident.attachments.filter((att) => {
+      return Number(ev.detail.id) !== Number(att.id);
+    });
+
+    this.set('incident.attachments', newAttachments);
   }
 
   handleUploadedFiles(ev) {

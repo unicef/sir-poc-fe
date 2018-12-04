@@ -13,7 +13,8 @@ class IncidentDiffView extends DiffViewBase {
   static get navButtons() {
     return html`
       <incident-history-navigation-links page="diff"
-                                         view-url="view-incident"
+                                         view-url="[[viewUrl]]"
+                                         module="[[module]]"
                                          working-item="[[workingItem]]">
       </incident-history-navigation-links>`;
   }
@@ -21,7 +22,8 @@ class IncidentDiffView extends DiffViewBase {
   static get properties() {
     return {
       ...super.properties,
-      viewUrl: String
+      viewUrl: String,
+      module: String
     }
   }
 }

@@ -16,24 +16,15 @@ import '../../styles/shared-styles.js';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
 
-import './revision-view-elements/incident-revision-view.js';
 import './revision-view-elements/incident-diff-view.js';
+import './revision-view-elements/incident-revision-view.js';
 
-import './revision-view-elements/evacuation-revision-view.js';
-import './revision-view-elements/evacuation-diff-view.js';
-
-import './revision-view-elements/property-revision-view.js';
-import './revision-view-elements/property-diff-view.js';
-
-import './revision-view-elements/premise-revision-view.js';
-import './revision-view-elements/premise-diff-view.js';
-
-import './revision-view-elements/programme-revision-view.js';
-import './revision-view-elements/programme-diff-view.js';
-
-import './revision-view-elements/personnel-diff-view.js';
-import './revision-view-elements/un-personnel-revision-view.js';
 import './revision-view-elements/non-un-personnel-revision-view.js';
+import './revision-view-elements/un-personnel-revision-view.js';
+import './revision-view-elements/evacuation-revision-view.js';
+import './revision-view-elements/programme-revision-view.js';
+import './revision-view-elements/property-revision-view.js';
+import './revision-view-elements/premise-revision-view.js';
 
 import './incident-timeline.js';
 
@@ -65,7 +56,8 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
         </incident-timeline>
 
 
-        <incident-diff-view name="diff-incident"
+        <incident-diff-view view-url="view-incident"
+                            name="diff-incident"
                             working-item="[[workingItem]]">
         </incident-diff-view>
         <incident-revision-view name="view-incident"
@@ -73,37 +65,42 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
         </incident-revision-view>
 
 
-        <evacuation-diff-view name="diff-evacuation"
-                              working-item="[[workingItem]]">
-        </evacuation-diff-view>
+        <incident-diff-view view-url="view-evacuation"
+                            name="diff-evacuation"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
         <evacuation-revision-view name="view-evacuation"
                                   working-item="[[workingItem]]">
         </evacuation-revision-view>
 
-        <property-diff-view name="diff-property"
-                              working-item="[[workingItem]]">
-        </property-diff-view>
+        <incident-diff-view view-url="view-property"
+                            name="diff-property"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
         <property-revision-view name="view-property"
-                                  working-item="[[workingItem]]">
+                                working-item="[[workingItem]]">
         </property-revision-view>
 
-        <premise-diff-view name="diff-premise"
-                           working-item="[[workingItem]]">
-        </premise-diff-view>
+        <incident-diff-view view-url="view-premise"
+                            name="diff-premise"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
         <premise-revision-view name="view-premise"
                                working-item="[[workingItem]]">
         </premise-revision-view>
 
-        <programme-diff-view name="diff-programme"
-                             working-item="[[workingItem]]">
-        </programme-diff-view>
+        <incident-diff-view view-url="view-programme"
+                            name="diff-programme"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
         <programme-revision-view name="view-programme"
                                  working-item="[[workingItem]]">
         </programme-revision-view>
 
-        <personnel-diff-view name="diff-personnel"
-                             working-item="[[workingItem]]">
-        </personnel-diff-view>
+        <incident-diff-view view-url="view-personnel"
+                            name="diff-personnel"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
 
         <div name="view-personnel">
           <template is="dom-if" if="[[personnelIsUn(workingItem)]]">

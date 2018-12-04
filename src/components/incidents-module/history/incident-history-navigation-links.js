@@ -9,6 +9,10 @@ class IncidentHistoryNavigationLinks extends HistoryNavigationLinksBase {
     super.connectedCallback();
     this.module = 'incidents';
   }
+
+  _getLabel(module) {
+    return this.viewUrl.indexOf('incident') > -1 ? 'incident': 'impact';
+  }
 }
 
 window.customElements.define(IncidentHistoryNavigationLinks.is, IncidentHistoryNavigationLinks);

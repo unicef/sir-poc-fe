@@ -16,6 +16,8 @@ import './timeline-cards/premise-created';
 import './timeline-cards/premise-changed';
 import './timeline-cards/programme-created';
 import './timeline-cards/programme-changed';
+import './timeline-cards/personnel-created';
+import './timeline-cards/personnel-changed';
 /**
  * @polymer
  * @customElement
@@ -175,6 +177,14 @@ class IncidentTimeline extends PermissionsBase {
 
                     <template is="dom-if" if="[[actionIs(item.action, 'update_programme_impact')]]">
                       <programme-changed-card item="[[item]]"></programme-changed-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_personnel_impact')]]">
+                      <personnel-created-card item="[[item]]"></personnel-created-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_personnel_impact')]]">
+                      <personnel-changed-card item="[[item]]"></personnel-changed-card>
                     </template>
 
                   </template>

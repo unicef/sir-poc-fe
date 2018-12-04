@@ -35,7 +35,7 @@ class PremiseRevisionView extends PremiseForm {
       <style include="history-common-styles"></style>
       <div class="layout-horizontal space-between flex-c">
         <div>
-          <h2> View premise at this revision </h2>
+          <h2> View premise impact at this revision </h2>
         </div>
 
         <div class="nav-buttons">

@@ -35,7 +35,7 @@ class ProgrammeRevisionView extends ProgrammeForm {
       <style include="history-common-styles"></style>
       <div class="layout-horizontal space-between flex-c">
         <div>
-          <h2> View programme at this revision </h2>
+          <h2> View programme impact at this revision </h2>
         </div>
 
         <div class="nav-buttons">

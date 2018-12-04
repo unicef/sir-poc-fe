@@ -31,6 +31,10 @@ import './revision-view-elements/premise-diff-view.js';
 import './revision-view-elements/programme-revision-view.js';
 import './revision-view-elements/programme-diff-view.js';
 
+import './revision-view-elements/personnel-diff-view.js';
+import './revision-view-elements/un-personnel-revision-view.js';
+import './revision-view-elements/non-un-personnel-revision-view.js';
+
 import './incident-timeline.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
@@ -96,6 +100,21 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
         <programme-revision-view name="view-programme"
                                  working-item="[[workingItem]]">
         </programme-revision-view>
+
+        <personnel-diff-view name="diff-personnel"
+                             working-item="[[workingItem]]">
+        </personnel-diff-view>
+
+        <div name="view-personnel">
+          <template is="dom-if" if="[[personnelIsUn(workingItem)]]">
+            <un-personnel-revision-view working-item="[[workingItem]]">
+            </un-personnel-revision-view>
+          </template>
+          <template is="dom-if" if="[[!personnelIsUn(workingItem)]]">
+            <non-un-personnel-revision-view working-item="[[workingItem]]">
+            </un-personnel-revision-view>
+          </template>
+        </div>
 
       </iron-pages>
     `;
@@ -225,6 +244,14 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
 
   fetchImpactHistory() {
     return store.dispatch(fetchImpactsHistory(this.getImpactIds()));
+  }
+
+  personnelIsUn(item) {
+    if (typeof item.data.person !== 'object') {
+      return false;
+    }
+
+    return !!item.data.person.un_official;
   }
 }
 

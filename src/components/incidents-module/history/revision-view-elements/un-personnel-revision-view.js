@@ -1,7 +1,7 @@
 /**
 @license
 */
-import { PropertyForm } from '../../impact/forms/property.js';
+import { UnPersonnelForm } from '../../impact/forms/un-personnel';
 import { html } from '@polymer/polymer/polymer-element.js';
 import '../../../history-components/styles.js';
 import '../incident-history-navigation-links.js';
@@ -10,7 +10,7 @@ import '../incident-history-navigation-links.js';
  * @polymer
  * @customElement
  */
-class PropertyRevisionView extends PropertyForm {
+class UnPersonnelRevisionView extends UnPersonnelForm {
   connectedCallback() {
     super.connectedCallback();
     this.hideCancelBtn = true;
@@ -18,7 +18,7 @@ class PropertyRevisionView extends PropertyForm {
   }
 
   static get is() {
-    return 'property-revision-view';
+    return 'un-personnel-revision-view';
   }
 
   static get properties() {
@@ -35,13 +35,13 @@ class PropertyRevisionView extends PropertyForm {
       <style include="history-common-styles"></style>
       <div class="layout-horizontal space-between flex-c">
         <div>
-          <h2> View property impact at this revision </h2>
+          <h2> View UNICEF personnel impact at this revision </h2>
         </div>
 
         <div class="nav-buttons">
           <incident-history-navigation-links page="view"
                                              module="incidents"
-                                             diff-url="diff-property"
+                                             diff-url="diff-personnel"
                                              working-item="[[workingItem]]">
           </incident-history-navigation-links>
         </div>
@@ -64,4 +64,4 @@ class PropertyRevisionView extends PropertyForm {
   }
 }
 
-window.customElements.define(PropertyRevisionView.is, PropertyRevisionView);
+window.customElements.define(UnPersonnelRevisionView.is, UnPersonnelRevisionView);

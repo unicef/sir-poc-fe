@@ -154,8 +154,14 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
           <review-fields data="[[data]]"></review-fields>
         </fieldset>
 
-        <paper-button on-tap="save">Save</paper-button>
-        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+         <paper-button on-tap="save"
+                      hidden$="[[readonly]]">
+          Save
+        </paper-button>
+        <paper-button raised
+                      class="danger"
+                      hidden$="[[hideCancelBtn]]"
+                      on-tap="_goToIncidentImpacts">
           Cancel
         </paper-button>
       </div>

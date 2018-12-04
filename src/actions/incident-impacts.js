@@ -621,109 +621,28 @@ export const fetchImpactsHistory = ids => async (dispatch, getState) => {
   }
 
   return [
-    ...await dispatch(FetchEvacuationsHistory(ids.evacuation)),
-    ...await dispatch(FetchPropertiesHistory(ids.property)),
-    ...await dispatch(FetchProgrammesHistory(ids.programme)),
-    ...await dispatch(FetchPersonnelHistory(ids.personnel)),
-    ...await dispatch(FetchPremisesHistory(ids.premise)),
+    ...await dispatch(fetchImpactHistory(ids.evacuation, Endpoints.getIncidentEvacuationHistory, 'evacuation')),
+    ...await dispatch(fetchImpactHistory(ids.programme, Endpoints.getIncidentProgrammeHistory, 'programme')),
+    ...await dispatch(fetchImpactHistory(ids.personnel, Endpoints.getIncidentPersonnelHistory, 'personnel')),
+    ...await dispatch(fetchImpactHistory(ids.property, Endpoints.getIncidentPropertyHistory, 'property')),
+    ...await dispatch(fetchImpactHistory(ids.premise, Endpoints.getIncidentPremiseHistory, 'premise')),
   ].map((elem) => {
     elem.incident_id = ids.incident;
     return elem;
   });
 };
 
-const FetchEvacuationsHistory = (ids) => async (dispatch) => {
+const fetchImpactHistory = (ids, endpoint, impactType) => async (dispatch) => {
   let allHistoryItems = [];
 
   for (let i = 0; i < ids.length; i++) {
     let impactId = ids[i];
-    let endpoint = prepareEndpoint(Endpoints.getIncidentEvacuationHistory, {id: impactId});
-    let result = await makeRequest(endpoint);
+    let result = await makeRequest(prepareEndpoint(endpoint, {id: impactId}));
 
     result.forEach((value, key) => {
-      result[key].action += '_evacuation_impact';
+      result[key].action += `_${impactType}_impact`;
       result[key].impact_id = impactId;
-      result[key].impact_type = 'evacuation';
-    });
-
-    allHistoryItems = [...allHistoryItems, ...result];
-  };
-
-  return allHistoryItems;
-};
-
-const FetchPropertiesHistory = (ids) => async (dispatch) => {
-  let allHistoryItems = [];
-
-  for (let i = 0; i < ids.length; i++) {
-    let impactId = ids[i];
-    let endpoint = prepareEndpoint(Endpoints.getIncidentPropertyHistory, {id: impactId});
-    let result = await makeRequest(endpoint);
-
-    result.forEach((value, key) => {
-      result[key].action += '_property_impact';
-      result[key].impact_id = impactId;
-      result[key].impact_type = 'property';
-    });
-
-    allHistoryItems = [...allHistoryItems, ...result];
-  };
-
-  return allHistoryItems;
-};
-
-const FetchPremisesHistory = (ids) => async (dispatch) => {
-  let allHistoryItems = [];
-
-  for (let i = 0; i < ids.length; i++) {
-    let impactId = ids[i];
-    let endpoint = prepareEndpoint(Endpoints.getIncidentPremiseHistory, {id: impactId});
-    let result = await makeRequest(endpoint);
-
-    result.forEach((value, key) => {
-      result[key].action += '_premise_impact';
-      result[key].impact_id = impactId;
-      result[key].impact_type = 'premise';
-    });
-
-    allHistoryItems = [...allHistoryItems, ...result];
-  };
-
-  return allHistoryItems;
-};
-
-const FetchProgrammesHistory = (ids) => async (dispatch) => {
-  let allHistoryItems = [];
-
-  for (let i = 0; i < ids.length; i++) {
-    let impactId = ids[i];
-    let endpoint = prepareEndpoint(Endpoints.getIncidentProgrammeHistory, {id: impactId});
-    let result = await makeRequest(endpoint);
-
-    result.forEach((value, key) => {
-      result[key].action += '_programme_impact';
-      result[key].impact_id = impactId;
-      result[key].impact_type = 'programme';
-    });
-
-    allHistoryItems = [...allHistoryItems, ...result];
-  };
-
-  return allHistoryItems;
-};
-
-const FetchPersonnelHistory = (ids) => async (dispatch) => {
-  let allHistoryItems = [];
-
-  for (let i = 0; i < ids.length; i++) {
-    let impactId = ids[i];
-    let endpoint = prepareEndpoint(Endpoints.getIncidentPersonnelHistory, {id: impactId});
-    let result = await makeRequest(endpoint);
-
-    result.forEach((value, key) => {
-      result[key].action += '_personnel_impact';
-      result[key].impact_id = impactId;
-      result[key].impact_type = 'personnel';
+      result[key].impact_type = impactType;
     });
 
     allHistoryItems = [...allHistoryItems, ...result];

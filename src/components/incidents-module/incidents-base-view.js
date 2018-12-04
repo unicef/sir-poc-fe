@@ -842,8 +842,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   hideUploadBtn() {
-    return this.incident && !this.hasPermission('add_incidentattachment') &&
-           (this.readonly || this.state.app.offline || this.incident.unsynced);
+    return this.incident &&
+           (this.readonly || this.state.app.offline || this.incident.unsynced) ||
+           !this.hasPermission('add_incidentattachment');
   }
 
   canDeleteAttachment() {

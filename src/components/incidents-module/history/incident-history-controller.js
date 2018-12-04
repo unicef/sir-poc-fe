@@ -55,20 +55,20 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                            history="[[history]]">
         </incident-timeline>
 
-
         <incident-diff-view view-url="view-incident"
                             name="diff-incident"
                             working-item="[[workingItem]]">
         </incident-diff-view>
+
         <incident-revision-view name="view-incident"
                                 working-item="[[workingItem]]">
         </incident-revision-view>
-
 
         <incident-diff-view view-url="view-evacuation"
                             name="diff-evacuation"
                             working-item="[[workingItem]]">
         </incident-diff-view>
+
         <evacuation-revision-view name="view-evacuation"
                                   working-item="[[workingItem]]">
         </evacuation-revision-view>
@@ -77,6 +77,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                             name="diff-property"
                             working-item="[[workingItem]]">
         </incident-diff-view>
+
         <property-revision-view name="view-property"
                                 working-item="[[workingItem]]">
         </property-revision-view>
@@ -85,6 +86,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                             name="diff-premise"
                             working-item="[[workingItem]]">
         </incident-diff-view>
+
         <premise-revision-view name="view-premise"
                                working-item="[[workingItem]]">
         </premise-revision-view>
@@ -93,6 +95,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                             name="diff-programme"
                             working-item="[[workingItem]]">
         </incident-diff-view>
+
         <programme-revision-view name="view-programme"
                                  working-item="[[workingItem]]">
         </programme-revision-view>
@@ -112,7 +115,6 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
             </un-personnel-revision-view>
           </template>
         </div>
-
       </iron-pages>
     `;
   }

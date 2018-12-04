@@ -31,12 +31,6 @@ class PersonnelChangedCard extends TimelineCardBase {
   static get is() {
     return 'personnel-changed-card';
   }
-
-  hasChangedFields(changesObj) {
-    let changes = Object.keys(changesObj);
-    // length 1 because version is always present
-    return changes.length !== 1;
-  }
 }
 
 window.customElements.define(PersonnelChangedCard.is, PersonnelChangedCard);

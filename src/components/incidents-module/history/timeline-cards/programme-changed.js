@@ -31,12 +31,6 @@ class ProgrammeChangedCard extends TimelineCardBase {
   static get is() {
     return 'programme-changed-card';
   }
-
-  hasChangedFields(changesObj) {
-    let changes = Object.keys(changesObj);
-    // length 1 because version is always present
-    return changes.length !== 1;
-  }
 }
 
 window.customElements.define(ProgrammeChangedCard.is, ProgrammeChangedCard);

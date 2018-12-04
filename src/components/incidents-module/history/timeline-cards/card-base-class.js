@@ -41,4 +41,10 @@ export class TimelineCardBase extends HistoryHelpers(PolymerElement) {
 
     return (changes.length > 0 ? changes: ['No changes found']).join(', ');
   }
+
+  hasChangedFields(changesObj) {
+    let changes = Object.keys(changesObj);
+    // length 1 because version is always present
+    return changes.length !== 1;
+  }
 }

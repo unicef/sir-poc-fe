@@ -31,12 +31,6 @@ class PremiseChangedCard extends TimelineCardBase {
   static get is() {
     return 'premise-changed-card';
   }
-
-  hasChangedFields(changesObj) {
-    let changes = Object.keys(changesObj);
-    // length 1 because version is always present
-    return changes.length !== 1;
-  }
 }
 
 window.customElements.define(PremiseChangedCard.is, PremiseChangedCard);

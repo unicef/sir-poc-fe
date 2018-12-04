@@ -31,12 +31,6 @@ class IncidentChangedCard extends TimelineCardBase {
   static get is() {
     return 'incident-changed-card';
   }
-
-  hasChangedFields(changesObj) {
-    let changes = Object.keys(changesObj);
-    // length 1 because version is always present
-    return changes.length !== 1;
-  }
 }
 
 window.customElements.define(IncidentChangedCard.is, IncidentChangedCard);

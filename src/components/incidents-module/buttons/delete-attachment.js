@@ -25,7 +25,7 @@ class DeleteAttachmentButton extends ButtonsBaseClass {
       </style>
 
       <iron-icon icon="icons:delete"
-                    on-tap="openDialog">
+                 on-tap="openDialog">
       </iron-icon>
       `;
   }

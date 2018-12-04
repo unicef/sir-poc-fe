@@ -86,6 +86,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           margin-bottom: 0;
         }
 
+        delete-attachment-button {
+          margin-left: 8px;
+        }
       </style>
 
       <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
@@ -497,15 +500,15 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                           [[getFilenameFromURL(item.attachment)]]
                       </a>
                     </span>
-                  </span>
-                  <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
-                    <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
-                    </paper-input>
-
                     <delete-attachment-button hidden$="[[!canDeleteAttachment(incident.status, offline, readonly)]]"
                                               on-remove-attachment="removeAttachment"
                                               attachment="[[item]]">
                     </delete-attachment-button>
+
+                  </span>
+                  <span class="col-data col-7" title="[[item.note]]" data-col-header-label="Note">
+                    <paper-input no-label-float readonly$="[[readonly]]" value="{{item.note}}" placeholder="&#8212;">
+                    </paper-input>
                   </span>
                 </div>
               </etools-data-table-row>
@@ -839,8 +842,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   hideUploadBtn() {
-    return this.incident && !this.hasPermission('add_incidentattachment') &&
-           (this.readonly || this.state.app.offline || this.incident.unsynced);
+    return this.incident &&
+           (this.readonly || this.state.app.offline || this.incident.unsynced) ||
+           !this.hasPermission('add_incidentattachment');
   }
 
   canDeleteAttachment() {

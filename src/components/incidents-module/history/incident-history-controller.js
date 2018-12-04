@@ -28,6 +28,9 @@ import './revision-view-elements/property-diff-view.js';
 import './revision-view-elements/premise-revision-view.js';
 import './revision-view-elements/premise-diff-view.js';
 
+import './revision-view-elements/programme-revision-view.js';
+import './revision-view-elements/programme-diff-view.js';
+
 import './incident-timeline.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
@@ -81,11 +84,18 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
         </property-revision-view>
 
         <premise-diff-view name="diff-premise"
-                              working-item="[[workingItem]]">
+                           working-item="[[workingItem]]">
         </premise-diff-view>
         <premise-revision-view name="view-premise"
-                                  working-item="[[workingItem]]">
+                               working-item="[[workingItem]]">
         </premise-revision-view>
+
+        <programme-diff-view name="diff-programme"
+                             working-item="[[workingItem]]">
+        </programme-diff-view>
+        <programme-revision-view name="view-programme"
+                                 working-item="[[workingItem]]">
+        </programme-revision-view>
 
       </iron-pages>
     `;

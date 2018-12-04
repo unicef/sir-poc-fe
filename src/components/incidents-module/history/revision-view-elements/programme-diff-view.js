@@ -5,15 +5,15 @@ import '../incident-history-navigation-links.js'
  * @polymer
  * @customElement
  */
-class PremiseDiffView extends DiffViewBase {
+class ProgrammeDiffView extends DiffViewBase {
   static get is() {
-    return 'premise-diff-view';
+    return 'programme-diff-view';
   }
 
   static get navButtons() {
     return html`
       <incident-history-navigation-links page="diff"
-                                         view-url="view-premise"
+                                         view-url="view-programme"
                                          working-item="[[workingItem]]">
       </incident-history-navigation-links>`;
   }
@@ -26,4 +26,4 @@ class PremiseDiffView extends DiffViewBase {
   }
 }
 
-window.customElements.define(PremiseDiffView.is, PremiseDiffView);
+window.customElements.define(ProgrammeDiffView.is, ProgrammeDiffView);

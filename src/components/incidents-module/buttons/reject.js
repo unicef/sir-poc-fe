@@ -38,7 +38,7 @@ class RejectButton extends ButtonsBaseClass {
         type: String,
         value: ''
       }
-    }
+    };
   }
 
   isHidden() {

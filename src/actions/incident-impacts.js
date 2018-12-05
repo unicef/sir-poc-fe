@@ -625,7 +625,7 @@ export const fetchHistoryOfImpacts = ids => async (dispatch, getState) => {
     ...await dispatch(fetchImpactHistory(ids.programme, Endpoints.getIncidentProgrammeHistory, 'programme')),
     ...await dispatch(fetchImpactHistory(ids.personnel, Endpoints.getIncidentPersonnelHistory, 'personnel')),
     ...await dispatch(fetchImpactHistory(ids.property, Endpoints.getIncidentPropertyHistory, 'property')),
-    ...await dispatch(fetchImpactHistory(ids.premise, Endpoints.getIncidentPremiseHistory, 'premise')),
+    ...await dispatch(fetchImpactHistory(ids.premise, Endpoints.getIncidentPremiseHistory, 'premise'))
   ].map((elem) => {
     elem.incident_id = ids.incident;
     return elem;
@@ -649,7 +649,7 @@ const fetchImpactHistory = (ids, endpoint, impactType) => async (dispatch) => {
     });
 
     allHistoryItems = allHistoryItems.concat(result);
-  };
+  }
 
   return allHistoryItems;
 };

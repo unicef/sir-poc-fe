@@ -1,6 +1,6 @@
 import { DiffViewBase } from '../../history-components/diff-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
-import './history-navigation-links.js'
+import './history-navigation-links.js';
 /**
  * @polymer
  * @customElement

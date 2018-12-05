@@ -5,7 +5,7 @@ import { EventsBaseView } from '../events-base-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import '../../history-components/history-navigation-links.js';
 import '../../history-components/styles.js';
-import './history-navigation-links.js'
+import './history-navigation-links.js';
 /**
  * @polymer
  * @customElement

@@ -225,7 +225,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
   static get observers() {
     return [
-      '_idChanged(impactId)',
+      '_idChanged(impactId)'
     ];
   }
 

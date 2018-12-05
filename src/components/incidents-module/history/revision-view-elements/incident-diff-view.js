@@ -1,6 +1,6 @@
 import { DiffViewBase } from '../../../history-components/diff-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
-import '../incident-history-navigation-links.js'
+import '../incident-history-navigation-links.js';
 /**
  * @polymer
  * @customElement
@@ -24,7 +24,7 @@ class IncidentDiffView extends DiffViewBase {
       ...super.properties,
       viewUrl: String,
       module: String
-    }
+    };
   }
 }
 

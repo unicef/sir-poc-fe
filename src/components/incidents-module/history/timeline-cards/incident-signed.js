@@ -25,7 +25,7 @@ class IncidentSignedCard extends TimelineCardBase {
 
   getTypeOfSignature(changesObj) {
     let keys = Object.keys(changesObj);
-    switch(true) {
+    switch (true) {
       case keys.indexOf('staff_wellbeing_review_by') > -1:
         return 'Staff Wellbeing';
       case keys.indexOf('legal_review_by') > -1:

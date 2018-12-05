@@ -87,7 +87,7 @@ export const getCountriesForRegion = (regionId) => {
 
   let allCountries = store.getState().staticData.countries;
   return allCountries.filter(country => Number(country.region) === Number(regionId));
-}
+};
 
 export const getUserName = (id) => {
   let state = store.getState();
@@ -98,4 +98,4 @@ export const getUserName = (id) => {
   let usersList = state.users.list;
   let result = usersList.find(v => Number(v.id) === Number(id));
   return result ? result.name || '' : '';
-}
+};

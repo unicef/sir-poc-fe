@@ -323,10 +323,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      getNameFromId: {
-        type: Function,
-        value: () => getNameFromId
-      },
       exportDocType: {
         type: String,
         observer: '_export'
@@ -343,7 +339,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   }
 
   connectedCallback() {
-    this.initFilters(); //causes slow filter init if not first
+    this.initFilters(); // causes slow filter init if not first
     super.connectedCallback();
   }
 
@@ -519,7 +515,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
 
     let lastLogin = this.state.staticData.profile.last_login;
     let allComments = this.state.incidents.comments;
-    let newCommentsForIncident = allComments.filter(c => {
+    let newCommentsForIncident = allComments.filter((c) => {
       return Number(c.incident) === Number(incident.id) &&
             moment(c.created_on).isAfter(moment(lastLogin));
     });

@@ -1,7 +1,7 @@
 /**
  @license
  */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -22,11 +22,11 @@ import '../common/warn-message.js';
 import '../common/review-fields.js';
 
 import { Endpoints } from '../../config/endpoints';
-import { PermissionsBase } from '../common/permissions-base-class';
+import { getCountriesForRegion } from '../common/utils.js';
 import { SirMsalAuth } from '../auth/jwt/msal-authentication';
-import { objDiff, getCountriesForRegion } from '../common/utils.js';
+import { PermissionsBase } from '../common/permissions-base-class';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
-import { makeRequest, handleBlobDataReceivedAndStartDownload  } from '../common/request-helper.js';
+import { makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/request-helper.js';
 
 import { store } from '../../redux/store.js';
 import { selectIncident } from '../../reducers/incidents.js';
@@ -467,7 +467,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           </div>
         </fieldset>
 
-        <fieldset hidden$="[[hideRelatedDocsSection(readonly, state.app.offline, incident.unsynced, incident.attachments, incident.attachments.length)]]">
+        <fieldset hidden$="[[hideRelatedDocsSection(readonly, state.app.offline,
+                           incident.unsynced, incident.attachments, incident.attachments.length)]]">
           <legend><h3>Related documents</h3></legend>
 
           <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
@@ -477,7 +478,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             </etools-upload-multi>
           </div>
 
-          <div hidden$="[[hideAttachmentsList(offline, incident, incident.attachments, incident.attachments.length)]]">
+          <div hidden$="[[hideAttachmentsList(offline, incident, incident.attachments,
+                        incident.attachments.length)]]">
             <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
               <etools-data-table-column class="col-4">
@@ -807,7 +809,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     return !offline || !incidentId || isNaN(incidentId);
   }
 
-  canEdit(offline, status, unsynced)  {
+  canEdit(offline, status, unsynced) {
     return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
            (unsynced && this.hasPermission('add_incident'));
   }

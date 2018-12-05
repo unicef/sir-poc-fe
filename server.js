@@ -6,7 +6,6 @@ or to have it run on a specific port
 */
 var express = require('express'); // eslint-disable-line
 var browserCapabilities = require('browser-capabilities'); // eslint-disable-line
-var proxy = require('http-proxy-middleware');
 
 const app = express();
 const basedir = __dirname + '/build/'; // eslint-disable-line

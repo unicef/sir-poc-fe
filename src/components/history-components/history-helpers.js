@@ -39,7 +39,7 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'contributing_factor': 'Contributing Factor',
           'incident_SUBcategory': 'Incident Subcategory',
           'staff_wellbeing_review_by': 'Staff Wellbeing review by',
-          'staff_wellbeing_review_date': 'Staff Wellbeing review date',
+          'staff_wellbeing_review_date': 'Staff Wellbeing review date'
         }
       }
     };

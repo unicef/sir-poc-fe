@@ -227,16 +227,31 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
 
   async _fetchHistory() {
     let incidentHistory = await store.dispatch(fetchIncidentHistory(this.incidentId));
-    let impactHistory  = await this.fetchImpactHistory();
+    let impactHistory = await this.fetchImpactHistory();
     this.history = [...incidentHistory, ...impactHistory];
   }
 
   getImpactIds() {
-    let premise = this.state.incidents.premises.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
-    let property = this.state.incidents.properties.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
-    let personnel = this.state.incidents.personnel.filter(elem => '' + elem.incident === this.incidentId).map(elem => elem.id);
-    let programme = this.state.incidents.programmes.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
-    let evacuation = this.state.incidents.evacuations.filter(elem => '' + elem.incident_id === this.incidentId).map(elem => elem.id);
+    let premise = this.state.incidents.premises
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
+    let property = this.state.incidents.properties
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
+    let personnel = this.state.incidents.personnel
+                  .filter(elem => '' + elem.incident === this.incidentId)
+                  .map(elem => elem.id);
+
+    let programme = this.state.incidents.programmes
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
+    let evacuation = this.state.incidents.evacuations
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
     let incident = this.incidentId;
     return {premise, property, personnel, programme, evacuation, incident};
   }

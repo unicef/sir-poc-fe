@@ -471,5 +471,8 @@ export const fetchIncidentHistory = id => async (dispatch, getState) => {
     return;
   }
   let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id});
-  return await makeRequest(endpoint);
+  return await makeRequest(endpoint).catch((error) => {
+      dispatch(serverError(error.response));
+      return [];
+    });
 };

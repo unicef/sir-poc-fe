@@ -637,7 +637,10 @@ const fetchImpactHistory = (ids, endpoint, impactType) => async (dispatch) => {
 
   for (let i = 0; i < ids.length; i++) {
     let impactId = ids[i];
-    let result = await makeRequest(prepareEndpoint(endpoint, {id: impactId}));
+    let result = await makeRequest(prepareEndpoint(endpoint, {id: impactId})).catch((error) => {
+      dispatch(serverError(error.response));
+      return [];
+    });
 
     result.forEach((value, key) => {
       result[key].action += `_${impactType}_impact`;

@@ -52,9 +52,6 @@ class PremiseRevisionView extends PremiseForm {
   _idChanged() {
   }
 
-  _setIncidentId() {
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

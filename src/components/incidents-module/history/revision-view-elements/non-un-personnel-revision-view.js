@@ -52,9 +52,6 @@ class UnPersonnelRevisionView extends NonUnPersonnelForm {
   _idChanged() {
   }
 
-  _setIncidentId() {
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

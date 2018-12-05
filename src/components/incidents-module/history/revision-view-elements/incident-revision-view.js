@@ -51,9 +51,6 @@ class IncidentRevisionView extends IncidentsBaseView {
   _idChanged() {
   }
 
-  _setIncidentId() {
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

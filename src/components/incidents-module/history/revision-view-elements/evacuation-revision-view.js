@@ -52,9 +52,6 @@ class EvacuationRevisionView extends EvacuationForm {
   _idChanged() {
   }
 
-  _setIncidentId() {
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

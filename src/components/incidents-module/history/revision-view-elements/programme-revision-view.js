@@ -52,9 +52,6 @@ class ProgrammeRevisionView extends ProgrammeForm {
   _idChanged() {
   }
 
-  _setIncidentId() {
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

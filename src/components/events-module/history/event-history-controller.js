@@ -14,8 +14,8 @@ import '../../styles/shared-styles.js';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
 import './revisions-list.js';
+import './event-diff-view.js';
 import './event-revision-view.js';
-import './diff-view.js';
 
 export class EventHistory extends HistoryHelpers(connect(store)(PolymerElement)) {
   static get template() {
@@ -39,15 +39,11 @@ export class EventHistory extends HistoryHelpers(connect(store)(PolymerElement))
       </app-route>
 
       <iron-pages selected="[[routeData.section]]" attr-for-selected="name" role="main">
-        <revisions-list name="list"
-                   module="events"
-                   history="[[history]]">
+        <revisions-list name="list" module="events" history="[[history]]">
         </revisions-list>
-        <event-diff-view name="diff"
-                         working-item="[[workingItem]]">
+        <event-diff-view name="diff" working-item="[[workingItem]]">
         </event-diff-view>
-        <event-revision-view name="view"
-                        working-item="[[workingItem]]">
+        <event-revision-view name="view" working-item="[[workingItem]]">
         </event-revision-view>
       </iron-pages>
     `;

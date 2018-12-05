@@ -52,9 +52,6 @@ class PropertyRevisionView extends PropertyForm {
   _idChanged() {
   }
 
-  _setIncidentId() {
-  }
-
   _itemChanged(workingItem) {
     if (!workingItem) {
       return;

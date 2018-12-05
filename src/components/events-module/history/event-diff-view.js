@@ -12,8 +12,7 @@ class EventDiffView extends DiffViewBase {
 
   static get navButtons() {
     return html`
-      <event-history-navigation-links page="diff"
-                                      working-item="[[workingItem]]">
+      <event-history-navigation-links page="diff" working-item="[[workingItem]]">
       </event-history-navigation-links>`;
   }
 }

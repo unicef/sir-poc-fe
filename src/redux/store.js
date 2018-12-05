@@ -61,4 +61,4 @@ const persistorReady = () => new Promise((resolve, reject) => {
 export const initStore = async () => {
   await persistorReady();
   store.dispatch(storeReady());
-}
+};

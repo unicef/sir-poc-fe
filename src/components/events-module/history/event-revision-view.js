@@ -5,7 +5,7 @@ import { EventsBaseView } from '../events-base-view.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import '../../history-components/history-navigation-links.js';
 import '../../history-components/styles.js';
-
+import './history-navigation-links.js';
 /**
  * @polymer
  * @customElement
@@ -38,8 +38,8 @@ class EventRevisionView extends EventsBaseView {
         </div>
 
         <div class="nav-buttons">
-          <history-navigation-links page="view" module="events" working-item="[[workingItem]]">
-          </history-navigation-links>
+          <event-history-navigation-links page="view" module="events" working-item="[[workingItem]]">
+          </event-history-navigation-links>
         </div>
       </div>
     `;

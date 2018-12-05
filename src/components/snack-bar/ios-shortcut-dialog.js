@@ -25,7 +25,9 @@ class IosShortcutDialog extends PolymerElement {
         }
       </style>
       <paper-dialog id="dialog">
-        <p> Install this webapp on your device: Tap <img src="/images/safari_share.png"></img> and then Add to Homescreen </p>
+        <p>
+          Install this webapp on your device: Tap <img src="/images/safari_share.png"></img> and then Add to Homescreen
+        </p>
       </paper-dialog>
     `;
   }
@@ -47,7 +49,7 @@ class IosShortcutDialog extends PolymerElement {
     }
   }
 
-  isIos () {
+  isIos() {
     const userAgent = window.navigator.userAgent.toLowerCase();
     return /iphone|ipad|ipod/.test( userAgent );
   }

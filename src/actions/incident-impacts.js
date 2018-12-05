@@ -614,3 +614,42 @@ const syncPersonnelList = (newId, oldId) => (dispatch, getState) => {
 
   return operations;
 };
+
+export const fetchHistoryOfImpacts = ids => async (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return {};
+  }
+
+  return [
+    ...await dispatch(fetchImpactHistory(ids.evacuation, Endpoints.getIncidentEvacuationHistory, 'evacuation')),
+    ...await dispatch(fetchImpactHistory(ids.programme, Endpoints.getIncidentProgrammeHistory, 'programme')),
+    ...await dispatch(fetchImpactHistory(ids.personnel, Endpoints.getIncidentPersonnelHistory, 'personnel')),
+    ...await dispatch(fetchImpactHistory(ids.property, Endpoints.getIncidentPropertyHistory, 'property')),
+    ...await dispatch(fetchImpactHistory(ids.premise, Endpoints.getIncidentPremiseHistory, 'premise'))
+  ].map((elem) => {
+    elem.incident_id = ids.incident;
+    return elem;
+  });
+};
+
+const fetchImpactHistory = (ids, endpoint, impactType) => async (dispatch) => {
+  let allHistoryItems = [];
+
+  for (let i = 0; i < ids.length; i++) {
+    let impactId = ids[i];
+    let result = await makeRequest(prepareEndpoint(endpoint, {id: impactId})).catch((error) => {
+      dispatch(serverError(error.response));
+      return [];
+    });
+
+    result.forEach((value, key) => {
+      result[key].action += `_${impactType}_impact`;
+      result[key].impact_id = impactId;
+      result[key].impact_type = impactType;
+    });
+
+    allHistoryItems = allHistoryItems.concat(result);
+  }
+
+  return allHistoryItems;
+};

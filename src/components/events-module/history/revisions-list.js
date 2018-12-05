@@ -7,12 +7,12 @@ import '@polymer/iron-media-query/iron-media-query.js';
 
 import 'etools-data-table';
 
-import { getUserName } from '../common/utils.js';
-import DateMixin from '../common/date-mixin.js';
-import HistoryHelpers from './history-helpers.js';
+import HistoryHelpers from '../../history-components/history-helpers.js';
+import { getUserName } from '../../common/utils.js';
+import DateMixin from '../../common/date-mixin.js';
 
-import '../styles/shared-styles.js';
-import '../styles/grid-layout-styles.js';
+import '../../styles/shared-styles.js';
+import '../../styles/grid-layout-styles.js';
 
 
 export class RevisionsList extends DateMixin(HistoryHelpers(PolymerElement)) {

@@ -1,14 +1,28 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { PermissionsBase } from '../../common/permissions-base-class';
-import HistoryHelpers from '../../history-components/history-helpers.js';
 import { getUserName } from '../../common/utils.js';
 import '../../styles/shared-styles.js';
 import { store } from '../../../redux/store.js';
+import './timeline-cards/incident-status-changed';
+import './timeline-cards/incident-commented';
+import './timeline-cards/incident-changed';
+import './timeline-cards/incident-created';
+import './timeline-cards/incident-signed';
+import './timeline-cards/evacuation-created';
+import './timeline-cards/evacuation-changed';
+import './timeline-cards/property-created';
+import './timeline-cards/property-changed';
+import './timeline-cards/premise-created';
+import './timeline-cards/premise-changed';
+import './timeline-cards/programme-created';
+import './timeline-cards/programme-changed';
+import './timeline-cards/personnel-created';
+import './timeline-cards/personnel-changed';
 /**
  * @polymer
  * @customElement
  */
-class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
+class IncidentTimeline extends PermissionsBase {
   static get template() {
     return html`
       <style include="shared-styles">
@@ -36,12 +50,6 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
           padding: 0 4px;
           position: relative;
           top: -13px;
-        }
-
-        .card.new:before {
-          content: "New";
-          font-weight: bold;
-          color: var(--notification-icon-color);
         }
 
         section.timeline-outer {
@@ -112,53 +120,73 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
                     <b>[[workingDay.date.day]]</b>
                     [[workingDay.date.month]]
                   </div>
+
                   <template is="dom-repeat" items="[[workingDay.items]]">
+
                     <template is="dom-if" if="[[actionIs(item.action, 'create')]]">
-                      <div class$="[[getCardClass(item)]]">
-                        [[getUserName(item.by_user)]] added this incident.
-                        <span title="View entire incident at this version">
-                          <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
-                            View original data
-                          </a>
-                        </span>
-                      </div>
+                      <incident-created-card item="[[item]]"></incident-created-card>
                     </template>
+
                     <template is="dom-if" if="[[actionIs(item.action, 'update')]]">
                       <template is="dom-if" if="[[statusHasChanged(item.change)]]">
-                        <div class$="[[getCardClass(item)]]">
-                          [[getUserName(item.by_user)]] [[item.change.status.after]] this <br>
-                        </div>
+                        <incident-status-changed-card item="[[item]]"></incident-status-changed-card>
                       </template>
 
                       <template is="dom-if" if="[[isSignOperation(item.change)]]">
-                        <div class$="[[getCardClass(item)]]">
-                          [[getUserName(item.by_user)]] signed this on behalf of [[getTypeOfSignature(item.change)]]<br>
-                        </div>
+                        <incident-signed-card item="[[item]]"></incident-signed-card>
                       </template>
 
                       <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
                       <template is="dom-if" if="[[!isSignOperation(item.change)]]">
-                        <div class$="[[getCardClass(item)]]">
-                          [[getUserName(item.by_user)]] changed fields:
-                          <p> [[getChangedFileds(item.change)]] </p>
-                          You can
-                          <a href="/incidents/history/[[item.data.id]]/diff/[[item.id]]">
-                            view the changes
-                          </a>
-                          or
-                          <a href="/incidents/history/[[item.data.id]]/view/[[item.id]]">
-                            view the entire incident at this revision
-                          </a>
-                        </div>
+                        <incident-changed-card item="[[item]]"></incident-changed-card>
                       </template>
                       </template>
                     </template>
+
                     <template is="dom-if" if="[[actionIs(item.action, 'comment')]]">
-                      <div class$="[[getCardClass(item)]]">
-                        [[getUserName(item.last_modify_user_id)]] commented on this:
-                        <p> [[item.comment]] </p>
-                      </div>
+                      <incident-commented-card item="[[item]]"></incident-commented-card>
                     </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_evacuation_impact')]]">
+                      <evacuation-created-card item="[[item]]"></evacuation-created-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_evacuation_impact')]]">
+                      <evacuation-changed-card item="[[item]]"></evacuation-changed-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_property_impact')]]">
+                      <property-created-card item="[[item]]"></property-created-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_property_impact')]]">
+                      <property-changed-card item="[[item]]"></property-changed-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_premise_impact')]]">
+                      <premise-created-card item="[[item]]"></premise-created-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_premise_impact')]]">
+                      <premise-changed-card item="[[item]]"></premise-changed-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_programme_impact')]]">
+                      <programme-created-card item="[[item]]"></programme-created-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_programme_impact')]]">
+                      <programme-changed-card item="[[item]]"></programme-changed-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'create_personnel_impact')]]">
+                      <personnel-created-card item="[[item]]"></personnel-created-card>
+                    </template>
+
+                    <template is="dom-if" if="[[actionIs(item.action, 'update_personnel_impact')]]">
+                      <personnel-changed-card item="[[item]]"></personnel-changed-card>
+                    </template>
+
                   </template>
                 </li>
               </template>
@@ -281,38 +309,8 @@ class IncidentTimeline extends HistoryHelpers(PermissionsBase) {
     return keys.length === 0;
   }
 
-  getTypeOfSignature(changesObj) {
-    let keys = Object.keys(changesObj);
-    switch(true) {
-      case keys.indexOf('staff_wellbeing_review_by') > -1:
-        return 'Staff Wellbeing';
-      case keys.indexOf('legal_review_by') > -1:
-        return 'Legal';
-      case keys.indexOf('dhr_review_by') > -1:
-        return 'DHR';
-      case keys.indexOf('dfam_review_by') > -1:
-        return 'DFAM';
-      case keys.indexOf('eod_review_by') > -1:
-        return 'EOD';
-    }
-    return 'N/A';
-  }
-
-  getChangedFileds(changesObj) {
-    let changes = Object.keys(changesObj);
-
-    changes = changes.filter(change => change !== 'version');
-    changes = changes.map(change => this.getLabelForField(change));
-
-    return (changes.length > 0 ? changes: ['No changes found']).join(', ');
-  }
-
   isCurrentYear(year) {
     return moment().format('YYYY') === year;
-  }
-
-  getCardClass(item) {
-    return item.is_new ? 'card new': 'card';
   }
 }
 

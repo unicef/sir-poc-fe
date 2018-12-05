@@ -1,4 +1,3 @@
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { DynamicDialogMixin } from 'etools-dialog/dynamic-dialog-mixin.js';
 import { store } from '../../../redux/store.js';
 import { PermissionsBase } from '../../common/permissions-base-class.js';

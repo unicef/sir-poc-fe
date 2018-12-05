@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
@@ -14,7 +14,6 @@ import '../styles/grid-layout-styles.js';
 import '../styles/shared-styles.js';
 import '../common/errors-box.js';
 import { PermissionsBase } from '../common/permissions-base-class';
-import { updatePath } from '../common/navigation-helper';
 import { getUserName } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';
@@ -180,7 +179,9 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           value="[[prettyDate(incident.staff_wellbeing_review_date)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[_canReview(offline, incident.staff_wellbeing_review_by, 'staff_wellbeing_review_incident')]]">
+          <div class="col col-6"
+               hidden$="[[_canReview(offline, incident.staff_wellbeing_review_by,
+                        'staff_wellbeing_review_incident')]]">
             <paper-input id="staffWellbeingReviewBy"
                           placeholder="&#8212;"
                           readonly
@@ -189,7 +190,9 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           value="[[getUserName(incident.staff_wellbeing_review_by)]]">
             </paper-input>
           </div>
-          <div class="col col-6" hidden$="[[!_canReview(offline, incident.staff_wellbeing_review_by, 'staff_wellbeing_review_incident')]]">
+          <div class="col col-6"
+               hidden$="[[!_canReview(offline, incident.staff_wellbeing_review_by,
+                        'staff_wellbeing_review_incident')]]">
             <review-wellbeing-button incident="[[incident]]"></review-wellbeing-button>
           </div>
         </div>

@@ -3,7 +3,7 @@ import HistoryHelpers from './history-helpers.js';
 import '@polymer/iron-icons/image-icons.js';
 import '../styles/shared-styles.js';
 
-export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
+export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
 
   static get template() {
     return html`
@@ -14,14 +14,14 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
         }
       </style>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/list/" title="Go to changes list">
+      <a href="[[module]]/history/[[getIncidentId(workingItem)]]/list/" title="Go to changes list">
         <paper-button raised class="white smaller">
           <iron-icon icon="list"></iron-icon>
           History List
         </paper-button>
       </a>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/view/[[workingItem.id]]/"
+      <a href="[[module]]/history/[[getIncidentId(workingItem)]]/[[viewUrl]]/[[workingItem.id]]/"
            hidden$="[[_pageIs('view')]]"
            title="View entire [[_getLabel(module)]] at this version">
         <paper-button raised class="white smaller">
@@ -30,7 +30,7 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
         </paper-button>
       </a>
 
-      <a href="[[module]]/history/[[workingItem.data.id]]/diff/[[workingItem.id]]/"
+      <a href="[[module]]/history/[[getIncidentId(workingItem)]]/[[diffUrl]]/[[workingItem.id]]/"
            hidden$="[[_shouldHideViewChangesButton(workingItem.change)]]"
            title="View changes from previous version">
         <paper-button raised class="white smaller">
@@ -41,15 +41,19 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
     `;
   }
 
-  static get is() {
-    return 'history-navigation-links';
-  }
-
   static get properties() {
     return {
       page: String,
       module: String,
-      workingItem: Object
+      workingItem: Object,
+      viewUrl: {
+        type: String,
+        value: 'view'
+      },
+      diffUrl: {
+        type: String,
+        value: 'diff'
+      }
     };
   }
 
@@ -72,6 +76,8 @@ export class HistoryNavigationLinks extends HistoryHelpers(PolymerElement) {
       return 'incident';
     }
   }
-}
 
-window.customElements.define(HistoryNavigationLinks.is, HistoryNavigationLinks);
+  getIncidentId(workingItem) {
+    return workingItem.incident_id || workingItem.data.id;
+  }
+}

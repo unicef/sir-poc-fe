@@ -9,14 +9,23 @@ import '@polymer/app-route/app-route.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
 
-import { makeRequest, prepareEndpoint } from '../../common/request-helper.js';
 import { selectIncidentComments } from '../../../reducers/incidents.js';
-import { Endpoints } from '../../../config/endpoints.js';
+import { fetchHistoryOfImpacts } from '../../../actions/incident-impacts.js';
+import { fetchIncidentHistory } from '../../../actions/incidents.js';
 import '../../styles/shared-styles.js';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
-import '../../history-components/diff-view.js';
-import './incident-revision-view.js';
+
+import './revision-view-elements/incident-diff-view.js';
+import './revision-view-elements/incident-revision-view.js';
+
+import './revision-view-elements/non-un-personnel-revision-view.js';
+import './revision-view-elements/un-personnel-revision-view.js';
+import './revision-view-elements/evacuation-revision-view.js';
+import './revision-view-elements/programme-revision-view.js';
+import './revision-view-elements/property-revision-view.js';
+import './revision-view-elements/premise-revision-view.js';
+
 import './incident-timeline.js';
 
 export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
@@ -45,13 +54,67 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
                            comments="[[comments]]"
                            history="[[history]]">
         </incident-timeline>
-        <diff-view name="diff"
-                   module="incidents"
-                   working-item="[[workingItem]]">
-        </diff-view>
-        <incident-revision-view name="view"
-                        working-item="[[workingItem]]">
+
+        <incident-diff-view view-url="view-incident"
+                            name="diff-incident"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
+
+        <incident-revision-view name="view-incident"
+                                working-item="[[workingItem]]">
         </incident-revision-view>
+
+        <incident-diff-view view-url="view-evacuation"
+                            name="diff-evacuation"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
+
+        <evacuation-revision-view name="view-evacuation"
+                                  working-item="[[workingItem]]">
+        </evacuation-revision-view>
+
+        <incident-diff-view view-url="view-property"
+                            name="diff-property"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
+
+        <property-revision-view name="view-property"
+                                working-item="[[workingItem]]">
+        </property-revision-view>
+
+        <incident-diff-view view-url="view-premise"
+                            name="diff-premise"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
+
+        <premise-revision-view name="view-premise"
+                               working-item="[[workingItem]]">
+        </premise-revision-view>
+
+        <incident-diff-view view-url="view-programme"
+                            name="diff-programme"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
+
+        <programme-revision-view name="view-programme"
+                                 working-item="[[workingItem]]">
+        </programme-revision-view>
+
+        <incident-diff-view view-url="view-personnel"
+                            name="diff-personnel"
+                            working-item="[[workingItem]]">
+        </incident-diff-view>
+
+        <div name="view-personnel">
+          <template is="dom-if" if="[[personnelIsUn(workingItem)]]">
+            <un-personnel-revision-view working-item="[[workingItem]]">
+            </un-personnel-revision-view>
+          </template>
+          <template is="dom-if" if="[[!personnelIsUn(workingItem)]]">
+            <non-un-personnel-revision-view working-item="[[workingItem]]">
+            </un-personnel-revision-view>
+          </template>
+        </div>
       </iron-pages>
     `;
   }
@@ -85,7 +148,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
   static get observers() {
     return [
       '_routeChanged(routeData.section)',
-      '_revisionIdChanged(subRouteData.revisionId, history)'
+      '_computeWorkingItem(subRouteData.revisionId, history, subRouteData.subsection)'
     ];
   }
 
@@ -102,11 +165,43 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
     }
   }
 
-  _revisionIdChanged(revId, history) {
+  _getWorkingSectionFromRoute() {
+    // turns diff-x and view-x into x
+    return this.routeData.section.substr(5);
+  }
+
+  _computeWorkingItem(revId, history, routeSection) {
     if (!revId || !history) {
       return;
     }
-    let workingItem = history.find(item => item.id === Number(revId));
+
+    let section = this._getWorkingSectionFromRoute();
+
+    let workingItem = history.find((item) => {
+      switch (section) {
+        case 'incident':
+          return !item.impact_type && Number(item.id) === Number(revId);
+
+        case 'evacuation':
+          return item.impact_type === 'evacuation' && Number(item.id) === Number(revId);
+
+        case 'property':
+          return item.impact_type === 'property' && Number(item.id) === Number(revId);
+
+        case 'premise':
+          return item.impact_type === 'premise' && Number(item.id) === Number(revId);
+
+        case 'programme':
+          return item.impact_type === 'programme' && Number(item.id) === Number(revId);
+
+        case 'personnel':
+          return item.impact_type === 'personnel' && Number(item.id) === Number(revId);
+
+        default:
+          return false;
+      }
+    });
+
     this.set('workingItem', workingItem);
   }
 
@@ -130,13 +225,48 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
     this.comments = JSON.parse(JSON.stringify(selectIncidentComments(this.state))) || [];
   }
 
-  _fetchHistory() {
-    let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id: this.incidentId});
-    makeRequest(endpoint).then((response) => {
-      this.history = response;
-    });
+  async _fetchHistory() {
+    let incidentHistory = await store.dispatch(fetchIncidentHistory(this.incidentId));
+    let impactHistory = await this.fetchImpactHistory();
+    this.history = [...incidentHistory, ...impactHistory];
   }
 
+  getImpactIds() {
+    let premise = this.state.incidents.premises
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
+    let property = this.state.incidents.properties
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
+    let personnel = this.state.incidents.personnel
+                  .filter(elem => '' + elem.incident === this.incidentId)
+                  .map(elem => elem.id);
+
+    let programme = this.state.incidents.programmes
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
+    let evacuation = this.state.incidents.evacuations
+                  .filter(elem => '' + elem.incident_id === this.incidentId)
+                  .map(elem => elem.id);
+
+    let incident = this.incidentId;
+    return {premise, property, personnel, programme, evacuation, incident};
+  }
+
+  fetchImpactHistory() {
+    return store.dispatch(fetchHistoryOfImpacts(this.getImpactIds()));
+  }
+
+  personnelIsUn(item) {
+    if (typeof item.data.person !== 'object') {
+      return false;
+    }
+
+    return !!item.data.person.un_official;
+  }
 }
 
 window.customElements.define(IncidentHistory.is, IncidentHistory);

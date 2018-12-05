@@ -320,7 +320,7 @@ export const fetchIncidentComments = () => (dispatch, getState) => {
   if (state.app.offline === true || !state.staticData.profile.permissions) {
     return;
   }
-  if(state.staticData.profile.permissions['view_comment']) {
+  if (state.staticData.profile.permissions['view_comment']) {
     makeRequest(Endpoints.incidentsCommentsList).then((result) => {
       dispatch(receiveIncidentComments(result));
     });
@@ -360,7 +360,7 @@ export const updateAddedAttachmentIds = (incidentId, attachments) => (dispatch) 
   Promise.all(operations).catch((err) => {
     dispatch(serverError(err.status === 500 ? 'There was an error updating Related Documents section' : err));
   });
-}
+};
 
 export const deleteIncidentAttachment = attachmentId => (dispatch) => {
   return makeRequest(prepareEndpoint(Endpoints.deleteIncidentAttachment, {id: attachmentId})).then((result) => {
@@ -369,7 +369,7 @@ export const deleteIncidentAttachment = attachmentId => (dispatch) => {
     dispatch(serverError(err));
     return false;
   });
-}
+};
 
 export const editAttachmentsNotes = incident => (dispatch, getState) => {
   if (getState().app.offline || incident.unsynced) {
@@ -419,7 +419,7 @@ export const deleteIncident = incidentId => (dispatch) => {
   } else {
     return dispatch(deleteIncidentFromServer(incidentId));
   }
-}
+};
 
 export const deleteIncidentFromServer = incidentId => (dispatch) => {
   return makeRequest(prepareEndpoint(Endpoints.deleteIncident, {id: incidentId})).then(() => {
@@ -460,4 +460,19 @@ const getSanitizedIncident = (rawIncident) => {
   sanitizedIncident.longitude = isNumber(sanitizedIncident.longitude)? sanitizedIncident.longitude : null;
 
   return sanitizedIncident;
+};
+
+export const fetchIncidentHistory = id => async (dispatch, getState) => {
+  if (getState().app.offline === true) {
+    return;
+  }
+  if (isNaN(id)) {
+    updatePath('/incidents/list/');
+    return;
+  }
+  let endpoint = prepareEndpoint(Endpoints.getIncidentHistory, {id});
+  return await makeRequest(endpoint).catch((error) => {
+      dispatch(serverError(error.response));
+      return [];
+    });
 };

@@ -22,7 +22,6 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../redux/store.js';
 
 import { syncEventOnList } from '../../actions/events.js';
-import { updateAppState } from '../common/navigation-helper';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import 'etools-date-time/datepicker-lite.js';
@@ -225,7 +224,7 @@ class EventsList extends connect(store)(ListBaseClass) {
   }
 
   connectedCallback() {
-    this.initFilters(); //causes slow filter init if not first
+    this.initFilters(); // causes slow filter init if not first
     super.connectedCallback();
   }
 

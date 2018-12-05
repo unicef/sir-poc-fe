@@ -53,6 +53,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
       </style>
 
       <div class="card">
+        ${this.getTitleTemplate}
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -137,7 +138,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="row-h flex-c">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
-                assault subcategory are Status, Impact, Description, Duty Station Region, and Duty Station Country. 
+                assault subcategory are Status, Impact, Description, Duty Station Region, and Duty Station Country.
                 The victim should be informed that all other information is VOLUNTARY.
               </div>
             </div>
@@ -305,12 +306,22 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
         <fieldset hidden$="[[isNew]]">
           <review-fields data="[[data]]"></review-fields>
         </fieldset>
-        <paper-button raised on-tap="save">Save</paper-button>
-        <paper-button class="danger" raised on-tap="_goToIncidentImpacts">
+        <paper-button on-tap="save"
+                      hidden$="[[readonly]]">
+          Save
+        </paper-button>
+        <paper-button raised
+                      class="danger"
+                      hidden$="[[hideCancelBtn]]"
+                      on-tap="_goToIncidentImpacts">
           Cancel
         </paper-button>
       </div>
     `;
+  }
+
+  static get getTitleTemplate() {
+    return html``;
   }
 
   static get properties() {

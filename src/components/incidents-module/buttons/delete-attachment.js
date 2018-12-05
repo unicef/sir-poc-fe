@@ -4,9 +4,7 @@
 import '@polymer/iron-icons/iron-icons.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { deleteIncidentAttachment } from '../../../actions/incidents.js';
-import { showSnackbar } from '../../../actions/app.js';
 import { ButtonsBaseClass } from './buttons-base.js';
-import { updatePath } from '../../common/navigation-helper';
 import '../../styles/button-styles.js';
 
 /**

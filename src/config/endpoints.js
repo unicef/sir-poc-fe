@@ -97,6 +97,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_evacuations/<%=id%>/',
     method: 'PATCH'
   },
+  getIncidentEvacuationHistory: {
+    url: baseUrl + '/api/incident_evacuations/<%=id%>/history/',
+    method: 'GET'
+  },
   incidentEvacuationsList: {
     url: baseUrl + '/api/incident_evacuations/',
     method: 'GET'
@@ -108,6 +112,10 @@ export const Endpoints = {
   editIncidentProperty: {
     url: baseUrl + '/api/incident_properties/<%=id%>/',
     method: 'PATCH'
+  },
+  getIncidentPropertyHistory: {
+    url: baseUrl + '/api/incident_properties/<%=id%>/history/',
+    method: 'GET'
   },
   incidentPropertiesList: {
     url: baseUrl + '/api/incident_properties/',
@@ -133,6 +141,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_premises/<%=id%>/',
     method: 'PATCH'
   },
+  getIncidentPremiseHistory: {
+    url: baseUrl + '/api/incident_premises/<%=id%>/history/',
+    method: 'GET'
+  },
   incidentPremisesList: {
     url: baseUrl + '/api/incident_premises/',
     method: 'GET'
@@ -145,6 +157,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_programmes/<%=id%>/',
     method: 'PATCH'
   },
+  getIncidentProgrammeHistory: {
+    url: baseUrl + '/api/incident_programmes/<%=id%>/history/',
+    method: 'GET'
+  },
   incidentProgrammesList: {
     url: baseUrl + '/api/incident_programmes/',
     method: 'GET'
@@ -156,6 +172,10 @@ export const Endpoints = {
   editIncidentPersonnel: {
     url: baseUrl + '/api/incident_involved/<%=id%>/',
     method: 'PATCH'
+  },
+  getIncidentPersonnelHistory: {
+    url: baseUrl + '/api/incident_involved/<%=id%>/history/',
+    method: 'GET'
   },
   incidentPersonnelList: {
     url: baseUrl + '/api/incident_involved/',

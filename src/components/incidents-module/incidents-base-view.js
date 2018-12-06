@@ -672,7 +672,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       },
       specialConditionSubcategories: {
         type: Array,
-        value: ['Sexual assault', 'Sexual harassment', 'Stalking']
+        value: ['Sexual assault', 'Sexual harassment', 'Stalking', 'Rape']
       }
     };
   }

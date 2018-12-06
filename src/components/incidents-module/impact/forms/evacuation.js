@@ -256,7 +256,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
 
   static get getTitleTemplate() {
     return html`
-      <h3> Evacuation </h3>
+      <h3> Evacuation or Relocation </h3>
     `;
   }
 

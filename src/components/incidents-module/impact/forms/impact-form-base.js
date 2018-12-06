@@ -31,7 +31,7 @@ export class ImpactFormBase extends PolymerElement {
       },
       specialConditionImpacts: {
         type: Array,
-        value: ['Stalking', 'Sexually assaulted', 'Sexual harassment']
+        value: ['Rape', 'Stalking', 'Sexually assaulted', 'Sexual harassment']
       }
     };
   }

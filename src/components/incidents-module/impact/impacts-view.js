@@ -105,13 +105,13 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
 
       <div class="card">
         <div class="layout-horizontal space-between">
-          <h3>Evacuations</h3>
+          <h3>Evacuations and Relocations</h3>
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addEvacuation"
                         hidden$="[[!hasPermission('add_evacuation')]]">
             <iron-icon icon="add"></iron-icon>
-            Add Evacuation
+            Add Evacuation or Relocation
           </paper-button>
         </div>
         <evacuations-list hidden$="[[!hasPermission('view_evacuation')]]"></evacuations-list>

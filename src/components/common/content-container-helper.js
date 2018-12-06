@@ -13,7 +13,7 @@ const _getContentContainer = () => {
 export const scrollToTop = () => {
   const contentContainer = _getContentContainer();
   if (!contentContainer) {
-    console.warn('Cannot scroll! `contentContainer` object is null or undefined');
+    // console.warn('Cannot scroll! `contentContainer` object is null or undefined');
     return;
   }
   contentContainer.scrollTop = 0;

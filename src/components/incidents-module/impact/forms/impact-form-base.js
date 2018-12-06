@@ -28,6 +28,10 @@ export class ImpactFormBase extends PolymerElement {
       selectedImpactType: {
         type: Object,
         value: {}
+      },
+      specialConditionImpacts: {
+        type: Array,
+        value: ['Stalking', 'Sexually assaulted', 'Sexual harassment']
       }
     };
   }
@@ -57,5 +61,12 @@ export class ImpactFormBase extends PolymerElement {
     if (newId) {
       this.data = {};
     }
+  }
+
+  isSpecialConditionImpact() {
+    if (!this.selectedImpactType) {
+      return false;
+    }
+    return this.specialConditionImpacts.indexOf(this.selectedImpactType.name) > -1;
   }
 }

@@ -201,7 +201,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                                         options="[[staticData.targets]]"
                                         selected="{{incident.target}}"
                                         selected-item="{{selectedTarget}}"
-                                        required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                        required$="[[!isSpecialConditionSubcategory(selectedIncidentSubcategory)]]"
+                                        auto-validate
                                         error-message="Target is required">
                   </etools-dropdown-lite>
                   <span slot="message">[[selectedTarget.description]]</span>
@@ -209,13 +210,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               </div>
             </div>
 
-            <template is="dom-if" if="[[isSexualAssault(selectedIncidentSubcategory)]]">
+            <template is="dom-if" if="[[isSpecialConditionSubcategory(selectedIncidentSubcategory)]]">
               <div class="row-h flex-c">
                 <div class="alert-text">
                   ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
-                  sexual assault subcategory are Threat Category, Incident Category, Incident Subcategory, Incident
-                  Description, Region, Country, Incident Date, and Incident Time. The victim should be informed that
-                  all other information is VOLUNTARY.
+                  [[selectedImpactType.name]] subcategory are Threat Category, Incident Category, Incident Subcategory,
+                  Incident Description, Region, Country, Incident Date, and Incident Time.
+                  The victim should be informed that all other information is VOLUNTARY.
                 </div>
               </div>
             </template>
@@ -281,7 +282,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                 <paper-textarea id="injuries" readonly$="[[readonly]]" label="Injuries"
                                 placeholder="&#8212;"
                                 value="{{incident.injuries}}"
-                                required$="[[!isSexualAssault(selectedIncidentSubcategory)]]" auto-validate
+                                required$="[[!isSpecialConditionSubcategory(selectedIncidentSubcategory)]]"
+                                auto-validate
                                 error-message="Injuries details are required"></paper-textarea>
               </div>
             </div>
@@ -378,7 +380,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                               placeholder="&#8212;"
                               readonly$="[[readonly]]"
                               value="{{incident.city}}"
-                              required$="[[!isSexualAssault(selectedIncidentSubcategory)]]"
+                              required$="[[!isSpecialConditionSubcategory(selectedIncidentSubcategory)]]"
                               error-message="City is required">
 
                 </paper-input>
@@ -667,6 +669,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       getCountriesForRegion: {
         type: Function,
         value: () => getCountriesForRegion
+      },
+      specialConditionSubcategories: {
+        type: Array,
+        value: ['Sexual assault', 'Sexual harassment', 'Stalking']
       }
     };
   }
@@ -786,10 +792,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     }
   }
 
-  isSexualAssault(selectedIncidentSubcategory) {
-    if (this.selectedIncidentSubcategory) {
-      return selectedIncidentSubcategory.name === 'Sexual assault';
+  isSpecialConditionSubcategory(selectedIncidentSubcategory) {
+    if (!this.selectedIncidentSubcategory) {
+      return false;
     }
+    return this.specialConditionSubcategories.indexOf(selectedIncidentSubcategory.name) > -1;
   }
 
   eventNotOk(eventId, offline) {

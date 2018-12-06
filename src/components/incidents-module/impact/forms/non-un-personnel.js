@@ -100,12 +100,12 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         <fieldset>
           <legend><h3>Impacted Non-UNICEF Personnel</h3></legend>
 
-          <template is="dom-if" if="[[isSexualAssault(selectedImpactType)]]">
+          <template is="dom-if" if="[[isSpecialConditionImpact(selectedImpactType)]]">
             <div class="row-h flex-c">
               <div class="alert-text">
-                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the sexual
-                assault subcategory are Impact, Description, Region, and Country. The victim should be informed that
-                all other information is VOLUNTARY.
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                [[selectedImpactType.name]] category are Impact, Description, Region, and Country.
+                The victim should be informed that all other information is VOLUNTARY.
               </div>
             </div>
           </template>
@@ -117,7 +117,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                            readonly$="[[readonly]]"
                            label="First Name"
                            value="{{data.person.first_name}}"
-                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
+                           required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
                            error-message="First name is required">
               </paper-input>
             </div>
@@ -127,7 +127,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                            readonly$="[[readonly]]"
                            label="Last Name"
                            value="{{data.person.last_name}}"
-                           required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
+                           required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
                            error-message="Last name is required">
               </paper-input>
             </div>
@@ -138,7 +138,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                   readonly="[[readonly]]"
                   options="[[staticData.genders]]"
                   selected="{{data.person.gender}}"
-                  required$="[[!isSexualAssault(selectedImpactType)]]" auto-validate
+                  required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
                   error-message="Gender is required">
               </etools-dropdown-lite>
             </div>
@@ -328,14 +328,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
 
   resetData() {
     this.data = JSON.parse(JSON.stringify(this.modelForNew));
-  }
-
-  isSexualAssault() {
-    if (this.selectedImpactType) {
-      return this.selectedImpactType.name === 'Sexually assaulted';
-    } else {
-      return false;
-    }
   }
 
   _computeIsNew(id) {

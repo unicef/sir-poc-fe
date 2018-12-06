@@ -1,10 +1,12 @@
 const _getContentContainer = () => {
   let appShell = document.querySelector('app-shell');
   if (!appShell) {
+    console.warn('app-shell not found');
     return null;
   }
   let appHeadLayout = appShell.shadowRoot.querySelector('app-header-layout');
   if (!appHeadLayout) {
+    console.warn('app-head-layout not found');
     return null;
   }
   return appHeadLayout.shadowRoot.querySelector('#contentContainer');

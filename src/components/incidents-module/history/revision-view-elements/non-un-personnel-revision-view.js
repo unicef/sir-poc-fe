@@ -52,12 +52,15 @@ class UnPersonnelRevisionView extends NonUnPersonnelForm {
   _idChanged() {
   }
 
+  _incidentIdChanged() {
+  }
+
   _itemChanged(workingItem) {
-    console.log(workingItem);
     if (!workingItem) {
       return;
     }
 
+    console.log(workingItem.data);
     this.data = workingItem.data;
   }
 }

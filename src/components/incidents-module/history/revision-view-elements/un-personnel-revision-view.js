@@ -49,6 +49,9 @@ class UnPersonnelRevisionView extends UnPersonnelForm {
     `;
   }
 
+  _incidentIdChanged() {
+  }
+
   _idChanged() {
   }
 

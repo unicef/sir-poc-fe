@@ -13,6 +13,7 @@ import '../incident-history-navigation-links.js';
 class IncidentRevisionView extends IncidentsBaseView {
   connectedCallback() {
     super.connectedCallback();
+    this.useBasicLayout = true;
     this.readonly = true;
   }
 

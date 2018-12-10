@@ -93,8 +93,8 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
           </div>
         </div>
 
-        <div hidden$="[[hideReviewFields]]">
-          <review-fields data="[[event]]"></review-fields>
+        <div hidden$="[[useBasicLayout]]">
+          <review-fields data="[[event]]" hidden$="[[hideReviewFields]]"></review-fields>
         </div>
 
         <template is="dom-if" if="[[!readonly]]">
@@ -157,6 +157,10 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
         type: Number,
         computed: '_setEventId(state.app.locationInfo.eventId)',
         observer: '_idChanged'
+      },
+      useBasicLayout: {
+        type: Boolean,
+        value: false
       },
       fieldsToValidateSelectors: {
         type: Array,

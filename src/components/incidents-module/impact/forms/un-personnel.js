@@ -135,7 +135,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <legend><h3> Impacted UNICEF Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSpecialConditionImpact(selectedImpactType)]]">
-            <div class="row-h flex-c">
+            <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the
                 [[selectedImpactType.name]] subcategory are Status, Impact, Description, Duty Station Region,

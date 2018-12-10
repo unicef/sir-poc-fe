@@ -101,7 +101,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
           <legend><h3>Impacted Non-UNICEF Personnel</h3></legend>
 
           <template is="dom-if" if="[[isSpecialConditionImpact(selectedImpactType)]]">
-            <div class="row-h flex-c">
+            <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
               <div class="alert-text">
                 IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the
                 [[selectedImpactType.name]] category are Impact, Description, Region, and Country.

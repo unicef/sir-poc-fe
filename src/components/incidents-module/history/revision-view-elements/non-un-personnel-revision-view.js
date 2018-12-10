@@ -13,7 +13,7 @@ import '../incident-history-navigation-links.js';
 class UnPersonnelRevisionView extends NonUnPersonnelForm {
   connectedCallback() {
     super.connectedCallback();
-    this.hideCancelBtn = true;
+    this.useBasicLayout = true;
     this.readonly = true;
   }
 
@@ -53,6 +53,7 @@ class UnPersonnelRevisionView extends NonUnPersonnelForm {
   }
 
   _itemChanged(workingItem) {
+    console.log(workingItem);
     if (!workingItem) {
       return;
     }

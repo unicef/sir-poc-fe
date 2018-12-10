@@ -29,6 +29,10 @@ export class ImpactFormBase extends PolymerElement {
         type: Object,
         value: {}
       },
+      useBasicLayout: {
+        type: Boolean,
+        value: false
+      },
       specialConditionImpacts: {
         type: Array,
         value: ['Rape', 'Stalking', 'Sexually assaulted', 'Sexual harassment']

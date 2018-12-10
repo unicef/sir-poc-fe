@@ -237,7 +237,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
         </fieldset>
 
         <fieldset hidden$="[[isNew]]">
-          <review-fields data="[[data]]"></review-fields>
+          <review-fields data="[[data]]" hidden$="[[useBasicLayout]]"></review-fields>
         </fieldset>
 
         <paper-button on-tap="saveEvacuation"
@@ -246,7 +246,7 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
         </paper-button>
         <paper-button raised
                       class="danger"
-                      hidden$="[[hideCancelBtn]]"
+                      hidden$="[[useBasicLayout]]"
                       on-tap="_goToIncidentImpacts">
           Cancel
         </paper-button>

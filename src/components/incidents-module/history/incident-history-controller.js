@@ -5,6 +5,8 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { PermissionsBase } from '../../common/permissions-base-class';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/app-route/app-route.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/iron-icons/iron-icons.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../../redux/store.js';
@@ -13,6 +15,7 @@ import { selectIncidentComments } from '../../../reducers/incidents.js';
 import { fetchHistoryOfImpacts } from '../../../actions/incident-impacts.js';
 import { fetchIncidentHistory } from '../../../actions/incidents.js';
 import '../../styles/shared-styles.js';
+import '../../styles/button-styles.js';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
 
@@ -31,9 +34,25 @@ import './incident-timeline.js';
 export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBase)) {
   static get template() {
     return html`
-      <style include="shared-styles">
+      <style include="shared-styles button-styles">
         :host {
           @apply --layout-vertical;
+        }
+
+        #refreshHistoryBtn {
+          float: right;
+        }
+
+        #top-container {
+          padding-bottom: 32px;
+          padding-right: 24px;
+          padding-top: 8px;
+        }
+
+        @media screen and (max-width: 767px) {
+          #top-container {
+            padding-right: 16px;
+          }
         }
       </style>
 
@@ -53,6 +72,16 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
         <incident-timeline name="list"
                            comments="[[comments]]"
                            history="[[history]]">
+          <div slot="topSection" id="top-container">
+            <paper-button id="refreshHistoryBtn"
+                          raised
+                          on-tap="_refreshHistory"
+                          class="white no-t-transform">
+              <iron-icon icon="autorenew">
+              </iron-icon>
+              Refresh history
+            </paper-button>
+          </div>
         </incident-timeline>
 
         <incident-diff-view view-url="view-incident"
@@ -223,6 +252,17 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
 
   _fetchComments() {
     this.comments = JSON.parse(JSON.stringify(selectIncidentComments(this.state))) || [];
+  }
+
+  _refreshHistory() {
+    let btn = this.$.refreshHistoryBtn;
+    if (!btn) {
+      return;
+    }
+
+    btn.disabled = true;
+    setTimeout(() => btn.disabled = false, 10000);
+    this._fetchHistory();
   }
 
   async _fetchHistory() {

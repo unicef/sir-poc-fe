@@ -60,7 +60,6 @@ class UnPersonnelRevisionView extends NonUnPersonnelForm {
       return;
     }
 
-    console.log(workingItem.data);
     this.data = workingItem.data;
   }
 }

@@ -5,24 +5,6 @@
  */
 const HistoryHelpers = baseClass => class extends baseClass {
   static get properties() {
-    /*
-    Still missing from labels map:
-        person.first_name
-        person.last_name
-        person.gender
-        person.nationality
-        person.date_of_birth
-        person.email
-        person.contact
-        person.address
-        person.region
-        person.country
-        person.city
-        person.agency
-        person.index_number
-        person.category
-        person.job_title
-    */
     return {
       labelsMap: {
         type: Object,
@@ -81,7 +63,22 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'staff_wellbeing_review_by': 'Staff Wellbeing review by',
           'number_national_dependants': 'Number National Dependants',
           'staff_wellbeing_review_date': 'Staff Wellbeing review date',
-          'number_international_dependants': 'Number International Dependants'
+          'number_international_dependants': 'Number International Dependants',
+          'person_category': 'Personnel Category',
+          'person_date_of_birth': 'Date of Birth',
+          'person_index_number': 'Index Number',
+          'person_nationality': 'Nationality',
+          'person_first_name': 'First name',
+          'person_job_title': 'Job Title',
+          'person_last_name': 'Last name',
+          'person_address': 'Address',
+          'person_country': 'Country',
+          'person_contact': 'Contact',
+          'person_agency': 'Agency',
+          'person_gender': 'Gender',
+          'person_region': 'Region',
+          'person_email': 'Email',
+          'person_city': 'City'
         }
       }
     };

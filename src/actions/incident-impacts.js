@@ -620,10 +620,13 @@ export const fetchHistoryOfImpacts = ids => async (dispatch, getState) => {
     return {};
   }
 
+  let personnelHistory = await dispatch(
+                          fetchImpactHistory(ids.personnel, Endpoints.getIncidentPersonnelHistory, 'personnel'));
+
   return [
+    ...sanitizeImpactedPersonnelHistory(personnelHistory),
     ...await dispatch(fetchImpactHistory(ids.evacuation, Endpoints.getIncidentEvacuationHistory, 'evacuation')),
     ...await dispatch(fetchImpactHistory(ids.programme, Endpoints.getIncidentProgrammeHistory, 'programme')),
-    ...await dispatch(fetchImpactHistory(ids.personnel, Endpoints.getIncidentPersonnelHistory, 'personnel')),
     ...await dispatch(fetchImpactHistory(ids.property, Endpoints.getIncidentPropertyHistory, 'property')),
     ...await dispatch(fetchImpactHistory(ids.premise, Endpoints.getIncidentPremiseHistory, 'premise'))
   ].map((elem) => {
@@ -652,4 +655,26 @@ const fetchImpactHistory = (ids, endpoint, impactType) => async (dispatch) => {
   }
 
   return allHistoryItems;
+};
+
+const sanitizeImpactedPersonnelHistory = (historyArr) => {
+  return historyArr.map((element) => {
+    if (!element.change || !element.change.person) {
+      return element;
+    }
+    let newChanges = {};
+
+    for(let key in element.change.person) {sanitizeImpactedPersonnelHistory
+      if (['id', 'version', 'last_modify_user', 'created_by_user'].indexOf(key) > -1) {
+        continue;
+      }
+
+      newChanges['person_' + key] = element.change.person[key];
+    }
+
+    delete element.change.person;
+    element.change = {...element.change, ...newChanges};
+
+    return element;
+  });
 };

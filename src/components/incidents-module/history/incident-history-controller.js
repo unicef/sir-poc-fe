@@ -301,7 +301,7 @@ export class IncidentHistory extends HistoryHelpers(connect(store)(PermissionsBa
   }
 
   personnelIsUn(item) {
-    if (!item.data || typeof item.data.person !== 'object') {
+    if (!item || !item.data || typeof item.data.person !== 'object') {
       return false;
     }
 

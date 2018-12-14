@@ -109,6 +109,7 @@ class IncidentTimeline extends PermissionsBase {
         }
       </style>
 
+      <slot name="topSection"></slot>
       <template is="dom-repeat" items="[[timeline]]" as="workingYear">
         <div class="container">
           <hr year$="[[workingYear.year]]" hidden$="[[isCurrentYear(workingYear.year)]]">

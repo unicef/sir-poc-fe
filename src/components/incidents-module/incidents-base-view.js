@@ -211,7 +211,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             </div>
 
             <template is="dom-if" if="[[isSpecialConditionSubcategory(selectedIncidentSubcategory)]]">
-              <div class="row-h flex-c">
+              <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
                 <div class="alert-text">
                   ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
                   [[selectedImpactType.name]] subcategory are Threat Category, Incident Category, Incident Subcategory,
@@ -464,8 +464,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
         </fieldset>
         <fieldset>
-          <div hidden$="[[hideReviewFields]]">
-            <review-fields data="[[incident]]"></review-fields>
+          <div hidden$="[[useBasicLayout]]">
+            <review-fields data="[[incident]]" hidden$="[[hideReviewFields]]"></review-fields>
           </div>
         </fieldset>
 
@@ -661,6 +661,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
         type: Boolean,
         value: false,
         observer: 'pressCoverageChanged'
+      },
+      useBasicLayout: {
+        type: Boolean,
+        value: false
       },
       jwtLocalStorageKey: {
         type: String,

@@ -78,6 +78,6 @@ export class HistoryNavigationLinksBase extends HistoryHelpers(PolymerElement) {
   }
 
   getIncidentId(workingItem) {
-    return workingItem.incident_id || workingItem.data.id;
+    return workingItem ? (workingItem.incident_id || workingItem.data.id): null;
   }
 }

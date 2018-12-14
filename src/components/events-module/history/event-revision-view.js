@@ -13,6 +13,7 @@ import './history-navigation-links.js';
 class EventRevisionView extends EventsBaseView {
   connectedCallback() {
     super.connectedCallback();
+    this.useBasicLayout = true;
     this.readonly = true;
   }
 

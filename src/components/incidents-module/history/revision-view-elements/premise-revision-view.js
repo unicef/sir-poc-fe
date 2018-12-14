@@ -13,7 +13,7 @@ import '../incident-history-navigation-links.js';
 class PremiseRevisionView extends PremiseForm {
   connectedCallback() {
     super.connectedCallback();
-    this.hideCancelBtn = true;
+    this.useBasicLayout = true;
     this.readonly = true;
   }
 

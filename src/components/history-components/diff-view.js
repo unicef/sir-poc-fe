@@ -121,12 +121,20 @@ export class DiffViewBase extends DateMixin(HistoryHelpers(connect(store)(Polyme
         return getNameFromId(value, 'crashTypes');
       case 'crash_sub_type':
         return getNameFromId(value, 'crashSubTypes');
+      case 'person_category':
+        return getNameFromId(value, 'personnelCategories');
+      case 'person_nationality':
+        return getNameFromId(value, 'nationalities');
+      case 'person_agency':
+        return getNameFromId(value, 'agencies');
       case 'region':
+      case 'person_region':
         return getNameFromId(value, 'regions');
+      case 'country':
+      case 'person_country':
+        return getNameFromId(value, 'countries');
       case 'target':
         return getNameFromId(value, 'targets');
-      case 'country':
-        return getNameFromId(value, 'countries');
       case 'incident_date':
         return this.prettyDate(value);
       default:

@@ -37,6 +37,7 @@ import { updatePath } from '../components/common/navigation-helper.js';
 
 import { clearIncidentDraft } from '../actions/incidents.js';
 import {
+  showSnackbar,
   updateOffline,
   lazyLoadModules,
   updateLocationInfo
@@ -266,6 +267,7 @@ class AppShell extends connect(store)(PermissionsBase) {
 
   connectedCallback() {
     super.connectedCallback();
+    this.showPrefferedBrowserMessage();
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
   }
 
@@ -357,6 +359,11 @@ class AppShell extends connect(store)(PermissionsBase) {
     return filteredCases.length;
   }
 
+  showPrefferedBrowserMessage() {
+    if (!window.chrome) {
+      store.dispatch(showSnackbar('The preffered browser for this is Chrome'));
+    }
+  }
 }
 
 window.customElements.define('app-shell', AppShell);

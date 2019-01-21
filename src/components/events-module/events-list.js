@@ -275,7 +275,9 @@ class EventsList extends connect(store)(ListBaseClass) {
       return true;
     }
     q = q.toLowerCase();
-    return String(e.description).toLowerCase().search(q) > -1 || String(e.location).toLowerCase().search(q) > -1;
+    return String(e.description).toLowerCase().search(q) > -1 ||
+           String(e.case_number).toLowerCase().search(q) > -1 ||
+           String(e.location).toLowerCase().search(q) > -1;
   }
 
   isApproved(status) {

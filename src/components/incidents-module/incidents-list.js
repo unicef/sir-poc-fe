@@ -434,6 +434,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     }
     q = q.toLowerCase();
     return String(incident.city).search(q) > -1 ||
+        String(incident.case_number).toLowerCase().search(q) > -1 ||
         String(incident.description).toLowerCase().search(q) > -1;
   }
 

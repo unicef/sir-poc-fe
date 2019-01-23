@@ -267,8 +267,8 @@ class AppShell extends connect(store)(PermissionsBase) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.showPrefferedBrowserMessage();
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
+    this.showPrefferedBrowserMessage();
   }
 
   _locationChanged(path, queryParams) {
@@ -361,7 +361,7 @@ class AppShell extends connect(store)(PermissionsBase) {
 
   showPrefferedBrowserMessage() {
     if (!window.chrome) {
-      store.dispatch(showSnackbar('The preffered browser for this is Chrome'));
+      store.dispatch(showSnackbar('The preferred browser for this is Chrome'));
     }
   }
 }

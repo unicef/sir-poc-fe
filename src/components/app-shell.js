@@ -37,6 +37,7 @@ import { updatePath } from '../components/common/navigation-helper.js';
 
 import { clearIncidentDraft } from '../actions/incidents.js';
 import {
+  showSnackbar,
   updateOffline,
   lazyLoadModules,
   updateLocationInfo
@@ -201,7 +202,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <span>New Event</span>
             </a>
 
-            <a class="menu-heading" href="[[rootPath]]admin/" target="_blank">
+            <a class="menu-heading" href="[[rootPath]]admin/" target="_blank" hidden$="[[!canViewAdmin(profile)]]">
                 <iron-icon icon="supervisor-account"></iron-icon>
                 <span>Admin</span>
             </a>
@@ -267,6 +268,7 @@ class AppShell extends connect(store)(PermissionsBase) {
   connectedCallback() {
     super.connectedCallback();
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
+    this.showPrefferedBrowserMessage();
   }
 
   _locationChanged(path, queryParams) {
@@ -344,6 +346,13 @@ class AppShell extends connect(store)(PermissionsBase) {
     return this.hasPermission('add_event');
   }
 
+  canViewAdmin(profile) {
+    if (!profile) {
+      return false;
+    }
+    return this.hasPermission('view_admin');
+  }
+
   getNewCaseCount(allCases) {
     if (!this.profile || !this.profile.last_login) {
       return '';
@@ -357,6 +366,11 @@ class AppShell extends connect(store)(PermissionsBase) {
     return filteredCases.length;
   }
 
+  showPrefferedBrowserMessage() {
+    if (!window.chrome) {
+      store.dispatch(showSnackbar('The preferred browser for this is Chrome'));
+    }
+  }
 }
 
 window.customElements.define('app-shell', AppShell);

@@ -57,5 +57,7 @@ export const allPermissions = [
   'add_traffic',
   'view_traffic',
   'change_traffic',
-  'delete_traffic'
+  'delete_traffic',
+
+  'view_admin'
 ];

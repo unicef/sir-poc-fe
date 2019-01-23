@@ -202,7 +202,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <span>New Event</span>
             </a>
 
-            <a class="menu-heading" href="[[rootPath]]admin/" target="_blank">
+            <a class="menu-heading" href="[[rootPath]]admin/" target="_blank" hidden$="[[!canViewAdmin(profile)]]">
                 <iron-icon icon="supervisor-account"></iron-icon>
                 <span>Admin</span>
             </a>
@@ -344,6 +344,13 @@ class AppShell extends connect(store)(PermissionsBase) {
       return false;
     }
     return this.hasPermission('add_event');
+  }
+
+  canViewAdmin(profile) {
+    if (!profile) {
+      return false;
+    }
+    return this.hasPermission('view_admin');
   }
 
   getNewCaseCount(allCases) {

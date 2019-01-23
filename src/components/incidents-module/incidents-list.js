@@ -132,13 +132,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             </etools-dropdown-lite>
 
             <etools-dropdown-lite class="filter select"
-                                  label="Events"
-                                  enable-none-option
-                                  options="[[events]]"
-                                  selected="{{filters.values.event}}">
-            </etools-dropdown-lite>
-
-            <etools-dropdown-lite class="filter select"
                                   label="Target"
                                   enable-none-option
                                   options="[[staticData.targets]]"
@@ -322,10 +315,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       offline: Boolean,
       store: Object,
       state: Object,
-      events: {
-        type: Array,
-        value: []
-      },
       itemSyncStatusOptions: {
         type: Array,
         value: [
@@ -362,11 +351,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     this.staticData = state.staticData;
     this.listItems = state.incidents.list;
     this.threatCategories = state.staticData.threatCategories;
-
-    this.events = state.events.list.map((elem) => {
-      elem.name = elem.description;
-      return elem;
-    });
   }
 
   initFilters() {
@@ -380,7 +364,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         endDate: null,
         country: null,
         target: null,
-        event: null,
         q: null
       },
       handlers: {
@@ -392,7 +375,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         endDate: this.endDateFilter,
         country: this.countryFilter,
         target: this.targetFilter,
-        event: this.eventFilter,
         q: this.searchFilter
       }
     };
@@ -434,16 +416,13 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     return selectedTarget ? Number(incident.target) === Number(selectedTarget) : true;
   }
 
-  eventFilter(incident, selectedEvent) {
-    return selectedEvent ? incident.event === selectedEvent : true;
-  }
-
   searchFilter(incident, q) {
     if (!q || q === '') {
       return true;
     }
     q = q.toLowerCase();
     return String(incident.city).search(q) > -1 ||
+        String(incident.case_number).toLowerCase().search(q) > -1 ||
         String(incident.description).toLowerCase().search(q) > -1;
   }
 
@@ -481,7 +460,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       incident_date__lt: this.filters.values.endDate,
       country: this.filters.values.country,
       q: this.filters.values.q,
-      event: this.filters.values.event,
       format: docType,
       target: this.filters.values.target,
       threat_category: this.filters.values.threatCategory

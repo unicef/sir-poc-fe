@@ -278,6 +278,16 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             <div slot="row-data-details">
               <div class="row-details-content flex-c">
                 <div class="row-h flex-c">
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Created by: </strong>
+                    <span>[[getUserName(item.created_by_user_id)]]</span>
+                  </div>
+                  <div class="col col-6">
+                    <strong class="rdc-title inline">Created on: </strong>
+                    <span>[[prettyDate(item.created_on, 'D-MMM-YYYY hh:mm A')]]</span>
+                  </div>
+                </div>
+                <div class="row-h flex-c">
                   <div class="col col-12">
                     <strong class="rdc-title inline">Description: </strong>
                     <span>[[item.description]]</span>

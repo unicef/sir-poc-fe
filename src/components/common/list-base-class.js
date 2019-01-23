@@ -3,6 +3,7 @@ import PaginationMixin from './pagination-mixin';
 import DateMixin from './date-mixin';
 import { updateAppState } from './navigation-helper';
 import { store } from '../../redux/store.js';
+import { getUserName } from '../common/utils.js';
 
 export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   static get properties() {
@@ -29,6 +30,10 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
           values: {},
           handlers: {}
         }
+      },
+      getUserName: {
+        type: Function,
+        value: () => getUserName
       },
       showToggleFiltersBtn: {
         type: Boolean,

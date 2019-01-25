@@ -1,5 +1,6 @@
 const IncidentModel = {
   description: '',
+  status: 'new',
   incident_date: null,
   incident_time: null,
   injuries: '',

@@ -477,10 +477,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             <etools-upload-multi
                 endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
                 jwt-local-storage-key="[[jwtLocalStorageKey]]">
-            </etools-upload-multi>
+            </etools-upload-multi> <br>
+            Max individual file upload size is 10MB.
           </div>
 
-          <div hidden$="[[hideAttachmentsList(offline, incident, incident.attachments,
+          <div hidden$="[[!showAttachmentsList(offline, incident, incident.attachments,
                         incident.attachments.length)]]">
             <etools-data-table-header no-collapse no-title low-resolution-layout="[[lowResolutionLayout]]">
 
@@ -518,7 +519,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               </etools-data-table-row>
             </template>
           </div>
-          Max individual file upload size is 10MB.
         </fieldset>
 
         <template is="dom-if" if="[[!readonly]]">
@@ -861,17 +861,18 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   canDeleteAttachment() {
-    return this.incident && this.hasPermission('delete_incidentattachment') &&
-          !this.readonly && !this.state.app.offline && this.incident.status === 'created';
+    return this.incident && this.hasPermission('delete_incidentattachment') && !this.readonly &&
+           !this.state.app.offline && ['created', 'new'].indexOf(this.incident.status) > -1;
   }
 
-  hideAttachmentsList() {
-    return this.incident && !this.hasPermission('view_incidentattachment') &&
-      (this.state.app.offline || !this.incident.attachments || !this.incident.attachments.length);
+  showAttachmentsList() {
+    return this.incident && this.hasPermission('view_incidentattachment') &&
+           !this.state.app.offline &&
+           this.incident.attachments && this.incident.attachments.length;
   }
 
   hideRelatedDocsSection() {
-    return this.hideUploadBtn() && this.hideAttachmentsList();
+    return this.hideUploadBtn() && !this.showAttachmentsList();
   }
 
   removeAttachment(ev) {

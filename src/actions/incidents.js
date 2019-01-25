@@ -384,11 +384,15 @@ export const editAttachmentsNotes = incident => (dispatch, getState) => {
   }
 
   let attChanges = [];
-  let origAtt = origIncident.attachments;
+  let origAtt = {};
   let currAtt = incident.attachments;
 
-  for (let i = 0; i < origAtt.length; i++) {
-    if (origAtt[i].note !== currAtt[i].note) {
+  origIncident.attachments.forEach((att) => {
+    origAtt[att.id] = att;
+  });
+
+  for (let i = 0; i < currAtt.length; i++) {
+    if (currAtt[i].note !== origAtt[currAtt[i].id].note) {
       attChanges.push({
         id: currAtt[i].id,
         note: currAtt[i].note

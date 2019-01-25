@@ -364,6 +364,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="col col-3">
                 <etools-dropdown-lite id="country"
                                       readonly="[[readonly]]"
+                                      disabled$="[[!incident.region]]"
                                       label="Country"
                                       options="[[getCountriesForRegion(incident.region, staticData.countries)]]"
                                       selected="{{incident.country}}"

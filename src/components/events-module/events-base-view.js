@@ -3,6 +3,7 @@
  */
 
 import { html } from '@polymer/polymer/polymer-element.js';
+import { getCountriesForRegion } from '../common/utils.js';
 import { PermissionsBase } from '../common/permissions-base-class';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
@@ -12,6 +13,7 @@ import 'etools-date-time/datepicker-lite.js';
 
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
+import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
@@ -19,7 +21,7 @@ import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/required-fields-styles.js';
-import { resetFieldsValidations, validateFields } from '../common/validations-helper';
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import DateMixin from '../common/date-mixin.js';
 
 export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
@@ -62,18 +64,52 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
                              required auto-validate
                              error-message="End Date is required"></datepicker-lite>
           </div>
-          <div class="col flex-c">
-            <paper-input id="location"
-                         label="Location"
-                         placeholder="&#8212;"
-                         type="text"
-                         readonly$="[[readonly]]"
-                         value="{{event.location}}"
-                         required auto-validate
-                         error-message="Location is required"></paper-input>
+        </div>
+        <div class="row-h flex-c">
+          <div class="col col-3">
+            <etools-dropdown-lite id="region"
+                                  readonly="[[readonly]]"
+                                  required auto-validate
+                                  label="Region"
+                                  options="[[state.staticData.regions]]"
+                                  selected="{{event.region}}">
+            </etools-dropdown-lite>
+          </div>
+
+          <div class="col col-3">
+            <etools-dropdown-lite id="country"
+                                  readonly="[[readonly]]"
+                                  disabled$="[[!event.region]]"
+                                  label="Country"
+                                  options="[[getCountriesForRegion(event.region, state.staticData.countries)]]"
+                                  selected="{{event.country}}"
+                                  required auto-validate
+                                  error-message="Country is required">
+            </etools-dropdown-lite>
+          </div>
+
+          <div class="col col-3">
+            <paper-input  id="city"
+                          label="City"
+                          auto-validate
+                          placeholder="&#8212;"
+                          readonly$="[[readonly]]"
+                          value="{{event.city}}"
+                          required
+                          error-message="City is required">
+            </paper-input>
+          </div>
+
+          <div class="col col-3">
+            <paper-input id="address"
+                        type="text"
+                        value="{{event.address}}"
+                        readonly$="[[readonly]]"
+                        label="Address"
+                        placeholder="&#8212;">
+            </paper-input>
           </div>
         </div>
-
         <div class="row-h flex-c">
           <div class="col col-12">
             <paper-textarea label="Note" readonly$="[[readonly]]" placeholder="&#8212;"
@@ -145,9 +181,9 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
         type: Boolean,
         value: false
       },
-      title: String,
       state: Object,
       store: Object,
+      title: String,
       visible: {
         type: Boolean,
         value: false,
@@ -162,9 +198,9 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
         type: Boolean,
         value: false
       },
-      fieldsToValidateSelectors: {
-        type: Array,
-        value: ['#startDate', '#endDate', '#location', '#description']
+      getCountriesForRegion: {
+        type: Function,
+        value: () => getCountriesForRegion
       }
     };
   }
@@ -217,11 +253,11 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
   }
 
   validate() {
-    return validateFields(this, this.fieldsToValidateSelectors);
+    return validateAllRequired(this);
   }
 
   resetValidations() {
-    resetFieldsValidations(this, this.fieldsToValidateSelectors);
+    resetRequiredValidations(this);
   }
 
   _navigateBack() {

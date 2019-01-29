@@ -103,7 +103,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
           <div class="col col-3">
             <paper-input id="address"
                         type="text"
-                        value="{{event.address}}"
+                        value="{{event.location}}"
                         readonly$="[[readonly]]"
                         label="Address"
                         placeholder="&#8212;">

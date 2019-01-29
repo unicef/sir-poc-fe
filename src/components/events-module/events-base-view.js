@@ -83,7 +83,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
                                   label="Country"
                                   options="[[getCountriesForRegion(event.region, state.staticData.countries)]]"
                                   selected="{{event.country}}"
-                                  required auto-validate
+                                  auto-validate
                                   error-message="Country is required">
             </etools-dropdown-lite>
           </div>
@@ -95,7 +95,6 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
                           placeholder="&#8212;"
                           readonly$="[[readonly]]"
                           value="{{event.city}}"
-                          required
                           error-message="City is required">
             </paper-input>
           </div>

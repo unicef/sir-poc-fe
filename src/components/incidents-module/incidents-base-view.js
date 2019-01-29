@@ -474,9 +474,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <legend><h3>Related documents</h3></legend>
 
           <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
-            <etools-upload-multi
-                endpoint-info="[[getAttachmentInfo(incidentId)]]" on-upload-finished="handleUploadedFiles"
-                jwt-local-storage-key="[[jwtLocalStorageKey]]">
+            <etools-upload-multi  endpoint-info="[[getAttachmentInfo(incidentId)]]"
+                                  on-upload-finished="handleUploadedFiles"
+                                  jwt-local-storage-key="[[jwtLocalStorageKey]]"
+                                  accept="image/*,.doc,.docx,.pdf">
             </etools-upload-multi>
           </div>
 

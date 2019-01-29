@@ -262,6 +262,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                   id="dutyStationCountry"
                   label="Duty Station Country"
                   readonly="[[readonly]]"
+                  disabled$="[[!data.person.region]]"
                   options="[[getCountriesForRegion(data.person.region)]]"
                   selected="{{data.person.country}}"
                   required auto-validate

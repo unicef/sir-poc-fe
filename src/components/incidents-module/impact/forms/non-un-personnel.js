@@ -205,7 +205,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                   readonly="[[readonly]]"
                   required
                   options="[[getCountriesForRegion(data.person.region)]]"
-                  selected="{{data.person.country}}">
+                  selected="{{data.person.country}}"
+                  disabled$="[[!data.person.region]]">
               </etools-dropdown-lite>
             </div>
             <div class="col col-3">

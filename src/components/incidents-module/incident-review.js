@@ -9,10 +9,12 @@ import { selectIncident } from '../../reducers/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
+import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
+import '../common/errors-box.js';
+import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
-import '../styles/shared-styles.js';
-import '../common/errors-box.js';
+
 import { PermissionsBase } from '../common/permissions-base-class';
 import { getUserName } from '../common/utils';
 import './buttons/reject.js';
@@ -46,7 +48,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
         <errors-box prepared-errors="{{errors}}"></errors-box>
       </div>
 
-      <div class="card" hidden$="[[_hideBottomCard(offline, incident.status)]]">
+      <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
           <div class="row-h flex-c">
             <div class="col col-12">
               <paper-textarea label="Write your comment here" id="commentText"
@@ -197,6 +199,27 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
           </div>
         </div>
       </div>
+
+
+      <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
+          <div class="row-h flex-c">
+            <div class="col col-6">
+              <etools-dropdown-multi-lite class="filter sync-filter"
+                                          label="Send special notification to users"
+                                          options="[[users]]"
+                                          selected-values="{{usersToNotify}}"
+                                          hide-search>
+              </etools-dropdown-multi-lite>
+            </div>
+            <div class="col col-6">
+              <paper-button class="btn" raised
+                                        on-click="notifyUsers"
+                                        disabled$="[[!usersToNotify.length]]">
+                Notify selected users
+              </paper-button>
+            </div>
+          </div>
+      </div>
     `;
   }
 
@@ -220,7 +243,9 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
         type: Function,
         value: () => getUserName
       },
-      incident: Object
+      users: Array,
+      incident: Object,
+      usersToNotify: Array
     };
   }
 
@@ -237,6 +262,12 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
     this.state = state;
     this.offline = state.app.offline;
     this.incidentId = state.app.locationInfo.incidentId;
+    this.users = JSON.parse(JSON.stringify(state.users.list)).map((user) => {
+      if (user.job_title) {
+        user.name = user.name + ' - ' + user.job_title;
+      }
+      return user;
+    });
   }
 
   restComment() {
@@ -277,7 +308,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
     return offline || this.readonly || !this.hasPermission('add_comment');
   }
 
-  _hideBottomCard(offline, status) {
+  _hideCommentCard(offline, status) {
     return this._hideApproveButton(offline, status) &&
            this._hideRejectButton(offline, status) &&
            this._hideCommentButton(offline);
@@ -285,6 +316,14 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
 
   _canReview(offline, reviewerId, permissionsKey) {
     return !offline && this.hasPermission(permissionsKey) && !reviewerId;
+  }
+
+  async notifyUsers() {
+    if (!this.usersToNotify || !this.usersToNotify.length) {
+      return;
+    }
+
+    console.log('notification sent to users: ', this.usersToNotify);
   }
 }
 

@@ -242,13 +242,13 @@ class IncidentsList extends connect(store)(ListBaseClass) {
               <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
                 <span>[[item.city]]</span>
               </span>
-              <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
+              <span class="col-data col-1" title="[[item.incident_category_name]]"
                     data-col-header-label="Incident Category">
-                <span>[[getNameFromId(item.incident_category, 'incidentCategories')]]</span>
+                <span>[[item.incident_category_name]]</span>
               </span>
-              <span class="col-data col-2" title="[[getIncidentSubcategory(item.incident_subcategory)]]"
+              <span class="col-data col-2" title="[[item.incident_subcategory_name]]"
                     data-col-header-label="Incident Subcategory">
-                <span>[[getIncidentSubcategory(item.incident_subcategory)]]</span>
+                <span>[[item.incident_subcategory_name]]</span>
               </span>
               <span class="col-data col-2 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
@@ -338,10 +338,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       selectedIncidentCategory: {
         type: Object,
         value: {}
-      },
-      getNameFromId: {
-        type: Function,
-        value: () => getNameFromId
       }
     };
   }
@@ -358,8 +354,12 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     this.state = state;
     this.offline = state.app.offline;
     this.staticData = state.staticData;
-    this.listItems = state.incidents.list;
     this.threatCategories = state.staticData.threatCategories;
+    this.listItems = state.incidents.list.map((elem) => {
+      elem.incident_category_name = getNameFromId(elem.incident_category, 'incidentCategories');
+      elem.incident_subcategory_name = this.getIncidentSubcategory(elem.incident_subcategory);
+      return elem;
+    });
   }
 
   initFilters() {
@@ -430,9 +430,12 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       return true;
     }
     q = q.toLowerCase();
-    return String(incident.city).search(q) > -1 ||
-        String(incident.case_number).toLowerCase().search(q) > -1 ||
-        String(incident.description).toLowerCase().search(q) > -1;
+    return String(incident.city).toLowerCase().search(q) > -1 ||
+          String(incident.status).toLowerCase().search(q) > -1 ||
+          String(incident.description).toLowerCase().search(q) > -1 ||
+          String(incident.case_number).toLowerCase().search(q) > -1 ||
+          String(incident.incident_category_name).toLowerCase().search(q) > -1 ||
+          String(incident.incident_subcategory_name).toLowerCase().search(q) > -1;
   }
 
   canEdit(status, unsynced, offline) {

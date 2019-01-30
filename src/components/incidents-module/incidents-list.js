@@ -27,10 +27,8 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import { store } from '../../redux/store.js';
-import { syncIncidentOnList, exportIncidents } from '../../actions/incidents.js';
+import { syncIncidentOnList, exportIncidents, exportSingleIncident } from '../../actions/incidents.js';
 import { getNameFromId } from '../common/utils.js';
-
-import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -150,7 +148,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 <iron-icon icon="file-download"></iron-icon>
                 Export
               </paper-button>
-              <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
+              <paper-listbox slot="dropdown-content" on-iron-select="exportList">
                 <paper-item doc-type="pdf">PDF</paper-item>
                 <paper-item doc-type="csv">CSV</paper-item>
                 <paper-item doc-type="xls">XLS</paper-item>
@@ -276,9 +274,9 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 <div class="export-btn">
                   <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
                     <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
-                    <paper-listbox slot="dropdown-content" on-iron-select="somethingSelected">
+                    <paper-listbox slot="dropdown-content" on-iron-select="exportItem">
                       <paper-item doc-type="pdf" incident-id$="[[item.id]]">PDF</paper-item>
-                      <paper-item doc-type="csv" incident-id$="[[item.id]]">DOCX</paper-item>
+                      <paper-item doc-type="docx" incident-id$="[[item.id]]">DOCX</paper-item>
                     </paper-listbox>
                   </paper-menu-button>
                 </div>
@@ -331,10 +329,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      exportDocType: {
-        type: String,
-        observer: '_export'
-      },
       selectedIncidentCategory: {
         type: Object,
         value: {}
@@ -344,18 +338,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         value: () => getNameFromId
       }
     };
-  }
-
-  somethingSelected(e) {
-    if (!e || !e.detail || !e.detail.item) {
-      return;
-    }
-    // reset selected item
-    e.target.selected = null;
-
-    let docType = e.detail.item.getAttribute('doc-type');
-    let incidentId = e.detail.item.getAttribute('incident-id');
-
   }
 
   connectedCallback() {
@@ -487,15 +469,30 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     });
   }
 
-  _export(docType) {
-    if (!docType || docType === '') {
+  exportItem(e) {
+    if (!e || !e.target || !e.detail || !e.detail.item) {
       return;
     }
-    const csvQStr = this._getExportQueryString(docType);
-    const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
-    this.set('exportDocType', '');
+    // reset selected item
+    e.target.selected = null;
 
-    store.dispatch(exportIncidents(csvDownloadUrl, docType));
+    let docType = e.detail.item.getAttribute('doc-type');
+    let incidentId = e.detail.item.getAttribute('incident-id');
+
+    store.dispatch(exportSingleIncident(incidentId, docType));
+  }
+
+  exportList(e) {
+    if (!e || !e.target || !e.detail || !e.detail.item) {
+      return;
+    }
+    // reset selected item
+    e.target.selected = null;
+
+    let docType = e.detail.item.getAttribute('doc-type');
+    const csvQStr = this._getExportQueryString(docType);
+
+    store.dispatch(exportIncidents(csvQStr, docType));
   }
 
   showNewIncidentTooltip(incident) {

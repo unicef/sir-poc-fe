@@ -60,7 +60,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           text-transform: capitalize;
         }
 
-        .sync-btn {
+        .action-btn {
           color: var(--primary-color);
           cursor: pointer;
         }
@@ -270,9 +270,18 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                   </a>
                 </template>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
+                    <iron-icon icon="notification:sync" title="Sync Incident" class="action-btn" on-click="_syncItem">
                     </iron-icon>
                 </template>
+                <div class="export-btn">
+                  <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
+                    <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
+                    <paper-listbox slot="dropdown-content" on-iron-select="somethingSelected">
+                      <paper-item doc-type="pdf" incident-id$="[[item.id]]">PDF</paper-item>
+                      <paper-item doc-type="csv" incident-id$="[[item.id]]">DOCX</paper-item>
+                    </paper-listbox>
+                  </paper-menu-button>
+                </div>
               </span>
             </div>
             <div slot="row-data-details">
@@ -335,6 +344,18 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         value: () => getNameFromId
       }
     };
+  }
+
+  somethingSelected(e) {
+    if (!e || !e.detail || !e.detail.item) {
+      return;
+    }
+    // reset selected item
+    e.target.selected = null;
+
+    let docType = e.detail.item.getAttribute('doc-type');
+    let incidentId = e.detail.item.getAttribute('incident-id');
+
   }
 
   connectedCallback() {

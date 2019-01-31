@@ -457,10 +457,12 @@ export const exportSingleIncident = (id, docType) => (dispatch) => {
 };
 
 export const exportIncidents = (queryString, docType) => (dispatch) => {
-  const incidentsExportReqOptions = {
+  let incidentsExportReqOptions = {
     url: Endpoints.incidentsList.url + '?' + queryString,
     handleAs: 'blob'
   };
+
+  incidentsExportReqOptions = Object.assign({}, Endpoints.incidentsList, incidentsExportReqOptions);
 
   makeRequest(incidentsExportReqOptions).then((blob) => {
     handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);

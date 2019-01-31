@@ -616,20 +616,47 @@ const syncPersonnelList = (newId, oldId) => (dispatch, getState) => {
 };
 
 export const fetchHistoryOfImpacts = ids => async (dispatch, getState) => {
-  if (getState().app.offline === true) {
+  const state = getState();
+  if (state.app.offline === true) {
     return {};
   }
 
-  let personnelHistory = await dispatch(
-                          fetchImpactHistory(ids.personnel, Endpoints.getIncidentPersonnelHistory, 'personnel'));
+  let historyOfImpacts = [];
 
-  return [
-    ...sanitizeImpactedPersonnelHistory(personnelHistory),
-    ...await dispatch(fetchImpactHistory(ids.evacuation, Endpoints.getIncidentEvacuationHistory, 'evacuation')),
-    ...await dispatch(fetchImpactHistory(ids.programme, Endpoints.getIncidentProgrammeHistory, 'programme')),
-    ...await dispatch(fetchImpactHistory(ids.property, Endpoints.getIncidentPropertyHistory, 'property')),
-    ...await dispatch(fetchImpactHistory(ids.premise, Endpoints.getIncidentPremiseHistory, 'premise'))
-  ].map((elem) => {
+  if (state.staticData.profile.permissions['view_personincident']) {
+    let ph = await dispatch(fetchImpactHistory(ids.personnel, Endpoints.getIncidentPersonnelHistory, 'personnel'));
+    historyOfImpacts = sanitizeImpactedPersonnelHistory(ph);
+  }
+
+  if (state.staticData.profile.permissions['view_evacuation']) {
+    historyOfImpacts = [
+      ...historyOfImpacts,
+      ...await dispatch(fetchImpactHistory(ids.evacuation, Endpoints.getIncidentEvacuationHistory, 'evacuation'))
+    ];
+  }
+
+  if (state.staticData.profile.permissions['view_programme']) {
+    historyOfImpacts = [
+      ...historyOfImpacts,
+      ...await dispatch(fetchImpactHistory(ids.programme, Endpoints.getIncidentProgrammeHistory, 'programme'))
+    ];
+  }
+
+  if (state.staticData.profile.permissions['view_property']) {
+    historyOfImpacts = [
+      ...historyOfImpacts,
+      ...await dispatch(fetchImpactHistory(ids.property, Endpoints.getIncidentPropertyHistory, 'property'))
+    ];
+  }
+
+  if (state.staticData.profile.permissions['view_premise']) {
+    historyOfImpacts = [
+      ...historyOfImpacts,
+      ...await dispatch(fetchImpactHistory(ids.premise, Endpoints.getIncidentPremiseHistory, 'premise'))
+    ];
+  }
+
+  return historyOfImpacts.map((elem) => {
     elem.incident_id = ids.incident;
     return elem;
   });

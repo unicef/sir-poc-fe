@@ -441,10 +441,7 @@ export const deleteIncidentLocally = incidentId => (dispatch) => {
 };
 
 export const exportSingleIncident = (id, docType) => (dispatch) => {
-  let endpoint = prepareEndpoint(Endpoints.getIncident, {id});
-
-  endpoint.url += '?format=' + docType;
-  endpoint.handleAs = 'blob';
+  let endpoint = prepareEndpoint(Endpoints.exportSingleIncident, {id, docType});
 
   makeRequest(endpoint).then((blob) => {
     handleBlobDataReceivedAndStartDownload(blob, 'incident.' + docType);
@@ -457,14 +454,8 @@ export const exportSingleIncident = (id, docType) => (dispatch) => {
 };
 
 export const exportIncidents = (queryString, docType) => (dispatch) => {
-  let incidentsExportReqOptions = {
-    url: Endpoints.incidentsList.url + '?' + queryString,
-    handleAs: 'blob'
-  };
-
-  incidentsExportReqOptions = Object.assign({}, Endpoints.incidentsList, incidentsExportReqOptions);
-
-  makeRequest(incidentsExportReqOptions).then((blob) => {
+  let endpoint = prepareEndpoint(Endpoints.exportIncidentsList, {queryString});
+  makeRequest(endpoint).then((blob) => {
     handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);
   }).catch((error) => {
     // eslint-disable-next-line

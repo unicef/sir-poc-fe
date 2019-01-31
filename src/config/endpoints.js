@@ -29,6 +29,11 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/',
     method: 'GET'
   },
+  exportIncidentsList: {
+    url: baseUrl + '/api/incidents/?<%=queryString%>',
+    method: 'GET',
+    handleAs: 'blob'
+  },
   newIncident: {
     url: baseUrl + '/api/incidents/',
     method: 'POST'
@@ -36,6 +41,11 @@ export const Endpoints = {
   getIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'GET'
+  },
+  exportSingleIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/?format=<%=docType%>',
+    method: 'GET',
+    handleAs: 'blob'
   },
   getIncidentHistory: {
     url: baseUrl + '/api/incidents/<%=id%>/history/',

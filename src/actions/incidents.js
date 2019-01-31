@@ -440,14 +440,22 @@ export const deleteIncidentLocally = incidentId => (dispatch) => {
   return true;
 };
 
-export const exportIncidents = (exportUrl, docType) => (dispatch) => {
-  const incidentsExportReqOptions = Object.assign({}, Endpoints['incidentsList'],
-      {
-        url: exportUrl,
-        handleAs: 'blob'
-      }
-  );
-  makeRequest(incidentsExportReqOptions).then((blob) => {
+export const exportSingleIncident = (id, docType) => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.exportSingleIncident, {id, docType});
+
+  makeRequest(endpoint).then((blob) => {
+    handleBlobDataReceivedAndStartDownload(blob, 'incident.' + docType);
+  }).catch((error) => {
+    // eslint-disable-next-line
+    console.error(error);
+    // TODO: redirects and messages should be moved to the view
+    dispatch(showSnackbar('An error occurred on incident export'));
+  });
+};
+
+export const exportIncidents = (queryString, docType) => (dispatch) => {
+  let endpoint = prepareEndpoint(Endpoints.exportIncidentsList, {queryString});
+  makeRequest(endpoint).then((blob) => {
     handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);
   }).catch((error) => {
     // eslint-disable-next-line

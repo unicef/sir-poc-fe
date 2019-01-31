@@ -27,10 +27,8 @@ import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
 
 import { store } from '../../redux/store.js';
-import { syncIncidentOnList, exportIncidents } from '../../actions/incidents.js';
+import { syncIncidentOnList, exportIncidents, exportSingleIncident } from '../../actions/incidents.js';
 import { getNameFromId } from '../common/utils.js';
-
-import { Endpoints } from '../../config/endpoints.js';
 
 import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
@@ -60,7 +58,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           text-transform: capitalize;
         }
 
-        .sync-btn {
+        .action-btn {
           color: var(--primary-color);
           cursor: pointer;
         }
@@ -76,6 +74,12 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         iron-icon.smaller {
           --iron-icon-width: 20px;
           --iron-icon-height: 20px;
+        }
+
+        @media (max-width: 768px) {
+          .hidden-on-mobile {
+            display: none;
+          }
         }
       </style>
 
@@ -150,7 +154,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 <iron-icon icon="file-download"></iron-icon>
                 Export
               </paper-button>
-              <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
+              <paper-listbox slot="dropdown-content" on-iron-select="exportList">
                 <paper-item doc-type="pdf">PDF</paper-item>
                 <paper-item doc-type="csv">CSV</paper-item>
                 <paper-item doc-type="xls">XLS</paper-item>
@@ -238,13 +242,13 @@ class IncidentsList extends connect(store)(ListBaseClass) {
               <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
                 <span>[[item.city]]</span>
               </span>
-              <span class="col-data col-1" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
+              <span class="col-data col-1" title="[[item.incident_category_name]]"
                     data-col-header-label="Incident Category">
-                <span>[[getNameFromId(item.incident_category, 'incidentCategories')]]</span>
+                <span>[[item.incident_category_name]]</span>
               </span>
-              <span class="col-data col-2" title="[[getIncidentSubcategory(item.incident_subcategory)]]"
+              <span class="col-data col-2" title="[[item.incident_subcategory_name]]"
                     data-col-header-label="Incident Subcategory">
-                <span>[[getIncidentSubcategory(item.incident_subcategory)]]</span>
+                <span>[[item.incident_subcategory_name]]</span>
               </span>
               <span class="col-data col-2 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
@@ -270,9 +274,18 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                   </a>
                 </template>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
+                    <iron-icon icon="notification:sync" title="Sync Incident" class="action-btn" on-click="_syncItem">
                     </iron-icon>
                 </template>
+                <div class="export-btn hidden-on-mobile">
+                  <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
+                    <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
+                    <paper-listbox slot="dropdown-content" on-iron-select="exportItem">
+                      <paper-item doc-type="pdf" incident-id$="[[item.id]]">PDF</paper-item>
+                      <paper-item doc-type="docx" incident-id$="[[item.id]]">DOCX</paper-item>
+                    </paper-listbox>
+                  </paper-menu-button>
+                </div>
               </span>
             </div>
             <div slot="row-data-details">
@@ -322,17 +335,9 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      exportDocType: {
-        type: String,
-        observer: '_export'
-      },
       selectedIncidentCategory: {
         type: Object,
         value: {}
-      },
-      getNameFromId: {
-        type: Function,
-        value: () => getNameFromId
       }
     };
   }
@@ -349,8 +354,12 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     this.state = state;
     this.offline = state.app.offline;
     this.staticData = state.staticData;
-    this.listItems = state.incidents.list;
     this.threatCategories = state.staticData.threatCategories;
+    this.listItems = state.incidents.list.map((elem) => {
+      elem.incident_category_name = getNameFromId(elem.incident_category, 'incidentCategories');
+      elem.incident_subcategory_name = this.getIncidentSubcategory(elem.incident_subcategory);
+      return elem;
+    });
   }
 
   initFilters() {
@@ -421,9 +430,12 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       return true;
     }
     q = q.toLowerCase();
-    return String(incident.city).search(q) > -1 ||
-        String(incident.case_number).toLowerCase().search(q) > -1 ||
-        String(incident.description).toLowerCase().search(q) > -1;
+    return String(incident.city).toLowerCase().search(q) > -1 ||
+          String(incident.status).toLowerCase().search(q) > -1 ||
+          String(incident.description).toLowerCase().search(q) > -1 ||
+          String(incident.case_number).toLowerCase().search(q) > -1 ||
+          String(incident.incident_category_name).toLowerCase().search(q) > -1 ||
+          String(incident.incident_subcategory_name).toLowerCase().search(q) > -1;
   }
 
   canEdit(status, unsynced, offline) {
@@ -466,15 +478,30 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     });
   }
 
-  _export(docType) {
-    if (!docType || docType === '') {
+  exportItem(e) {
+    if (!e || !e.target || !e.detail || !e.detail.item) {
       return;
     }
-    const csvQStr = this._getExportQueryString(docType);
-    const csvDownloadUrl = Endpoints['incidentsList'].url + '?' + csvQStr;
-    this.set('exportDocType', '');
+    // reset selected item
+    e.target.selected = null;
 
-    store.dispatch(exportIncidents(csvDownloadUrl, docType));
+    let docType = e.detail.item.getAttribute('doc-type');
+    let incidentId = e.detail.item.getAttribute('incident-id');
+
+    store.dispatch(exportSingleIncident(incidentId, docType));
+  }
+
+  exportList(e) {
+    if (!e || !e.target || !e.detail || !e.detail.item) {
+      return;
+    }
+    // reset selected item
+    e.target.selected = null;
+
+    let docType = e.detail.item.getAttribute('doc-type');
+    const csvQStr = this._getExportQueryString(docType);
+
+    store.dispatch(exportIncidents(csvQStr, docType));
   }
 
   showNewIncidentTooltip(incident) {

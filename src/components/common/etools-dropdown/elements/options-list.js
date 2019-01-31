@@ -68,7 +68,7 @@ class EsmmOptionsList extends ListItemUtils(PolymerElement) {
       <paper-listbox multi="[[multi]]" attr-for-selected="internal-id" selected="[[selected]]"
                      selected-values="{{selectedValues}}">
         <template is="dom-repeat" items="[[shownOptions]]">
-          <paper-icon-item disabled\$="[[!item.is_active]]" item\$="[[item]]" internal-id\$="[[getValue(item)]]"
+          <paper-icon-item disabled\$="[[isDisabledItem(item)]]" item\$="[[item]]" internal-id\$="[[getValue(item)]]"
                            on-tap="_itemSelected" class\$="[[item.cssClass]] [[_getSelectedClass(item)]]"
                            title\$="[[_getItemTitle(item)]]">
 
@@ -202,6 +202,14 @@ class EsmmOptionsList extends ListItemUtils(PolymerElement) {
       return this.selectedValues.indexOf(item[this.optionValue].toString()) > -1 ? 'iron-selected' : '';
     }
     return '';
+  }
+
+  isDisabledItem(item) {
+    if (!item || typeof item.is_active === 'undefined') {
+      return false;
+    }
+
+    return !item.is_active;
   }
 }
 

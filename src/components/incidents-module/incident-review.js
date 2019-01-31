@@ -324,6 +324,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
     }
 
     store.dispatch(notifySpecificUsers(this.usersToNotify, this.incidentId));
+    this.set('usersToNotify', []);
   }
 }
 

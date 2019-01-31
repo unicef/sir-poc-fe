@@ -1,7 +1,7 @@
 import { makeRequest, prepareEndpoint,
   handleBlobDataReceivedAndStartDownload } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
-import { objDiff, isNumber } from '../components/common/utils.js';
+import { objDiff, isNumber, getUserName } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
@@ -479,4 +479,42 @@ export const fetchIncidentHistory = id => async (dispatch, getState) => {
       dispatch(serverError(error.response));
       return [];
     });
+};
+
+export const notifySpecificUsers = (userIds, incidentId) => (dispatch, getState) => {
+  if (getState().app.offline) {
+    return;
+  }
+  if (!userIds || !userIds.length) {
+    return;
+  }
+
+  let operations = [];
+  userIds.forEach((userId) => {
+    let endpoint = prepareEndpoint(Endpoints.notifySpecificUser, {userId, incidentId});
+    operations.push(makeRequest(endpoint).catch(err => err).then((result) => {
+      result.userId = userId;
+      return result;
+    }));
+  });
+
+  Promise.all(operations).then((results) => {
+    let failedUsers = [];
+    let successfulUsers = [];
+
+    results.forEach((res) => {
+      if (res.error) {
+        failedUsers.push(getUserName(res.userId));
+      } else {
+        successfulUsers.push(getUserName(res.userId));
+      }
+    });
+
+    if (failedUsers.length) {
+      dispatch(serverError('Failed sending special notification to ' + failedUsers.join(', ')));
+    }
+    if (successfulUsers.length) {
+      dispatch(showSnackbar('Special notification sent to ' + successfulUsers.join(', ')));
+    }
+  });
 };

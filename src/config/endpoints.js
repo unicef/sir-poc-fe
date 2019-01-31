@@ -41,6 +41,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/history/',
     method: 'GET'
   },
+  notifySpecificUser: {
+    url: baseUrl + '/api/incident/<%=incidentId%>/alert/user/<%=userId%>/',
+    method: 'GET'
+  },
   editIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'

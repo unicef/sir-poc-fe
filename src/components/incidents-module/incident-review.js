@@ -4,7 +4,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import { addComment } from '../../actions/incidents.js';
+import { addComment, notifySpecificUsers } from '../../actions/incidents.js';
 import { selectIncident } from '../../reducers/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
@@ -318,12 +318,12 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
     return !offline && this.hasPermission(permissionsKey) && !reviewerId;
   }
 
-  async notifyUsers() {
+  notifyUsers() {
     if (!this.usersToNotify || !this.usersToNotify.length) {
       return;
     }
 
-    console.log('notification sent to users: ', this.usersToNotify);
+    store.dispatch(notifySpecificUsers(this.usersToNotify, this.incidentId));
   }
 }
 

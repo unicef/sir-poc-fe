@@ -5,17 +5,17 @@ import {SirMsalAuth} from '../auth/jwt/msal-authentication';
 
 // let ironRequestElem;
 
-const createIronRequestElement = function() {
+const createIronRequestElement = () => {
   let ironRequestElem = document.createElement('iron-request');
   // document.querySelector('body').appendChild(ironRequestElem);
   return ironRequestElem;
 };
 
-const getRequestElement = function() {
+const getRequestElement = () => {
   return createIronRequestElement();
 };
 
-const generateRequestConfigOptions = function(endpoint, data) {
+const generateRequestConfigOptions = (endpoint, data) => {
   let config = {
       url: endpoint.url,
       method: endpoint.method,
@@ -29,7 +29,7 @@ const generateRequestConfigOptions = function(endpoint, data) {
 };
 
 
-const _prepareResponse = function(response) {
+const _prepareResponse = (response) => {
   try {
     return JSON.parse(response);
   } catch (e) {
@@ -37,24 +37,40 @@ const _prepareResponse = function(response) {
   }
 };
 
-const SirRequestError = function(error, statusCode, statusText, response) {
+const SirRequestError = (error, statusCode, statusText, response) => {
   this.error = error;
   this.status = statusCode;
   this.statusText = statusText;
   this.response = _prepareResponse(response);
 };
 
-export const makeRequest = function(endpoint, data = {}) {
+export const makeRequest = (endpoint, data = {}) => {
+  if (endpoint.cachingPeriod) {
+    return makeCachedRequest(endpoint, data);
+  }
+
+  return makeUncachedRequest(endpoint, data);
+}
+
+const makeCachedRequest = (endpoint, data) => {
+  if (endpoint._cachedData) {
+    return Promise.resolve(JSON.parse(JSON.stringify(endpoint._cachedData)));
+  }
+
+  return makeUncachedRequest(endpoint, data).then((result) => {
+    endpoint._cachedData = JSON.parse(JSON.stringify(result));
+    setTimeout(() => delete endpoint._cachedData, endpoint.cachingPeriod);
+    return result;
+  });
+}
+
+const makeUncachedRequest = function(endpoint, data) {
   let reqConfig = generateRequestConfigOptions(endpoint, data);
   let requestElem = getRequestElement();
   requestElem.send(reqConfig);
   return requestElem.completes.then((result) => {
     return result.response;
   }).catch((error) => {
-    // if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
-    //   TODO: should this be replaced by redirect to FE login page?
-    //   redirectToAdminLogin();
-    // }
     throw new SirRequestError(error, requestElem.xhr.status, requestElem.xhr.statusText, requestElem.xhr.response);
   });
 };

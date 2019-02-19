@@ -201,11 +201,13 @@ export const Endpoints = {
   },
   regions: {
     url: baseUrl + '/api/regions/',
-    method: 'GET'
+    method: 'GET',
+    cachingPeriod: 60000
   },
   countries: {
     url: baseUrl + '/api/countries/',
-    method: 'GET'
+    method: 'GET',
+    cachingPeriod: 60000
   },
   teams: {
     url: baseUrl + '/api/teams/',

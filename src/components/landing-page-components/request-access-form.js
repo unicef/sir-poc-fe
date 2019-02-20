@@ -2,7 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '../common/etools-dropdown/etools-dropdown-lite.js';
-import { validateAllRequired } from '../common/validations-helper.js';
+import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { makeRequest } from '../common/request-helper.js';
 import { Endpoints } from '../../config/endpoints.js';
 
@@ -122,6 +122,9 @@ class RequestAccessForm extends PolymerElement {
     if (this.visible) {
       this._fetchCountries();
       this._fetchRegions();
+    } else {
+      this.set('errorMessage', '');
+      resetRequiredValidations(this)
     }
   }
 

@@ -5,6 +5,10 @@ export const Endpoints = {
     url: baseUrl + '/api/profile',
     method: 'GET'
   },
+  requestAccess: {
+    url: baseUrl + '/api/register/',
+    method: 'POST'
+  },
   eventsList: {
     url: baseUrl + '/api/events/',
     method: 'GET'

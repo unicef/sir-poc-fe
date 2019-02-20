@@ -1,18 +1,26 @@
-
 import '@polymer/iron-ajax/iron-request.js';
-// import { redirectToAdminLogin } from './navigation-helper.js';
-import {SirMsalAuth} from '../auth/jwt/msal-authentication';
+import { SirMsalAuth } from '../auth/jwt/msal-authentication';
 
-// let ironRequestElem;
+class SirRequestError {
+  constructor(error, statusCode, statusText, response) {
+    this.error = error;
+    this.status = statusCode;
+    this.statusText = statusText;
+    this.response = this._prepareResponse(response);
+  }
+
+  _prepareResponse(response) {
+    try {
+      return JSON.parse(response);
+    } catch (e) {
+      return response;
+    }
+  }
+};
 
 const createIronRequestElement = () => {
   let ironRequestElem = document.createElement('iron-request');
-  // document.querySelector('body').appendChild(ironRequestElem);
   return ironRequestElem;
-};
-
-const getRequestElement = () => {
-  return createIronRequestElement();
 };
 
 const generateRequestConfigOptions = (endpoint, data) => {
@@ -26,22 +34,6 @@ const generateRequestConfigOptions = (endpoint, data) => {
       withCredentials: endpoint.auth
   };
   return config;
-};
-
-
-const _prepareResponse = (response) => {
-  try {
-    return JSON.parse(response);
-  } catch (e) {
-    return response;
-  }
-};
-
-const SirRequestError = (error, statusCode, statusText, response) => {
-  this.error = error;
-  this.status = statusCode;
-  this.statusText = statusText;
-  this.response = _prepareResponse(response);
 };
 
 export const makeRequest = (endpoint, data = {}) => {
@@ -66,7 +58,7 @@ const makeCachedRequest = (endpoint, data) => {
 
 const makeUncachedRequest = function(endpoint, data) {
   let reqConfig = generateRequestConfigOptions(endpoint, data);
-  let requestElem = getRequestElement();
+  let requestElem = createIronRequestElement();
   requestElem.send(reqConfig);
   return requestElem.completes.then((result) => {
     return result.response;

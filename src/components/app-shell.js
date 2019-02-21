@@ -272,9 +272,15 @@ class AppShell extends connect(store)(PermissionsBase) {
     this.checkForIdleState();
   }
 
+  sendMessageToServiceWorker(msg){
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage(msg);
+    }
+  }
+
   checkForIdleState() {
-    document.addEventListener('mouseup', () => console.log('Mouse did something, not idle'));
-    document.addEventListener('keyup', () => console.log('key pressed, not idle'));
+    document.addEventListener('mouseup', () => this.sendMessageToServiceWorker('Mouse did something, not idle'));
+    document.addEventListener('keyup', () => this.sendMessageToServiceWorker('key pressed, not idle'));
   }
 
   _locationChanged(path, queryParams) {

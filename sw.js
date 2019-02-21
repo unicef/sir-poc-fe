@@ -1,9 +1,20 @@
-console.log('service worker started');
-let store;
+importScripts('persistance-config.js');
+
+self.addEventListener('install', function(event) {
+  event.waitUntil(self.skipWaiting()); // Activate worker immediately
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim()); // Become available to all pages
+});
+
+
+let store, db;
 let idb = indexedDB.open('sir-poc', 1);
+let lastActivityTimestamp = getCurrentTimestamp();
 
 idb.onupgradeneeded = () => {
-  var db = idb.result;
+  db = idb.result;
   store = db.createObjectStore('PersistedState', {keyPath: 'key'});
 };
 
@@ -13,13 +24,34 @@ idb.onerror = () => {
 };
 
 function createTransaction() {
-  var db = idb.result;
-  var tx = db.transaction('PersistedState', 'readwrite');
+  let tx = idb.result.transaction('PersistedState', 'readwrite');
   return tx.objectStore('PersistedState');
 }
 
-setTimeout(() => {
-  console.log('nuking the DB');
-  // createTransaction().clear();
-}, 10000);
+function clearSavedState() {
+  createTransaction().clear();
+}
+
+function getCurrentTimestamp() {
+  return (new Date()).getTime();
+}
+
+function getElapsedTime(timestamp) {
+  return getCurrentTimestamp() - timestamp;
+}
+
+self.addEventListener('message', (event) => {
+  lastActivityTimestamp = getCurrentTimestamp();
+});
+
+// check to see if we need to erase the saved state
+let interval = setInterval(() => {
+  if (getElapsedTime(lastActivityTimestamp) >= ERASE_DATABASE_AFTER) {
+    clearSavedState();
+    lastActivityTimestamp = getCurrentTimestamp();
+    console.log('persisted state deleted due to inactivity');
+  } else {
+    console.log('last activity was', getElapsedTime(lastActivityTimestamp) / 1000, 'seconds ago')
+  }
+}, CHECK_IDLE_STATE_INTERVAL);
 

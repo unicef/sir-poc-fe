@@ -157,7 +157,13 @@ class RequestAccessForm extends PolymerElement {
   }
 
   _showErrorMessage(response) {
-    this.set('errorMessage', response || 'There was an error while processing your request');
+    let messages = [];
+    for (let key in response) {
+      messages = [...messages, ...response[key]];
+    }
+
+    let errorMessage = messages.join(' ');
+    this.set('errorMessage', errorMessage || 'There was an error while processing your request');
   }
 
   _requestAccess() {
@@ -176,6 +182,12 @@ class RequestAccessForm extends PolymerElement {
     }, 10000);
   }
 
+  _sanitizeData(data) {
+    let newData = {...data};
+    newData.email += '@unicef.org';
+    return newData;
+  }
+
   getCountriesForRegion(regionId) {
   if (!regionId) {
     return null;
@@ -185,7 +197,7 @@ class RequestAccessForm extends PolymerElement {
   }
 
   submitAccessRequest() {
-    makeRequest(Endpoints.requestAccess, this.requester).then((result) => {
+    makeRequest(Endpoints.requestAccess, this._sanitizeData(this.requester)).then((result) => {
         this._showSuccessMessage();
       }).catch((err) => {
         this._showErrorMessage(err.response);

@@ -14,7 +14,7 @@ import {
   applyMiddleware
 } from 'redux';
 import thunk from 'redux-thunk';
-import { persistStore, persistCombineReducers, createTransform } from 'redux-persist';
+import { persistStore, persistCombineReducers } from 'redux-persist';
 
 import { storeReady } from '../actions/app.js';
 import app from '../reducers/app.js';
@@ -25,30 +25,16 @@ import incidents from '../reducers/incidents.js';
 import staticData from '../reducers/static-data.js';
 
 import { getStorage } from './storage/storage-loader.js';
+import { encryptState } from './storage/utils.js';
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
 const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
-
-const encrypt = createTransform(
-  (inboundState, key) => {
-    if (!inboundState) return inboundState;
-    const cryptedText = CryptoJS.AES.encrypt(JSON.stringify(inboundState), 'secret key 123');
-
-    return cryptedText.toString();
-  },
-  (outboundState, key) => {
-    if (!outboundState) return outboundState;
-    const bytes = CryptoJS.AES.decrypt(outboundState, 'secret key 123');
-    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-
-    return JSON.parse(decrypted);
-  },
-);
+let key;
 
 const persistConfig = {
   key: 'sir-app',
-  transforms: [encrypt],
+  transforms: [encryptState],
   storage: getStorage(),
   blacklist: ['errors', 'app', 'users']
 };

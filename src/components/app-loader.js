@@ -2,7 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
 import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 import { initStore } from '../redux/store.js';
-import './auth/sir-login.js';
+import './landing-page-components/sir-login.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.

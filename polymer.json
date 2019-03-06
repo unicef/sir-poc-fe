@@ -5,6 +5,8 @@
     "images/**/*"
   ],
   "fragments": [
+    "sw.js",
+    "persistance-config.js",
     "src/components/non-found-module/404.js",
     "src/components/events-module/events-list.js",
     "src/components/events-module/add-event.js",

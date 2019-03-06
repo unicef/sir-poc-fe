@@ -1,9 +1,10 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-button/paper-button.js';
-import { SirMsalAuth } from './jwt/msal-authentication.js';
-
+import { SirMsalAuth } from '../auth/jwt/msal-authentication.js';
+import './request-access-form.js';
 /**
  * @customElement
  * @polymer
@@ -66,6 +67,10 @@ class SirLogin extends PolymerElement {
           @apply --layout-center;
           text-align: center;
         }
+
+        paper-input {
+          margin-bottom: 16px;
+        }
       </style>
 
       <div class="icons">
@@ -73,12 +78,56 @@ class SirLogin extends PolymerElement {
         <img src="../../../images/manifest/icon-96x96.png" id="sir-icon"></img>
         <iron-icon id="login-icon" icon="account-circle"></iron-icon>
       </div>
-      <div id="login-area">
-        <h1>Welcome to UNICEF SIR</h1>
-        <p>Sign into your Microsoft Account</p>
-        <paper-button raised on-tap="_login">Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
-      </div>
+
+      <div id="content-column">
+        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
+          <div name="login">
+            <h1>Welcome to UNICEF SIR</h1>
+            <p>Sign into your Microsoft Account</p>
+            <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+            <paper-button raised on-tap="_showRequestAccessForm"> Request Access </paper-button>
+          </div>
+
+          <div name="successMessage">
+            <h3> Access Requested. You will receive an email after access is granted. </h3>
+          </div>
+
+          <request-access-form name="requestAccess"
+                               on-navigate-back="_showLoginForm"
+                               on-submit-success="_showSuccessForm">
+          </request-access-form>
+
+
+        </div>
+        </iron-pages>
+
     `;
+
+  }
+
+  static get properties() {
+    return {
+      page: {
+        type: String,
+        value: 'login'
+      },
+      requester: {
+        type: Object,
+        value: {}
+      }
+    }
+  }
+
+  _showRequestAccessForm() {
+    this.page = 'requestAccess';
+  }
+
+  _showLoginForm() {
+    this.page = 'login';
+  }
+
+  _showSuccessForm() {
+    this.page = 'successMessage';
   }
 
   _login() {
@@ -86,6 +135,7 @@ class SirLogin extends PolymerElement {
       window.location.reload();
     });
   }
+
 }
 
 window.customElements.define('sir-login', SirLogin);

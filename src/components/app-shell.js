@@ -269,6 +269,18 @@ class AppShell extends connect(store)(PermissionsBase) {
     super.connectedCallback();
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     this.showPrefferedBrowserMessage();
+    this.checkForIdleState();
+  }
+
+  sendMessageToServiceWorker(msg){
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage(msg);
+    }
+  }
+
+  checkForIdleState() {
+    document.addEventListener('mouseup', () => this.sendMessageToServiceWorker('Mouse did something, not idle'));
+    document.addEventListener('keyup', () => this.sendMessageToServiceWorker('key pressed, not idle'));
   }
 
   _locationChanged(path, queryParams) {

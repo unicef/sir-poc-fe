@@ -9,6 +9,10 @@ export const Endpoints = {
     url: baseUrl + '/api/profile',
     method: 'GET'
   },
+  requestAccess: {
+    url: baseUrl + '/api/register/',
+    method: 'POST'
+  },
   eventsList: {
     url: baseUrl + '/api/events/',
     method: 'GET'
@@ -205,11 +209,13 @@ export const Endpoints = {
   },
   regions: {
     url: baseUrl + '/api/regions/',
-    method: 'GET'
+    method: 'GET',
+    cachingPeriod: 60000
   },
   countries: {
     url: baseUrl + '/api/countries/',
-    method: 'GET'
+    method: 'GET',
+    cachingPeriod: 60000
   },
   teams: {
     url: baseUrl + '/api/teams/',

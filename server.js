@@ -33,9 +33,7 @@ function getSourcesPath(request) {
 app.get(/.*service-worker\.js/, function(req, res) {
   res.sendFile(getSourcesPath(req) + 'service-worker.js');
 });
-app.get(/.*sw\.js/, function(req, res) {
-  res.sendFile(getSourcesPath(req) + 'sw.js');
-});
+
 app.get(/.*persistance-config.js\.js/, function(req, res) {
   res.sendFile(getSourcesPath(req) + 'persistance-config.js.js');
 });

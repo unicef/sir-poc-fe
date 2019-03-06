@@ -30,7 +30,6 @@ import { encryptState } from './storage/utils.js';
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
 const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
-let key;
 
 const persistConfig = {
   key: 'sir-app',

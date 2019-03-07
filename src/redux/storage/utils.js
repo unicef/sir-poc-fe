@@ -3,9 +3,13 @@ import { makeRequest } from '../../components/common/request-helper.js';
 import { Endpoints } from '../../config/endpoints.js';
 import { ERASE_DATABASE_AFTER } from '../../config/general.js';
 
-makeRequest(Endpoints.myKey).then((result) => {
-  updateStoredKey(result.key);
-});
+const fetchKey = () => {
+  makeRequest(Endpoints.myKey).then((result) => {
+    updateStoredKey(result.key);
+  });
+};
+
+fetchKey();
 
 const updateStoredKey = (key) => {
   resetKey();
@@ -16,6 +20,10 @@ const getKey = () => {
   let index = document.cookie.indexOf('key=');
 
   if (index < 0) {
+    if (navigator.onLine) {
+      fetchKey();
+    }
+
     return null;
   }
 

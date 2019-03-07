@@ -21,6 +21,7 @@
   "extraDependencies": [
     "manifest.json",
     "node_modules/msal/dist/msal.min.js",
+    "node_modules/crypto-js/crypto-js.js",
     "node_modules/moment/min/moment.min.js",
     "node_modules/@webcomponents/webcomponentsjs/*.js",
     "!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",
@@ -43,7 +44,7 @@
       "html": {
         "minify": true
       },
-      "bundle": true,
+      "bundle": false,
       "addServiceWorker": true
     },
     {

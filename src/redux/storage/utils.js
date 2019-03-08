@@ -10,19 +10,17 @@ const fetchKey = () => {
   });
 };
 
-// fetchKey();
-
 const updateStoredKey = (key) => {
   resetKey();
   setKey(key, new Date(Date.now() + ERASE_DATABASE_AFTER));
 }
 
-const getKey = async () => {
+const getKey = () => {
   let index = document.cookie.indexOf('key=');
 
   if (index < 0) {
     if (navigator.onLine) {
-      return await fetchKey();
+      fetchKey();
     }
 
     return null;
@@ -49,16 +47,24 @@ export const resetKeyExpiry = () => {
 
 export const encryptState = createTransform(
   (inboundState) => {
-    if (!inboundState) return inboundState;
+    if (!inboundState) {
+      return inboundState;
+    }
     const cryptedText = CryptoJS.AES.encrypt(JSON.stringify(inboundState), getKey());
 
     return cryptedText.toString();
   },
   (outboundState) => {
-    if (!outboundState) return outboundState;
+    if (!outboundState) {
+      return outboundState;
+    }
     const bytes = CryptoJS.AES.decrypt(outboundState, getKey());
     const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
     return JSON.parse(decrypted);
   },
 );
+
+export const initEncryption = () => {
+  return fetchKey().then(() => console.log('key received'));
+};

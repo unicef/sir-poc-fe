@@ -4,24 +4,25 @@ import { Endpoints } from '../../config/endpoints.js';
 import { ERASE_DATABASE_AFTER } from '../../config/general.js';
 
 const fetchKey = () => {
-  makeRequest(Endpoints.myKey).then((result) => {
+  return makeRequest(Endpoints.myKey).then((result) => {
     updateStoredKey(result.key);
+    return result.key;
   });
 };
 
-fetchKey();
+// fetchKey();
 
 const updateStoredKey = (key) => {
   resetKey();
   setKey(key, new Date(Date.now() + ERASE_DATABASE_AFTER));
 }
 
-const getKey = () => {
+const getKey = async () => {
   let index = document.cookie.indexOf('key=');
 
   if (index < 0) {
     if (navigator.onLine) {
-      fetchKey();
+      return await fetchKey();
     }
 
     return null;

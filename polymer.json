@@ -44,7 +44,9 @@
       "html": {
         "minify": true
       },
-      "bundle": false,
+      "bundle": {
+        "exclude": "app-loader.js"
+      },
       "addServiceWorker": true
     },
     {
@@ -60,7 +62,9 @@
       "html": {
         "minify": true
       },
-      "bundle": true,
+      "bundle": {
+        "exclude": "app-loader.js"
+      },
       "addServiceWorker": true
     }
   ],

@@ -32,6 +32,8 @@ import { installOfflineWatcher } from 'pwa-helpers/network.js';
 import './snack-bar/snack-bar.js';
 import './snack-bar/ios-shortcut-dialog.js';
 import { store } from '../redux/store.js';
+import { resetKeyExpiry } from '../redux/storage/utils.js';
+import { CHECK_IDLE_STATE_INTERVAL } from '../config/general.js';
 import { PermissionsBase } from './common/permissions-base-class.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 
@@ -272,15 +274,19 @@ class AppShell extends connect(store)(PermissionsBase) {
     this.checkForIdleState();
   }
 
-  sendMessageToServiceWorker(msg){
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage(msg);
-    }
-  }
-
   checkForIdleState() {
-    document.addEventListener('mouseup', () => this.sendMessageToServiceWorker('Mouse did something, not idle'));
-    document.addEventListener('keyup', () => this.sendMessageToServiceWorker('key pressed, not idle'));
+    let lastActivityTimestamp = Date.now();
+    let lastTimeWeRest = Date.now();
+
+    document.addEventListener('mouseup', () => lastActivityTimestamp = Date.now());
+    document.addEventListener('keyup', () => lastActivityTimestamp = Date.now());
+
+    this.idleCheckInterval = this.idleCheckInterval || setInterval(() => {
+      if (lastActivityTimestamp !== lastTimeWeRest) {
+        resetKeyExpiry();
+        lastTimeWeRest = lastActivityTimestamp;
+      }
+    }, CHECK_IDLE_STATE_INTERVAL);
   }
 
   _locationChanged(path, queryParams) {

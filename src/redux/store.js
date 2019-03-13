@@ -25,6 +25,7 @@ import incidents from '../reducers/incidents.js';
 import staticData from '../reducers/static-data.js';
 
 import { getStorage } from './storage/storage-loader.js';
+import { encryptState, initEncryption } from './storage/utils.js';
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.
@@ -32,6 +33,7 @@ const compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || origCompose;
 
 const persistConfig = {
   key: 'sir-app',
+  transforms: [encryptState],
   storage: getStorage(),
   blacklist: ['errors', 'app', 'users']
 };
@@ -59,6 +61,7 @@ const persistorReady = () => new Promise((resolve, reject) => {
 });
 
 export const initStore = async () => {
+  await initEncryption();
   await persistorReady();
   store.dispatch(storeReady());
 };

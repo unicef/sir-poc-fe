@@ -31,6 +31,14 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
           handlers: {}
         }
       },
+      sortingOptions: {
+        type: Array,
+        value: []
+      },
+      selectedFilter: {
+        type: Object,
+        value: null
+      },
       getUserName: {
         type: Function,
         value: () => getUserName
@@ -47,7 +55,8 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     return [
       'filterData(listItems)',
       'filterData(pagination.*)',
-      'filterData(filters.values.*)'
+      'filterData(filters.values.*)',
+      'filterData(selectedFilter)'
     ];
   }
 
@@ -87,10 +96,9 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   filterData() {
-    if (!this.visible) {
+    if (!this.visible || !this.selectedFilter) {
       return false;
     }
-
     let filteredItems = JSON.parse(JSON.stringify(this.listItems));
     let allFilters = Object.keys(this.filters.handlers);
 
@@ -106,9 +114,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
       return true;
     });
 
-    filteredItems.sort((left, right) => {
-      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
-    });
+    filteredItems.sort(this.selectedFilter.method);
 
     this.updateFiltersQueryString();
     this.filteredItems = this.applyPagination(filteredItems);
@@ -134,6 +140,16 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     if (this.$.toggleIcon) {
       this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
     }
+  }
+
+  _alphabeticalSort(left, right)  {
+    if (left < right) {
+      return -1;
+    }
+    if (left > right) {
+      return 1;
+    }
+    return 0;
   }
 
   deserializeFilters(query) {

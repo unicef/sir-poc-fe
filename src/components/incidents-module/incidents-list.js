@@ -171,8 +171,22 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       </div>
 
       <div class="card list">
+        <div class="row-h flex-c">
+          <span class="col-9">
+            <h3> Incidents </h3>
+          </span>
+          <span class="col-3">
+            <etools-dropdown-lite id="incidentSorting"
+                                  label="Sorting"
+                                  options="[[sortingOptions]]"
+                                  selected-item="{{selectedFilter}}">
+            </etools-dropdown-lite>
+          </span>
+        </div>
+
         <etools-data-table-header id="listHeader"
-                                  label="Incidents"
+                                  no-title
+                                  no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-2">
             Case Number
@@ -292,11 +306,11 @@ class IncidentsList extends connect(store)(ListBaseClass) {
               <div class="row-details-content flex-c">
                 <div class="row-h flex-c">
                   <div class="col col-6">
-                    <strong class="rdc-title inline">Created by: </strong>
+                    <strong class="rdc-title inline"> Created by: </strong>
                     <span>[[getUserName(item.created_by_user_id)]]</span>
                   </div>
                   <div class="col col-6">
-                    <strong class="rdc-title inline">Created on: </strong>
+                    <strong class="rdc-title inline"> Created on: </strong>
                     <span>[[prettyDate(item.created_on, 'D-MMM-YYYY hh:mm A')]]</span>
                   </div>
                 </div>
@@ -345,6 +359,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   connectedCallback() {
     this.initFilters(); // causes slow filter init if not first
     super.connectedCallback();
+    this.initSorting();
   }
 
   _stateChanged(state) {
@@ -387,6 +402,52 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         q: this.searchFilter
       }
     };
+  }
+
+  initSorting() {
+    this.sortingOptions = [
+      {
+        name: 'Newest created',
+        id: 'date_created_asc',
+        default: true,
+        method: ((left, right) => moment.utc(right.created_on).diff(moment.utc(left.created_on)))
+      },
+      {
+        name: 'Oldest created',
+        id: 'date_created_desc',
+        default: false,
+        method: ((left, right) => moment.utc(left.created_on).diff(moment.utc(right.created_on)))
+      },
+      {
+        name: 'Newest modified',
+        id: 'date_modified_asc',
+        default: false,
+        method: ((left, right) => moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date)))
+      },
+      {
+        name: 'Oldest modified',
+        id: 'date_modified_desc',
+        default: false,
+        method: ((left, right) => moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date)))
+      },
+      {
+        name: 'Description alphabetical',
+        id: 'description_asc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(left.description, right.description))
+      },
+      {
+        name: 'Description unalphabetical',
+        id: 'description_desc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(right.description, left.description))
+      }
+    ];
+
+    if (!this.selectedFilter) {
+      let defaultSorting = this.sortingOptions.find(option => option.default);
+      this.selectedFilter =  {...defaultSorting};
+    }
   }
 
   incidentSubcategoryFilter(incident, selectedSubCategory) {

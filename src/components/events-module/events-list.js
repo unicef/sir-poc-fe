@@ -109,7 +109,22 @@ class EventsList extends connect(store)(ListBaseClass) {
       </div>
 
       <div class="card list">
-        <etools-data-table-header id="listHeader" label="Events" low-resolution-layout="[[lowResolutionLayout]]">
+        <div class="row-h flex-c">
+          <span class="col-9">
+            <h3> Events </h3>
+          </span>
+          <span class="col-3">
+            <etools-dropdown-lite id="eventSorting"
+                                  label="Sorting"
+                                  options="[[sortingOptions]]"
+                                  selected-item="{{selectedFilter}}">
+            </etools-dropdown-lite>
+          </span>
+        </div>
+        <etools-data-table-header id="listHeader"
+                                  no-title
+                                  no-collapse
+                                  low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
             Case number
           </etools-data-table-column>
@@ -236,6 +251,7 @@ class EventsList extends connect(store)(ListBaseClass) {
   connectedCallback() {
     this.initFilters(); // causes slow filter init if not first
     super.connectedCallback();
+    this.initSorting();
   }
 
   _stateChanged(state) {
@@ -262,6 +278,40 @@ class EventsList extends connect(store)(ListBaseClass) {
         q: this.searchFilter
       }
     };
+  }
+
+  initSorting() {
+    this.sortingOptions = [
+      {
+        name: 'Newest created',
+        id: 'date_created_asc',
+        default: true,
+        method: ((left, right) => moment.utc(right.created_on).diff(moment.utc(left.created_on)))
+      },
+      {
+        name: 'Oldest created',
+        id: 'date_created_desc',
+        default: false,
+        method: ((left, right) => moment.utc(left.created_on).diff(moment.utc(right.created_on)))
+      },
+      {
+        name: 'Newest modified',
+        id: 'date_modified_asc',
+        default: false,
+        method: ((left, right) => moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date)))
+      },
+      {
+        name: 'Oldest modified',
+        id: 'date_modified_desc',
+        default: false,
+        method: ((left, right) => moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date)))
+      },
+    ];
+
+    if (!this.selectedFilter) {
+      let defaultSorting = this.sortingOptions.find(option => option.default);
+      this.selectedFilter =  {...defaultSorting};
+    }
   }
 
   syncStatusFilter(event, selectedSyncStatuses = []) {

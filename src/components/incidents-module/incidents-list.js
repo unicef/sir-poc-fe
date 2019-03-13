@@ -435,7 +435,43 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         id: 'description_desc',
         default: false,
         method: ((left, right) => this._alphabeticalSort(right.description, left.description))
-      }
+      },
+      {
+        name: 'City alphabetical',
+        id: 'city_asc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(left.city, right.city))
+      },
+      {
+        name: 'City unalphabetical',
+        id: 'city_desc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(right.city, left.city))
+      },
+      {
+        name: 'Status alphabetical',
+        id: 'status_asc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(left.status, right.status))
+      },
+      {
+        name: 'Status unalphabetical',
+        id: 'status_desc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(right.status, left.status))
+      },
+      {
+        name: 'Case Number ascending',
+        id: 'case_number_asc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(left.case_number, right.case_number))
+      },
+      {
+        name: 'Case Number descending',
+        id: 'case_number_desc',
+        default: false,
+        method: ((left, right) => this._alphabeticalSort(right.case_number, left.case_number))
+      },
     ];
   }
 

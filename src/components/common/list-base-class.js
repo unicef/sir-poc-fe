@@ -35,7 +35,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
         type: Array,
         value: []
       },
-      selectedFilter: {
+      selectedSorting: {
         type: Object,
         value: null
       },
@@ -56,7 +56,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
       'filterData(listItems)',
       'filterData(pagination.*)',
       'filterData(filters.values.*)',
-      'filterData(selectedFilter)'
+      'filterData(selectedSorting)'
     ];
   }
 
@@ -86,14 +86,14 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   checkForDefaultFilter() {
-    if (!this.selectedFilter) {
+    if (!this.selectedSorting) {
       let defaultSorting = this.sortingOptions.find(option => option.default);
-      this.selectedFilter =  {...defaultSorting};
+      this.selectedSorting =  {...defaultSorting};
     }
   }
 
   setSorting(sortingId) {
-    this.selectedFilter = this.sortingOptions.find(option => option.id === sortingId);
+    this.selectedSorting = this.sortingOptions.find(option => option.id === sortingId);
   }
 
   visibilityChanged(visible) {
@@ -116,7 +116,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   filterData() {
-    if (!this.visible || !this.selectedFilter) {
+    if (!this.visible || !this.selectedSorting) {
       return false;
     }
     let filteredItems = JSON.parse(JSON.stringify(this.listItems));
@@ -134,7 +134,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
       return true;
     });
 
-    filteredItems.sort(this.selectedFilter.method);
+    filteredItems.sort(this.selectedSorting.method);
 
     this.updateFiltersQueryString();
     this.filteredItems = this.applyPagination(filteredItems);
@@ -143,7 +143,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   updateFiltersQueryString() {
     this.set('lastQueryString', this.serializeFilters({
       ...this.filters.values,
-      sort: this.selectedFilter.id
+      sort: this.selectedSorting.id
     }));
   }
 

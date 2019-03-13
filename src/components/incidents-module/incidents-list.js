@@ -179,7 +179,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             <etools-dropdown-lite id="incidentSorting"
                                   label="Sorting"
                                   options="[[sortingOptions]]"
-                                  selected-item="{{selectedFilter}}">
+                                  selected-item="{{selectedSorting}}">
             </etools-dropdown-lite>
           </span>
         </div>

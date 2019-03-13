@@ -117,7 +117,7 @@ class EventsList extends connect(store)(ListBaseClass) {
             <etools-dropdown-lite id="eventSorting"
                                   label="Sorting"
                                   options="[[sortingOptions]]"
-                                  selected-item="{{selectedFilter}}">
+                                  selected-item="{{selectedSorting}}">
             </etools-dropdown-lite>
           </span>
         </div>

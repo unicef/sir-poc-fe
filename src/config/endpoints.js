@@ -1,8 +1,12 @@
 const baseUrl = window.location.origin;
 
 export const Endpoints = {
+  myKey: {
+    url: baseUrl + '/api/profile/key/',
+    method: 'GET'
+  },
   myProfile: {
-    url: baseUrl + '/api/profile',
+    url: baseUrl + '/api/profile/',
     method: 'GET'
   },
   requestAccess: {
@@ -218,7 +222,8 @@ export const Endpoints = {
     method: 'GET'
   },
   users: {
-    url: baseUrl + '/api/users/',
+    url: 'https://graph.microsoft.com/v1.0/users/',
+    // url: baseUrl + '/api/users/',
     method: 'GET'
   },
   weapons: {

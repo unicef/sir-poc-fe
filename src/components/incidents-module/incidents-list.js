@@ -288,10 +288,12 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                   </a>
                 </template>
                 <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                  <span> <!-- This container is mostly useless, but without it the icon doesn't render -->
                     <iron-icon icon="notification:sync" title="Sync Incident" class="action-btn" on-click="_syncItem">
                     </iron-icon>
+                  </span>
                 </template>
-                <div class="export-btn hidden-on-mobile">
+                <div class="export-btn hidden-on-mobile" hidden$="[[!hasPermission('export_data')]]">
                   <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
                     <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
                     <paper-listbox slot="dropdown-content" on-iron-select="exportItem">

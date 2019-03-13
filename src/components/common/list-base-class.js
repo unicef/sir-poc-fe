@@ -65,7 +65,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     super.connectedCallback();
     this.initSorting();
     this.loadFiltersFromQueryParams();
-    this.checkForDefaultFilter();
+    this.checkForDefaultSorting();
   }
 
   loadFiltersFromQueryParams() {
@@ -85,7 +85,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     console.warn('Sorting options not initiated!');
   }
 
-  checkForDefaultFilter() {
+  checkForDefaultSorting() {
     if (!this.selectedSorting) {
       let defaultSorting = this.sortingOptions.find(option => option.default);
       this.selectedSorting =  {...defaultSorting};

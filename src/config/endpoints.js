@@ -2,7 +2,7 @@ const baseUrl = window.location.origin;
 
 export const Endpoints = {
   myProfile: {
-    url: baseUrl + '/api/profile',
+    url: baseUrl + '/api/profile/',
     method: 'GET'
   },
   requestAccess: {

@@ -24,7 +24,6 @@ module.exports = {
       handler: 'fastest'
     }
   ],
-  importScripts: ['sw.js'],
   navigateFallbackWhitelist: [/^(?!\/admin\/)/]
 };
 // TODO: figure out a viable way of importing msal only when needed

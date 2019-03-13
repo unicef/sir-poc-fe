@@ -356,12 +356,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     };
   }
 
-  connectedCallback() {
-    this.initFilters(); // causes slow filter init if not first
-    super.connectedCallback();
-    this.initSorting();
-  }
-
   _stateChanged(state) {
     if (!state) {
       return;
@@ -443,11 +437,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         method: ((left, right) => this._alphabeticalSort(right.description, left.description))
       }
     ];
-
-    if (!this.selectedFilter) {
-      let defaultSorting = this.sortingOptions.find(option => option.default);
-      this.selectedFilter =  {...defaultSorting};
-    }
   }
 
   incidentSubcategoryFilter(incident, selectedSubCategory) {

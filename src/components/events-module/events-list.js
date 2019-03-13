@@ -248,12 +248,6 @@ class EventsList extends connect(store)(ListBaseClass) {
     };
   }
 
-  connectedCallback() {
-    this.initFilters(); // causes slow filter init if not first
-    super.connectedCallback();
-    this.initSorting();
-  }
-
   _stateChanged(state) {
     if (!state) {
       return;
@@ -307,11 +301,6 @@ class EventsList extends connect(store)(ListBaseClass) {
         method: ((left, right) => moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date)))
       },
     ];
-
-    if (!this.selectedFilter) {
-      let defaultSorting = this.sortingOptions.find(option => option.default);
-      this.selectedFilter =  {...defaultSorting};
-    }
   }
 
   syncStatusFilter(event, selectedSyncStatuses = []) {

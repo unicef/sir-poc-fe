@@ -61,19 +61,39 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   connectedCallback() {
+    this.initFilters(); // causes slow filter init if not first
     super.connectedCallback();
+    this.initSorting();
     this.loadFiltersFromQueryParams();
+    this.checkForDefaultFilter();
   }
 
   loadFiltersFromQueryParams() {
     let queryParams = store.getState().app.locationInfo.queryParams;
     if (typeof queryParams !== 'undefined') {
-      this.set('filters.values', this.deserializeFilters(queryParams));
+      let filters = this.deserializeFilters(queryParams);
+      this.set('filters.values', filters);
+      this.setSorting(filters.sort);
     }
   }
 
   initFilters() {
     console.warn('List filters not initiated!');
+  }
+
+  initSorting() {
+    console.warn('Sorting options not initiated!');
+  }
+
+  checkForDefaultFilter() {
+    if (!this.selectedFilter) {
+      let defaultSorting = this.sortingOptions.find(option => option.default);
+      this.selectedFilter =  {...defaultSorting};
+    }
+  }
+
+  setSorting(sortingId) {
+    this.selectedFilter = this.sortingOptions.find(option => option.id === sortingId);
   }
 
   visibilityChanged(visible) {
@@ -121,7 +141,10 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   updateFiltersQueryString() {
-    this.set('lastQueryString', this.serializeFilters(this.filters.values));
+    this.set('lastQueryString', this.serializeFilters({
+      ...this.filters.values,
+      sort: this.selectedFilter.id
+    }));
   }
 
   _showToggleFiltersBtnChanged(show) {

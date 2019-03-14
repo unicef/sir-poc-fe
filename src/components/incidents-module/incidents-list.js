@@ -171,8 +171,22 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       </div>
 
       <div class="card list">
+        <div class="row-h flex-c">
+          <span class="col-9">
+            <h3> Incidents </h3>
+          </span>
+          <span class="col-3">
+            <etools-dropdown-lite id="incidentSorting"
+                                  label="Sorting"
+                                  options="[[sortingOptions]]"
+                                  selected-item="{{selectedSorting}}">
+            </etools-dropdown-lite>
+          </span>
+        </div>
+
         <etools-data-table-header id="listHeader"
-                                  label="Incidents"
+                                  no-title
+                                  no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-2">
             Case Number
@@ -294,11 +308,11 @@ class IncidentsList extends connect(store)(ListBaseClass) {
               <div class="row-details-content flex-c">
                 <div class="row-h flex-c">
                   <div class="col col-6">
-                    <strong class="rdc-title inline">Created by: </strong>
+                    <strong class="rdc-title inline"> Created by: </strong>
                     <span>[[getUserName(item.created_by_user_id)]]</span>
                   </div>
                   <div class="col col-6">
-                    <strong class="rdc-title inline">Created on: </strong>
+                    <strong class="rdc-title inline"> Created on: </strong>
                     <span>[[prettyDate(item.created_on, 'D-MMM-YYYY hh:mm A')]]</span>
                   </div>
                 </div>
@@ -344,11 +358,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     };
   }
 
-  connectedCallback() {
-    this.initFilters(); // causes slow filter init if not first
-    super.connectedCallback();
-  }
-
   _stateChanged(state) {
     if (!state) {
       return;
@@ -389,6 +398,83 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         q: this.searchFilter
       }
     };
+  }
+
+  initSorting() {
+    this.sortingOptions = [
+      {
+        name: 'Newest created first',
+        id: 'date_created_desc',
+        default: true,
+        method: ((left, right) => this.chronologicalSort(right.created_on, left.created_on))
+      },
+      {
+        name: 'Oldest created first',
+        id: 'date_created_asc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(left.created_on, right.created_on))
+      },
+      {
+        name: 'Newest modified first',
+        id: 'date_modified_desc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(right.last_modify_date, left.last_modify_date))
+      },
+      {
+        name: 'Oldest modified first',
+        id: 'date_modified_asc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(left.last_modify_date, right.last_modify_date))
+      },
+      {
+        name: 'Description alphabetical',
+        id: 'description_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.description, right.description))
+      },
+      {
+        name: 'Description unalphabetical',
+        id: 'description_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.description, left.description))
+      },
+      {
+        name: 'City alphabetical',
+        id: 'city_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.city, right.city))
+      },
+      {
+        name: 'City unalphabetical',
+        id: 'city_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.city, left.city))
+      },
+      {
+        name: 'Status alphabetical',
+        id: 'status_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.status, right.status))
+      },
+      {
+        name: 'Status unalphabetical',
+        id: 'status_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.status, left.status))
+      },
+      {
+        name: 'Case Number ascending',
+        id: 'case_number_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.case_number, right.case_number))
+      },
+      {
+        name: 'Case Number descending',
+        id: 'case_number_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.case_number, left.case_number))
+      }
+    ];
   }
 
   incidentSubcategoryFilter(incident, selectedSubCategory) {

@@ -31,6 +31,14 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
           handlers: {}
         }
       },
+      sortingOptions: {
+        type: Array,
+        value: []
+      },
+      selectedSorting: {
+        type: Object,
+        value: null
+      },
       getUserName: {
         type: Function,
         value: () => getUserName
@@ -47,24 +55,45 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     return [
       'filterData(listItems)',
       'filterData(pagination.*)',
-      'filterData(filters.values.*)'
+      'filterData(filters.values.*)',
+      'filterData(selectedSorting)'
     ];
   }
 
   connectedCallback() {
+    this.initFilters(); // causes slow filter init if not first
     super.connectedCallback();
+    this.initSorting();
     this.loadFiltersFromQueryParams();
+    this.checkForDefaultSorting();
   }
 
   loadFiltersFromQueryParams() {
     let queryParams = store.getState().app.locationInfo.queryParams;
     if (typeof queryParams !== 'undefined') {
-      this.set('filters.values', this.deserializeFilters(queryParams));
+      let filters = this.deserializeFilters(queryParams);
+      this.set('filters.values', filters);
+      this.setSorting(filters.sort);
     }
   }
 
   initFilters() {
     console.warn('List filters not initiated!');
+  }
+
+  initSorting() {
+    console.warn('Sorting options not initiated!');
+  }
+
+  checkForDefaultSorting() {
+    if (!this.selectedSorting) {
+      let defaultSorting = this.sortingOptions.find(option => option.default);
+      this.selectedSorting = defaultSorting;
+    }
+  }
+
+  setSorting(sortingId) {
+    this.selectedSorting = this.sortingOptions.find(option => option.id === sortingId);
   }
 
   visibilityChanged(visible) {
@@ -87,10 +116,9 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   }
 
   filterData() {
-    if (!this.visible) {
+    if (!this.visible || !this.selectedSorting) {
       return false;
     }
-
     let filteredItems = JSON.parse(JSON.stringify(this.listItems));
     let allFilters = Object.keys(this.filters.handlers);
 
@@ -106,16 +134,17 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
       return true;
     });
 
-    filteredItems.sort((left, right) => {
-      return moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date));
-    });
+    filteredItems.sort(this.selectedSorting.method);
 
     this.updateFiltersQueryString();
     this.filteredItems = this.applyPagination(filteredItems);
   }
 
   updateFiltersQueryString() {
-    this.set('lastQueryString', this.serializeFilters(this.filters.values));
+    this.set('lastQueryString', this.serializeFilters({
+      ...this.filters.values,
+      sort: this.selectedSorting.id
+    }));
   }
 
   _showToggleFiltersBtnChanged(show) {
@@ -134,6 +163,20 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     if (this.$.toggleIcon) {
       this.$.toggleIcon.icon = this.$.collapse.opened ? 'icons:expand-less' : 'icons:expand-more';
     }
+  }
+
+  chronologicalSort(left, right) {
+    return moment.utc(left).diff(moment.utc(right));
+  }
+
+  alphabeticalSort(left, right)  {
+    if (left < right) {
+      return -1;
+    }
+    if (left > right) {
+      return 1;
+    }
+    return 0;
   }
 
   deserializeFilters(query) {

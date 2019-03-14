@@ -109,7 +109,22 @@ class EventsList extends connect(store)(ListBaseClass) {
       </div>
 
       <div class="card list">
-        <etools-data-table-header id="listHeader" label="Events" low-resolution-layout="[[lowResolutionLayout]]">
+        <div class="row-h flex-c">
+          <span class="col-9">
+            <h3> Events </h3>
+          </span>
+          <span class="col-3">
+            <etools-dropdown-lite id="eventSorting"
+                                  label="Sorting"
+                                  options="[[sortingOptions]]"
+                                  selected-item="{{selectedSorting}}">
+            </etools-dropdown-lite>
+          </span>
+        </div>
+        <etools-data-table-header id="listHeader"
+                                  no-title
+                                  no-collapse
+                                  low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
             Case number
           </etools-data-table-column>
@@ -233,11 +248,6 @@ class EventsList extends connect(store)(ListBaseClass) {
     };
   }
 
-  connectedCallback() {
-    this.initFilters(); // causes slow filter init if not first
-    super.connectedCallback();
-  }
-
   _stateChanged(state) {
     if (!state) {
       return;
@@ -262,6 +272,35 @@ class EventsList extends connect(store)(ListBaseClass) {
         q: this.searchFilter
       }
     };
+  }
+
+  initSorting() {
+    this.sortingOptions = [
+      {
+        name: 'Newest created first',
+        id: 'date_created_desc',
+        default: true,
+        method: ((left, right) => this.chronologicalSort(right.created_on, left.created_on))
+      },
+      {
+        name: 'Oldest created first',
+        id: 'date_created_asc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(left.created_on, right.created_on))
+      },
+      {
+        name: 'Newest modified first',
+        id: 'date_modified_desc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(right.last_modify_date, left.last_modify_date))
+      },
+      {
+        name: 'Oldest modified first',
+        id: 'date_modified_asc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(left.last_modify_date, right.last_modify_date))
+      }
+    ];
   }
 
   syncStatusFilter(event, selectedSyncStatuses = []) {

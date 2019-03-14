@@ -88,7 +88,7 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
   checkForDefaultSorting() {
     if (!this.selectedSorting) {
       let defaultSorting = this.sortingOptions.find(option => option.default);
-      this.selectedSorting =  {...defaultSorting};
+      this.selectedSorting = defaultSorting;
     }
   }
 
@@ -165,7 +165,11 @@ export class ListBaseClass extends DateMixin(PaginationMixin(PermissionsBase)) {
     }
   }
 
-  _alphabeticalSort(left, right)  {
+  chronologicalSort(left, right) {
+    return moment.utc(left).diff(moment.utc(right));
+  }
+
+  alphabeticalSort(left, right)  {
     if (left < right) {
       return -1;
     }

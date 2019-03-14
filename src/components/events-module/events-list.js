@@ -277,29 +277,29 @@ class EventsList extends connect(store)(ListBaseClass) {
   initSorting() {
     this.sortingOptions = [
       {
-        name: 'Newest created',
-        id: 'date_created_asc',
-        default: true,
-        method: ((left, right) => moment.utc(right.created_on).diff(moment.utc(left.created_on)))
-      },
-      {
-        name: 'Oldest created',
+        name: 'Newest created first',
         id: 'date_created_desc',
-        default: false,
-        method: ((left, right) => moment.utc(left.created_on).diff(moment.utc(right.created_on)))
+        default: true,
+        method: ((left, right) => this.chronologicalSort(right.created_on, left.created_on))
       },
       {
-        name: 'Newest modified',
-        id: 'date_modified_asc',
+        name: 'Oldest created first',
+        id: 'date_created_asc',
         default: false,
-        method: ((left, right) => moment.utc(right.last_modify_date).diff(moment.utc(left.last_modify_date)))
+        method: ((left, right) => this.chronologicalSort(left.created_on, right.created_on))
       },
       {
-        name: 'Oldest modified',
+        name: 'Newest modified first',
         id: 'date_modified_desc',
         default: false,
-        method: ((left, right) => moment.utc(left.last_modify_date).diff(moment.utc(right.last_modify_date)))
+        method: ((left, right) => this.chronologicalSort(right.last_modify_date, left.last_modify_date))
       },
+      {
+        name: 'Oldest modified first',
+        id: 'date_modified_asc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(left.last_modify_date, right.last_modify_date))
+      }
     ];
   }
 

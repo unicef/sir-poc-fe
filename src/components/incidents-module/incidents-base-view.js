@@ -15,8 +15,8 @@ import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-date-time/time-input.js';
-import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-import '../common/etools-dropdown/etools-dropdown-lite.js';
+import 'etools-dropdown/etools-dropdown-multi.js';
+import 'etools-dropdown/etools-dropdown.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
@@ -123,16 +123,18 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
                                       selectedIncidentCategory.comment)]]">
-                  <etools-dropdown-lite id="incidentCat"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Incident Category"
-                                        options="[[staticData.incidentCategories]]"
-                                        selected="{{incident.incident_category}}"
-                                        selected-item="{{selectedIncidentCategory}}"
-                                        required auto-validate
-                                        error-message="Incident category is required">
-                  </etools-dropdown-lite>
+                  <etools-dropdown id="incidentCat"
+                                    slot="field"
+                                    readonly="[[readonly]]"
+                                    label="Incident Category"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.incidentCategories]]"
+                                    selected="{{incident.incident_category}}"
+                                    selected-item="{{selectedIncidentCategory}}"
+                                    required auto-validate
+                                    error-message="Incident category is required">
+                  </etools-dropdown>
                   <span slot="message">[[selectedIncidentCategory.description]]<br>[[selectedIncidentCategory.comment]]
                   </span>
                 </etools-info-tooltip>
@@ -142,16 +144,18 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
                                       selectedIncidentSubcategory.comment)]]">
-                  <etools-dropdown-lite id="incidentSubcat"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Incident Subcategory"
-                                        options="[[selectedIncidentCategory.subcategories]]"
-                                        selected="{{incident.incident_subcategory}}"
-                                        selected-item="{{selectedIncidentSubcategory}}"
-                                        required auto-validate
-                                        error-message="Incident subcategory is required">
-                  </etools-dropdown-lite>
+                  <etools-dropdown id="incidentSubcat"
+                                    slot="field"
+                                    readonly="[[readonly]]"
+                                    label="Incident Subcategory"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[selectedIncidentCategory.subcategories]]"
+                                    selected="{{incident.incident_subcategory}}"
+                                    selected-item="{{selectedIncidentSubcategory}}"
+                                    required auto-validate
+                                    error-message="Incident subcategory is required">
+                  </etools-dropdown>
                   <span slot="message">
                     [[selectedIncidentSubcategory.description]]
                     <br>
@@ -165,46 +169,52 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
-                  <etools-dropdown-lite slot="field" readonly="[[readonly]]"
-                                        label="Event"
-                                        options="[[events]]"
-                                        selected="{{incident.event}}"
-                                        enable-none-option
-                                        selected-item="{{selectedEvent}}">
-                  </etools-dropdown-lite>
+                  <etools-dropdown slot="field" readonly="[[readonly]]"
+                                    label="Event"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[events]]"
+                                    selected="{{incident.event}}"
+                                    enable-none-option
+                                    selected-item="{{selectedEvent}}">
+                  </etools-dropdown>
                   <span slot="message">[[selectedEvent.note]]</span>
                 </etools-info-tooltip>
               </div>
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedThreatCategory.description]]">
-                  <etools-dropdown-lite id="threatCategory"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Threat Category"
-                                        options="[[staticData.threatCategories]]"
-                                        selected="{{incident.threat_category}}"
-                                        selected-item="{{selectedThreatCategory}}"
-                                        required auto-validate
-                                        error-message="Threat category is required">
-                  </etools-dropdown-lite>
+                  <etools-dropdown id="threatCategory"
+                                    slot="field"
+                                    readonly="[[readonly]]"
+                                    label="Threat Category"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.threatCategories]]"
+                                    selected="{{incident.threat_category}}"
+                                    selected-item="{{selectedThreatCategory}}"
+                                    required auto-validate
+                                    error-message="Threat category is required">
+                  </etools-dropdown>
                   <span slot="message">[[selectedThreatCategory.description]]</span>
                 </etools-info-tooltip>
               </div>
               <div class="col col-4">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedTarget.description]]">
-                  <etools-dropdown-lite id="target"
-                                        slot="field"
-                                        readonly="[[readonly]]"
-                                        label="Target"
-                                        options="[[staticData.targets]]"
-                                        selected="{{incident.target}}"
-                                        selected-item="{{selectedTarget}}"
-                                        required$="[[!isSpecialConditionSubcategory(selectedIncidentSubcategory)]]"
-                                        auto-validate
-                                        error-message="Target is required">
-                  </etools-dropdown-lite>
+                  <etools-dropdown id="target"
+                                    slot="field"
+                                    readonly="[[readonly]]"
+                                    label="Target"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.targets]]"
+                                    selected="{{incident.target}}"
+                                    selected-item="{{selectedTarget}}"
+                                    required$="[[!isSpecialConditionSubcategory(selectedIncidentSubcategory)]]"
+                                    auto-validate
+                                    error-message="Target is required">
+                  </etools-dropdown>
                   <span slot="message">[[selectedTarget.description]]</span>
                 </etools-info-tooltip>
               </div>
@@ -224,30 +234,35 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             <template is="dom-if" if="[[isTrafficAccident(selectedIncidentSubcategory, staticData)]]" restamp>
               <div class="row-h flex-c">
                 <div class="col col-4">
-                  <etools-dropdown-lite readonly="[[readonly]]"
-                                        label="Vehicle Type"
-                                        options="[[staticData.vehicleTypes]]"
-                                        required auto-validate
-                                        selected="{{incident.vehicle_type}}">
-                  </etools-dropdown-lite>
+                  <etools-dropdown readonly="[[readonly]]"
+                                    label="Vehicle Type"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.vehicleTypes]]"
+                                    required auto-validate
+                                    selected="{{incident.vehicle_type}}">
+                  </etools-dropdown>
                 </div>
                 <div class="col col-4">
-                  <etools-dropdown-lite readonly="[[readonly]]"
-                                        label="Crash Type"
-                                        options="[[staticData.crashTypes]]"
-                                        required auto-validate
-                                        selected="{{incident.crash_type}}">
-                  </etools-dropdown-lite>
+                  <etools-dropdown readonly="[[readonly]]"
+                                    label="Crash Type"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.crashTypes]]"
+                                    required auto-validate
+                                    selected="{{incident.crash_type}}">
+                  </etools-dropdown>
                 </div>
                 <div class="col col-4">
-                  <etools-dropdown-lite readonly="[[readonly]]"
-                                        hidden$="[[isCrashTypeOther(incident.crash_type)]]"
-                                        label="Crash Subtype"
-                                        options="[[showSubType(incident.crash_type)]]"
-                                        option-value="name"
-                                        required auto-validate
-                                        selected="{{incident.crash_sub_type}}">
-                  </etools-dropdown-lite>
+                  <etools-dropdown readonly="[[readonly]]"
+                                    hidden$="[[isCrashTypeOther(incident.crash_type)]]"
+                                    label="Crash Subtype"
+                                    options="[[showSubType(incident.crash_type)]]"
+                                    option-label="name"
+                                    option-value="name"
+                                    required auto-validate
+                                    selected="{{incident.crash_sub_type}}">
+                  </etools-dropdown>
                   <paper-input readonly="[[readonly]]"
                               label="Crash Subtype"
                               type="text"
@@ -261,12 +276,14 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               </div>
               <div class="row-h flex-c">
                 <div class="col col-4">
-                  <etools-dropdown-lite readonly="[[readonly]]"
-                                        label="Contributing factor"
-                                        options="[[staticData.factors]]"
-                                        required auto-validate
-                                        selected="{{incident.contributing_factor}}">
-                  </etools-dropdown-lite>
+                  <etools-dropdown readonly="[[readonly]]"
+                                    label="Contributing factor"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.factors]]"
+                                    required auto-validate
+                                    selected="{{incident.contributing_factor}}">
+                  </etools-dropdown>
                 </div>
                 <div class="col col-3">
                   <paper-checkbox checked="{{incident.near_miss}}"
@@ -311,23 +328,26 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="col col-3 p-relative">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                     hide-tooltip$="[[!selectedCriticality.description]]">
-                  <etools-dropdown-lite slot="field" readonly="[[readonly]]"
-                                        label="Criticality"
-                                        options="[[staticData.criticalities]]"
-                                        selected="{{incident.criticality}}"
-                                        enable-none-option
-                                        selected-item="{{selectedCriticality}}">
-                  </etools-dropdown-lite>
+                  <etools-dropdown slot="field" readonly="[[readonly]]"
+                                    label="Criticality"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.criticalities]]"
+                                    selected="{{incident.criticality}}"
+                                    enable-none-option
+                                    selected-item="{{selectedCriticality}}">
+                  </etools-dropdown>
                   <span slot="message">[[selectedCriticality.description]]</span>
                 </etools-info-tooltip>
               </div>
               <div class="col col-3" hidden$="[[isSafetyIncident(selectedIncidentCategory)]]">
-                <etools-dropdown-multi-lite hidden$="[[isSafetyIncident(selectedIncidentCategory)]]"
-                                            readonly="[[readonly]]"
-                                            label="Weapons used"
-                                            options="[[staticData.weapons]]"
-                                            selected-values="{{incident.weapons_used}}">
-                </etools-dropdown-multi-lite>
+                <etools-dropdown-multi option-label="name"
+                                       option-value="id"
+                                       readonly="[[readonly]]"
+                                       label="Weapons used"
+                                       options="[[staticData.weapons]]"
+                                       selected-values="{{incident.weapons_used}}">
+                </etools-dropdown-multi>
               </div>
               <div class="col col-3">
                 <paper-checkbox checked="{{pressCoverageSelected}}" disabled="[[readonly]]">
@@ -352,30 +372,33 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
-                <etools-dropdown-lite id="region"
-                                      readonly="[[readonly]]"
-                                      required auto-validate
-                                      label="Region"
-                                      options="[[staticData.regions]]"
-                                      selected="{{incident.region}}">
-                </etools-dropdown-lite>
+                <etools-dropdown id="region"
+                                  readonly="[[readonly]]"
+                                  required auto-validate
+                                  label="Region"
+                                  option-label="name"
+                                  option-value="id"
+                                  options="[[staticData.regions]]"
+                                  selected="{{incident.region}}">
+                </etools-dropdown>
               </div>
 
               <div class="col col-3">
-                <etools-dropdown-lite id="country"
-                                      readonly="[[readonly]]"
-                                      disabled$="[[!incident.region]]"
-                                      label="Country"
-                                      options="[[getCountriesForRegion(incident.region, staticData.countries)]]"
-                                      selected="{{incident.country}}"
-                                      required auto-validate
-                                      error-message="Country is required">
-                </etools-dropdown-lite>
+                <etools-dropdown id="country"
+                                  readonly="[[readonly]]"
+                                  disabled$="[[!incident.region]]"
+                                  label="Country"
+                                  option-label="name"
+                                  option-value="id"
+                                  options="[[getCountriesForRegion(incident.region, staticData.countries)]]"
+                                  selected="{{incident.country}}"
+                                  required auto-validate
+                                  error-message="Country is required">
+                </etools-dropdown>
               </div>
 
               <div class="col col-3">
-                <paper-input
-                              id="city"
+                <paper-input id="city"
                               label="City"
                               auto-validate
                               placeholder="&#8212;"

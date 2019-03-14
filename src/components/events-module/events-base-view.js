@@ -10,10 +10,10 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import 'etools-date-time/datepicker-lite.js';
+import 'etools-dropdown/etools-dropdown.js';
 
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
-import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
@@ -67,25 +67,29 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
         </div>
         <div class="row-h flex-c">
           <div class="col col-3">
-            <etools-dropdown-lite id="region"
-                                  readonly="[[readonly]]"
-                                  required auto-validate
-                                  label="Region"
-                                  options="[[state.staticData.regions]]"
-                                  selected="{{event.region}}">
-            </etools-dropdown-lite>
+            <etools-dropdown id="region"
+                              readonly="[[readonly]]"
+                              required auto-validate
+                              label="Region"
+                              option-label="name"
+                              option-value="id"
+                              options="[[state.staticData.regions]]"
+                              selected="{{event.region}}">
+            </etools-dropdown>
           </div>
 
           <div class="col col-3">
-            <etools-dropdown-lite id="country"
-                                  readonly="[[readonly]]"
-                                  disabled$="[[!event.region]]"
-                                  label="Country"
-                                  options="[[getCountriesForRegion(event.region, state.staticData.countries)]]"
-                                  selected="{{event.country}}"
-                                  auto-validate
-                                  error-message="Country is required">
-            </etools-dropdown-lite>
+            <etools-dropdown id="country"
+                              readonly="[[readonly]]"
+                              disabled$="[[!event.region]]"
+                              label="Country"
+                              option-label="name"
+                              option-value="id"
+                              options="[[getCountriesForRegion(event.region, state.staticData.countries)]]"
+                              selected="{{event.country}}"
+                              auto-validate
+                              error-message="Country is required">
+            </etools-dropdown>
           </div>
 
           <div class="col col-3">

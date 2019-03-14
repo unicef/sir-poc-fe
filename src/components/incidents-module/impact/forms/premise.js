@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import 'etools-dropdown/etools-dropdown.js';
 import { showSnackbar } from '../../../../actions/app.js';
 
 import {
@@ -19,7 +20,6 @@ import {
   resetFieldsValidations,
   validateFields
 } from '../../../common/validations-helper.js';
-import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -60,14 +60,16 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
         <fieldset>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite id="country"
-                                    label="Country"
-                                    readonly="[[readonly]]"
-                                    options="[[staticData.countries]]"
-                                    selected="{{data.country}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="country"
+                                label="Country"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.countries]]"
+                                selected="{{data.country}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
 
             <div class="col col-3">
@@ -84,38 +86,43 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
             </div>
 
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="agency"
-                  label="Owner"
-                  readonly="[[readonly]]"
-                  options="[[staticData.agencies]]"
-                  selected="{{data.agency}}"
-                  required auto-validate
-                  error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="agency"
+                                label="Owner"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.agencies]]"
+                                selected="{{data.agency}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
 
           </div>
 
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite id="location"
-                                    label="UNICEF Location"
-                                    readonly="[[readonly]]"
-                                    options="[[staticData.unLocations]]"
-                                    selected="{{data.un_location}}">
-              </etools-dropdown-lite>
+              <etools-dropdown id="location"
+                                label="UNICEF Location"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.unLocations]]"
+                                selected="{{data.un_location}}">
+              </etools-dropdown>
             </div>
 
             <div class="col col-3">
-              <etools-dropdown-lite id="premisesType"
-                                    label="Premises Type"
-                                    readonly="[[readonly]]"
-                                    options="[[staticData.premisesTypes]]"
-                                    selected="{{data.premise_type}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="premisesType"
+                                label="Premises Type"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.premisesTypes]]"
+                                selected="{{data.premise_type}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
           </div>
         </fieldset>
@@ -124,16 +131,17 @@ export class PremiseForm extends connect(store)(ImpactFormBase) {
           <legend><h3>Impact Details</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="impact"
-                  label="Impact"
-                  readonly="[[readonly]]"
-                  options="[[staticData.impacts.property]]"
-                  selected="{{data.impact}}"
-                  selected-item="{{selectedImpactType}}"
-                  required auto-validate
-                  error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="impact"
+                                label="Impact"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.impacts.property]]"
+                                selected="{{data.impact}}"
+                                selected-item="{{selectedImpactType}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
           </div>
           <div class="row-h flex-c">

@@ -9,6 +9,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-dropdown/etools-dropdown.js';
 import { showSnackbar } from '../../../../actions/app.js';
 
 import {
@@ -22,7 +23,6 @@ import {
   resetFieldsValidations,
   validateFields
  } from '../../../common/validations-helper.js';
-import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -62,17 +62,18 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                      hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
-                  <etools-dropdown-lite
-                              id="impact"
-                              slot="field"
-                              label="Impact"
-                              readonly="[[readonly]]"
-                              options="[[staticData.impacts.person]]"
-                              selected="{{data.impact}}"
-                              selected-item="{{selectedImpactType}}"
-                              required auto-validate
-                              error-message="Impact is required">
-                  </etools-dropdown-lite>
+                  <etools-dropdown id="impact"
+                                    slot="field"
+                                    label="Impact"
+                                    readonly="[[readonly]]"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.impacts.person]]"
+                                    selected="{{data.impact}}"
+                                    selected-item="{{selectedImpactType}}"
+                                    required auto-validate
+                                    error-message="Impact is required">
+                  </etools-dropdown>
                   <span slot="message">[[selectedImpactType.description]]
                   </span>
                 </etools-info-tooltip>
@@ -132,24 +133,27 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               </paper-input>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="gender"
-                  label="Gender"
-                  readonly="[[readonly]]"
-                  options="[[staticData.genders]]"
-                  selected="{{data.person.gender}}"
-                  required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
-                  error-message="Gender is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="gender"
+                                label="Gender"
+                                readonly="[[readonly]]"
+                                hide-search
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.genders]]"
+                                selected="{{data.person.gender}}"
+                                required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
+                                error-message="Gender is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="nationality"
-                  label="Nationality"
-                  readonly="[[readonly]]"
-                  options="[[staticData.nationalities]]"
-                  selected="{{data.person.nationality}}">
-              </etools-dropdown-lite>
+              <etools-dropdown id="nationality"
+                                label="Nationality"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.nationalities]]"
+                                selected="{{data.person.nationality}}">
+              </etools-dropdown>
             </div>
           </div>
           <div class="row-h flex-c">
@@ -188,26 +192,26 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
               </paper-input>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="region"
-                  label="Region"
-                  readonly="[[readonly]]"
-                  options="[[staticData.regions]]"
-                  selected="{{data.person.region}}"
-                  required auto-validate
-                  error-message="Duty station region is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="region"
+                                label="Region"
+                                readonly="[[readonly]]"
+                                options="[[staticData.regions]]"
+                                selected="{{data.person.region}}"
+                                required auto-validate
+                                error-message="Duty station region is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="country"
-                  label="Country"
-                  readonly="[[readonly]]"
-                  required
-                  options="[[getCountriesForRegion(data.person.region)]]"
-                  selected="{{data.person.country}}"
-                  disabled$="[[!data.person.region]]">
-              </etools-dropdown-lite>
+              <etools-dropdown id="country"
+                                label="Country"
+                                readonly="[[readonly]]"
+                                required
+                                option-label="name"
+                                option-value="id"
+                                options="[[getCountriesForRegion(data.person.region)]]"
+                                selected="{{data.person.country}}"
+                                disabled$="[[!data.person.region]]">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input

@@ -7,6 +7,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
+import 'etools-dropdown/etools-dropdown.js';
 import { showSnackbar } from '../../../../actions/app.js';
 
 import {
@@ -20,7 +21,6 @@ import {
   resetFieldsValidations,
   validateFields
 } from '../../../common/validations-helper.js';
-import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -60,15 +60,16 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
         <fieldset>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                      id="agency"
-                      label="Agency"
-                      readonly="[[readonly]]"
-                      options="[[staticData.agencies]]"
-                      selected="{{data.agency}}"
-                      required auto-validate
-                      error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="agency"
+                                label="Agency"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.agencies]]"
+                                selected="{{data.agency}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <datepicker-lite id="date"
@@ -135,26 +136,29 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
 
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  required
-                  id="fromRegion"
-                  label="From Region"
-                  readonly="[[readonly]]"
-                  options="[[staticData.regions]]"
-                  selected="{{data.from_region}}"
-                  auto-validate
-                  error-message="From region is required">
-              </etools-dropdown-lite>
+              <etools-dropdown required
+                                id="fromRegion"
+                                label="From Region"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.regions]]"
+                                selected="{{data.from_region}}"
+                                auto-validate
+                                error-message="From region is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite id="fromCountry"
-                                    label="From Country"
-                                    readonly="[[readonly]]"
-                                    options="[[getCountriesForRegion(data.from_region)]]"
-                                    selected="{{data.from_country}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="fromCountry"
+                                label="From Country"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[getCountriesForRegion(data.from_region)]]"
+                                selected="{{data.from_country}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input
@@ -171,26 +175,29 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  required
-                  id="toRegion"
-                  label="To Region"
-                  readonly="[[readonly]]"
-                  options="[[staticData.regions]]"
-                  selected="{{data.to_region}}"
-                  auto-validate
-                  error-message="To region is required">
-              </etools-dropdown-lite>
+              <etools-dropdown required
+                                id="toRegion"
+                                label="To Region"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.regions]]"
+                                selected="{{data.to_region}}"
+                                auto-validate
+                                error-message="To region is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite id="toCountry"
-                                    label="To Country"
-                                    readonly="[[readonly]]"
-                                    options="[[getCountriesForRegion(data.to_region)]]"
-                                    selected="{{data.to_country}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="toCountry"
+                                label="To Country"
+                                readonly="[[readonly]]"
+                                option-value="id"
+                                option-label="name"
+                                options="[[getCountriesForRegion(data.to_region)]]"
+                                selected="{{data.to_country}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input
@@ -210,16 +217,17 @@ export class EvacuationForm extends connect(store)(ImpactFormBase) {
           <legend><h3>Impact Details</h3></legend>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                      id="category"
-                      label="Impact"
-                      readonly="[[readonly]]"
-                      options="[[staticData.impacts.evacuation]]"
-                      selected="{{data.impact}}"
-                      selected-item="{{selectedImpactType}}"
-                      required auto-validate
-                      error-message="Impact is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="category"
+                                label="Impact"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.impacts.evacuation]]"
+                                selected="{{data.impact}}"
+                                selected-item="{{selectedImpactType}}"
+                                required auto-validate
+                                error-message="Impact is required">
+              </etools-dropdown>
             </div>
           </div>
           <div class="row-h flex-c">

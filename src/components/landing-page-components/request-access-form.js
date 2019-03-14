@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
-import '../common/etools-dropdown/etools-dropdown-lite.js';
+import 'etools-dropdown/etools-dropdown.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { makeRequest } from '../common/request-helper.js';
 import { Endpoints } from '../../config/endpoints.js';
@@ -25,7 +25,7 @@ class RequestAccessForm extends PolymerElement {
           padding: 5px 10px;
         }
 
-        paper-input, etools-dropdown-lite {
+        paper-input, etools-dropdown {
           margin-bottom: 16px;
         }
 
@@ -74,19 +74,23 @@ class RequestAccessForm extends PolymerElement {
                   error-message="This is required">
       </paper-input>
 
-      <etools-dropdown-lite label="Region"
-                            options="[[regions]]"
-                            required auto-validate
-                            error-message="This is required"
-                            selected="{{requester.region}}">
-      </etools-dropdown-lite>
+      <etools-dropdown label="Region"
+                        options="[[regions]]"
+                        option-label="name"
+                        option-value="id"
+                        required auto-validate
+                        error-message="This is required"
+                        selected="{{requester.region}}">
+      </etools-dropdown>
 
-      <etools-dropdown-lite label="Country"
-                            disabled$="[[!requester.region]]"
-                            options="[[getCountriesForRegion(requester.region, countries)]]"
-                            selected="{{requester.country}}"
-                            error-message="This is required">
-      </etools-dropdown-lite>
+      <etools-dropdown label="Country"
+                        disabled$="[[!requester.region]]"
+                        option-label="name"
+                        option-value="id"
+                        options="[[getCountriesForRegion(requester.region, countries)]]"
+                        selected="{{requester.country}}"
+                        error-message="This is required">
+      </etools-dropdown>
 
       <div class="error-box" hidden$="[[!errorMessage.length]]">
         <p>[[errorMessage]]</p>
@@ -190,7 +194,7 @@ class RequestAccessForm extends PolymerElement {
 
   getCountriesForRegion(regionId) {
   if (!regionId) {
-    return null;
+    return [];
   }
 
     return this.countries.filter(country => Number(country.region) === Number(regionId));

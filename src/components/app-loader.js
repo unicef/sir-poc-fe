@@ -3,6 +3,8 @@ import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils
 import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 import './landing-page-components/sir-login.js';
 
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
@@ -14,12 +16,38 @@ setRootPath(MyAppGlobals.rootPath);
 class AppLoader extends PolymerElement {
   static get template() {
     return html`
-      <template is="dom-if" if="[[authorized]]">
-        <app-shell></app-shell>
-      </template>
-      <template is="dom-if" if="[[!authorized]]">
-        <sir-login></sir-login>
-      </template>
+      <style>
+        *[hidden] {
+          display: none !important;
+        }
+
+        #loading-card {
+          @apply --layout-horizontal;
+          @apply --layout-center;
+          padding: 28px;
+          margin: 12px;
+          color: rgba(0, 0, 0, 0.87);
+          flex-wrap: wrap;
+          border-radius: 5px;
+          background-color: #fff;
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                      0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                      0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+      </style>
+
+      <div hidden$="[[loading]]">
+        <template is="dom-if" if="[[authorized]]">
+          <app-shell></app-shell>
+        </template>
+        <template is="dom-if" if="[[!authorized]]">
+          <sir-login></sir-login>
+        </template>
+      </div>
+
+      <div id="loading-card" hidden$="[[!loading]]">
+        <h2> Loading, please wait </h2>
+      </div>
     `;
   }
 
@@ -30,6 +58,10 @@ class AppLoader extends PolymerElement {
   static get properties() {
     return {
       authorized: {
+        type: Boolean,
+        value: false
+      },
+      loading: {
         type: Boolean,
         value: false
       }
@@ -53,11 +85,13 @@ class AppLoader extends PolymerElement {
   }
 
   async authorizedCallback() {
+    this.set('loading', true);
     const reduxStore = await import ('../redux/store.js');
     reduxStore.initStore();
     this.registerServiceWorker();
     await import('./app-shell.js');
     this.set('authorized', true);
+    this.set('loading', false);
   }
 
   unauthorizedCallback() {

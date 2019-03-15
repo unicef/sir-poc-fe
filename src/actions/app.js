@@ -21,9 +21,9 @@ let snackbarTimer;
 
 export const requestPageLoadData = () => (dispatch) => {
   dispatch(loadAllStaticData());
-  dispatch(fetchAndStoreUsers());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchAllIncidentData());
+  dispatch(fetchAndStoreUsers());
 };
 
 export const storeReady = () => (dispatch, getState) => {

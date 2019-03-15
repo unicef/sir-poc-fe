@@ -9,6 +9,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-dropdown/etools-dropdown.js';
 import { showSnackbar } from '../../../../actions/app.js';
 
 import {
@@ -22,7 +23,6 @@ import {
   resetFieldsValidations,
   validateFields
 } from '../../../common/validations-helper.js';
-import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -63,25 +63,29 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
         <fieldset>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite id="country"
-                                    label="Country of Impact"
-                                    readonly$="[[readonly]]"
-                                    options="[[staticData.countries]]"
-                                    selected="{{data.country}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="country"
+                                label="Country of Impact"
+                                readonly$="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.countries]]"
+                                selected="{{data.country}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
 
             <div class="col col-3">
-              <etools-dropdown-lite id="scope"
-                                    label="Geographical Scope"
-                                    readonly$="[[readonly]]"
-                                    options="[[staticData.programmeScopes]]"
-                                    selected="{{data.scope}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="scope"
+                                label="Geographical Scope"
+                                readonly$="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.programmeScopes]]"
+                                selected="{{data.scope}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input label="Area Impacted"
@@ -116,42 +120,47 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-info-tooltip class="info" open-on-click form-field-align
                                    hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
-                <etools-dropdown-lite id="impact"
-                                      slot="field"
-                                      label="Impact Type"
-                                      readonly$="[[readonly]]"
-                                      options="[[staticData.impacts.property]]"
-                                      selected="{{data.impact}}"
-                                      selected-item="{{selectedImpactType}}"
-                                      required auto-validate
-                                      error-message="This is required">
-                </etools-dropdown-lite>
+                <etools-dropdown id="impact"
+                                  slot="field"
+                                  label="Impact Type"
+                                  readonly$="[[readonly]]"
+                                  option-label="name"
+                                  option-value="id"
+                                  options="[[staticData.impacts.property]]"
+                                  selected="{{data.impact}}"
+                                  selected-item="{{selectedImpactType}}"
+                                  required auto-validate
+                                  error-message="This is required">
+                </etools-dropdown>
                 <span slot="message">[[selectedImpactType.description]]
                 </span>
               </etools-info-tooltip>
             </div>
 
             <div class="col col-3">
-              <etools-dropdown-lite
-                      id="agency"
-                      label="Agency"
-                      readonly$="[[readonly]]"
-                      options="[[staticData.agencies]]"
-                      selected="{{data.agency}}"
-                      required auto-validate
-                      error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="agency"
+                                label="Agency"
+                                readonly$="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.agencies]]"
+                                selected="{{data.agency}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
 
             <div class="col col-3">
-              <etools-dropdown-lite id="programmeType"
-                                    label="Programme Type"
-                                    readonly$="[[readonly]]"
-                                    options="[[staticData.programmeTypes]]"
-                                    selected="{{data.programme_type}}"
-                                    required auto-validate
-                                    error-message="This is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="programmeType"
+                                label="Programme Type"
+                                readonly$="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.programmeTypes]]"
+                                selected="{{data.programme_type}}"
+                                required auto-validate
+                                error-message="This is required">
+              </etools-dropdown>
             </div>
           </div>
 

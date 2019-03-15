@@ -9,6 +9,7 @@ import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import 'etools-date-time/datepicker-lite.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-dropdown/etools-dropdown.js';
 import { showSnackbar } from '../../../../actions/app.js';
 
 import {
@@ -24,7 +25,6 @@ import {
   resetFieldsValidations,
   validateFields
 } from '../../../common/validations-helper.js';
-import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import DateMixin from '../../../common/date-mixin.js';
 
 import '../../../styles/shared-styles.js';
@@ -64,30 +64,32 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
-                <etools-dropdown-lite
-                    id="status"
-                    label="Status"
-                    readonly="[[readonly]]"
-                    options="[[statuses]]"
-                    selected="{{data.status}}"
-                    required auto-validate
-                    error-message="Status is required">
-                </etools-dropdown-lite>
+                <etools-dropdown id="status"
+                                  label="Status"
+                                  readonly="[[readonly]]"
+                                  option-label="name"
+                                  option-value="id"
+                                  options="[[statuses]]"
+                                  selected="{{data.status}}"
+                                  required auto-validate
+                                  error-message="Status is required">
+                </etools-dropdown>
               </div>
               <div class="col col-3">
                 <etools-info-tooltip class="info" open-on-click form-field-align
                                      hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
-                  <etools-dropdown-lite
-                      id="impact"
-                      slot="field"
-                      label="Impact"
-                      readonly="[[readonly]]"
-                      options="[[staticData.impacts.person]]"
-                      selected="{{data.impact}}"
-                      selected-item="{{selectedImpactType}}"
-                      required auto-validate
-                      error-message="Impact is required">
-                  </etools-dropdown-lite>
+                  <etools-dropdown id="impact"
+                                    slot="field"
+                                    label="Impact"
+                                    readonly="[[readonly]]"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.impacts.person]]"
+                                    selected="{{data.impact}}"
+                                    selected-item="{{selectedImpactType}}"
+                                    required auto-validate
+                                    error-message="Impact is required">
+                  </etools-dropdown>
                   <span slot="message">[[selectedImpactType.description]]
                   </span>
                 </etools-info-tooltip>
@@ -147,14 +149,16 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
           <div class="row-h flex-c" hidden$="[[offline]]">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="autoCompleteUser"
-                  label="Autocomplete Staff Member"
-                  trigger-value-change-event
-                  on-etools-selected-item-changed="_userSelected"
-                  options="[[users]]"
-                  disabled="[[!isUnicefStaff]]">
-              </etools-dropdown-lite>
+              <etools-dropdown id="autoCompleteUser"
+                                label="Autocomplete Staff Member"
+                                trigger-value-change-event
+                                on-etools-selected-item-changed="_userSelected"
+                                option-label="name"
+                                option-value="id"
+                                shown-options-limit="15"
+                                options="[[users]]"
+                                disabled="[[!isUnicefStaff]]">
+              </etools-dropdown>
             </div>
 
             <div class="col col-3">
@@ -164,15 +168,16 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="unEmployer"
-                  label="Employer"
-                  readonly="[[readonly]]"
-                  options="[[staticData.agencies]]"
-                  selected="{{data.person.agency}}"
-                  required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
-                  error-message="Employer is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="unEmployer"
+                                label="Employer"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.agencies]]"
+                                selected="{{data.person.agency}}"
+                                required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
+                                error-message="Employer is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input id="firstName"
@@ -195,15 +200,16 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               </paper-input>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="nationality"
-                  label="Nationality"
-                  readonly="[[readonly]]"
-                  options="[[staticData.nationalities]]"
-                  selected="{{data.person.nationality}}"
-                  required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
-                  error-message="Nationality is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="nationality"
+                                label="Nationality"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.nationalities]]"
+                                selected="{{data.person.nationality}}"
+                                required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
+                                error-message="Nationality is required">
+              </etools-dropdown>
             </div>
           </div>
 
@@ -216,15 +222,17 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
               </datepicker-lite>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="gender"
-                  label="Gender"
-                  required$="[[!isSpecialConditionImpact(selectedImpactType)]]"
-                  auto-validate
-                  readonly="[[readonly]]"
-                  options="[[staticData.genders]]"
-                  selected="{{data.person.gender}}">
-              </etools-dropdown-lite>
+              <etools-dropdown id="gender"
+                                label="Gender"
+                                required$="[[!isSpecialConditionImpact(selectedImpactType)]]"
+                                auto-validate
+                                readonly="[[readonly]]"
+                                hide-search
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.genders]]"
+                                selected="{{data.person.gender}}">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input id="email"
@@ -247,27 +255,29 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="dutyStationRegion"
-                  label="Duty Station Region"
-                  readonly="[[readonly]]"
-                  options="[[staticData.regions]]"
-                  selected="{{data.person.region}}"
-                  required auto-validate
-                  error-message="Duty station region is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="dutyStationRegion"
+                                label="Duty Station Region"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.regions]]"
+                                selected="{{data.person.region}}"
+                                required auto-validate
+                                error-message="Duty station region is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="dutyStationCountry"
-                  label="Duty Station Country"
-                  readonly="[[readonly]]"
-                  disabled$="[[!data.person.region]]"
-                  options="[[getCountriesForRegion(data.person.region)]]"
-                  selected="{{data.person.country}}"
-                  required auto-validate
-                  error-message="Duty station country is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="dutyStationCountry"
+                                label="Duty Station Country"
+                                readonly="[[readonly]]"
+                                disabled$="[[!data.person.region]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[getCountriesForRegion(data.person.region)]]"
+                                selected="{{data.person.country}}"
+                                required auto-validate
+                                error-message="Duty station country is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input
@@ -284,15 +294,16 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           </div>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="category"
-                  label="Category"
-                  readonly="[[readonly]]"
-                  options="[[staticData.personnelCategories]]"
-                  selected="{{data.person.category}}"
-                  required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
-                  error-message="Category is required">
-              </etools-dropdown-lite>
+              <etools-dropdown id="category"
+                                label="Category"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.personnelCategories]]"
+                                selected="{{data.person.category}}"
+                                required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
+                                error-message="Category is required">
+              </etools-dropdown>
             </div>
             <div class="col col-3">
               <paper-input id="index"

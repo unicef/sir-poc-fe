@@ -25,13 +25,13 @@ import '@polymer/iron-collapse/iron-collapse.js';
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
 import 'etools-date-time/datepicker-lite.js';
+import 'etools-dropdown/etools-dropdown-multi.js';
+import 'etools-dropdown/etools-dropdown.js';
 
 import { store } from '../../redux/store.js';
 import { syncIncidentOnList, exportIncidents, exportSingleIncident } from '../../actions/incidents.js';
 import { getNameFromId } from '../common/utils.js';
 
-import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-import '../common/etools-dropdown/etools-dropdown-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -95,12 +95,14 @@ class IncidentsList extends connect(store)(ListBaseClass) {
               <iron-icon icon="search" slot="prefix"></iron-icon>
             </paper-input>
 
-            <etools-dropdown-multi-lite class="filter sync-filter"
-                                        label="Sync Status"
-                                        options="[[itemSyncStatusOptions]]"
-                                        selected-values="{{filters.values.syncStatus}}"
-                                        hide-search>
-            </etools-dropdown-multi-lite>
+            <etools-dropdown-multi class="filter sync-filter"
+                                   label="Sync Status"
+                                   option-label="name"
+                                   option-value="id"
+                                   options="[[itemSyncStatusOptions]]"
+                                   selected-values="{{filters.values.syncStatus}}"
+                                   hide-search>
+            </etools-dropdown-multi>
 
             <datepicker-lite class="filter"
                             value="{{filters.values.startDate}}"
@@ -112,42 +114,52 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                             min-date="[[toDate(filters.values.startDate)]]"
                             label="To"></datepicker-lite>
 
-            <etools-dropdown-lite class="filter select"
-                                  label="Country"
-                                  enable-none-option
-                                  options="[[staticData.countries]]"
-                                  selected="{{filters.values.country}}">
-            </etools-dropdown-lite>
+            <etools-dropdown class="filter select"
+                              label="Country"
+                              enable-none-option
+                              option-label="name"
+                              option-value="id"
+                              options="[[staticData.countries]]"
+                              selected="{{filters.values.country}}">
+            </etools-dropdown>
 
-            <etools-dropdown-lite class="filter select"
-                                  label="Incident Category"
-                                  enable-none-option
-                                  options="[[staticData.incidentCategories]]"
-                                  selected="{{filters.values.incidentCategory}}"
-                                  selected-item="{{selectedIncidentCategory}}">
-            </etools-dropdown-lite>
+            <etools-dropdown class="filter select"
+                              label="Incident Category"
+                              enable-none-option
+                              option-label="name"
+                              option-value="id"
+                              options="[[staticData.incidentCategories]]"
+                              selected="{{filters.values.incidentCategory}}"
+                              selected-item="{{selectedIncidentCategory}}">
+            </etools-dropdown>
 
-            <etools-dropdown-lite class="filter select"
-                                  label="Incident Subcategory"
-                                  enable-none-option
-                                  disabled="[[!selectedIncidentCategory]]"
-                                  options="[[selectedIncidentCategory.subcategories]]"
-                                  selected="{{filters.values.incidentSubcategory}}">
-            </etools-dropdown-lite>
+            <etools-dropdown class="filter select"
+                              label="Incident Subcategory"
+                              enable-none-option
+                              option-label="name"
+                              option-value="id"
+                              disabled="[[!selectedIncidentCategory]]"
+                              options="[[selectedIncidentCategory.subcategories]]"
+                              selected="{{filters.values.incidentSubcategory}}">
+            </etools-dropdown>
 
-            <etools-dropdown-lite class="filter select"
-                                  label="Target"
-                                  enable-none-option
-                                  options="[[staticData.targets]]"
-                                  selected="{{filters.values.target}}">
-            </etools-dropdown-lite>
+            <etools-dropdown class="filter select"
+                              label="Target"
+                              enable-none-option
+                              option-label="name"
+                              option-value="id"
+                              options="[[staticData.targets]]"
+                              selected="{{filters.values.target}}">
+            </etools-dropdown>
 
-            <etools-dropdown-lite class="filter select"
-                                  label="Threat Category"
-                                  enable-none-option
-                                  options="[[staticData.threatCategories]]"
-                                  selected="{{filters.values.threatCategory}}">
-            </etools-dropdown-lite>
+            <etools-dropdown class="filter select"
+                              label="Threat Category"
+                              enable-none-option
+                              option-label="name"
+                              option-value="id"
+                              options="[[staticData.threatCategories]]"
+                              selected="{{filters.values.threatCategory}}">
+            </etools-dropdown>
 
             <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
               <paper-button raised class="white" slot="dropdown-trigger">
@@ -176,17 +188,18 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             <h3> Incidents </h3>
           </span>
           <span class="col-3">
-            <etools-dropdown-lite id="incidentSorting"
-                                  label="Sorting"
-                                  options="[[sortingOptions]]"
-                                  selected-item="{{selectedSorting}}">
-            </etools-dropdown-lite>
+            <etools-dropdown id="incidentSorting"
+                              label="Sorting"
+                              option-label="name"
+                              option-value="id"
+                              options="[[sortingOptions]]"
+                              selected-item="{{selectedSorting}}">
+            </etools-dropdown>
           </span>
         </div>
 
         <etools-data-table-header id="listHeader"
                                   no-title
-                                  no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-2">
             Case Number

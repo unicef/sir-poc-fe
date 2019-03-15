@@ -18,12 +18,13 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-dropdown/etools-dropdown-multi.js';
+import 'etools-dropdown/etools-dropdown.js';
 
 import { store } from '../../redux/store.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 
-import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import 'etools-date-time/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
@@ -77,12 +78,14 @@ class EventsList extends connect(store)(ListBaseClass) {
               <iron-icon icon="search" slot="prefix"></iron-icon>
             </paper-input>
 
-            <etools-dropdown-multi-lite class="filter sync-filter"
-                                        label="Sync status"
-                                        options="[[itemSyncStatusOptions]]"
-                                        selected-values="{{filters.values.syncStatus}}"
-                                        hide-search>
-            </etools-dropdown-multi-lite>
+            <etools-dropdown-multi class="filter sync-filter"
+                                   option-label="name"
+                                   option-value="id"
+                                   label="Sync status"
+                                   options="[[itemSyncStatusOptions]]"
+                                   selected-values="{{filters.values.syncStatus}}"
+                                   hide-search>
+            </etools-dropdown-multi>
 
             <div class="col filter">
               <datepicker-lite id="fromDate"
@@ -114,16 +117,17 @@ class EventsList extends connect(store)(ListBaseClass) {
             <h3> Events </h3>
           </span>
           <span class="col-3">
-            <etools-dropdown-lite id="eventSorting"
-                                  label="Sorting"
-                                  options="[[sortingOptions]]"
-                                  selected-item="{{selectedSorting}}">
-            </etools-dropdown-lite>
+            <etools-dropdown id="eventSorting"
+                              label="Sorting"
+                              option-label="name"
+                              option-value="id"
+                              options="[[sortingOptions]]"
+                              selected-item="{{selectedSorting}}">
+            </etools-dropdown>
           </span>
         </div>
         <etools-data-table-header id="listHeader"
                                   no-title
-                                  no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
             Case number

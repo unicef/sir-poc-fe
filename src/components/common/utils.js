@@ -82,7 +82,7 @@ export const isNumber = (candidate) => {
 
 export const getCountriesForRegion = (regionId) => {
   if (!regionId) {
-    return null;
+    return [];
   }
 
   let allCountries = store.getState().staticData.countries;

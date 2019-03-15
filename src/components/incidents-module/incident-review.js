@@ -2,6 +2,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
+import 'etools-dropdown/etools-dropdown-multi.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import { addComment, notifySpecificUsers } from '../../actions/incidents.js';
@@ -9,7 +10,6 @@ import { selectIncident } from '../../reducers/incidents.js';
 import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
-import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
 import '../common/errors-box.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
@@ -204,12 +204,14 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
       <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
           <div class="row-h flex-c">
             <div class="col col-6">
-              <etools-dropdown-multi-lite class="filter sync-filter"
-                                          label="Send special notification to users"
-                                          options="[[users]]"
-                                          selected-values="{{usersToNotify}}"
-                                          hide-search>
-              </etools-dropdown-multi-lite>
+              <etools-dropdown-multi class="filter sync-filter"
+                                     label="Send special notification to users"
+                                     options="[[users]]"
+                                     option-label="name"
+                                     option-value="id"
+                                     shown-options-limit="15"
+                                     selected-values="{{usersToNotify}}">
+              </etools-dropdown-multi>
             </div>
             <div class="col col-6">
               <paper-button class="btn" raised

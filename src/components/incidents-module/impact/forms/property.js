@@ -8,6 +8,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-dropdown/etools-dropdown.js';
 import { showSnackbar } from '../../../../actions/app.js';
 import {
   addProperty,
@@ -20,7 +21,6 @@ import {
   resetFieldsValidations,
   validateFields
 } from '../../../common/validations-helper.js';
-import '../../../common/etools-dropdown/etools-dropdown-lite.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -60,22 +60,24 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
         <fieldset>
           <div class="row-h flex-c">
             <div class="col col-3">
-              <etools-dropdown-lite
-                  id="agency"
-                  label="Owner"
-                  readonly="[[readonly]]"
-                  options="[[staticData.agencies]]"
-                  selected="{{data.agency}}">
-              </etools-dropdown-lite>
+              <etools-dropdown id="agency"
+                                label="Owner"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.agencies]]"
+                                selected="{{data.agency}}">
+              </etools-dropdown>
             </div>
             <div class="col col-2">
-              <etools-dropdown-lite
-                  id="property_type"
-                  label="Property Type"
-                  readonly="[[readonly]]"
-                  options="[[staticData.propertyTypes]]"
-                  selected="{{data.property_type}}">
-              </etools-dropdown-lite>
+              <etools-dropdown id="property_type"
+                                label="Property Type"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.propertyTypes]]"
+                                selected="{{data.property_type}}">
+              </etools-dropdown>
             </div>
             <div class="col col-2">
               <paper-input id="value"
@@ -98,17 +100,18 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
             <div class="col col-3">
               <etools-info-tooltip class="info" open-on-click form-field-align
                                    hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
-                <etools-dropdown-lite
-                    id="category"
-                    slot="field"
-                    label="Impact"
-                    readonly="[[readonly]]"
-                    options="[[staticData.impacts.property]]"
-                    selected="{{data.impact}}"
-                    selected-item="{{selectedImpactType}}"
-                    required auto-validate
-                    error-message="Impact is required">
-                </etools-dropdown-lite>
+                <etools-dropdown id="category"
+                                  slot="field"
+                                  label="Impact"
+                                  readonly="[[readonly]]"
+                                  option-label="name"
+                                  option-value="id"
+                                  options="[[staticData.impacts.property]]"
+                                  selected="{{data.impact}}"
+                                  selected-item="{{selectedImpactType}}"
+                                  required auto-validate
+                                  error-message="Impact is required">
+                </etools-dropdown>
                 <span slot="message">[[selectedImpactType.description]]
                 </span>
               </etools-info-tooltip>

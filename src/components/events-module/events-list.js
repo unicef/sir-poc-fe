@@ -128,7 +128,6 @@ class EventsList extends connect(store)(ListBaseClass) {
         </div>
         <etools-data-table-header id="listHeader"
                                   no-title
-                                  no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
             Case number

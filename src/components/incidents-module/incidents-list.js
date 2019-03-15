@@ -200,7 +200,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
 
         <etools-data-table-header id="listHeader"
                                   no-title
-                                  no-collapse
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-2">
             Case Number

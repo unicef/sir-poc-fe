@@ -11,6 +11,8 @@ import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
+import '../common/dropdowns/user-dropdown.js';
+// import '../common/dropdowns/user-dropdown-multi.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -200,6 +202,12 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
         </div>
       </div>
 
+      <user-dropdown label="Selecting a user here"
+                     option-label="name"
+                     option-value="id"
+                     options="[[users]]"
+                     shown-options-limit="15">
+      </user-dropdown>
 
       <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
           <div class="row-h flex-c">
@@ -264,11 +272,11 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
     this.state = state;
     this.offline = state.app.offline;
     this.incidentId = state.app.locationInfo.incidentId;
-    this.users = JSON.parse(JSON.stringify(state.users.list)).map((user) => {
+    this.users = state.users.list.map((user) => {
       if (user.job_title) {
         user.name = user.name + ' - ' + user.job_title;
       }
-      return user;
+      return {...user};
     });
   }
 

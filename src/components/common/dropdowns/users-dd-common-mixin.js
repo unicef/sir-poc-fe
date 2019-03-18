@@ -22,8 +22,8 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
     }
   }
 
-  _computeShownOptions(options, search, enableNoneOption) {
-    if (this._isUndefined(options) || this._isUndefined(enableNoneOption)) {
+  _computeShownOptions(options = [], search, enableNoneOption) {
+    if (this._isUndefined(enableNoneOption)) {
       return;
     }
 

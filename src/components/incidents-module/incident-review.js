@@ -11,8 +11,8 @@ import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
-import '../common/dropdowns/user-dropdown.js';
-// import '../common/dropdowns/user-dropdown-multi.js';
+// import '../common/dropdowns/user-dropdown.js';
+import '../common/dropdowns/user-dropdown-multi.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -201,22 +201,17 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
         </div>
       </div>
 
-      <user-dropdown label="Selecting a user here"
-                     option-label="name"
-                     option-value="id"
-                     shown-options-limit="15">
-      </user-dropdown>
 
       <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
           <div class="row-h flex-c">
             <div class="col col-6">
-              <etools-dropdown-multi class="filter sync-filter"
-                                     label="Send special notification to users"
-                                     option-label="name"
-                                     option-value="id"
-                                     shown-options-limit="15"
-                                     selected-values="{{usersToNotify}}">
-              </etools-dropdown-multi>
+              <user-dropdown-multi label="Send special notification to users"
+                                  class="filter sync-filter"
+                                  option-label="name"
+                                  option-value="id"
+                                  shown-options-limit="15"
+                                  selected-values="{{usersToNotify}}">
+              </user-dropdown-multi>
             </div>
             <div class="col col-6">
               <paper-button class="btn" raised

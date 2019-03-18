@@ -37,8 +37,8 @@ class UserDropdownMulti extends UsersDDCommonFunctionality(PolymerElement) {
                              selected-values="{{selectedValues}}" two-lines-label="[[twoLinesLabel]]"
                              option-value="[[optionValue]]" option-label="[[optionLabel]]"
                              show-no-search-results-warning="[[showNoSearchResultsWarning]]"
-                             show-limit-warning="[[showLimitWarning]]" shown-options-limit="[[shownOptionsLimit]]"
-                             no-options-available="[[noOptionsAvailable]]"
+                             show-limit-warning="[[boolFalse]]" shown-options-limit="[[shownOptionsLimit]]"
+                             no-options-available="[[boolFalse]]"
                              capitalize="[[capitalize]]"></esmm-options-list>
         </div>
 
@@ -57,6 +57,10 @@ class UserDropdownMulti extends UsersDDCommonFunctionality(PolymerElement) {
         type: Array,
         value: [],
         notify: true
+      },
+      boolFalse: {
+        type: Boolean,
+        value: false
       },
       /** Selected options objects */
       selectedItems: {
@@ -276,29 +280,6 @@ class UserDropdownMulti extends UsersDDCommonFunctionality(PolymerElement) {
     });
 
     return labels.join(' | ');
-  }
-
-  _computeShownOptions(options, search, enableNoneOption) {
-    if (this._isUndefined(options) || this._isUndefined(enableNoneOption)) {
-      return;
-    }
-
-    let shownOptions = [...options];
-
-    if (search) {
-      shownOptions = options.filter(this._itemContainsSearchString.bind(this));
-      shownOptions = this._trimByShownOptionsLimit(shownOptions);
-    } else if (options.length > this.shownOptionsLimit) {
-      shownOptions = this._trimByShownOptionsLimit(options);
-    }
-
-    if (enableNoneOption) {
-      let emptyOption = {cssClass: 'esmm-none-option'};
-      emptyOption[this.optionValue] = null;
-      emptyOption[this.optionLabel] = this.noneOptionLabel;
-      shownOptions.unshift(emptyOption);
-    }
-    return shownOptions;
   }
 }
 

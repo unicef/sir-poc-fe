@@ -2,7 +2,6 @@ import { CommonFunctionality } from 'etools-dropdown/mixins/common-mixin.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import { makeRequest, prepareEndpoint } from '../request-helper.js';
 
-
 export const UsersDDCommonFunctionality = (superClass) => class extends CommonFunctionality(superClass) {
   static get properties() {
     return {
@@ -18,28 +17,35 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
       preserveSearchOnClose: {
         type: Boolean,
         value: true
+      },
+      options: {
+        type: Array,
+        value: []
       }
     }
   }
 
   static get observers() {
     return [
-      'resetIronDropdownSize(shownOptions.length)'
+      'resetIronDropdownSize(shownOptions.length)',
+      'searchChanged(search)'
     ];
+  }
+
+  searchChanged(search) {
+    if (search && search.length > 2 && !this.options.length) {
+      this._fetchOptionsList();
+      return;
+    }
+
+    if (this.options.length && (!search || search.length < 3)) {
+      this.options = [];
+    }
   }
 
   _computeShownOptions(options = [], search, enableNoneOption) {
     if (this._isUndefined(enableNoneOption)) {
       return;
-    }
-
-    if (search && search.length > 2 && !options.length) {
-      this._fetchOptionsList();
-      return;
-    }
-
-    if (options.length && (!search || search.length < 3)) {
-      this.options = [];
     }
 
     let shownOptions = [...options];
@@ -69,7 +75,6 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
         elem.name = elem.display_name || (elem.first_name + ' ' + elem.last_name);
         return elem;
       })
-      console.log('new options are:', ...this.options);
     });
   }
 };

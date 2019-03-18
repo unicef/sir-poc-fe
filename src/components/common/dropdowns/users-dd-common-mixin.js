@@ -43,30 +43,6 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
     }
   }
 
-  _computeShownOptions(options = [], search, enableNoneOption) {
-    if (this._isUndefined(enableNoneOption)) {
-      return;
-    }
-
-    let shownOptions = [...options];
-
-    if (search && options.length) {
-      shownOptions = options.filter(this._itemContainsSearchString.bind(this));
-      shownOptions = this._trimByShownOptionsLimit(shownOptions);
-    } else if (options.length > this.shownOptionsLimit) {
-      shownOptions = this._trimByShownOptionsLimit(options);
-    }
-
-    if (enableNoneOption) {
-      let emptyOption = {cssClass: 'esmm-none-option'};
-      emptyOption[this.optionValue] = null;
-      emptyOption[this.optionLabel] = this.noneOptionLabel;
-      shownOptions.unshift(emptyOption);
-    }
-
-    return shownOptions;
-  }
-
   _fetchOptionsList() {
     let endpoint = prepareEndpoint(Endpoints.usersSearch, {search: this.search});
 

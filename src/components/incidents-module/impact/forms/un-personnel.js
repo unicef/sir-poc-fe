@@ -26,6 +26,7 @@ import {
   validateFields
 } from '../../../common/validations-helper.js';
 import DateMixin from '../../../common/date-mixin.js';
+import '../../../common/dropdowns/user-dropdown.js';
 
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
@@ -149,17 +150,16 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
           <div class="row-h flex-c" hidden$="[[offline]]">
             <div class="col col-3">
-              <!-- This needs to be ported over -->
-              <etools-dropdown id="autoCompleteUser"
-                                label="Autocomplete Staff Member"
-                                trigger-value-change-event
-                                on-etools-selected-item-changed="_userSelected"
-                                option-label="name"
-                                option-value="id"
-                                shown-options-limit="15"
-                                options="[[users]]"
-                                disabled="[[!isUnicefStaff]]">
-              </etools-dropdown>
+              <user-dropdown id="autoCompleteUser"
+                            label="Autocomplete Staff Member"
+                            trigger-value-change-event
+                            on-etools-selected-item-changed="_userSelected"
+                            option-label="name"
+                            option-value="id"
+                            shown-options-limit="15"
+                            options="[[users]]"
+                            disabled="[[!isUnicefStaff]]">
+              </user-dropdown>
             </div>
 
             <div class="col col-3">

@@ -1,4 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
+import {timeOut} from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-dropdown/iron-dropdown.js';
 import '@polymer/neon-animation/neon-animations.js';
@@ -103,8 +105,8 @@ class UserDropdown extends UsersDDCommonFunctionality(PolymerElement) {
     ];
   }
 
-  _selectedAndOptionsChanged(selected, options) {
-    this._setSelectedItem(selected, options);
+  _selectedAndOptionsChanged() {
+    this._setSelectedItem();
   }
 
   _setSelectedItem(selected, selectedItem) {

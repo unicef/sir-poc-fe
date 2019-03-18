@@ -11,7 +11,6 @@ import { showSnackbar } from '../../actions/app.js';
 import DateMixin from '../common/date-mixin.js';
 import { store } from '../../redux/store.js';
 import '../common/errors-box.js';
-// import '../common/dropdowns/user-dropdown.js';
 import '../common/dropdowns/user-dropdown-multi.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';

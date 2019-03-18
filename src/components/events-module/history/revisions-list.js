@@ -8,7 +8,6 @@ import '@polymer/iron-media-query/iron-media-query.js';
 import 'etools-data-table';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
-import { getUserName } from '../../common/utils.js';
 import DateMixin from '../../common/date-mixin.js';
 
 import '../../styles/shared-styles.js';
@@ -62,7 +61,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(PolymerElement)) {
               </span>
               <span class="col-data col-4" data-col-header-label="By user">
                 <span class="truncate">
-                  [[getUserName(item.by_user)]]
+                  [[item.by_user]]
                 </span>
               </span>
               <span class="col-data col-4" data-col-header-label="Date and time">
@@ -104,11 +103,7 @@ export class RevisionsList extends DateMixin(HistoryHelpers(PolymerElement)) {
     return {
       lowResolutionLayout: Boolean,
       history: Array,
-      module: String,
-      getUserName: {
-        type: Function,
-        value: () => getUserName
-      }
+      module: String
     };
   }
 

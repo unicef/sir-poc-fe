@@ -149,6 +149,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
 
           <div class="row-h flex-c" hidden$="[[offline]]">
             <div class="col col-3">
+              <!-- This needs to be ported over -->
               <etools-dropdown id="autoCompleteUser"
                                 label="Autocomplete Staff Member"
                                 trigger-value-change-event
@@ -396,7 +397,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
   }
 
   _stateChanged(state) {
-    this.users = state.users.list;
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;

@@ -1,6 +1,5 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { PermissionsBase } from '../../common/permissions-base-class';
-import { getUserName } from '../../common/utils.js';
 import '../../styles/shared-styles.js';
 import { store } from '../../../redux/store.js';
 import './timeline-cards/incident-status-changed';
@@ -212,11 +211,7 @@ class IncidentTimeline extends PermissionsBase {
       history: Array,
       comments: Array,
       timeline: Array,
-      profile: Object,
-      getUserName: {
-        type: Function,
-        value: () => getUserName
-      }
+      profile: Object
     };
   }
 

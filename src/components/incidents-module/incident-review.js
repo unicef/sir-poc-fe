@@ -18,7 +18,6 @@ import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 
 import { PermissionsBase } from '../common/permissions-base-class';
-import { getUserName } from '../common/utils';
 import './buttons/reject.js';
 import './buttons/approve.js';
 import './buttons/review-eod.js';
@@ -97,7 +96,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="EOD review by"
                           type="text"
-                          value="[[getUserName(incident.eod_review_by)]]">
+                          value="[[incident.eod_review_by]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.eod_review_by, 'eod_review_incident')]]">
@@ -120,7 +119,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="DHR review by"
                           type="text"
-                          value="[[getUserName(incident.dhr_review_by)]]">
+                          value="[[incident.dhr_review_by]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.dhr_review_by, 'dhr_review_incident')]]">
@@ -143,7 +142,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="DFAM review by"
                           type="text"
-                          value="[[getUserName(incident.dfam_review_by)]]">
+                          value="[[incident.dfam_review_by]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.dfam_review_by, 'dfam_review_incident')]]">
@@ -166,7 +165,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="Legal review by"
                           type="text"
-                          value="[[getUserName(incident.legal_review_by)]]">
+                          value="[[incident.legal_review_by]]">
             </paper-input>
           </div>
           <div class="col col-6" hidden$="[[!_canReview(offline, incident.legal_review_by, 'legal_review_incident')]]">
@@ -191,7 +190,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                           readonly
                           label="Staff Wellbeing review by"
                           type="text"
-                          value="[[getUserName(incident.staff_wellbeing_review_by)]]">
+                          value="[[incident.staff_wellbeing_review_by]]">
             </paper-input>
           </div>
           <div class="col col-6"
@@ -205,7 +204,6 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
       <user-dropdown label="Selecting a user here"
                      option-label="name"
                      option-value="id"
-                     options="[[users]]"
                      shown-options-limit="15">
       </user-dropdown>
 
@@ -214,7 +212,6 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
             <div class="col col-6">
               <etools-dropdown-multi class="filter sync-filter"
                                      label="Send special notification to users"
-                                     options="[[users]]"
                                      option-label="name"
                                      option-value="id"
                                      shown-options-limit="15"
@@ -249,10 +246,6 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
       state: {
         type: Object
       },
-      getUserName: {
-        type: Function,
-        value: () => getUserName
-      },
       users: Array,
       incident: Object,
       usersToNotify: Array
@@ -272,12 +265,6 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
     this.state = state;
     this.offline = state.app.offline;
     this.incidentId = state.app.locationInfo.incidentId;
-    this.users = state.users.list.map((user) => {
-      if (user.job_title) {
-        user.name = user.name + ' - ' + user.job_title;
-      }
-      return {...user};
-    });
   }
 
   restComment() {

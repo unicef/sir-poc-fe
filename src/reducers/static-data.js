@@ -135,11 +135,6 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         weapons: action.weapons
       };
-    case ACTIONS.RECEIVE_USERS:
-      return {
-        ...state,
-        users: action.users
-      };
     case ACTIONS.RECEIVE_TEAMS:
       return {
         ...state,

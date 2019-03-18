@@ -15,7 +15,7 @@ class PremiseCreatedCard extends TimelineCardBase {
        ${this.styles}
 
         <div class$="[[getCardClass(item)]]">
-          [[getUserName(item.by_user)]] added an premise impact.
+          [[item.by_user]] added an premise impact.
           <span title="View entire impact at this version">
             <a href="/incidents/history/[[item.incident_id]]/view-premise/[[item.id]]">
               View original impact data

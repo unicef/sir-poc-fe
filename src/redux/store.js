@@ -18,7 +18,6 @@ import { persistStore, persistCombineReducers } from 'redux-persist';
 
 import { storeReady } from '../actions/app.js';
 import app from '../reducers/app.js';
-import users from '../reducers/users.js';
 import errors from '../reducers/errors.js';
 import events from '../reducers/events.js';
 import incidents from '../reducers/incidents.js';
@@ -35,12 +34,11 @@ const persistConfig = {
   key: 'sir-app',
   transforms: [encryptState],
   storage: getStorage(),
-  blacklist: ['errors', 'app', 'users']
+  blacklist: ['errors', 'app']
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {
   app,
-  users,
   errors,
   events,
   incidents,

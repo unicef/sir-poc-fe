@@ -221,10 +221,6 @@ export const Endpoints = {
     url: baseUrl + '/api/teams/',
     method: 'GET'
   },
-  users: {
-    url: baseUrl + '/api/users/',
-    method: 'GET'
-  },
   usersSearch: {
     url: baseUrl + '/api/users/?search=<%=search%>/',
     method: 'GET'

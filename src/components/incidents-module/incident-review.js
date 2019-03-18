@@ -209,7 +209,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                                   option-label="name"
                                   option-value="id"
                                   shown-options-limit="15"
-                                  selected-values="{{usersToNotify}}">
+                                  selected-items="{{usersToNotify}}">
               </user-dropdown-multi>
             </div>
             <div class="col col-6">

@@ -489,19 +489,20 @@ export const fetchIncidentHistory = id => async (dispatch, getState) => {
     });
 };
 
-export const notifySpecificUsers = (userIds, incidentId) => (dispatch, getState) => {
+export const notifySpecificUsers = (users, incidentId) => (dispatch, getState) => {
   if (getState().app.offline) {
     return;
   }
-  if (!userIds || !userIds.length) {
+  if (!users || !users.length) {
     return;
   }
 
   let operations = [];
-  userIds.forEach((userId) => {
-    let endpoint = prepareEndpoint(Endpoints.notifySpecificUser, {userId, incidentId});
+  users.forEach((user) => {
+    let endpoint = prepareEndpoint(Endpoints.notifySpecificUser, {userId: user.id, incidentId});
     operations.push(makeRequest(endpoint).catch(err => err).then((result) => {
-      result.userId = userId;
+      result.user = user.id;
+      result.userName = user.display_name;
       return result;
     }));
   });

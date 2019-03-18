@@ -104,7 +104,7 @@ class UserDropdown extends UsersDDCommonFunctionality(PolymerElement) {
   }
 
   _selectedAndOptionsChanged(selected, options) {
-    this._setSelectedItem();
+    this._setSelectedItem(selected, options);
   }
 
   _setSelectedItem(selected, selectedItem) {

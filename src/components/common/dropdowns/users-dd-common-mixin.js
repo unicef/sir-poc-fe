@@ -22,6 +22,12 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
     }
   }
 
+  static get observers() {
+    return [
+      'resetIronDropdownSize(shownOptions.length)'
+    ];
+  }
+
   _computeShownOptions(options = [], search, enableNoneOption) {
     if (this._isUndefined(enableNoneOption)) {
       return;

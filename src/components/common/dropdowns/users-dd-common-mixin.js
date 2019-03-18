@@ -33,12 +33,12 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
   }
 
   searchChanged(search) {
-    if (search && search.length > 2 && !this.options.length) {
+    if (search && this.hasThreeChars(search) && !this.options.length) {
       this._fetchOptionsList();
       return;
     }
 
-    if (this.options.length && (!search || search.length < 3)) {
+    if (this.options.length && (!search || !this.hasThreeChars(search))) {
       this.options = [];
     }
   }
@@ -52,5 +52,9 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
         return elem;
       })
     });
+  }
+
+  hasThreeChars(string) {
+    return string.length > 2;
   }
 };

@@ -15,6 +15,14 @@ class UserDropdownMulti extends UsersDDCommonFunctionality(PolymerElement) {
     // language=HTML
     return html`
       <style include="paper-material-styles esmm-shared-styles">
+        .warning {
+          font-family: Roboto;
+          font-size: 12px;
+          line-height: 16px;
+          color: rgba(0, 0, 0, 0.54);
+          background-color: #EEEEEE;
+          padding: 8px;
+        }
       </style>
 
       <esmm-selected-options id="main" selected-items="[[selectedItems]]" label="[[label]]"
@@ -32,7 +40,7 @@ class UserDropdownMulti extends UsersDDCommonFunctionality(PolymerElement) {
 
         <div id="ironDrContent" class="paper-material" elevation="1" slot="dropdown-content">
           <esmm-searchbox-input id="searchbox" search="{{search}}" hidden\$="{{hideSearch}}"></esmm-searchbox-input>
-
+          <div hidden$="[[hasThreeChars(search)]]" class="warning"> Start typing a name and options will appear </div>
           <esmm-options-list id="optionsList" shown-options="[[shownOptions]]" multi=""
                              selected-values="{{selectedValues}}" two-lines-label="[[twoLinesLabel]]"
                              option-value="[[optionValue]]" option-label="[[optionLabel]]"

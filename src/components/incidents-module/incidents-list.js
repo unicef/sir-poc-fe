@@ -416,73 +416,73 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   initSorting() {
     this.sortingOptions = [
       {
-        name: 'Newest created first',
+        name: 'Date Created',
         id: 'date_created_desc',
         default: true,
         method: ((left, right) => this.chronologicalSort(right.created_on, left.created_on))
       },
       {
-        name: 'Oldest created first',
+        name: 'Reverse Date Created',
         id: 'date_created_asc',
         default: false,
         method: ((left, right) => this.chronologicalSort(left.created_on, right.created_on))
       },
       {
-        name: 'Newest modified first',
+        name: 'Date Modified',
         id: 'date_modified_desc',
         default: false,
         method: ((left, right) => this.chronologicalSort(right.last_modify_date, left.last_modify_date))
       },
       {
-        name: 'Oldest modified first',
+        name: 'Reverse Date Modified',
         id: 'date_modified_asc',
         default: false,
         method: ((left, right) => this.chronologicalSort(left.last_modify_date, right.last_modify_date))
       },
       {
-        name: 'Description alphabetical',
+        name: 'Description A-Z',
         id: 'description_asc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(left.description, right.description))
       },
       {
-        name: 'Description unalphabetical',
+        name: 'Description Z-A',
         id: 'description_desc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(right.description, left.description))
       },
       {
-        name: 'City alphabetical',
+        name: 'City A-Z',
         id: 'city_asc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(left.city, right.city))
       },
       {
-        name: 'City unalphabetical',
+        name: 'City Z-A',
         id: 'city_desc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(right.city, left.city))
       },
       {
-        name: 'Status alphabetical',
+        name: 'Status A-Z',
         id: 'status_asc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(left.status, right.status))
       },
       {
-        name: 'Status unalphabetical',
+        name: 'Status Z-A',
         id: 'status_desc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(right.status, left.status))
       },
       {
-        name: 'Case Number ascending',
+        name: 'Case Number',
         id: 'case_number_asc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(left.case_number, right.case_number))
       },
       {
-        name: 'Case Number descending',
+        name: 'Reverse Case Number',
         id: 'case_number_desc',
         default: false,
         method: ((left, right) => this.alphabeticalSort(right.case_number, left.case_number))

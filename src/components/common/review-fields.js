@@ -2,7 +2,6 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { store } from '../../redux/store.js';
 
-import { getUserName } from '../common/utils.js';
 import '../styles/shared-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/form-fields-styles.js';
@@ -20,7 +19,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
                         label="Created By"
                         placeholder="&#8212;"
                         type="text"
-                        value="[[getUserName(data.created_by_user_id)]]"
+                        value="[[data.created_by_user_name]]"
                         readonly></paper-input>
         </div>
         <div class="col col-3">
@@ -35,7 +34,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
                         placeholder="&#8212;"
                         type="text"
                         readonly
-                        value="[[getUserName(data.last_modify_user_id)]]"></paper-input>
+                        value="[[data.last_modify_user_name]]"></paper-input>
         </div>
         <div class="col col-3">
           <datepicker-lite id="last_edited_on"
@@ -55,11 +54,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
     return {
       data: Object,
       state: Object,
-      offline: Boolean,
-      getUserName: {
-        type: Function,
-        value: () => getUserName
-      }
+      offline: Boolean
     };
   }
 

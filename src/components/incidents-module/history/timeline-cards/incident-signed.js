@@ -14,7 +14,7 @@ class IncidentSignedCard extends TimelineCardBase {
     return html`
        ${this.styles}
         <div class$="[[getCardClass(item)]]">
-          [[getUserName(item.by_user)]] signed this on behalf of [[getTypeOfSignature(item.change)]]<br>
+          [[item.by_user]] signed this on behalf of [[getTypeOfSignature(item.change)]]<br>
         </div>
       `;
   }

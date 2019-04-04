@@ -14,7 +14,7 @@ class PremiseChangedCard extends TimelineCardBase {
     return html`
        ${this.styles}
        <div class$="[[getCardClass(item)]]" hidden$="[[!hasChangedFields(item.change)]]">
-        [[getUserName(item.by_user)]] changed premise impact fields:
+        [[item.by_user]] changed premise impact fields:
         <p> [[getChangedFileds(item.change)]] </p>
         You can
         <a href="/incidents/history/[[item.incident_id]]/diff-premise/[[item.id]]">

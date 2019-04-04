@@ -15,7 +15,7 @@ class EvacuaionCreatedCard extends TimelineCardBase {
        ${this.styles}
 
         <div class$="[[getCardClass(item)]]">
-          [[getUserName(item.by_user)]] added an evacuation impact.
+          [[item.by_user]] added an evacuation impact.
           <span title="View entire impact at this version">
             <a href="/incidents/history/[[item.incident_id]]/view-evacuation/[[item.id]]">
               View original impact data

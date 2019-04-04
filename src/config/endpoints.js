@@ -221,9 +221,8 @@ export const Endpoints = {
     url: baseUrl + '/api/teams/',
     method: 'GET'
   },
-  users: {
-    url: 'https://graph.microsoft.com/v1.0/users/',
-    // url: baseUrl + '/api/users/',
+  usersSearch: {
+    url: baseUrl + '/api/users?q=<%=search%>',
     method: 'GET'
   },
   weapons: {

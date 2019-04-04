@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
-import { fetchAndStoreUsers } from './users.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
 import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import * as ACTIONS from './constants.js';
@@ -23,7 +22,6 @@ export const requestPageLoadData = () => (dispatch) => {
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchAllIncidentData());
-  dispatch(fetchAndStoreUsers());
 };
 
 export const storeReady = () => (dispatch, getState) => {

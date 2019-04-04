@@ -14,7 +14,7 @@ class IncidentStatusChangedCard extends TimelineCardBase {
     return html`
        ${this.styles}
         <div class$="[[getCardClass(item)]]">
-          [[getUserName(item.by_user)]] [[item.change.status.after]] this <br>
+          [[item.by_user]] [[item.change.status.after]] this <br>
         </div>
       `;
   }

@@ -1,7 +1,7 @@
 import { makeRequest, prepareEndpoint,
   handleBlobDataReceivedAndStartDownload } from '../components/common/request-helper.js';
 import { Endpoints } from '../config/endpoints.js';
-import { objDiff, isNumber, getUserName } from '../components/common/utils.js';
+import { objDiff, isNumber } from '../components/common/utils.js';
 import { scrollToTop } from '../components/common/content-container-helper.js';
 import { updatePath } from '../components/common/navigation-helper.js';
 import { generateRandomHash } from './action-helpers.js';
@@ -489,19 +489,20 @@ export const fetchIncidentHistory = id => async (dispatch, getState) => {
     });
 };
 
-export const notifySpecificUsers = (userIds, incidentId) => (dispatch, getState) => {
+export const notifySpecificUsers = (users, incidentId) => (dispatch, getState) => {
   if (getState().app.offline) {
     return;
   }
-  if (!userIds || !userIds.length) {
+  if (!users || !users.length) {
     return;
   }
 
   let operations = [];
-  userIds.forEach((userId) => {
-    let endpoint = prepareEndpoint(Endpoints.notifySpecificUser, {userId, incidentId});
+  users.forEach((user) => {
+    let endpoint = prepareEndpoint(Endpoints.notifySpecificUser, {userId: user.id, incidentId});
     operations.push(makeRequest(endpoint).catch(err => err).then((result) => {
-      result.userId = userId;
+      result.user = user.id;
+      result.userName = user.display_name;
       return result;
     }));
   });
@@ -512,9 +513,9 @@ export const notifySpecificUsers = (userIds, incidentId) => (dispatch, getState)
 
     results.forEach((res) => {
       if (res.error) {
-        failedUsers.push(getUserName(res.userId));
+        failedUsers.push(res.userName);
       } else {
-        successfulUsers.push(getUserName(res.userId));
+        successfulUsers.push(res.userName);
       }
     });
 

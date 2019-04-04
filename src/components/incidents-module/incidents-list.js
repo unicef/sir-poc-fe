@@ -161,7 +161,10 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                               selected="{{filters.values.threatCategory}}">
             </etools-dropdown>
 
-            <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
+            <paper-menu-button class="export"
+                               hidden="[[!hasExportPermission]]"
+                               horizontal-align="right"
+                               vertical-offset="8">
               <paper-button raised class="white" slot="dropdown-trigger">
                 <iron-icon icon="file-download"></iron-icon>
                 Export
@@ -367,6 +370,10 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       selectedIncidentCategory: {
         type: Object,
         value: {}
+      },
+      hasExportPermission: {
+        type: Boolean,
+        value: function() {return this.checkExportPermission();}
       }
     };
   }
@@ -622,6 +629,11 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     let lastLogin = this.state.staticData.profile.last_login;
     let modifiedAfterLastLogin = moment(incident.last_modify_date).isAfter(moment(lastLogin));
     return modifiedAfterLastLogin && !this.showNewIncidentTooltip(incident);
+  }
+
+  checkExportPermission() {
+    let teams = store.getState().staticData.profile.teams;
+    return teams.some(t => t.team_type === 10 || t.team_type === 3);
   }
 
   showNewCommentsTooltip(incident) {

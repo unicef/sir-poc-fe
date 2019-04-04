@@ -1,6 +1,5 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import HistoryHelpers from '../../../history-components/history-helpers.js';
-import { getUserName } from '../../../common/utils.js';
 import '../../../styles/shared-styles.js';
 
 export class TimelineCardBase extends HistoryHelpers(PolymerElement) {
@@ -21,11 +20,7 @@ export class TimelineCardBase extends HistoryHelpers(PolymerElement) {
 
   static get properties() {
     return {
-      item: Object,
-      getUserName: {
-        type: Function,
-        value: () => getUserName
-      }
+      item: Object
     };
   }
 

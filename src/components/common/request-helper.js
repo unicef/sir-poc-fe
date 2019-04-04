@@ -150,7 +150,7 @@ export const prepareEndpoint = (endpoint, data) => {
   let endpointCpy = JSON.parse(JSON.stringify(endpoint));
 
   Object.keys(data).forEach((key) => {
-    endpointCpy.url = endpointCpy.url.replace('<%='+ key + '%>', data[key]);
+    endpointCpy.url = endpointCpy.url.replace('<%='+ key + '%>', encodeURI(data[key]));
   });
 
   return endpointCpy;

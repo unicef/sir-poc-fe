@@ -15,7 +15,7 @@ class PersonnelCreatedCard extends TimelineCardBase {
        ${this.styles}
 
         <div class$="[[getCardClass(item)]]">
-          [[item.by_user]] added a personnel impact.
+          [[item.by_user_display]] added a personnel impact.
           <span title="View entire impact at this version">
             <a href="/incidents/history/[[item.incident_id]]/view-personnel/[[item.id]]">
               View original impact data

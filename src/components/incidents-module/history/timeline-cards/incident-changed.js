@@ -14,7 +14,7 @@ class IncidentChangedCard extends TimelineCardBase {
     return html`
        ${this.styles}
        <div class$="[[getCardClass(item)]]" hidden$="[[!hasChangedFields(item.change)]]">
-        [[item.by_user]] changed fields:
+        [[item.by_user_display]] changed fields:
         <p> [[getChangedFileds(item.change)]] </p>
         You can
         <a href="/incidents/history/[[item.data.id]]/diff-incident/[[item.id]]">

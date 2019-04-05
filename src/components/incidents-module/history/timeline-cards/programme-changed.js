@@ -14,7 +14,7 @@ class ProgrammeChangedCard extends TimelineCardBase {
     return html`
        ${this.styles}
        <div class$="[[getCardClass(item)]]" hidden$="[[!hasChangedFields(item.change)]]">
-        [[item.by_user]] changed programme impact fields:
+        [[item.by_user_display]] changed programme impact fields:
         <p> [[getChangedFileds(item.change)]] </p>
         You can
         <a href="/incidents/history/[[item.incident_id]]/diff-programme/[[item.id]]">

@@ -210,7 +210,7 @@ class EventsList extends connect(store)(ListBaseClass) {
                 <div class="row-h flex-c">
                   <div class="col col-6">
                     <strong class="rdc-title inline">Created by: </strong>
-                    <span>[[item.created_by_user_name]]</span>
+                    <span>[[item.created_by_user.email]]</span>
                   </div>
                   <div class="col col-6">
                     <strong class="rdc-title inline">Created on: </strong>

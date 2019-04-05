@@ -16,7 +16,7 @@ class SirRequestError {
       return response;
     }
   }
-};
+}
 
 const createIronRequestElement = () => {
   let ironRequestElem = document.createElement('iron-request');
@@ -42,7 +42,7 @@ export const makeRequest = (endpoint, data = {}) => {
   }
 
   return makeUncachedRequest(endpoint, data);
-}
+};
 
 const makeCachedRequest = (endpoint, data) => {
   if (endpoint._cachedData) {
@@ -54,7 +54,7 @@ const makeCachedRequest = (endpoint, data) => {
     setTimeout(() => delete endpoint._cachedData, endpoint.cachingPeriod);
     return result;
   });
-}
+};
 
 const makeUncachedRequest = function(endpoint, data) {
   let reqConfig = generateRequestConfigOptions(endpoint, data);

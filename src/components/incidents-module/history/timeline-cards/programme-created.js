@@ -15,7 +15,7 @@ class ProgrammeCreatedCard extends TimelineCardBase {
        ${this.styles}
 
         <div class$="[[getCardClass(item)]]">
-          [[item.by_user]] added an programme impact.
+          [[item.by_user_display]] added an programme impact.
           <span title="View entire impact at this version">
             <a href="/incidents/history/[[item.incident_id]]/view-programme/[[item.id]]">
               View original impact data

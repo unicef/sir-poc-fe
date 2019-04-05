@@ -15,7 +15,7 @@ class PropertyCreatedCard extends TimelineCardBase {
        ${this.styles}
 
         <div class$="[[getCardClass(item)]]">
-          [[item.by_user]] added an property impact.
+          [[item.by_user_display]] added an property impact.
           <span title="View entire impact at this version">
             <a href="/incidents/history/[[item.incident_id]]/view-property/[[item.id]]">
               View original impact data

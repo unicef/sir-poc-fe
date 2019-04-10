@@ -379,7 +379,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   }
 
   static get observers() {
-    return ['checkExportPermission(state.staticData.profile)'];
+    return ['checkExportPermission(state.staticData.profile.teams)'];
   }
 
   _stateChanged(state) {
@@ -636,6 +636,9 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   }
 
   checkExportPermission() {
+    if (!this.state.staticData.profile.teams) {
+      this.set('hasExportPermission', false);
+    }
     let teams = this.state.staticData.profile.teams;
     let permission = teams.some(t => t.team_type === 10 || t.team_type === 3);
     this.set('hasExportPermission', permission);

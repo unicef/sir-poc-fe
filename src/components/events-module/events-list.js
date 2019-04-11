@@ -173,17 +173,17 @@ class EventsList extends connect(store)(ListBaseClass) {
                   [[item.description]]
                 </span>
               </span>
-              <span class="col-data col-2" title="[[item.event_category]]" data-col-header-label="Category">
-                [[item.event_category]]
+              <span class="col-data col-2" title="[[getName(item.event_category, 'incidentCategories')]]" data-col-header-label="Category">
+                [[getName(item.event_category, 'incidentCategories')]]
               </span>
-              <span class="col-data col-2" title="[[item.threat_category]]" data-col-header-label="Threat Category">
-                [[item.threat_category]]
+              <span class="col-data col-2" title="[[getName(item.threat_category, 'threatCategories')]]" data-col-header-label="Threat Category">
+                [[getName(item.threat_category, 'threatCategories')]]
               </span>
               <span class="col-data col-1" title="[[item.start_date]]" data-col-header-label="Start date">
                 [[item.start_date]]
               </span>
-              <span class="col-data col-1" title="[[getRegion(item.region)]]" data-col-header-label="Region">
-                <span class="truncate">[[getRegion(item.region)]]</span>
+              <span class="col-data col-1" title="[[getName(item.region, 'regions')]]" data-col-header-label="Region">
+                <span class="truncate">[[getName(item.region, 'regions')]]</span>
               </span>
               <span class="col-data col-1" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
@@ -374,8 +374,8 @@ class EventsList extends connect(store)(ListBaseClass) {
            (!event.unsynced || !this.hasPermission('add_event'));
   }
 
-  getRegion(id) {
-    return getNameFromId(id, 'regions');
+  getName(id, statePath) {
+    return getNameFromId(id, statePath);
   }
 }
 

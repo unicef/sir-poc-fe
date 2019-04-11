@@ -434,7 +434,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="col col-3">
                 <time-input id="incidentTime"
                             readonly$="[[readonly]]"
-                            label="Incident Time"
+                            label="Incident Time (24h format)"
                             value="{{incident.incident_time}}"
                             required auto-validate
                             hide-icon

@@ -224,8 +224,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
                 <div class="alert-text">
                   ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
-                  [[selectedImpactType.name]] subcategory are Threat Category, Incident Category, Incident Subcategory,
-                  Incident Description, Region, Country, Incident Date, and Incident Time.
+                  [[selectedIncidentSubcategory.name]] subcategory are Threat Category, Incident Category, 
+                  Incident Subcategory, Incident Description, Region, Country, Incident Date, and Incident Time.
                   The victim should be informed that all other information is VOLUNTARY.
                 </div>
               </div>
@@ -434,7 +434,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="col col-3">
                 <time-input id="incidentTime"
                             readonly$="[[readonly]]"
-                            label="Incident Time"
+                            label="Incident Time (24h format)"
                             value="{{incident.incident_time}}"
                             required auto-validate
                             hide-icon

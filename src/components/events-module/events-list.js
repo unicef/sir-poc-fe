@@ -25,6 +25,8 @@ import { store } from '../../redux/store.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 
+import { getNameFromId } from '../../components/common/utils.js';
+
 import 'etools-date-time/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
@@ -73,7 +75,7 @@ class EventsList extends connect(store)(ListBaseClass) {
         <iron-collapse id="collapse" opened>
           <div class="filters">
             <paper-input class="filter search-input"
-                        placeholder="Search by Description or Location"
+                        placeholder="Search by Description or Region"
                         value="{{filters.values.q}}">
               <iron-icon icon="search" slot="prefix"></iron-icon>
             </paper-input>
@@ -132,16 +134,22 @@ class EventsList extends connect(store)(ListBaseClass) {
           <etools-data-table-column class="col-1">
             Case number
           </etools-data-table-column>
-          <etools-data-table-column class="col-4">
+          <etools-data-table-column class="col-3">
             Description
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
+            Event Category
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Threat Category
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
             Start date
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
-            Location
+          <etools-data-table-column class="col-1">
+            Region
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
             Status
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -160,18 +168,24 @@ class EventsList extends connect(store)(ListBaseClass) {
                   [[item.case_number]]
                 </span>
               </span>
-              <span class="col-data col-4" data-col-header-label="Description">
+              <span class="col-data col-3" data-col-header-label="Description">
                 <span class="truncate">
                   [[item.description]]
                 </span>
               </span>
-              <span class="col-data col-2" title="[[item.start_date]]" data-col-header-label="Start date">
+              <span class="col-data col-2" title="[[item.event_category]]" data-col-header-label="Category">
+                [[item.event_category]]
+              </span>
+              <span class="col-data col-2" title="[[item.threat_category]]" data-col-header-label="Threat Category">
+                [[item.threat_category]]
+              </span>
+              <span class="col-data col-1" title="[[item.start_date]]" data-col-header-label="Start date">
                 [[item.start_date]]
               </span>
-              <span class="col-data col-2" title="[[item.location]]" data-col-header-label="Location">
-                <span class="truncate">[[item.location]]</span>
+              <span class="col-data col-1" title="[[getRegion(item.region)]]" data-col-header-label="Region">
+                <span class="truncate">[[getRegion(item.region)]]</span>
               </span>
-              <span class="col-data col-2" data-col-header-label="Status">
+              <span class="col-data col-1" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
                   Synced
                 </template>
@@ -258,7 +272,11 @@ class EventsList extends connect(store)(ListBaseClass) {
     }
 
     this.offline = state.app.offline;
-    this.listItems = state.events.list;
+    this.listItems = state.events.list.map((elem) => {
+      elem.event_category_name = getNameFromId(elem.event_category, 'incidentCategories');
+      elem.event_threat_category_name = getNameFromId(elem.threat_category, 'threatCategories');
+      return elem;
+    });
   }
 
   initFilters() {
@@ -330,7 +348,9 @@ class EventsList extends connect(store)(ListBaseClass) {
     q = q.toLowerCase();
     return String(e.description).toLowerCase().search(q) > -1 ||
            String(e.case_number).toLowerCase().search(q) > -1 ||
-           String(e.location).toLowerCase().search(q) > -1;
+           String(e.event_category_name).toLowerCase().search(q) > -1 ||
+           String(e.event_threat_category_name).toLowerCase().search(q) > -1 ||
+           String(getNameFromId(e.region, 'regions')).toLowerCase().search(q) > -1;
   }
 
   isApproved(status) {
@@ -352,6 +372,10 @@ class EventsList extends connect(store)(ListBaseClass) {
   notEditable(event, offline) {
     return (!this.hasPermission('change_event') || offline) &&
            (!event.unsynced || !this.hasPermission('add_event'));
+  }
+
+  getRegion(id) {
+    return getNameFromId(id, 'regions');
   }
 }
 

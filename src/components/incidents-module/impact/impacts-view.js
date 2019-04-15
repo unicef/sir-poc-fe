@@ -74,12 +74,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
               class="no-t-transform smaller"
               on-click="_addUnPersonnel"
-              hidden$="[[!hasPermission('add_personincident')]]">
+              hidden$="[[!permissions.add_personincident]]">
             <iron-icon icon="add"></iron-icon>
             Add UNICEF Personnel
           </paper-button>
         </div>
-        <un-personnel-list hidden$="[[!hasPermission('view_personincident')]]"></un-personnel-list>
+        <un-personnel-list hidden$="[[!permissions.view_personincident]]"></un-personnel-list>
       </div>
 
       <div class="card">
@@ -95,12 +95,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addNonUn"
-                        hidden$="[[!hasPermission('add_personincident')]]">
+                        hidden$="[[!permissions.add_personincident]]">
             <iron-icon icon="add"></iron-icon>
             Add Non-UNICEF Personnel
           </paper-button>
         </div>
-        <non-un-personnel-list hidden$="[[!hasPermission('view_personincident')]]"></non-un-personnel-list>
+        <non-un-personnel-list hidden$="[[!permissions.view_personincident]]"></non-un-personnel-list>
       </div>
 
       <div class="card">
@@ -109,12 +109,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addEvacuation"
-                        hidden$="[[!hasPermission('add_evacuation')]]">
+                        hidden$="[[!permissions.add_evacuation]]">
             <iron-icon icon="add"></iron-icon>
             Add Evacuation or Relocation
           </paper-button>
         </div>
-        <evacuations-list hidden$="[[!hasPermission('view_evacuation')]]"></evacuations-list>
+        <evacuations-list hidden$="[[!permissions.view_evacuation]]"></evacuations-list>
       </div>
 
       <div class="card">
@@ -128,12 +128,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addProperty"
-                        hidden$="[[!hasPermission('add_property')]]">
+                        hidden$="[[!permissions.add_property]]">
             <iron-icon icon="add"></iron-icon>
             Add UNICEF Property
           </paper-button>
         </div>
-        <properties-list hidden$="[[!hasPermission('view_property')]]"></properties-list>
+        <properties-list hidden$="[[!permissions.view_property]]"></properties-list>
       </div>
 
       <div class="card">
@@ -150,12 +150,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addPremise"
-                        hidden$="[[!hasPermission('add_premise')]]">
+                        hidden$="[[!permissions.add_premise]]">
             <iron-icon icon="add"></iron-icon>
             Add Premise
           </paper-button>
         </div>
-        <premises-list hidden$="[[!hasPermission('view_premise')]]"></premises-list>
+        <premises-list hidden$="[[!permissions.view_premise]]"></premises-list>
       </div>
 
       <div class="card">
@@ -164,12 +164,12 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
           <paper-button raised
                         class="no-t-transform smaller"
                         on-click="_addProgramme"
-                        hidden$="[[!hasPermission('add_programme')]]">
+                        hidden$="[[!permissions.add_programme]]">
             <iron-icon icon="add"></iron-icon>
             Add Programme
           </paper-button>
         </div>
-        <programmes-list hidden$="[[!hasPermission('view_programme')]]"></programmes-list>
+        <programmes-list hidden$="[[!permissions.view_programme]]"></programmes-list>
       </div>
     `;
   }
@@ -183,8 +183,26 @@ export class ImpactsView extends connect(store)(PermissionsBase) {
         type: Number,
         computed: '_setIncidentId(state.app.locationInfo.incidentId)',
         observer: '_idChanged'
+      },
+      permissions: {
+        type: Object,
+        notify: true
       }
     };
+  }
+
+  static get observers() {
+    return ['checkPermissions(state.staticData.profile)'];
+  }
+
+  checkPermissions() {
+    let permissions = {};
+    let types = [
+      'add_personincident', 'view_personincident', 'add_evacuation', 'view_evacuation', 'add_property',
+      'view_property', 'add_premise', 'view_premise', 'add_programme', 'view_programme'
+    ];
+    types.forEach(type => permissions[type] = this.hasPermission(type));
+    this.set('permissions', permissions);
   }
 
   _setIncidentId(id) {

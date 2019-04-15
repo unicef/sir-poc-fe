@@ -19,7 +19,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
                         label="Created By"
                         placeholder="&#8212;"
                         type="text"
-                        value="[[data.created_by_user_name]]"
+                        value="[[data.created_by_user.email]]"
                         readonly></paper-input>
         </div>
         <div class="col col-3">
@@ -34,7 +34,7 @@ export class ReviewFields extends connect(store)(PolymerElement) {
                         placeholder="&#8212;"
                         type="text"
                         readonly
-                        value="[[data.last_modify_user_name]]"></paper-input>
+                        value="[[data.last_modify_user.email]]"></paper-input>
         </div>
         <div class="col col-3">
           <datepicker-lite id="last_edited_on"

@@ -36,6 +36,8 @@ import { resetKeyExpiry } from '../redux/storage/utils.js';
 import { CHECK_IDLE_STATE_INTERVAL } from '../config/general.js';
 import { PermissionsBase } from './common/permissions-base-class.js';
 import { updatePath } from '../components/common/navigation-helper.js';
+import { makeRequest } from '../components/common/request-helper.js';
+import { Endpoints } from '../config/endpoints.js';
 
 import { clearIncidentDraft } from '../actions/incidents.js';
 import {
@@ -143,6 +145,16 @@ class AppShell extends connect(store)(PermissionsBase) {
           position: fixed;
           bottom: 128px;
         }
+        .boxed {
+          padding: 24px;
+          border: 4px solid red;
+        }
+        .link-cursor {
+          cursor: pointer;
+        }
+        .sidebar-dropdown {
+          width: 100%;
+        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -208,7 +220,37 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <iron-icon icon="supervisor-account"></iron-icon>
                 <span>Admin</span>
             </a>
-          </div>
+            </div>
+            <template is="dom-if" if="[[_userIsInactive()]]">
+              <div class="boxed">
+                <div class="alert-text">You do not have full access to SIR.</div>
+                <etools-dropdown class="sidebar-dropdown"
+                                 label="Region"
+                                 options="[[regions]]"
+                                 option-label="name"
+                                 option-value="id"
+                                 required auto-validate
+                                 error-message="This is required"
+                                 selected="{{requester.region}}">
+                </etools-dropdown>
+
+                <etools-dropdown class="sidebar-dropdown"
+                                 label="Country"
+                                 disabled$="[[!requester.region]]"
+                                 option-label="name"
+                                 option-value="id"
+                                 options="[[getCountriesForRegion(requester.region, countries)]]"
+                                 selected="{{requester.country}}"
+                                 error-message="This is required">
+                </etools-dropdown>
+                <div>Select a region/country and 
+                  <a class="link-cursor" on-tap="_requestAccess">click to request.</a>
+                </div>
+                <template is="dom-if" if="[[requestSubmitted]]">
+                  <div>Thank you. Your request has been submitted.</div>
+                </template>
+              </div>
+            </template>
           <img id="logo" align="end" src="../../images/unicef_logo.png"></img>
 
         </app-drawer>
@@ -256,7 +298,18 @@ class AppShell extends connect(store)(PermissionsBase) {
       route: Object,
       routeData: Object,
       queryParams: Object,
-      offline: Boolean
+      offline: Boolean,
+      requester: {
+        type: Object,
+        value: {}
+      },
+      countries: Array,
+      regions: Array,
+      requestSubmitted: {
+        type: Boolean,
+        value: () => localStorage.getItem('request_submitted'),
+        notify: true
+      }
     };
   }
 
@@ -389,6 +442,66 @@ class AppShell extends connect(store)(PermissionsBase) {
       store.dispatch(showSnackbar('The preferred browser for this is Chrome'));
     }
   }
+
+  _userIsInactive() {
+    if (!store.getState().staticData.profile.teams.length) {
+      this._fetchCountries();
+      this._fetchRegions();
+      return true;
+    }
+    return false;
+  }
+
+  async _fetchCountries() {
+    this.countries = this.countries || await makeRequest(Endpoints.countries);
+  }
+
+  async _fetchRegions() {
+    this.regions = this.regions || await makeRequest(Endpoints.regions);
+  }
+
+  _showSuccessMessage() {
+    let showSuccessEvent = new CustomEvent('submit-success', {
+      detail: this.attachment,
+      bubbles: true,
+      composed: true
+    });
+    this.dispatchEvent(showSuccessEvent);
+
+    localStorage.setItem('request_submitted', true);
+    this.set('requestSubmitted', true);
+  }
+
+  _showErrorMessage(response) {
+    let messages = [];
+    for (let key in response) {
+      messages = [...messages, ...response[key]];
+    }
+
+    let errorMessage = messages.join(' ');
+    this.set('errorMessage', errorMessage || 'There was an error while processing your request');
+  }
+
+  _requestAccess() {
+    let {display_name, email, job_title} = store.getState().staticData.profile;
+
+    this.requester.name = display_name;
+    this.requester.email = email;
+    this.requester.job_title = job_title;
+
+    makeRequest(Endpoints.requestAccess, this.requester).then((result) => {
+      this._showSuccessMessage();
+    }).catch((err) => {
+      this._showErrorMessage(err.response);
+    });
+  }
+
+  getCountriesForRegion(regionId) {
+    if (!regionId) {
+      return [];
+    }
+      return this.countries.filter(country => Number(country.region) === Number(regionId));
+    }
 }
 
 window.customElements.define('app-shell', AppShell);

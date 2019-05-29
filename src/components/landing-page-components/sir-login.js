@@ -85,17 +85,17 @@ class SirLogin extends PolymerElement {
             <h1>Welcome to UNICEF SIR</h1>
             <p>Sign into your Microsoft Account</p>
             <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
-            <paper-button raised on-tap="_showRequestAccessForm"> Request Access </paper-button>
+            <!-- <paper-button raised on-tap="_showRequestAccessForm"> Request Access </paper-button> -->
           </div>
 
-          <div name="successMessage">
+          <!-- <div name="successMessage">
             <h3> Access Requested. You will receive an email after access is granted. </h3>
           </div>
 
           <request-access-form name="requestAccess"
                                on-navigate-back="_showLoginForm"
                                on-submit-success="_showSuccessForm">
-          </request-access-form>
+          </request-access-form> -->
 
 
         </div>

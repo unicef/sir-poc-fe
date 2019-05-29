@@ -86,7 +86,7 @@ class AppLoader extends PolymerElement {
 
   async authorizedCallback() {
     this.set('loading', true);
-    const reduxStore = await import ('../redux/store.js');
+    const reduxStore = await import('../redux/store.js');
     reduxStore.initStore();
     this.registerServiceWorker();
     await import('./app-shell.js');

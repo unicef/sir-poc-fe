@@ -26,7 +26,7 @@ import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
 // import './common/support-btn.js';
-import './common/documentation-btn.js';
+// import './common/documentation-btn.js';
 import './common/no-access-overlay.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
@@ -250,7 +250,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <div class="capitalize">[[_getPageTitle(page)]]</div>
               </div>
               <div>
-                <documentation-btn class="menu-icon"></documentation-btn>
+                <!-- <documentation-btn class="menu-icon"></documentation-btn> -->
                 <!-- <support-btn class="menu-icon"></support-btn> -->
                 <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
               </div>
@@ -296,11 +296,6 @@ class AppShell extends connect(store)(PermissionsBase) {
       },
       countries: Array,
       regions: Array,
-      requestSubmitted: {
-        type: Boolean,
-        value: () => localStorage.getItem('request_submitted'),
-        notify: true
-      },
       userInactive: {
         type: Boolean,
         value: false,
@@ -447,28 +442,6 @@ class AppShell extends connect(store)(PermissionsBase) {
         this.shadowRoot.querySelector('#noAccess').open();
     }
     this.set('userInactive', false);
-  }
-
-  _showSuccessMessage() {
-    let showSuccessEvent = new CustomEvent('submit-success', {
-      detail: this.attachment,
-      bubbles: true,
-      composed: true
-    });
-    this.dispatchEvent(showSuccessEvent);
-
-    localStorage.setItem('request_submitted', true);
-    this.set('requestSubmitted', true);
-  }
-
-  _showErrorMessage(response) {
-    let messages = [];
-    for (let key in response) {
-      messages = [...messages, ...response[key]];
-    }
-
-    let errorMessage = messages.join(' ');
-    this.set('errorMessage', errorMessage || 'There was an error while processing your request');
   }
 
   getCountriesForRegion(regionId) {

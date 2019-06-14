@@ -1,6 +1,18 @@
 const baseUrl = window.location.origin;
 
 export const Endpoints = {
+  myKey: {
+    url: baseUrl + '/api/profile/key/',
+    method: 'GET'
+  },
+  myProfile: {
+    url: baseUrl + '/api/profile/',
+    method: 'GET'
+  },
+  requestAccess: {
+    url: baseUrl + '/api/register/',
+    method: 'POST'
+  },
   eventsList: {
     url: baseUrl + '/api/events/',
     method: 'GET'
@@ -25,6 +37,11 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/',
     method: 'GET'
   },
+  exportIncidentsList: {
+    url: baseUrl + '/api/incidents/?<%=queryString%>',
+    method: 'GET',
+    handleAs: 'blob'
+  },
   newIncident: {
     url: baseUrl + '/api/incidents/',
     method: 'POST'
@@ -33,16 +50,57 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'GET'
   },
+  exportSingleIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/?format=<%=docType%>',
+    method: 'GET',
+    handleAs: 'blob'
+  },
   getIncidentHistory: {
     url: baseUrl + '/api/incidents/<%=id%>/history/',
+    method: 'GET'
+  },
+  notifySpecificUser: {
+    url: baseUrl + '/api/incident/<%=incidentId%>/alert/user/<%=userId%>/',
     method: 'GET'
   },
   editIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/',
     method: 'PATCH'
   },
+  deleteIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/',
+    method: 'DELETE'
+  },
   submitIncident: {
     url: baseUrl + '/api/incidents/<%=id%>/submit/',
+    method: 'PUT'
+  },
+  rejectIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/reject/',
+    method: 'PUT'
+  },
+  approveIncident: {
+    url: baseUrl + '/api/incidents/<%=id%>/approve/',
+    method: 'PUT'
+  },
+  reviewIncidentEOD: {
+    url: baseUrl + '/api/incidents/<%=id%>/eod_review/',
+    method: 'PUT'
+  },
+  reviewIncidentDHR: {
+    url: baseUrl + '/api/incidents/<%=id%>/dhr_review/',
+    method: 'PUT'
+  },
+  reviewIncidentDFAM: {
+    url: baseUrl + '/api/incidents/<%=id%>/dfam_review/',
+    method: 'PUT'
+  },
+  reviewIncidentLegal: {
+    url: baseUrl + '/api/incidents/<%=id%>/legal_review/',
+    method: 'PUT'
+  },
+  reviewIncidentStaffWellbeing: {
+    url: baseUrl + '/api/incidents/<%=id%>/staff_wellbeing_review/',
     method: 'PUT'
   },
   incidentsCommentsList: {
@@ -61,6 +119,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_evacuations/<%=id%>/',
     method: 'PATCH'
   },
+  getIncidentEvacuationHistory: {
+    url: baseUrl + '/api/incident_evacuations/<%=id%>/history/',
+    method: 'GET'
+  },
   incidentEvacuationsList: {
     url: baseUrl + '/api/incident_evacuations/',
     method: 'GET'
@@ -73,6 +135,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_properties/<%=id%>/',
     method: 'PATCH'
   },
+  getIncidentPropertyHistory: {
+    url: baseUrl + '/api/incident_properties/<%=id%>/history/',
+    method: 'GET'
+  },
   incidentPropertiesList: {
     url: baseUrl + '/api/incident_properties/',
     method: 'GET'
@@ -82,8 +148,12 @@ export const Endpoints = {
     method: 'POST'
   },
   editIncidentAttachments: {
-    url: baseUrl + '/api/incident_attachments/',
+    url: baseUrl + '/api/incident_attachments/<%=id%>/',
     method: 'PATCH'
+  },
+  deleteIncidentAttachment: {
+    url: baseUrl + '/api/incident_attachments/<%=id%>/',
+    method: 'DELETE'
   },
   addIncidentPremise: {
     url: baseUrl + '/api/incident_premises/',
@@ -92,6 +162,10 @@ export const Endpoints = {
   editIncidentPremise: {
     url: baseUrl + '/api/incident_premises/<%=id%>/',
     method: 'PATCH'
+  },
+  getIncidentPremiseHistory: {
+    url: baseUrl + '/api/incident_premises/<%=id%>/history/',
+    method: 'GET'
   },
   incidentPremisesList: {
     url: baseUrl + '/api/incident_premises/',
@@ -105,6 +179,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_programmes/<%=id%>/',
     method: 'PATCH'
   },
+  getIncidentProgrammeHistory: {
+    url: baseUrl + '/api/incident_programmes/<%=id%>/history/',
+    method: 'GET'
+  },
   incidentProgrammesList: {
     url: baseUrl + '/api/incident_programmes/',
     method: 'GET'
@@ -117,6 +195,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incident_involved/<%=id%>/',
     method: 'PATCH'
   },
+  getIncidentPersonnelHistory: {
+    url: baseUrl + '/api/incident_involved/<%=id%>/history/',
+    method: 'GET'
+  },
   incidentPersonnelList: {
     url: baseUrl + '/api/incident_involved/',
     method: 'GET'
@@ -127,18 +209,20 @@ export const Endpoints = {
   },
   regions: {
     url: baseUrl + '/api/regions/',
-    method: 'GET'
+    method: 'GET',
+    cachingPeriod: 60000
   },
   countries: {
     url: baseUrl + '/api/countries/',
-    method: 'GET'
+    method: 'GET',
+    cachingPeriod: 60000
   },
   teams: {
     url: baseUrl + '/api/teams/',
     method: 'GET'
   },
-  users: {
-    url: baseUrl + '/api/users/',
+  usersSearch: {
+    url: baseUrl + '/api/users?q=<%=search%>',
     method: 'GET'
   },
   weapons: {
@@ -228,5 +312,5 @@ export const Endpoints = {
   programmeTypes: {
     url: baseUrl + '/api/programme_types/',
     method: 'GET'
-  },
+  }
 };

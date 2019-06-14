@@ -17,7 +17,8 @@ const defaultStaticData = {
     crashTypes: [],
     countries: [],
     agencies: [],
-    impacts: {},
+    profile: {},
+    impacts: [],
     regions: [],
     factors: [],
     targets: [],
@@ -32,6 +33,11 @@ const defaultStaticData = {
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
+    case ACTIONS.RECEIVE_PROFILE:
+      return {
+        ...state,
+        profile: action.profile
+      };
     case ACTIONS.RECEIVE_INCIDENT_CATEGORIES:
       return {
         ...state,
@@ -128,11 +134,6 @@ const staticData = (state = defaultStaticData, action) => {
       return {
         ...state,
         weapons: action.weapons
-      };
-    case ACTIONS.RECEIVE_USERS:
-      return {
-        ...state,
-        users: action.users
       };
     case ACTIONS.RECEIVE_TEAMS:
       return {

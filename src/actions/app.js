@@ -10,28 +10,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { updatePath } from '../components/common/navigation-helper.js';
 import { loadAllStaticData } from './static-data.js';
-import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import { fetchIncident, fetchAllIncidentData } from './incidents.js';
+import { fetchEvent, fetchAndStoreEvents } from './events.js';
 import * as ACTIONS from './constants.js';
 // TODO: break this up into smaller files
 // TODO: add a sync data action when app is back online
 
 let snackbarTimer;
 
-export const storeReady = () => (dispatch, getState) => {
-  let state = getState();
-  if (state && state.app && state.app.offline) {
-    return;
-  }
-
+export const requestPageLoadData = () => (dispatch) => {
   dispatch(loadAllStaticData());
   dispatch(fetchAndStoreEvents());
   dispatch(fetchAllIncidentData());
 };
 
-export const showSnackbar = () => (dispatch) => {
+export const storeReady = () => (dispatch, getState) => {
+  let state = getState();
+  const isOffline = state && state.app && state.app.offline;
+  if (isOffline) {
+    return;
+  }
+
+  dispatch(requestPageLoadData());
+};
+
+export const showSnackbar = text => (dispatch) => {
   dispatch({
-    type: ACTIONS.OPEN_SNACKBAR
+    type: ACTIONS.OPEN_SNACKBAR,
+    text
   });
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() =>
@@ -42,10 +48,10 @@ export const updateOffline = offline => (dispatch, getState) => {
   if (!getState()) {
     return;
   }
-  // Show the snackbar, unless this is the first load of the page.
-  if (getState().app.offline !== undefined) {
-    dispatch(showSnackbar());
-  }
+
+  let message = offline ? 'You are now offline' : 'You are now online';
+  dispatch(showSnackbar(message));
+
   dispatch({
     type: ACTIONS.UPDATE_OFFLINE,
     offline
@@ -92,9 +98,6 @@ export const lazyLoadIncidentPages = page => (dispatch, getState) => {
     case 'history':
       import('../components/incidents-module/history/incident-history-controller.js');
       break;
-    case 'comments':
-      import('../components/incidents-module/incident-comments.js');
-      break;
     case 'review':
       import('../components/incidents-module/incident-review.js');
       break;
@@ -118,9 +121,6 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
       break;
     case 'incidents':
       import('../components/incidents-module/incidents-controller.js');
-      break;
-    case 'dashboard':
-      import('../components/dashboard-module/dashboard-controller.js');
       break;
     case 'view404':
       import('../components/non-found-module/404.js');

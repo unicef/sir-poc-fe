@@ -25,15 +25,16 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
         }
       }
 
-      etools-dropdown-lite, etools-dropdown-multi-lite {
+      etools-dropdown, etools-dropdown-multi {
         width: 100%;
       }
 
       paper-input,
       paper-textarea,
       datepicker-lite,
-      etools-dropdown-lite,
-      etools-dropdown-multi-lite {
+      time-input,
+      etools-dropdown,
+      etools-dropdown-multi {
         --paper-input-container-underline-focus: {
           box-shadow:
             0 2px 2px 0 rgba(0, 0, 0, 0.14),
@@ -43,14 +44,15 @@ documentContainer.innerHTML = `<dom-module id="form-fields-styles">
       }
 
       paper-input[readonly],
+      time-input[readonly],
       paper-textarea[readonly],
       datepicker-lite[readonly],
-      etools-dropdown-lite[readonly],
+      etools-dropdown[readonly],
       etools-dropdown-multi-lite[readonly],
       paper-input[disabled],
       paper-textarea[disabled],
       datepicker-lite[disabled],
-      etools-dropdown-lite[disabled],
+      etools-dropdown[disabled],
       etools-dropdown-multi-lite[disabled] {
 
         --paper-input-container-label-focus: {

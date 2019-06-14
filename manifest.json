@@ -1,7 +1,7 @@
 {
   "name": "SIR",
   "short_name": "SIR",
-  "description": "SIR proof of concept",
+  "description": "SIR - Safety and Security Incident Recording System",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",

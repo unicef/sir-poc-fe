@@ -40,6 +40,10 @@ const DateMixin = baseClass => class extends baseClass {
     return (date instanceof Date === false) ? false : (date.toString() !== 'Invalid Date');
   }
 
+  toDate(dateStr) {
+    return this._convertDate(dateStr);
+  }
+
 };
 
 export default DateMixin;

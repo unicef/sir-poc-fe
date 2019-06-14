@@ -8,8 +8,7 @@
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -25,36 +24,37 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
-
-// basic stuff above, PWA stuff below
+import './styles/shared-styles.js';
+// import './common/support-btn.js';
+// import './common/documentation-btn.js';
+import './common/no-access-overlay.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-// This element is connected to the Redux store.
-import './snack-bar/snack-bar.js';
-import { store } from '../redux/store.js';
 
+import './snack-bar/snack-bar.js';
+import './snack-bar/ios-shortcut-dialog.js';
+import { store } from '../redux/store.js';
+import { resetKeyExpiry } from '../redux/storage/utils.js';
+import { CHECK_IDLE_STATE_INTERVAL } from '../config/general.js';
+import { PermissionsBase } from './common/permissions-base-class.js';
 import { updatePath } from '../components/common/navigation-helper.js';
-// These are the actions needed by this element.
+
+import { clearIncidentDraft } from '../actions/incidents.js';
 import {
+  showSnackbar,
   updateOffline,
   lazyLoadModules,
   updateLocationInfo
 } from '../actions/app.js';
 
+import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 
-// Gesture events like tap and track generated from touch will not be
-// preventable, allowing for better scrolling performance.
-setPassiveTouchGestures(true);
-
-// Set Polymer's root path to the same value we passed to our service worker
-// in `index.html`.
-setRootPath(MyAppGlobals.rootPath);
-
-class MyApp extends connect(store)(PolymerElement) {
+class AppShell extends connect(store)(PermissionsBase) {
   static get template() {
+    // language=HTML
     return html`
-      <style>
+      <style include="shared-styles">
         :host {
           display: block;
         }
@@ -65,30 +65,59 @@ class MyApp extends connect(store)(PolymerElement) {
 
         app-header {
           color: #fff;
-          background-color: var(--app-primary-color);
+          background-color: var(--primary-color);
+        }
+
+        app-header app-toolbar {
+          @apply --layout-justified;
         }
 
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
+          padding: 4px;
         }
 
         #menu-header {
           @apply --layout-horizontal;
+          @apply --layout-center;
           height: 63px;
           border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+          background-color: var(--menu-header-bg, #d6d8d9);
         }
 
-        #menu-header iron-icon {
-          color: var(--secondary-text-color);
+        #menu-header #app-logo {
+          @apply --layout-horizontal;
+          @apply --layout-center;
+          @apply --layout-center-justified;
+          width: 48px;
           height: 48px;
-          margin-right: 8px;
+          border-radius: 50%;
+          border: 2px solid var(--primary-color);
+          background-color: #fff;
+          color: var(--primary-color);
+          font-size: 20px;
+        }
+
+        #menu-header #app-name {
+          @apply --layout-vertical;
+          margin-left: 8px;
+          font-size: 14px;
+        }
+
+        #menu-header #app-name span:last-child {
+          color: var(--secondary-text-color);
+          font-size: 13px;
+        }
+
+        .capitalize {
+          text-transform: capitalize;
         }
 
         .drawer-list a {
           @apply --layout-horizontal;
           @apply --layout-center;
           font-weight: normal;
-          padding: 0 32px;
+          padding: 0 30px;
           text-decoration: none;
           color: var(--primary-text-color);
           line-height: 40px;
@@ -98,7 +127,7 @@ class MyApp extends connect(store)(PolymerElement) {
           color: var(--secondary-text-color);
         }
         .drawer-list a.menu-heading[selected] {
-          color: var(--app-primary-color);
+          color: var(--primary-color);
         }
         .drawer-list a.menu-heading {
           padding: 0 24px;
@@ -110,7 +139,32 @@ class MyApp extends connect(store)(PolymerElement) {
         }
         .drawer-list a[selected]:not(.menu-heading) {
           background-color: var(--menu-selected-bg-color);
-          color: var(--app-primary-color);
+          color: var(--primary-color);
+        }
+        #logo {
+          width: 70%;
+          padding: 0 16px;
+          position: fixed;
+          bottom: 128px;
+        }
+        .boxed {
+          padding: 24px;
+          border: 4px solid red;
+        }
+        .link-cursor {
+          cursor: pointer;
+        }
+        .sidebar-dropdown {
+          width: 100%;
+        }
+        .menu-icon {
+          padding: 4px;
+          border-right: solid;
+        }
+        .title-group {
+          flex-direction: row;
+          display: flex;
+          align-items: center;
         }
       </style>
 
@@ -120,18 +174,42 @@ class MyApp extends connect(store)(PolymerElement) {
       <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
 
-      <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="900px">
+      <no-access-overlay id="noAccess" with-backdrop no-cancel-on-outside-click no-cancel-on-esc-key>
+        You do not have permission to access this application. Please contact your administrator to request access.
+      </no-access-overlay>
+
+      <!-- menu will switch to mobile hamburger menu under 1280px -->
+      <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="1280px">
         <!-- Drawer content -->
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar id="menu-header">
-            <iron-icon icon="event"></iron-icon>
-            <span>Menu</span>
+            <span id="app-logo">SIR</span>
+            <span id="app-name">
+              <span>Safety and Security</span>
+              <span>Incident Recording System</span>
+            </span>
           </app-toolbar>
 
           <div class="drawer-list">
             <a class="menu-heading"
-              selected$="[[pathsMatch(page, 'dashboard')]]"
-              href="[[rootPath]]dashboard"> Dashboard </a>
+              selected$="[[pathsMatch(page, 'incidents')]]"
+              href="[[rootPath]]incidents/list/">Incidents</a>
+
+            <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]"
+              href="[[rootPath]]incidents/list/">
+                <iron-icon icon="list"></iron-icon>
+                <span> Incidents List </span>
+                <small hidden$="[[!getNewCaseCount(incidents)]]">
+                  &nbsp;([[getNewCaseCount(incidents)]] new)
+                </small>
+            </a>
+
+            <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
+              href="[[rootPath]]incidents/new/"
+              hidden$="[[!canAddIncidents(profile)]]">
+                  <iron-icon icon="av:playlist-add"></iron-icon>
+                  <span>New Incident</span>
+            </a>
 
             <a class="menu-heading"
               selected$="[[pathsMatch(page, 'events')]]"
@@ -141,55 +219,56 @@ class MyApp extends connect(store)(PolymerElement) {
               href="[[rootPath]]events/list/">
                 <iron-icon icon="list"></iron-icon>
                 <span>Events List</span>
-              </a>
+                <small hidden$="[[!getNewCaseCount(events)]]">
+                  &nbsp;([[getNewCaseCount(events)]] new)
+                </small>
+            </a>
 
             <a selected$="[[pathsMatch(route.path, '/events/new/')]]"
-              href="[[rootPath]]events/new/">
-              <iron-icon icon="av:playlist-add"></iron-icon>
-              <span>New Event</span>
+              href="[[rootPath]]events/new/"
+              hidden$="[[!canAddEvents(profile)]]">
+                <iron-icon icon="av:playlist-add"></iron-icon>
+                <span>New Event</span>
             </a>
 
-            <a class="menu-heading"
-              selected$="[[pathsMatch(page, 'incidents')]]"
-              href="[[rootPath]]incidents/list/">Incidents</a>
-
-            <a selected$="[[pathsMatch(route.path, '/incidents/list/')]]"
-              href="[[rootPath]]incidents/list/">
-              <iron-icon icon="list"></iron-icon>
-              <span>Incidents List</span>
-            </a>
-
-            <a selected$="[[pathsMatch(route.path, '/incidents/new/')]]"
-              href="[[rootPath]]incidents/new/">
-              <iron-icon icon="av:playlist-add"></iron-icon>
-              <span>New Incident</span>
+            <a class="menu-heading" href="[[rootPath]]admin/" target="_blank" hidden$="[[!canViewAdmin(profile)]]">
+                <iron-icon icon="supervisor-account"></iron-icon>
+                <span>Admin</span>
             </a>
           </div>
+          <img id="logo" align="end" src="../../images/unicef_logo.png"></img>
 
         </app-drawer>
 
         <!-- Main content -->
         <app-header-layout has-scrolling-region="">
 
-          <app-header slot="header" condenses="" reveals="" effects="waterfall">
+          <app-header slot="header" effects="waterfall">
             <app-toolbar>
-              <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title="">SIR</div>
+              <div class="title-group">
+                <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
+                <div class="capitalize">[[_getPageTitle(page)]]</div>
+              </div>
+              <div>
+                <!-- <documentation-btn class="menu-icon"></documentation-btn> -->
+                <!-- <support-btn class="menu-icon"></support-btn> -->
+                <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
+              </div>
             </app-toolbar>
           </app-header>
 
-          <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+          <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
-            <dashboard-controller name="dashboard"></dashboard-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 
         </app-header-layout>
+
         <snack-bar active$="[[snackbarOpened]]">
-          <span hidden$="[[!offline]]">You are now offline</span>
-          <span hidden$="[[offline]]">You are now online</span>
+          <span>[[snackbarText]]</span>
         </snack-bar>
+        <ios-shortcut-dialog></ios-shortcut-dialog>
       </app-drawer-layout>
     `;
   }
@@ -203,13 +282,25 @@ class MyApp extends connect(store)(PolymerElement) {
       },
       validPages: {
         type: Array,
-        value: ['events', 'incidents', 'dashboard']
+        value: ['events', 'incidents']
       },
       snackbarOpened: Boolean,
+      snackbarText: String,
       route: Object,
       routeData: Object,
       queryParams: Object,
-      offline: Boolean
+      offline: Boolean,
+      requester: {
+        type: Object,
+        value: {}
+      },
+      countries: Array,
+      regions: Array,
+      userInactive: {
+        type: Boolean,
+        value: false,
+        notify: true
+      }
     };
   }
 
@@ -222,12 +313,30 @@ class MyApp extends connect(store)(PolymerElement) {
 
   connectedCallback() {
     super.connectedCallback();
-
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
+    this.showPrefferedBrowserMessage();
+    this.checkForIdleState();
+    this._userIsInactive();
+  }
+
+  checkForIdleState() {
+    let lastActivityTimestamp = Date.now();
+    let lastTimeWeRest = Date.now();
+
+    document.addEventListener('mouseup', () => lastActivityTimestamp = Date.now());
+    document.addEventListener('keyup', () => lastActivityTimestamp = Date.now());
+
+    this.idleCheckInterval = this.idleCheckInterval || setInterval(() => {
+      if (lastActivityTimestamp !== lastTimeWeRest) {
+        resetKeyExpiry();
+        lastTimeWeRest = lastActivityTimestamp;
+      }
+    }, CHECK_IDLE_STATE_INTERVAL);
   }
 
   _locationChanged(path, queryParams) {
     store.dispatch(updateLocationInfo(path, queryParams));
+    store.dispatch({type: 'CLEAR_ERRORS'});
   }
 
   pathsMatch(path1, path2) {
@@ -235,19 +344,22 @@ class MyApp extends connect(store)(PolymerElement) {
   }
 
   _routePageChanged(page) {
-     // Show the corresponding page according to the route.
-     //
-     // If no page was found in the route data, page will be an empty string.
-     // Show the dashboard in that case. And if the page doesn't exist, show 'view404'.
+    if (this.page === page) {
+      return;
+    }
+
+    this._routePageChangedCallback(page);
+  }
+
+  _routePageChangedCallback(page) {
     if (!page) {
-      updatePath('dashboard');
+      updatePath('incidents/list/');
     } else if (this._isValidPage(page)) {
       this.page = page;
     } else {
       this.page = 'view404';
     }
 
-    // Close a non-persistent drawer when the page & route are changed.
     if (!this.$.drawer.persistent) {
       this.$.drawer.close();
     }
@@ -257,8 +369,12 @@ class MyApp extends connect(store)(PolymerElement) {
     if (!state) {
       return;
     }
-    // this.page = state.app.page;
+
     this.set('offline', state.app.offline);
+    this.set('profile', state.staticData.profile);
+    this.set('events', state.events.list);
+    this.set('incidents', state.incidents.list);
+    this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
 
@@ -269,6 +385,71 @@ class MyApp extends connect(store)(PolymerElement) {
   _isValidPage(page) {
     return this.validPages.indexOf(page) !== -1;
   }
+
+  _logout() {
+    store.dispatch(clearIncidentDraft());
+    SirMsalAuth.logout();
+  }
+
+  _getPageTitle(page) {
+    return !page ? '' : `SIR - ${page}`;
+  }
+
+  canAddIncidents(profile) {
+    if (!profile) {
+      return false;
+    }
+    return this.hasPermission('add_incident');
+  }
+
+  canAddEvents(profile) {
+    if (!profile) {
+      return false;
+    }
+    return this.hasPermission('add_event');
+  }
+
+  canViewAdmin(profile) {
+    if (!profile) {
+      return false;
+    }
+    return this.hasPermission('view_admin');
+  }
+
+  getNewCaseCount(allCases) {
+    if (!this.profile || !this.profile.last_login) {
+      return '';
+    }
+
+    let lastLogin = this.profile.last_login;
+    let filteredCases = allCases.filter((incident) => {
+      return moment(incident.created_on).isAfter(moment(lastLogin));
+    });
+
+    return filteredCases.length;
+  }
+
+  showPrefferedBrowserMessage() {
+    if (!window.chrome) {
+      store.dispatch(showSnackbar('The preferred browser for this is Chrome'));
+    }
+  }
+
+  _userIsInactive() {
+    if (Object.keys(store.getState().staticData.profile).length === 0
+      && store.getState().staticData.profile.constructor === Object) {
+        this.set('userInactive', true);
+        this.shadowRoot.querySelector('#noAccess').open();
+    }
+    this.set('userInactive', false);
+  }
+
+  getCountriesForRegion(regionId) {
+    if (!regionId) {
+      return [];
+    }
+      return this.countries.filter(country => Number(country.region) === Number(regionId));
+    }
 }
 
-window.customElements.define('app-shell', MyApp);
+window.customElements.define('app-shell', AppShell);

@@ -56,15 +56,6 @@ export const objDiff = (object1, object2) => {
   }, {});
 };
 
-export const getNameFromId = (id, staticDataPath) => {
-  if (!id) {
-    return '';
-  }
-  let staticData = store.getState().staticData;
-  let result = getStaticDataByPath(staticDataPath, staticData).find(v => v.id === Number(id));
-  return result ? result.name || '' : '';
-};
-
 const getStaticDataByPath = (path, data) => {
   if (path.indexOf('.') === -1) {
     return data[path];
@@ -74,3 +65,27 @@ const getStaticDataByPath = (path, data) => {
   let newData = data[pathPieces.shift()];
   return getStaticDataByPath(pathPieces.join('.'), newData);
 };
+
+export const getNameFromId = (id, staticDataPath) => {
+  if (!id) {
+    return '';
+  }
+
+  let staticData = store.getState().staticData;
+  let result = getStaticDataByPath(staticDataPath, staticData).find(v => Number(v.id) === Number(id));
+  return result ? result.name || '' : '';
+};
+
+export const isNumber = (candidate) => {
+  return !isNaN(parseFloat(candidate));
+};
+
+export const getCountriesForRegion = (regionId) => {
+  if (!regionId) {
+    return [];
+  }
+
+  let allCountries = store.getState().staticData.countries;
+  return allCountries.filter(country => Number(country.region) === Number(regionId));
+};
+

@@ -11,7 +11,9 @@
 module.exports = {
   staticFileGlobs: [
     'src/**/*',
+    'images/**/*',
     'manifest.json',
+    'node_modules/msal/dist/msal.min.js',
     'node_modules/moment/min/moment.min.js',
     'node_modules/web-animations-js/web-animations-next-lite.min.js',
     'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js'
@@ -21,5 +23,7 @@ module.exports = {
       urlPattern: /\/@webcomponents\/webcomponentsjs\//,
       handler: 'fastest'
     }
-  ]
+  ],
+  navigateFallbackWhitelist: [/^(?!\/admin\/)/]
 };
+// TODO: figure out a viable way of importing msal only when needed

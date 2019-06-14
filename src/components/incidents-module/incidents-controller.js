@@ -30,23 +30,28 @@ class IncidentsController extends connect(store)(BaseController) {
         .tabs-container {
           background-color: white;
           border-left: 1px solid #eeeeee;
+          border-bottom: 1px solid #eeeeee;
           --paper-tabs: {
             font-size: 14px;
           }
+          z-index: 1;
+          position: -webkit-sticky; /* Safari */
+          position: sticky;
+          top: -65px;
         }
 
         paper-tabs {
-          --paper-tabs-selection-bar-color: var(--app-primary-color);
+          --paper-tabs-selection-bar-color: var(--primary-color);
         }
 
         paper-tab[link],
         paper-tab {
-          --paper-tab-ink: var(--app-primary-color);
+          --paper-tab-ink: var(--primary-color);
           padding: 0 24px;
         }
 
         paper-tab.iron-selected {
-          color: var(--app-primary-color);
+          color: var(--primary-color);
         }
       </style>
 
@@ -79,7 +84,6 @@ class IncidentsController extends connect(store)(BaseController) {
         <view-incident name="view"></view-incident>
         <incident-review name="review"></incident-review>
         <impact-controller name="impact" route="{{subRoute}}"></impact-controller>
-        <incident-comments name="comments"></incident-comments>
         <incident-history-controller name="history" route="{{route}}"></incident-history-controller>
       </iron-pages>
     `;
@@ -91,6 +95,10 @@ class IncidentsController extends connect(store)(BaseController) {
       route: Object,
       routeData: Object,
       isOffline: Boolean,
+      visible: {
+        type: Boolean,
+        observer: 'visibilityChanged'
+      },
       viewPageTabs: {
         type: Array,
         computed: 'getTabs(isOffline, showEditTab, incidentId)'
@@ -129,7 +137,16 @@ class IncidentsController extends connect(store)(BaseController) {
     }
   }
 
+  visibilityChanged(visible) {
+    if (!visible) {
+      this.page = '';
+    }
+  }
+
   pageChanged(page) {
+    if (page === '') {
+      return;
+    }
     if (page === 'history' && this.isOffline) {
       updatePath('/');
     }
@@ -144,7 +161,6 @@ class IncidentsController extends connect(store)(BaseController) {
 
   getTabs(offline, showEditTab, incidentId) {
     let hideHistory = this._unsyncedAndCreatedOffline(incidentId);
-    let hideComments = this._unsyncedAndCreatedOffline(incidentId);
     let hideReview = this.hideReviewTab();
     hideHistory = hideHistory || offline;
 
@@ -169,11 +185,6 @@ class IncidentsController extends connect(store)(BaseController) {
         hidden: hideReview
       },
       {
-        name: 'comments',
-        tabLabel: 'COMMENTS',
-        hidden: hideComments
-      },
-      {
         name: 'history',
         tabLabel: 'HISTORY',
         hidden: hideHistory
@@ -190,7 +201,7 @@ class IncidentsController extends connect(store)(BaseController) {
   }
 
   hideReviewTab() {
-    if (this.showEditTab){
+    if (this.showEditTab) {
       return true;
     }
     if (this.isOffline) {

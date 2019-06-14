@@ -1,59 +1,69 @@
-
 import '@polymer/iron-ajax/iron-request.js';
-import { redirectToLogin } from './navigation-helper.js';
+import { SirMsalAuth } from '../auth/jwt/msal-authentication';
 
-// let ironRequestElem;
+class SirRequestError {
+  constructor(error, statusCode, statusText, response) {
+    this.error = error;
+    this.status = statusCode;
+    this.statusText = statusText;
+    this.response = this._prepareResponse(response);
+  }
 
-const createIronRequestElement = function() {
+  _prepareResponse(response) {
+    try {
+      return JSON.parse(response);
+    } catch (e) {
+      return response;
+    }
+  }
+}
+
+const createIronRequestElement = () => {
   let ironRequestElem = document.createElement('iron-request');
-  // document.querySelector('body').appendChild(ironRequestElem);
   return ironRequestElem;
 };
 
-const getRequestElement = function() {
-  return createIronRequestElement();
-};
-
-const generateRequestConfigOptions = function(endpoint, data) {
+const generateRequestConfigOptions = (endpoint, data) => {
   let config = {
       url: endpoint.url,
       method: endpoint.method,
       async: true,
-      handleAs: 'json',
-      headers: _getRequestHeaders({}),
+      handleAs: endpoint.handleAs || 'json',
       body: data,
       withCredentials: endpoint.auth
   };
+
+  config.headers = _getRequestHeaders(config);
   return config;
 };
 
-
-const _prepareResponse = function(response) {
-  try {
-    return JSON.parse(response);
-  } catch (e) {
-    return response;
+export const makeRequest = (endpoint, data = {}) => {
+  if (endpoint.cachingPeriod) {
+    return makeCachedRequest(endpoint, data);
   }
+
+  return makeUncachedRequest(endpoint, data);
 };
 
-const SirRequestError = function(error, statusCode, statusText, response) {
-  this.error = error;
-  this.status = statusCode;
-  this.statusText = statusText;
-  this.response = _prepareResponse(response);
+const makeCachedRequest = (endpoint, data) => {
+  if (endpoint._cachedData) {
+    return Promise.resolve(JSON.parse(JSON.stringify(endpoint._cachedData)));
+  }
+
+  return makeUncachedRequest(endpoint, data).then((result) => {
+    endpoint._cachedData = JSON.parse(JSON.stringify(result));
+    setTimeout(() => delete endpoint._cachedData, endpoint.cachingPeriod);
+    return result;
+  });
 };
 
-export const makeRequest = function(endpoint, data = {}) {
+const makeUncachedRequest = function(endpoint, data) {
   let reqConfig = generateRequestConfigOptions(endpoint, data);
-  let requestElem = getRequestElement();
-
+  let requestElem = createIronRequestElement();
   requestElem.send(reqConfig);
   return requestElem.completes.then((result) => {
     return result.response;
   }).catch((error) => {
-    if ([403, 401].indexOf(requestElem.xhr.status) > -1) {
-      redirectToLogin();
-    }
     throw new SirRequestError(error, requestElem.xhr.status, requestElem.xhr.statusText, requestElem.xhr.response);
   });
 };
@@ -99,12 +109,16 @@ const _getRequestHeaders = (reqConfig) => {
     headers['content-type'] = 'text';
   }
 
+  const authorizationHeader = SirMsalAuth.tokenIsValid()
+      ? SirMsalAuth.getRequestsAuthHeader()
+      : {};
+
   let clientConfiguredHeaders = _getClientConfiguredHeaders(reqConfig.headers);
   let csrfHeaders = {};
   if (!_csrfSafeMethod(reqConfig.method)) {
     csrfHeaders = _getCsrfHeader(reqConfig.csrfCheck);
   }
-  headers = Object.assign({}, headers, clientConfiguredHeaders, csrfHeaders);
+  headers = Object.assign({}, headers, clientConfiguredHeaders, csrfHeaders, authorizationHeader);
 
   if (reqConfig.multiPart) {
     // content type will be automatically set in this case
@@ -137,8 +151,27 @@ export const prepareEndpoint = (endpoint, data) => {
   let endpointCpy = JSON.parse(JSON.stringify(endpoint));
 
   Object.keys(data).forEach((key) => {
-    endpointCpy.url = endpointCpy.url.replace('<%='+ key + '%>', data[key]);
+    endpointCpy.url = endpointCpy.url.replace('<%='+ key + '%>', encodeURI(data[key]));
   });
-
   return endpointCpy;
+};
+
+export const handleBlobDataReceivedAndStartDownload = (blob, filename) => {
+  if (window.navigator.userAgent.indexOf('Trident/') > -1) {
+    window.navigator.msSaveBlob(blob, filename);
+  } else {
+    // create a blob url representing the data
+    let url = window.URL.createObjectURL(blob);
+    // attach blob url to anchor element with download attribute
+    let anchor = document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', filename);
+
+    //* anchor.click() doesn't work on ff, edge
+    anchor.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 100);
+  }
 };

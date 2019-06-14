@@ -7,10 +7,11 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { ListBaseClass } from '../common/list-base-class.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/notification-icons.js';
 import '@polymer/paper-input/paper-input.js';
@@ -18,28 +19,25 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
+import '@polymer/iron-media-query/iron-media-query.js';
+import '@polymer/iron-collapse/iron-collapse.js';
 
 import 'etools-data-table/etools-data-table.js';
 import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-date-time/datepicker-lite.js';
+import 'etools-dropdown/etools-dropdown-multi.js';
+import 'etools-dropdown/etools-dropdown.js';
 
 import { store } from '../../redux/store.js';
-import PaginationMixin from '../common/pagination-mixin.js';
-import DateMixin from '../common/date-mixin.js';
-import { syncIncidentOnList } from '../../actions/incidents.js';
-import ListCommonMixin from '../common/list-common-mixin.js';
-import {updateAppState} from '../common/navigation-helper';
+import { syncIncidentOnList, exportIncidents, exportSingleIncident } from '../../actions/incidents.js';
 import { getNameFromId } from '../common/utils.js';
-import { Endpoints } from '../../config/endpoints.js';
 
-import '../common/etools-dropdown/etools-dropdown-multi-lite.js';
-import '../common/etools-dropdown/etools-dropdown-lite.js';
-import '../common/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
 import '../styles/filters-styles.js';
 
-class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonMixin(PolymerElement)))) {
+class IncidentsList extends connect(store)(ListBaseClass) {
   static get template() {
     // language=HTML
     return html`
@@ -53,183 +51,292 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         }
 
         .col-data iron-icon {
-          margin-right: 16px;
+          margin-right: 8px;
         }
 
-        .sync-btn {
+        .capitalize {
+          text-transform: capitalize;
+        }
+
+        .action-btn {
           color: var(--primary-color);
           cursor: pointer;
         }
 
-        .row-details {
-          display: block;
+        etools-data-table-row[low-resolution-layout] etools-info-tooltip {
+          display: inherit;
         }
 
+        .notification-tooltip {
+          color: var(--notification-icon-color);
+        }
+
+        iron-icon.smaller {
+          --iron-icon-width: 20px;
+          --iron-icon-height: 20px;
+        }
+
+        @media (max-width: 768px) {
+          .hidden-on-mobile {
+            display: none;
+          }
+        }
       </style>
 
-      <div class="card filters">
-        <paper-input class="filter search-input"
-                     placeholder="Search by Person Involved, City or Description"
-                     value="{{filters.q}}">
-          <iron-icon icon="search" slot="prefix"></iron-icon>
-        </paper-input>
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+      <iron-media-query query="(max-width: 1024px)" query-matches="{{showToggleFiltersBtn}}"></iron-media-query>
 
-        <etools-dropdown-multi-lite class="filter sync-filter"
-                                    label="Sync Status"
-                                    options="[[itemSyncStatusOptions]]"
-                                    selected-values="{{filters.syncStatus}}"
-                                    hide-search>
-        </etools-dropdown-multi-lite>
+      <div class="card">
+        <iron-collapse id="collapse" opened>
+          <div class="filters">
+            <paper-input class="filter search-input"
+                        placeholder="Search by City or Description"
+                        value="{{filters.values.q}}">
+              <iron-icon icon="search" slot="prefix"></iron-icon>
+            </paper-input>
 
-        <datepicker-lite class="filter date"
-                         value="{{filters.startDate}}"
-                         label="From"></datepicker-lite>
+            <etools-dropdown-multi class="filter sync-filter"
+                                   label="Sync Status"
+                                   option-label="name"
+                                   option-value="id"
+                                   options="[[itemSyncStatusOptions]]"
+                                   selected-values="{{filters.values.syncStatus}}"
+                                   hide-search>
+            </etools-dropdown-multi>
 
-        <datepicker-lite class="filter date"
-                         value="{{filters.endDate}}"
-                         label="To"></datepicker-lite>
+            <datepicker-lite class="filter"
+                            value="{{filters.values.startDate}}"
+                            max-date="[[toDate(filters.values.endDate)]]"
+                            label="From"></datepicker-lite>
 
-        <etools-dropdown-lite class="filter select"
+            <datepicker-lite class="filter"
+                            value="{{filters.values.endDate}}"
+                            min-date="[[toDate(filters.values.startDate)]]"
+                            label="To"></datepicker-lite>
+
+            <etools-dropdown class="filter select"
                               label="Country"
                               enable-none-option
+                              option-label="name"
+                              option-value="id"
                               options="[[staticData.countries]]"
-                              selected="{{filters.country}}">
-        </etools-dropdown-lite>
+                              selected="{{filters.values.country}}">
+            </etools-dropdown>
 
-        <etools-dropdown-lite class="filter select"
+            <etools-dropdown class="filter select"
                               label="Incident Category"
                               enable-none-option
+                              option-label="name"
+                              option-value="id"
                               options="[[staticData.incidentCategories]]"
-                              selected="{{filters.incidentCategory}}"
+                              selected="{{filters.values.incidentCategory}}"
                               selected-item="{{selectedIncidentCategory}}">
-        </etools-dropdown-lite>
+            </etools-dropdown>
 
-        <etools-dropdown-lite class="filter select"
+            <etools-dropdown class="filter select"
                               label="Incident Subcategory"
                               enable-none-option
+                              option-label="name"
+                              option-value="id"
+                              disabled="[[!selectedIncidentCategory]]"
                               options="[[selectedIncidentCategory.subcategories]]"
-                              selected="{{filters.incidentSubcategory}}">
-        </etools-dropdown-lite>
+                              selected="{{filters.values.incidentSubcategory}}">
+            </etools-dropdown>
 
-        <etools-dropdown-lite class="filter select"
-                              label="Events"
-                              enable-none-option
-                              options="[[events]]"
-                              selected="{{filters.event}}">
-        </etools-dropdown-lite>
-
-        <etools-dropdown-lite class="filter select"
+            <etools-dropdown class="filter select"
                               label="Target"
                               enable-none-option
+                              option-label="name"
+                              option-value="id"
                               options="[[staticData.targets]]"
-                              selected="{{filters.target}}">
-        </etools-dropdown-lite>
+                              selected="{{filters.values.target}}">
+            </etools-dropdown>
 
-        <etools-dropdown-lite class="filter select"
+            <etools-dropdown class="filter select"
                               label="Threat Category"
                               enable-none-option
+                              option-label="name"
+                              option-value="id"
                               options="[[staticData.threatCategories]]"
-                              selected="{{filters.threatCategory}}">
-        </etools-dropdown-lite>
+                              selected="{{filters.values.threatCategory}}">
+            </etools-dropdown>
 
-        <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
-          <paper-button raised class="white-bg" slot="dropdown-trigger">
-            <iron-icon icon="file-download"></iron-icon>
-            Export
-          </paper-button>
-          <paper-listbox slot="dropdown-content" attr-for-selected="doc-type" selected="{{exportDocType}}">
-              <paper-item doc-type="pdf">PDF</paper-item>
-              <paper-item doc-type="csv">CSV</paper-item>
-              <paper-item doc-type="xls">XLS</paper-item>
-              <paper-item doc-type="xlsx">XLSX</paper-item>
-          </paper-listbox>
-        </paper-menu-button>
+            <paper-menu-button class="export"
+                               hidden="[[!hasExportPermission]]"
+                               horizontal-align="right"
+                               vertical-offset="8">
+              <paper-button raised class="white" slot="dropdown-trigger">
+                <iron-icon icon="file-download"></iron-icon>
+                Export
+              </paper-button>
+              <paper-listbox slot="dropdown-content" on-iron-select="exportList">
+                <paper-item doc-type="pdf">PDF</paper-item>
+                <paper-item doc-type="csv">CSV</paper-item>
+                <paper-item doc-type="xls">XLS</paper-item>
+                <paper-item doc-type="xlsx">XLSX</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+          </div>
+        </iron-collapse>
 
+        <div class="filters-button" on-tap="_toggleFilters" hidden$="[[!showToggleFiltersBtn]]">
+          <iron-icon id=toggleIcon icon="icons:expand-more"></iron-icon>
+          FILTERS
+        </div>
       </div>
 
       <div class="card list">
+        <div class="row-h flex-c">
+          <span class="col-9">
+            <h3> Incidents </h3>
+          </span>
+          <span class="col-3">
+            <etools-dropdown id="incidentSorting"
+                              label="Sorting"
+                              option-label="name"
+                              option-value="id"
+                              options="[[sortingOptions]]"
+                              selected-item="{{selectedSorting}}">
+            </etools-dropdown>
+          </span>
+        </div>
+
         <etools-data-table-header id="listHeader"
-                                  label="Incidents">
-          <etools-data-table-column class="col-3">
-            Case number
-          </etools-data-table-column>
+                                  no-title
+                                  low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-2">
+            Case Number
+          </etools-data-table-column>
+          <etools-data-table-column class="col-3">
+            Description
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
             City
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
-            Incident Category
+          <etools-data-table-column class="col-1">
+            Category
+          </etools-data-table-column>
+          <etools-data-table-column class="col-2">
+            Subcategory
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Status
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
             Actions
           </etools-data-table-column>
         </etools-data-table-header>
 
-        <template id="rows" is="dom-repeat" items="[[filteredIncidents]]">
-          <etools-data-table-row unsynced$="[[item.unsynced]]">
-            <div slot="row-data">
-              <span class="col-data col-3" data-col-header-label="Case number">
-                <span class="truncate">
-                  <a href="/incidents/view/[[item.id]]"> N/A </a>
+        <template id="rows" is="dom-repeat" items="[[filteredItems]]">
+          <etools-data-table-row unsynced$="[[item.unsynced]]"
+                                 low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
+            <div slot="row-data" class="p-relative">
+              <span class="col-data col-2" data-col-header-label="Case number">
+                <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
+                  <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
                 </span>
-              </span>
-              <span class="col-data col-2" title="[[item.city]]" data-col-header-label="City">
-                  <span>[[getNameFromId(item.city, 'cities')]]</span>
-              </span>
-              <span class="col-data col-3" title="[[getNameFromId(item.incident_category, 'incidentCategories')]]"
-                    data-col-header-label="Incident Category">
-                <span>[[getNameFromId(item.incident_category, 'incidentCategories')]]</span>
+                <span class="truncate" hidden$="[[hasPermission('view_incident')]]">
+                  [[item.case_number]]
+                </span>
+
+                <etools-info-tooltip class="notification-tooltip"
+                                     hidden$="[[!showNewIncidentTooltip(item)]]"
+                                     custom-icon
+                                     open-on-click>
+                  <span slot="custom-icon"><iron-icon icon="av:fiber-new"></iron-icon></span>
+                  <span slot="message"> This incident has been added since your last login </span>
+                </etools-info-tooltip>
+
+                <etools-info-tooltip class="notification-tooltip"
+                                     hidden$="[[!showNewCommentsTooltip(item)]]"
+                                     custom-icon
+                                     open-on-click>
+                  <span slot="custom-icon"><iron-icon class="smaller" icon="editor:insert-comment"></iron-icon></span>
+                  <span slot="message"> New comments have been added since your last login </span>
+                </etools-info-tooltip>
+
+                <etools-info-tooltip class="notification-tooltip"
+                                     hidden$="[[!showNewChangesTooltip(item)]]"
+                                     custom-icon
+                                     open-on-click>
+                  <span slot="custom-icon"><iron-icon class="smaller" icon="build"></iron-icon></span>
+                  <span slot="message"> This incident has been changed since your last login </span>
+                </etools-info-tooltip>
 
               </span>
-              <span class="col-data col-2" data-col-header-label="Status">
+              <span class="col-data col-3" data-col-header-label="Case number">
+                <span class="truncate">
+                  [[item.description]]
+                </span>
+              </span>
+              <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
+                <span>[[item.city]]</span>
+              </span>
+              <span class="col-data col-1" title="[[item.incident_category_name]]"
+                    data-col-header-label="Incident Category">
+                <span>[[item.incident_category_name]]</span>
+              </span>
+              <span class="col-data col-2" title="[[item.incident_subcategory_name]]"
+                    data-col-header-label="Incident Subcategory">
+                <span>[[item.incident_subcategory_name]]</span>
+              </span>
+              <span class="col-data col-2 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
                   [[item.status]]
                 </template>
                 <template is="dom-if" if="[[item.unsynced]]">
                   <etools-info-tooltip class="info" open-on-click>
                     <span slot="field">Not Synced</span>
-                    <span slot="message">This incident has not been sumitted to the server. Click the sync button when
-                                          online to submit it.</span>
+                    <span slot="message">This incident has not been submitted to the server.
+                                         Click the sync button when online to submit it.</span>
                   </etools-info-tooltip>
                 </template>
               </span>
-              <span class="col-data col-2" data-col-header-label="Actions">
-                <a href="/incidents/view/[[item.id]]">
-                  <iron-icon icon="assignment" title="View Incident"></iron-icon>
-                </a>
-                <a href="/incidents/edit/[[item.id]]" title="Edit Incident" hidden$="[[notEditable(item, offline)]]">
-                  <iron-icon icon="editor:mode-edit"></iron-icon>
-                </a>
-                <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
-                  <div> <!-- this div princidents resizing of the icon on low resolutions -->
-                    <iron-icon icon="notification:sync" title="Sync Incident" class="sync-btn" on-click="_syncItem">
-                    </iron-icon>
-                  </div>
+              <span class="col-data col-1" data-col-header-label="Actions">
+                <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
+                  <a href="/incidents/view/[[item.id]]" hidden$="[[!hasPermission('view_incident')]]">
+                    <iron-icon icon="assignment" title="View Incident"></iron-icon>
+                  </a>
                 </template>
+                <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
+                  <a href="/incidents/edit/[[item.id]]" title="Edit Incident">
+                    <iron-icon icon="editor:mode-edit"></iron-icon>
+                  </a>
+                </template>
+                <template is="dom-if" if="[[_showSyncButton(item.unsynced, offline)]]">
+                  <span> <!-- This container is mostly useless, but without it the icon doesn't render -->
+                    <iron-icon icon="notification:sync" title="Sync Incident" class="action-btn" on-click="_syncItem">
+                    </iron-icon>
+                  </span>
+                </template>
+                <div class="export-btn hidden-on-mobile" hidden$="[[!hasPermission('export_data')]]">
+                  <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
+                    <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
+                    <paper-listbox slot="dropdown-content" on-iron-select="exportItem">
+                      <paper-item doc-type="pdf" incident-id$="[[item.id]]">PDF</paper-item>
+                      <paper-item doc-type="docx" incident-id$="[[item.id]]">DOCX</paper-item>
+                    </paper-listbox>
+                  </paper-menu-button>
+                </div>
               </span>
             </div>
-            <div slot="row-data-details" class="row-details">
-              <div class="row-h flex-c">
-                <div class="col-6">
-                  <strong>Date created: </strong>
-                  <span>[[prettyDate(item.submitted_date)]]</span>
+            <div slot="row-data-details">
+              <div class="row-details-content flex-c">
+                <div class="row-h flex-c">
+                  <div class="col col-6">
+                    <strong class="rdc-title inline"> Created by: </strong>
+                    <span>[[item.created_by_user.email]]</span>
+                  </div>
+                  <div class="col col-6">
+                    <strong class="rdc-title inline"> Created on: </strong>
+                    <span>[[prettyDate(item.created_on, 'D-MMM-YYYY hh:mm A')]]</span>
+                  </div>
                 </div>
-                <div class="col-6">
-                  <strong>Date revised: </strong>
-                  <span>[[prettyDate(item.last_modify_date)]]</span>
-                </div>
-              </div>
-
-              <div class="row-h flex-c">
-                <div class="col-6">
-                  <strong>Description: </strong>
-                  <span>[[item.description]]</span>
-                </div>
-                <div class="col-6">
-                  <strong>Note: </strong>
-                  <span>[[item.note]]</span>
+                <div class="row-h flex-c">
+                  <div class="col col-12">
+                    <strong class="rdc-title inline">Description: </strong>
+                    <span>[[item.description]]</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -239,7 +346,8 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
         <etools-data-table-footer id="footer" page-size="{{pagination.pageSize}}"
                                   page-number="{{pagination.pageNumber}}"
                                   total-results="[[pagination.totalResults]]"
-                                  visible-range="{{visibleRange}}">
+                                  visible-range="{{visibleRange}}"
+                                  low-resolution-layout="[[lowResolutionLayout]]">
         </etools-data-table-footer>
       </div>
     `;
@@ -247,23 +355,11 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
 
   static get properties() {
     return {
-      incidents: {
-        type: Object,
-        value: []
-      },
-      events: {
-        type: Array,
-        value: []
-      },
       threatCategories: Array,
+      staticData: Object,
       offline: Boolean,
-      filteredIncidents: {
-        type: Array,
-        computed: '_filterData(incidents, filters.q, pagination.pageSize, pagination.pageNumber, ' +
-            'filters.syncStatus.length, filters.startDate, filters.endDate, filters.country, ' +
-            'filters.incidentCategory, _queryParamsInitComplete, filters.event, filters.target, ' +
-            'filters.incidentSubcategory, filters.threatCategory)'
-      },
+      store: Object,
+      state: Object,
       itemSyncStatusOptions: {
         type: Array,
         value: [
@@ -271,226 +367,196 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
           {id: 'unsynced', name: 'Not Synced'}
         ]
       },
-      store: Object,
-      state: Object,
-      staticData: Object,
-      filters: {
+      selectedIncidentCategory: {
         type: Object,
-        value: {
-          incidentCategory: null,
-          incidentSubcategory: null,
-          country: null,
-          startDate: null,
-          endDate: null,
-          syncStatus: [],
-          q: null,
-          event: null,
-          target: null,
-          threatCategory: null
-        }
+        value: {}
       },
-      _queryParams: {
-        type: Object,
-        observer: '_queryParamsChanged'
-      },
-      _queryParamsInitComplete: Boolean,
-      _lastQueryString: {
-        type: String,
-        value: ''
-      },
-      visible: {
+      hasExportPermission: {
         type: Boolean,
-        observer: '_visibilityChanged'
-      },
-      exportDocType: {
-        type: String,
-        observer: '_export'
-      },
-      selectedIncidentCategory: Object
+        notify: true
+      }
     };
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.getNameFromId = getNameFromId;
-    this.store = store;
-  }
-
-  _updateUrlQuery() {
-    if (!this.visible) {
-      return false;
-    }
-    this.set('_lastQueryString', this._buildQueryString());
-    updateAppState('/incidents/list', this._lastQueryString, false);
-  }
-
-  _visibilityChanged(visible) {
-    if (this._queryParamsInitComplete) {
-      if (visible && this._lastQueryString !== '') {
-        updateAppState('/incidents/list', this._lastQueryString, false);
-      }
-    }
-  }
-
-  _queryParamsChanged(params) {
-    if (params && this.visible ) {
-      if (params.q && params.q !== this.filters.q) {
-        this.set('filters.q', params.q);
-      }
-
-      if (params.incidentCategory && params.incidentCategory !== this.filters.incidentCategory) {
-        this.set('filters.incidentCategory', Number(params.incidentCategory));
-      }
-
-      if (params.country && params.country !== this.filters.country) {
-        this.set('filters.country', params.country);
-      }
-
-      if (params.start) {
-        this.set('filters.startDate', params.start);
-      }
-
-      if (params.end) {
-        this.set('filters.endDate', params.end);
-      }
-
-      if (params.synced) {
-        if (params.synced.indexOf('|') > -1) {
-          this.set('filters.syncStatus', params.synced.split('|'));
-        } else {
-          this.set('filters.syncStatus', [params.synced]);
-        }
-      }
-
-      if (params.incident_category) {
-        this.set('filters.incidentCategory', params.incident_category);
-      }
-
-      if (params.incident_subcategory) {
-        this.set('filters.incidentSubcategory', params.incident_subcategory);
-      }
-
-      if (params.event) {
-        this.set('filters.event', params.event);
-      }
-
-      if (params.target) {
-        this.set('filters.target', params.target);
-      }
-
-      if (params.threat_category) {
-        this.set('filters.threatCategory', params.threat_category);
-      }
-
-      this.set('_queryParamsInitComplete', true);
-    }
+  static get observers() {
+    return ['checkExportPermission(state.staticData.profile.teams)'];
   }
 
   _stateChanged(state) {
     if (!state) {
       return;
     }
-
-    if (typeof state.app.locationInfo.queryParams !== 'undefined') {
-      this._queryParams = state.app.locationInfo.queryParams;
-    }
-
+    this.state = state;
     this.offline = state.app.offline;
     this.staticData = state.staticData;
-    this.incidents = state.incidents.list;
     this.threatCategories = state.staticData.threatCategories;
-
-    this.events = state.events.list.map((elem) => {
-      elem.name = elem.description;
+    this.listItems = state.incidents.list.map((elem) => {
+      elem.incident_category_name = getNameFromId(elem.incident_category, 'incidentCategories');
+      elem.incident_subcategory_name = this.getIncidentSubcategory(elem.incident_subcategory);
       return elem;
     });
   }
 
-  _filterData(incidents, q, pageSize, pageNumber, syncStatusLen, startDate, endDate, country,
-              incidentCategory, qParamsInit, event, target, subcategory, threatCategory) {
-
-    if (!qParamsInit || !(incidents instanceof Array && incidents.length > 0)) {
-      return [];
-    }
-
-    this._updateUrlQuery();
-
-    let filteredIncidents = JSON.parse(JSON.stringify(incidents));
-
-    filteredIncidents = filteredIncidents.filter(incident => this._applyQFilter(incident, q));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyStatusFilter(incident,
-                                                                                      this.filters.syncStatus));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyDateFilter(incident, startDate, endDate));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyCountryFilter(incident, country));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentCategoryFilter(incident,
-                                                                                                    incidentCategory));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyEventFilter(incident, event));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyTargetFilter(incident, target));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyIncidentSubcategoryFilter(incident,
-                                                                                                        subcategory));
-    filteredIncidents = filteredIncidents.filter(incident => this._applyThreatCategoryFilter(incident, threatCategory));
-
-    return this.applyPagination(filteredIncidents);
+  initFilters() {
+    this.filters = {
+      values: {
+        incidentSubcategory: null,
+        incidentCategory: null,
+        threatCategory: null,
+        syncStatus: [],
+        startDate: null,
+        endDate: null,
+        country: null,
+        target: null,
+        q: null
+      },
+      handlers: {
+        incidentSubcategory: this.incidentSubcategoryFilter,
+        incidentCategory: this.incidentCategoryFilter,
+        threatCategory: this.threatCategoryFilter,
+        syncStatus: this.syncStatusFilter,
+        startDate: this.startDateFilter,
+        endDate: this.endDateFilter,
+        country: this.countryFilter,
+        target: this.targetFilter,
+        q: this.searchFilter
+      }
+    };
   }
 
-  _applyQFilter(incident, q) {
-    if (!q || q === '') {
-      return true;
-    }
-    q = q.toLowerCase();
-    let person = (incident.primary_person.first_name + ' ' + incident.primary_person.last_name).trim();
-    return person.toLowerCase().search(q) > -1 ||
-        String(incident.city).search(q) > -1 ||
-        String(incident.description).toLowerCase().search(q) > -1;
+  initSorting() {
+    this.sortingOptions = [
+      {
+        name: 'Date Created',
+        id: 'date_created_desc',
+        default: true,
+        method: ((left, right) => this.chronologicalSort(right.created_on, left.created_on))
+      },
+      {
+        name: 'Reverse Date Created',
+        id: 'date_created_asc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(left.created_on, right.created_on))
+      },
+      {
+        name: 'Date Modified',
+        id: 'date_modified_desc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(right.last_modify_date, left.last_modify_date))
+      },
+      {
+        name: 'Reverse Date Modified',
+        id: 'date_modified_asc',
+        default: false,
+        method: ((left, right) => this.chronologicalSort(left.last_modify_date, right.last_modify_date))
+      },
+      {
+        name: 'Description A-Z',
+        id: 'description_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.description, right.description))
+      },
+      {
+        name: 'Description Z-A',
+        id: 'description_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.description, left.description))
+      },
+      {
+        name: 'City A-Z',
+        id: 'city_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.city, right.city))
+      },
+      {
+        name: 'City Z-A',
+        id: 'city_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.city, left.city))
+      },
+      {
+        name: 'Status A-Z',
+        id: 'status_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.status, right.status))
+      },
+      {
+        name: 'Status Z-A',
+        id: 'status_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.status, left.status))
+      },
+      {
+        name: 'Case Number',
+        id: 'case_number_asc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(left.case_number, right.case_number))
+      },
+      {
+        name: 'Reverse Case Number',
+        id: 'case_number_desc',
+        default: false,
+        method: ((left, right) => this.alphabeticalSort(right.case_number, left.case_number))
+      }
+    ];
   }
 
-  _applyStatusFilter(incident, selectedSyncStatuses) {
-    if (selectedSyncStatuses.length === 0 || selectedSyncStatuses.length === this.itemSyncStatusOptions.length) {
+  incidentSubcategoryFilter(incident, selectedSubCategory) {
+    return selectedSubCategory ? Number(incident.incident_subcategory) === Number(selectedSubCategory) : true;
+  }
+
+  incidentCategoryFilter(incident, selectedIncidentCategory) {
+    return selectedIncidentCategory ? Number(incident.incident_category) === Number(selectedIncidentCategory) : true;
+  }
+
+  threatCategoryFilter(incident, selectedThreatCategory) {
+    return selectedThreatCategory ? Number(incident.threat_category) === Number(selectedThreatCategory) : true;
+  }
+
+  syncStatusFilter(incident, selectedSyncStatuses = []) {
+    if (selectedSyncStatuses.length === 0) {
       return true;
     }
     const eStatus = incident.unsynced ? 'unsynced' : 'synced';
     return selectedSyncStatuses.some(s => s === eStatus);
   }
 
-  _applyDateFilter(incident, startDate, endDate) {
-
-    if (startDate && new Date(incident.incident_date) <= new Date(startDate)) {
-      return false;
-    }
-
-    if (endDate && new Date(incident.incident_date) >= new Date(endDate)) {
-      return false;
-    }
-
-    return true;
+  startDateFilter(incident, startDate) {
+    return !startDate || new Date(incident.incident_date) > new Date(startDate);
   }
 
-  _applyCountryFilter(incident, selectedCountry) {
+  endDateFilter(incident, endDate) {
+    return !endDate || new Date(incident.incident_date) < new Date(endDate);
+  }
+
+  countryFilter(incident, selectedCountry) {
     return selectedCountry ? incident.country === Number(selectedCountry) : true;
   }
 
-  _applyIncidentCategoryFilter(incident, selectedIncidentCategory) {
-    return selectedIncidentCategory ? incident.incident_category === Number(selectedIncidentCategory) : true;
+  targetFilter(incident, selectedTarget) {
+    return selectedTarget ? Number(incident.target) === Number(selectedTarget) : true;
   }
 
-  _applyIncidentSubcategoryFilter(incident, selectedSubCategory) {
-    return selectedSubCategory ? incident.incident_subcategory === Number(selectedSubCategory) : true;
+  searchFilter(incident, q) {
+    if (!q || q === '') {
+      return true;
+    }
+    q = q.toLowerCase();
+    return String(incident.city).toLowerCase().search(q) > -1 ||
+          String(incident.status).toLowerCase().search(q) > -1 ||
+          String(incident.description).toLowerCase().search(q) > -1 ||
+          String(incident.case_number).toLowerCase().search(q) > -1 ||
+          String(incident.incident_category_name).toLowerCase().search(q) > -1 ||
+          String(incident.incident_subcategory_name).toLowerCase().search(q) > -1;
   }
 
-  _applyEventFilter(incident, selectedEvent) {
-    return selectedEvent ? incident.event === selectedEvent : true;
-  }
-
-  _applyTargetFilter(incident, selectedTarget) {
-    return selectedTarget ? incident.target === Number(selectedTarget) : true;
-  }
-
-  _applyThreatCategoryFilter(incident, selectedThreatCategory) {
-    return selectedThreatCategory ? incident.threat_category === Number(selectedThreatCategory) : true;
+  canEdit(status, unsynced, offline) {
+    return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
+           (unsynced && this.hasPermission('add_incident'));
   }
 
   _showSyncButton(unsynced, offline) {
-    return unsynced && !offline;
+    return !offline && unsynced && this.hasPermission('add_incident');
   }
 
   _syncItem(incident) {
@@ -502,51 +568,97 @@ class IncidentsList extends connect(store)(DateMixin(PaginationMixin(ListCommonM
     store.dispatch(syncIncidentOnList(element));
   }
 
-  notEditable(incident, offline) {
-    return offline && !incident.unsynced;
+  getIncidentSubcategory(id) {
+    if (id) {
+      let allSubCategories = [].concat(...this.staticData.incidentCategories.map(thing => thing.subcategories));
+      let selectedDatum = allSubCategories.find(item => item.id === id);
+      return selectedDatum.name;
+    }
   }
 
-  // Outputs the query string for the list
-  _buildQueryString() {
-    return this._buildUrlQueryString({
-      incident_category: this.filters.incidentCategory,
-      incident_subcategory: this.filters.incidentSubcategory,
-      country: this.filters.country,
-      start: this.filters.startDate,
-      end: this.filters.endDate,
-      synced: this.filters.syncStatus,
-      q: this.filters.q,
-      event: this.filters.event,
-      target: this.filters.target,
-      threat_category: this.filters.threatCategory
-    });
-  }
-
-  // Outputs the query string for the export
-  _buildExportQueryString(docType) {
-    return this._buildUrlQueryString({
-      incident_category: this.filters.incidentCategory,
-      incident_subcategory: this.filters.incidentSubcategory,
-      incident_date__gt: this.filters.startDate,
-      incident_date__lt: this.filters.endDate,
-      event: this.filters.event,
+  _getExportQueryString(docType) {
+    return this.serializeFilters({
+      incident_category: this.filters.values.incidentCategory,
+      incident_subcategory: this.filters.values.incidentSubcategory,
+      incident_date__gt: this.filters.values.startDate,
+      incident_date__lt: this.filters.values.endDate,
+      country: this.filters.values.country,
+      q: this.filters.values.q,
       format: docType,
-      target: this.filters.target,
-      threat_category: this.filters.threatCategory
+      target: this.filters.values.target,
+      threat_category: this.filters.values.threatCategory
     });
   }
 
-  _export(docType) {
-    if (!docType || docType === '') {
+  exportItem(e) {
+    if (!e || !e.target || !e.detail || !e.detail.item) {
       return;
     }
-    const url = Endpoints['incidents'].url;
-    const csvQStr = this._buildExportQueryString(docType);
-    const csvDownloadUrl = url + '?' + csvQStr;
-    this.set('exportDocType', '');
-    window.open(csvDownloadUrl, '_blank');
+    // reset selected item
+    e.target.selected = null;
+
+    let docType = e.detail.item.getAttribute('doc-type');
+    let incidentId = e.detail.item.getAttribute('incident-id');
+
+    store.dispatch(exportSingleIncident(incidentId, docType));
   }
 
+  exportList(e) {
+    if (!e || !e.target || !e.detail || !e.detail.item) {
+      return;
+    }
+    // reset selected item
+    e.target.selected = null;
+
+    let docType = e.detail.item.getAttribute('doc-type');
+    const csvQStr = this._getExportQueryString(docType);
+
+    store.dispatch(exportIncidents(csvQStr, docType));
+  }
+
+  showNewIncidentTooltip(incident) {
+    if (!incident.id || !this.state || !this.state.app || this.state.app.offilne) {
+      return false;
+    }
+
+    let lastLogin = this.state.staticData.profile.last_login;
+    return moment(incident.created_on).isAfter(moment(lastLogin));
+  }
+
+  showNewChangesTooltip(incident) {
+    if (!incident.id || !this.state || !this.state.app || this.state.app.offilne) {
+      return false;
+    }
+
+    let lastLogin = this.state.staticData.profile.last_login;
+    let modifiedAfterLastLogin = moment(incident.last_modify_date).isAfter(moment(lastLogin));
+    return modifiedAfterLastLogin && !this.showNewIncidentTooltip(incident);
+  }
+
+  checkExportPermission() {
+    if (!this.state || !this.state.staticData.profile.teams) {
+      this.set('hasExportPermission', false);
+      return;
+    }
+    let teams = this.state.staticData.profile.teams;
+    let permission = teams.some(t => t.team_type === 10 || t.team_type === 3);
+    this.set('hasExportPermission', permission);
+  }
+
+  showNewCommentsTooltip(incident) {
+    if (!incident.id || !this.state || !this.state.app || this.state.app.offilne) {
+      return false;
+    }
+
+    let lastLogin = this.state.staticData.profile.last_login;
+    let allComments = this.state.incidents.comments;
+    let newCommentsForIncident = allComments.filter((c) => {
+      return Number(c.incident) === Number(incident.id) &&
+            moment(c.created_on).isAfter(moment(lastLogin));
+    });
+
+    return newCommentsForIncident.length > 0;
+  }
 }
 
 window.customElements.define('incidents-list', IncidentsList);

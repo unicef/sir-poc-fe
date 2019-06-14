@@ -1,53 +1,57 @@
 /**
-@license
-*/
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+ * @license
+ */
+import { ImpactFormBase } from './impact-form-base.js';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-
+import 'etools-info-tooltip/etools-info-tooltip.js';
+import 'etools-dropdown/etools-dropdown.js';
+import { showSnackbar } from '../../../../actions/app.js';
 import {
-    addProperty,
-    editProperty,
-    syncProperty
-  } from '../../../../actions/incident-impacts.js';
+  addProperty,
+  editProperty,
+  syncProperty
+} from '../../../../actions/incident-impacts.js';
 import { store } from '../../../../redux/store.js';
 import { scrollToTop } from '../../../common/content-container-helper.js';
-import { updatePath } from '../../../common/navigation-helper.js';
 import {
-    resetFieldsValidations,
-    validateFields
-  } from '../../../common/validations-helper.js';
-import '../../../common/etools-dropdown/etools-dropdown-lite.js';
+  resetFieldsValidations,
+  validateFields
+} from '../../../common/validations-helper.js';
 import '../../../common/errors-box.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 import '../../../styles/form-fields-styles.js';
 import '../../../styles/required-fields-styles.js';
+import '../../../common/review-fields.js';
 
 /**
  * @polymer
  * @customElement
  */
-export class PropertyForm extends connect(store)(PolymerElement) {
+export class PropertyForm extends connect(store)(ImpactFormBase) {
   static get is() {
     return 'property-form';
   }
 
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles required-fields-styles form-fields-styles">
         :host {
           @apply --layout-vertical;
         }
+
         errors-box {
           margin: 0 24px;
         }
       </style>
 
       <div class="card">
-        <h3> UN Property </h3>
+        ${this.getTitleTemplate}
 
         <div class="layout-horizontal">
           <errors-box></errors-box>
@@ -55,72 +59,98 @@ export class PropertyForm extends connect(store)(PolymerElement) {
 
         <fieldset>
           <div class="row-h flex-c">
-            <div class="col col-12">
-              <etools-dropdown-lite
-                        id="agency"
-                        label="Owner"
-                        readonly="[[readonly]]"
-                        options="[[staticData.agencies]]"
-                        selected="{{data.agency}}">
-              </etools-dropdown-lite>
+            <div class="col col-3">
+              <etools-dropdown id="agency"
+                                label="Owner"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.agencies]]"
+                                selected="{{data.agency}}">
+              </etools-dropdown>
+            </div>
+            <div class="col col-2">
+              <etools-dropdown id="property_type"
+                                label="Property Type"
+                                readonly="[[readonly]]"
+                                option-label="name"
+                                option-value="id"
+                                options="[[staticData.propertyTypes]]"
+                                selected="{{data.property_type}}">
+              </etools-dropdown>
+            </div>
+            <div class="col col-2">
+              <paper-input id="value"
+                           readonly$="[[readonly]]"
+                           label="Value in USD"
+                           type="number"
+                           placeholder="&#8212;"
+                           value="{{data.value}}"
+                           required
+                           error-message="Value is required">
+                <span  slot="prefix">$</span>
+              </paper-input>
+            </div>
+          </div>
+
+        </fieldset>
+        <fieldset>
+          <legend><h3>Impact Details</h3></legend>
+          <div class="row-h flex-c">
+            <div class="col col-3">
+              <etools-info-tooltip class="info" open-on-click form-field-align
+                                   hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
+                <etools-dropdown id="category"
+                                  slot="field"
+                                  label="Impact"
+                                  readonly="[[readonly]]"
+                                  option-label="name"
+                                  option-value="id"
+                                  options="[[staticData.impacts.property]]"
+                                  selected="{{data.impact}}"
+                                  selected-item="{{selectedImpactType}}"
+                                  required auto-validate
+                                  error-message="Impact is required">
+                </etools-dropdown>
+                <span slot="message">[[selectedImpactType.description]]
+                </span>
+              </etools-info-tooltip>
             </div>
           </div>
           <div class="row-h flex-c">
-            <div class="col col-6">
-              <etools-dropdown-lite
-                        id="property_type"
-                        label="Property type"
-                        readonly="[[readonly]]"
-                        options="[[staticData.propertyTypes]]"
-                        selected="{{data.property_type}}">
-              </etools-dropdown-lite>
-            </div>
-
-            <div class="col col-6">
-              <paper-input id="value"
+            <div class="col col-12">
+              <paper-textarea id="description"
                               readonly$="[[readonly]]"
-                              label="Value"
-                              type="number"
+                              label="Description"
                               placeholder="&#8212;"
-                              value="{{data.value}}">
-              </paper-input>
+                              value="{{data.description}}"
+                              required auto-validate
+                              error-message="Description is required">
+              </paper-textarea>
             </div>
+          </div>
+        </fieldset>
 
-          </div>
+        <fieldset hidden$="[[isNew]]">
+          <review-fields data="[[data]]" hidden$="[[useBasicLayout]]"></review-fields>
         </fieldset>
-        <fieldset>
-          <legend><h3>Impact details</h3></legend>
-          <div>
-            <div class="row-h flex-c">
-              <div class="col col-3">
-                <etools-dropdown-lite
-                            id="category"
-                            label="Impact"
-                            readonly="[[readonly]]"
-                            options="[[staticData.impacts.property]]"
-                            selected="{{data.impact}}"
-                            selected-item="{{selectedImpactType}}"
-                            required auto-validate
-                            error-message="Impact is required">
-                </etools-dropdown-lite>
-              </div>
-            </div>
-            <div class="row-h flex-c">
-              <div class="col col-12">
-                <paper-textarea id="description"
-                                readonly$="[[readonly]]"
-                                label="Description"
-                                placeholder="&#8212;"
-                                value="{{data.description}}"
-                                required auto-validate
-                                error-message="Description is required">
-                </paper-textarea>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-        <paper-button on-click="save">Save</paper-button>
+        <paper-button on-tap="save"
+                      hidden$="[[readonly]]">
+          Save
+        </paper-button>
+        <paper-button raised
+                      class="danger"
+                      hidden$="[[useBasicLayout]]"
+                      on-tap="_goToIncidentImpacts">
+          Cancel
+        </paper-button>
       </div>
+    `;
+  }
+
+  static get getTitleTemplate() {
+    return html`
+      <h3> UNICEF Property </h3>
     `;
   }
 
@@ -128,15 +158,14 @@ export class PropertyForm extends connect(store)(PolymerElement) {
     return {
       staticData: Array,
       impactId: String,
-      visible: Boolean,
+      selectedImpactType: {
+        type: Object,
+        value: {}
+      },
       offline: Boolean,
       readonly: {
         type: Boolean,
         value: false
-      },
-      data: {
-        type: Object,
-        value: {}
       },
       isNew: {
         type: Boolean,
@@ -146,7 +175,8 @@ export class PropertyForm extends connect(store)(PolymerElement) {
         type: Array,
         value: [
           '#category',
-          '#description'
+          '#description',
+          '#value'
         ]
       }
     };
@@ -157,30 +187,32 @@ export class PropertyForm extends connect(store)(PolymerElement) {
       '_idChanged(impactId)'
     ];
   }
+
   _stateChanged(state) {
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.propertiesList = state.incidents.properties;
     this.data.incident_id = state.app.locationInfo.incidentId;
+    // TODO: (future) we should only user data.incident_id for all impacts (API changed needed)
+    this.incidentId = state.app.locationInfo.incidentId;
   }
 
   async save() {
     let result;
     if (!validateFields(this, this.fieldsToValidateSelectors)) {
+      store.dispatch(showSnackbar('Please check the highlighted fields'));
       return;
     }
     if (this.isNew) {
       result = await store.dispatch(addProperty(this.data));
-    }
-    else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
+    } else if (this.data.unsynced && !isNaN(this.data.incident_id) && !this.offline) {
       result = await store.dispatch(syncProperty(this.data));
-    }
-    else {
+    } else {
       result = await store.dispatch(editProperty(this.data));
     }
 
     if (result === true) {
-      updatePath(`incidents/impact/${this.data.incident_id}/`);
+      this._goToIncidentImpacts();
       this.data = {};
     }
     if (result === false) {
@@ -189,9 +221,7 @@ export class PropertyForm extends connect(store)(PolymerElement) {
   }
 
   resetValidations() {
-    if(this.visible) {
-      resetFieldsValidations(this, this.fieldsToValidateSelectors);
-    }
+    resetFieldsValidations(this, this.fieldsToValidateSelectors);
   }
 
   _computeIsNew(id) {
@@ -201,7 +231,6 @@ export class PropertyForm extends connect(store)(PolymerElement) {
   _idChanged(id) {
     if (!id || this.isNew) {
       this.data = {};
-      this.resetValidations();
       return;
     }
 

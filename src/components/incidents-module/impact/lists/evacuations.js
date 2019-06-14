@@ -1,9 +1,11 @@
 /**
 @license
 */
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { PermissionsBase } from '../../../common/permissions-base-class';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/iron-icons/editor-icons.js';
+import '@polymer/iron-media-query/iron-media-query.js';
 
 import 'etools-data-table';
 import { getNameFromId } from '../../../common/utils.js';
@@ -11,9 +13,9 @@ import { store } from '../../../../redux/store.js';
 import '../../../styles/shared-styles.js';
 import '../../../styles/grid-layout-styles.js';
 
-
-export class EvacuationsList extends connect(store)(PolymerElement) {
+export class EvacuationsList extends connect(store)(PermissionsBase) {
   static get template() {
+    // language=HTML
     return html`
       <style include="shared-styles grid-layout-styles data-table-styles">
         :host {
@@ -21,8 +23,11 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
         }
       </style>
 
+      <iron-media-query query="(max-width: 767px)" query-matches="{{lowResolutionLayout}}"></iron-media-query>
+
       <div hidden$="[[!evacuationsList.length]]">
-        <etools-data-table-header id="listHeader" no-title no-collapse>
+        <etools-data-table-header id="listHeader" no-title no-collapse
+                                  low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-3">
             Impact
           </etools-data-table-column>
@@ -47,7 +52,8 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
         </etools-data-table-header>
 
         <template id="rows" is="dom-repeat" items="[[evacuationsList]]">
-          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]">
+          <etools-data-table-row no-collapse unsynced$="[[item.unsynced]]"
+                                 low-resolution-layout="[[lowResolutionLayout]]">
             <div slot="row-data">
               <span class="col-data col-3" data-col-header-label="Impact">
                 <span class="truncate">
@@ -100,17 +106,17 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      lowResolutionLayout: Boolean,
       offline: Boolean,
       evacuationsList: {
         type: Array,
         value: []
+      },
+      getNameFromId: {
+        type: Function,
+        value: () => getNameFromId
       }
     };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.getNameFromId = getNameFromId;
   }
 
   _stateChanged(state) {
@@ -120,7 +126,7 @@ export class EvacuationsList extends connect(store)(PolymerElement) {
   }
 
   _notEditable(item, offline) {
-    return offline && !item.unsynced;
+    return offline && !item.unsynced && !this.hasPermission('change_evacuation');
   }
 }
 

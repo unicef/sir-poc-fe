@@ -27,24 +27,28 @@ class EventsController extends connect(store)(BaseController) {
         .tabs-container {
           background-color: white;
           border-left: 1px solid #eeeeee;
+          border-bottom: 1px solid #eeeeee;
           --paper-tabs: {
             font-size: 14px;
             max-width: 350px;
           }
+          position: -webkit-sticky; /* Safari */
+          position: sticky;
+          top: -1px;
         }
 
         paper-tabs {
-          --paper-tabs-selection-bar-color: var(--app-primary-color);
+          --paper-tabs-selection-bar-color: var(--primary-color);
         }
 
         paper-tab[link],
         paper-tab {
-          --paper-tab-ink: var(--app-primary-color);
+          --paper-tab-ink: var(--primary-color);
           padding: 0 24px;
         }
 
         paper-tab.iron-selected {
-          color: var(--app-primary-color);
+          color: var(--primary-color);
         }
       </style>
 
@@ -93,6 +97,10 @@ class EventsController extends connect(store)(BaseController) {
       showEditTab: {
         type: Boolean,
         value: false
+      },
+      visible: {
+        type: Boolean,
+        observer: 'visibilityChanged'
       }
     };
   }
@@ -127,7 +135,6 @@ class EventsController extends connect(store)(BaseController) {
     ];
   }
 
-
   tabClicked(e) {
     if (this.page === 'history') {
       this.navigateToHistoryList();
@@ -139,7 +146,16 @@ class EventsController extends connect(store)(BaseController) {
     this.set('subrouteData.subsection', null);
   }
 
+  visibilityChanged(visible) {
+    if (!visible) {
+      this.page = '';
+    }
+  }
+
   pageChanged(page) {
+    if (page === '') {
+      return;
+    }
     if (page === 'edit') {
       this.showEditTab = true;
     }

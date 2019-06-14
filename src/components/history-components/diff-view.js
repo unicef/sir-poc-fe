@@ -15,7 +15,7 @@ import './styles.js';
 import HistoryHelpers from './history-helpers.js';
 import './history-navigation-links.js';
 
-export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
+export class DiffViewBase extends DateMixin(HistoryHelpers(connect(store)(PolymerElement))) {
   static get template() {
     return html`
       <style include="shared-styles grid-layout-styles history-common-styles">
@@ -33,8 +33,7 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
             <h3> Changes performed </h3>
           </div>
           <div class="nav-buttons">
-            <history-navigation-links page="diff" working-item="[[workingItem]]" module="[[module]]">
-            </history-navigation-links>
+            ${this.navButtons}
           </div>
         </div>
         <template is="dom-repeat" items="[[changes]]">
@@ -62,10 +61,6 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
     `;
   }
 
-  static get is() {
-    return 'diff-view';
-  }
-
   static get properties() {
     return {
       workingItem: {
@@ -76,6 +71,10 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
       module: String,
       events: Array
     };
+  }
+
+  static get navButtons() {
+    return html``;
   }
 
   _stateChanged(state) {
@@ -122,14 +121,20 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
         return getNameFromId(value, 'crashTypes');
       case 'crash_sub_type':
         return getNameFromId(value, 'crashSubTypes');
+      case 'person_category':
+        return getNameFromId(value, 'personnelCategories');
+      case 'person_nationality':
+        return getNameFromId(value, 'nationalities');
+      case 'person_agency':
+        return getNameFromId(value, 'agencies');
       case 'region':
+      case 'person_region':
         return getNameFromId(value, 'regions');
-      case 'city':
-        return getNameFromId(value, 'cities');
+      case 'country':
+      case 'person_country':
+        return getNameFromId(value, 'countries');
       case 'target':
         return getNameFromId(value, 'targets');
-      case 'country':
-        return getNameFromId(value, 'countries');
       case 'incident_date':
         return this.prettyDate(value);
       default:
@@ -137,5 +142,3 @@ export class DiffView extends DateMixin(HistoryHelpers(connect(store)(PolymerEle
     }
   }
 }
-
-window.customElements.define(DiffView.is, DiffView);

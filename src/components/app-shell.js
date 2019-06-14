@@ -25,6 +25,9 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
+// import './common/support-btn.js';
+// import './common/documentation-btn.js';
+import './common/no-access-overlay.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
@@ -36,8 +39,6 @@ import { resetKeyExpiry } from '../redux/storage/utils.js';
 import { CHECK_IDLE_STATE_INTERVAL } from '../config/general.js';
 import { PermissionsBase } from './common/permissions-base-class.js';
 import { updatePath } from '../components/common/navigation-helper.js';
-import { makeRequest } from '../components/common/request-helper.js';
-import { Endpoints } from '../config/endpoints.js';
 
 import { clearIncidentDraft } from '../actions/incidents.js';
 import {
@@ -73,6 +74,7 @@ class AppShell extends connect(store)(PermissionsBase) {
 
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
+          padding: 4px;
         }
 
         #menu-header {
@@ -155,6 +157,15 @@ class AppShell extends connect(store)(PermissionsBase) {
         .sidebar-dropdown {
           width: 100%;
         }
+        .menu-icon {
+          padding: 4px;
+          border-right: solid;
+        }
+        .title-group {
+          flex-direction: row;
+          display: flex;
+          align-items: center;
+        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -162,6 +173,10 @@ class AppShell extends connect(store)(PermissionsBase) {
 
       <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
+
+      <no-access-overlay id="noAccess" with-backdrop no-cancel-on-outside-click no-cancel-on-esc-key>
+        You do not have permission to access this application. Please contact your administrator to request access.
+      </no-access-overlay>
 
       <!-- menu will switch to mobile hamburger menu under 1280px -->
       <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="1280px">
@@ -220,37 +235,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <iron-icon icon="supervisor-account"></iron-icon>
                 <span>Admin</span>
             </a>
-            </div>
-            <template is="dom-if" if="[[userInactive]]">
-              <div class="boxed">
-                <div class="alert-text">You do not have full access to SIR.</div>
-                <etools-dropdown class="sidebar-dropdown"
-                                 label="Region"
-                                 options="[[regions]]"
-                                 option-label="name"
-                                 option-value="id"
-                                 required auto-validate
-                                 error-message="This is required"
-                                 selected="{{requester.region}}">
-                </etools-dropdown>
-
-                <etools-dropdown class="sidebar-dropdown"
-                                 label="Country"
-                                 disabled$="[[!requester.region]]"
-                                 option-label="name"
-                                 option-value="id"
-                                 options="[[getCountriesForRegion(requester.region, countries)]]"
-                                 selected="{{requester.country}}"
-                                 error-message="This is required">
-                </etools-dropdown>
-                <div>Select a region/country and 
-                  <a class="link-cursor" on-tap="_requestAccess">click to request.</a>
-                </div>
-                <template is="dom-if" if="[[requestSubmitted]]">
-                  <div>Thank you. Your request has been submitted.</div>
-                </template>
-              </div>
-            </template>
+          </div>
           <img id="logo" align="end" src="../../images/unicef_logo.png"></img>
 
         </app-drawer>
@@ -260,9 +245,15 @@ class AppShell extends connect(store)(PermissionsBase) {
 
           <app-header slot="header" effects="waterfall">
             <app-toolbar>
-              <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div class="capitalize">[[_getPageTitle(page)]]</div>
-              <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
+              <div class="title-group">
+                <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
+                <div class="capitalize">[[_getPageTitle(page)]]</div>
+              </div>
+              <div>
+                <!-- <documentation-btn class="menu-icon"></documentation-btn> -->
+                <!-- <support-btn class="menu-icon"></support-btn> -->
+                <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
+              </div>
             </app-toolbar>
           </app-header>
 
@@ -305,11 +296,6 @@ class AppShell extends connect(store)(PermissionsBase) {
       },
       countries: Array,
       regions: Array,
-      requestSubmitted: {
-        type: Boolean,
-        value: () => localStorage.getItem('request_submitted'),
-        notify: true
-      },
       userInactive: {
         type: Boolean,
         value: false,
@@ -450,56 +436,12 @@ class AppShell extends connect(store)(PermissionsBase) {
   }
 
   _userIsInactive() {
-    if (!store.getState().staticData.profile.teams.length) {
-      this._fetchCountries();
-      this._fetchRegions();
-      this.set('userInactive', true);
+    if (Object.keys(store.getState().staticData.profile).length === 0
+      && store.getState().staticData.profile.constructor === Object) {
+        this.set('userInactive', true);
+        this.shadowRoot.querySelector('#noAccess').open();
     }
     this.set('userInactive', false);
-  }
-
-  async _fetchCountries() {
-    this.countries = this.countries || await makeRequest(Endpoints.countries);
-  }
-
-  async _fetchRegions() {
-    this.regions = this.regions || await makeRequest(Endpoints.regions);
-  }
-
-  _showSuccessMessage() {
-    let showSuccessEvent = new CustomEvent('submit-success', {
-      detail: this.attachment,
-      bubbles: true,
-      composed: true
-    });
-    this.dispatchEvent(showSuccessEvent);
-
-    localStorage.setItem('request_submitted', true);
-    this.set('requestSubmitted', true);
-  }
-
-  _showErrorMessage(response) {
-    let messages = [];
-    for (let key in response) {
-      messages = [...messages, ...response[key]];
-    }
-
-    let errorMessage = messages.join(' ');
-    this.set('errorMessage', errorMessage || 'There was an error while processing your request');
-  }
-
-  _requestAccess() {
-    let {display_name, email, job_title} = store.getState().staticData.profile;
-
-    this.requester.name = display_name;
-    this.requester.email = email;
-    this.requester.job_title = job_title;
-
-    makeRequest(Endpoints.requestAccess, this.requester).then((result) => {
-      this._showSuccessMessage();
-    }).catch((err) => {
-      this._showErrorMessage(err.response);
-    });
   }
 
   getCountriesForRegion(regionId) {

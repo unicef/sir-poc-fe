@@ -2,7 +2,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 import {IronOverlayBehavior} from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
 
-class RedirectOverlay extends mixinBehaviors(IronOverlayBehavior, PolymerElement) {
+class NoAccessOverlay extends mixinBehaviors(IronOverlayBehavior, PolymerElement) {
   static get template() {
     return html`
       <style>
@@ -17,4 +17,4 @@ class RedirectOverlay extends mixinBehaviors(IronOverlayBehavior, PolymerElement
     `;
   }
 }
-customElements.define('redirect-overlay', RedirectOverlay);
+customElements.define('no-access-overlay', NoAccessOverlay);

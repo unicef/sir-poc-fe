@@ -45,9 +45,8 @@ class DocumentationBtn extends PolymerElement {
     return {
       url: {
         type: String,
-        value: 'https://unicef.service-now.com/' +
-               'cc/?id=sc_cat_item&sys_id=35b00b1bdb255f00085184735b9619e6' +
-               '&sysparm_category=c6ab1444db5b5700085184735b961920'
+        value: 'https://unicef-my.sharepoint.com/:b:/g/personal/zadams_unicef_org/'
+          + 'EVH4VAF6xAVMhyZ177FzN_8Bp0FavKqjhr3EraRn8VAI7g?e=a8wIwB'
       }
     };
   }

@@ -221,7 +221,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <span>Admin</span>
             </a>
             </div>
-            <template is="dom-if" if="[[userInactive]]">
+            <template is="dom-if" if="[[_userIsInactive()]]">
               <div class="boxed">
                 <div class="alert-text">You do not have full access to SIR.</div>
                 <etools-dropdown class="sidebar-dropdown"
@@ -308,11 +308,6 @@ class AppShell extends connect(store)(PermissionsBase) {
       requestSubmitted: {
         type: Boolean,
         value: () => localStorage.getItem('request_submitted'),
-        notify: true
-      },
-      userInactive: {
-        type: Boolean,
-        value: false,
         notify: true
       }
     };
@@ -452,9 +447,9 @@ class AppShell extends connect(store)(PermissionsBase) {
     if (!store.getState().staticData.profile.teams.length) {
       this._fetchCountries();
       this._fetchRegions();
-      this.set('userInactive', true);
+      return true;
     }
-    this.set('userInactive', false);
+    return false;
   }
 
   async _fetchCountries() {

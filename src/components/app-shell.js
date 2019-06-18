@@ -25,9 +25,6 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
-import './common/support-btn.js';
-import './common/documentation-btn.js';
-import './common/redirect-overlay.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
@@ -76,7 +73,6 @@ class AppShell extends connect(store)(PermissionsBase) {
 
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
-          padding: 4px;
         }
 
         #menu-header {
@@ -159,14 +155,6 @@ class AppShell extends connect(store)(PermissionsBase) {
         .sidebar-dropdown {
           width: 100%;
         }
-        .menu-icon {
-          padding: 4px;
-        }
-        .title-group {
-          flex-direction: row;
-          display: flex;
-          align-items: center;
-        }
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -174,10 +162,6 @@ class AppShell extends connect(store)(PermissionsBase) {
 
       <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
-
-      <redirect-overlay id="redirect" with-backdrop>
-        You do not have permission to access this application. Please contact your administrator for access.
-      </redirect-overlay>
 
       <!-- menu will switch to mobile hamburger menu under 1280px -->
       <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="1280px">
@@ -276,15 +260,9 @@ class AppShell extends connect(store)(PermissionsBase) {
 
           <app-header slot="header" effects="waterfall">
             <app-toolbar>
-              <div class="title-group">
-                <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-                <div class="capitalize">[[_getPageTitle(page)]]</div>
-              </div>
-              <div>
-                <documentation-btn class="menu-icon"></documentation-btn>
-                <support-btn class="menu-icon"></support-btn>
-                <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
-              </div>
+              <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
+              <div class="capitalize">[[_getPageTitle(page)]]</div>
+              <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
             </app-toolbar>
           </app-header>
 
@@ -472,19 +450,12 @@ class AppShell extends connect(store)(PermissionsBase) {
   }
 
   _userIsInactive() {
-    if (Object.keys(store.getState().staticData.profile).length === 0
-      && store.getState().staticData.profile.constructor === Object) {
-        this._fetchCountries();
-        this._fetchRegions();
-        this.set('userInactive', true);
-        this.shadowRoot.querySelector('#redirect').open();
-        setTimeout(this._redirect, 4000);
+    if (!store.getState().staticData.profile.teams.length) {
+      this._fetchCountries();
+      this._fetchRegions();
+      this.set('userInactive', true);
     }
     this.set('userInactive', false);
-  }
-
-  _redirect() {
-    window.location = 'http://www.unicef.org';
   }
 
   async _fetchCountries() {

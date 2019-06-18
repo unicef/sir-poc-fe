@@ -29,11 +29,10 @@ const generateRequestConfigOptions = (endpoint, data) => {
       method: endpoint.method,
       async: true,
       handleAs: endpoint.handleAs || 'json',
+      headers: _getRequestHeaders({}),
       body: data,
       withCredentials: endpoint.auth
   };
-
-  config.headers = _getRequestHeaders(config);
   return config;
 };
 
@@ -153,6 +152,7 @@ export const prepareEndpoint = (endpoint, data) => {
   Object.keys(data).forEach((key) => {
     endpointCpy.url = endpointCpy.url.replace('<%='+ key + '%>', encodeURI(data[key]));
   });
+
   return endpointCpy;
 };
 

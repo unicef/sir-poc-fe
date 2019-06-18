@@ -45,8 +45,8 @@ class DocumentationBtn extends PolymerElement {
     return {
       url: {
         type: String,
-        value: 'https://unicef.sharepoint.com/:w:/t/EMOPS-OSC/'
-          + 'ES5YDX0zziRIg8nj_nx0EkMBqjplq_JbHw7mUF2KLuO1iQ?e=4%3aNbNMmH&at=9'
+        value: 'https://unicef-my.sharepoint.com/:b:/g/personal/zadams_unicef_org/'
+          + 'EVH4VAF6xAVMhyZ177FzN_8Bp0FavKqjhr3EraRn8VAI7g?e=a8wIwB'
       }
     };
   }

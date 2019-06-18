@@ -4,7 +4,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-button/paper-button.js';
 import { SirMsalAuth } from '../auth/jwt/msal-authentication.js';
-// import './request-access-form.js';
+import './request-access-form.js';
 /**
  * @customElement
  * @polymer
@@ -85,7 +85,19 @@ class SirLogin extends PolymerElement {
             <h1>Welcome to UNICEF SIR</h1>
             <p>Sign into your Microsoft Account</p>
             <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+            <paper-button raised on-tap="_showRequestAccessForm"> Request Access </paper-button>
           </div>
+
+          <div name="successMessage">
+            <h3> Access Requested. You will receive an email after access is granted. </h3>
+          </div>
+
+          <request-access-form name="requestAccess"
+                               on-navigate-back="_showLoginForm"
+                               on-submit-success="_showSuccessForm">
+          </request-access-form>
+
+
         </div>
         </iron-pages>
 
@@ -98,12 +110,24 @@ class SirLogin extends PolymerElement {
       page: {
         type: String,
         value: 'login'
+      },
+      requester: {
+        type: Object,
+        value: {}
       }
-    };
+    }
+  }
+
+  _showRequestAccessForm() {
+    this.page = 'requestAccess';
   }
 
   _showLoginForm() {
     this.page = 'login';
+  }
+
+  _showSuccessForm() {
+    this.page = 'successMessage';
   }
 
   _login() {

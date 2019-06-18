@@ -4,7 +4,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-button/paper-button.js';
 import { SirMsalAuth } from '../auth/jwt/msal-authentication.js';
-import './request-access-form.js';
+// import './request-access-form.js';
 /**
  * @customElement
  * @polymer
@@ -80,14 +80,30 @@ class SirLogin extends PolymerElement {
       </div>
 
       <div id="content-column">
-        <div name="login">
-          <h1>Welcome to UNICEF SIR</h1>
-          <p>Sign into your Microsoft Account</p>
-          <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
+          <div name="login">
+            <h1>Welcome to UNICEF SIR</h1>
+            <p>Sign into your Microsoft Account</p>
+            <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+          </div>
         </div>
-      </div>
+        </iron-pages>
+
     `;
 
+  }
+
+  static get properties() {
+    return {
+      page: {
+        type: String,
+        value: 'login'
+      }
+    };
+  }
+
+  _showLoginForm() {
+    this.page = 'login';
   }
 
   _login() {

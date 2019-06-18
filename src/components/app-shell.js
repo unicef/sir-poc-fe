@@ -26,7 +26,7 @@ import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
 // import './common/support-btn.js';
-// import './common/documentation-btn.js';
+import './common/documentation-btn.js';
 import './common/no-access-overlay.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
@@ -240,7 +240,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <div class="capitalize">[[_getPageTitle(page)]]</div>
               </div>
               <div>
-                <!-- <documentation-btn class="menu-icon"></documentation-btn> -->
+                <documentation-btn class="menu-icon"></documentation-btn>
                 <!-- <support-btn class="menu-icon"></support-btn> -->
                 <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
               </div>
@@ -305,7 +305,7 @@ class AppShell extends connect(store)(PermissionsBase) {
 
   _userIsInactive() {
     if (Object.keys(store.getState().staticData.profile).length === 0
-      && store.getState().staticData.profile.constructor === Object) {
+      || store.getState().staticData.profile.teams.length === 0) {
         this.set('userInactive', true);
         this.shadowRoot.querySelector('#noAccess').open();
     }

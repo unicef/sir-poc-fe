@@ -22,6 +22,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+// import * as _ from 'lodash-es';
 import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';

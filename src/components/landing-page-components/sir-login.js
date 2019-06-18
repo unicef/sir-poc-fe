@@ -79,11 +79,14 @@ class SirLogin extends PolymerElement {
       </div>
 
       <div id="content-column">
-        <h1>Welcome to UNICEF SIR</h1>
-        <p>Sign into your Microsoft Account</p>
-        <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+        <div name="login">
+          <h1>Welcome to UNICEF SIR</h1>
+          <p>Sign into your Microsoft Account</p>
+          <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
+        </div>
       </div>
     `;
+
   }
 
   _login() {
@@ -91,6 +94,7 @@ class SirLogin extends PolymerElement {
       window.location.reload();
     });
   }
+
 }
 
 window.customElements.define('sir-login', SirLogin);

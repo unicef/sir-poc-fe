@@ -22,7 +22,6 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-// import * as _ from 'lodash-es';
 import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
@@ -222,7 +221,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <span>Admin</span>
             </a>
             </div>
-            <template is="dom-if" if="[[userInactive]]">
+            <template is="dom-if" if="[[_userIsInactive()]]">
               <div class="boxed">
                 <div class="alert-text">You do not have full access to SIR.</div>
                 <etools-dropdown class="sidebar-dropdown"
@@ -310,11 +309,6 @@ class AppShell extends connect(store)(PermissionsBase) {
         type: Boolean,
         value: () => localStorage.getItem('request_submitted'),
         notify: true
-      },
-      userInactive: {
-        type: Boolean,
-        value: false,
-        notify: true
       }
     };
   }
@@ -331,7 +325,6 @@ class AppShell extends connect(store)(PermissionsBase) {
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     this.showPrefferedBrowserMessage();
     this.checkForIdleState();
-    this._userIsInactive();
   }
 
   checkForIdleState() {
@@ -454,9 +447,9 @@ class AppShell extends connect(store)(PermissionsBase) {
     if (!store.getState().staticData.profile.teams.length) {
       this._fetchCountries();
       this._fetchRegions();
-      this.set('userInactive', true);
+      return true;
     }
-    this.set('userInactive', false);
+    return false;
   }
 
   async _fetchCountries() {

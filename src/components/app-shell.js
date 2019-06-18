@@ -279,7 +279,12 @@ class AppShell extends connect(store)(PermissionsBase) {
       route: Object,
       routeData: Object,
       queryParams: Object,
-      offline: Boolean
+      offline: Boolean,
+      userInactive: {
+        type: Boolean,
+        value: true,
+        notify: true
+      }
     };
   }
 
@@ -295,7 +300,7 @@ class AppShell extends connect(store)(PermissionsBase) {
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     this.showPrefferedBrowserMessage();
     this.checkForIdleState();
-    this._userIsInactive();
+    setTimeout(() => this._userIsInactive(), 1000);
   }
 
   _userIsInactive() {

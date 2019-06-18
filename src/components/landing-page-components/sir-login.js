@@ -80,54 +80,14 @@ class SirLogin extends PolymerElement {
       </div>
 
       <div id="content-column">
-        <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
-          <div name="login">
-            <h1>Welcome to UNICEF SIR</h1>
-            <p>Sign into your Microsoft Account</p>
-            <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
-            <paper-button raised on-tap="_showRequestAccessForm"> Request Access </paper-button>
-          </div>
-
-          <div name="successMessage">
-            <h3> Access Requested. You will receive an email after access is granted. </h3>
-          </div>
-
-          <request-access-form name="requestAccess"
-                               on-navigate-back="_showLoginForm"
-                               on-submit-success="_showSuccessForm">
-          </request-access-form>
-
-
+        <div name="login">
+          <h1>Welcome to UNICEF SIR</h1>
+          <p>Sign into your Microsoft Account</p>
+          <paper-button raised on-tap="_login"> Sign In <iron-icon icon="arrow-forward"></iron-icon></paper-button>
         </div>
-        </iron-pages>
-
+      </div>
     `;
 
-  }
-
-  static get properties() {
-    return {
-      page: {
-        type: String,
-        value: 'login'
-      },
-      requester: {
-        type: Object,
-        value: {}
-      }
-    }
-  }
-
-  _showRequestAccessForm() {
-    this.page = 'requestAccess';
-  }
-
-  _showLoginForm() {
-    this.page = 'login';
-  }
-
-  _showSuccessForm() {
-    this.page = 'successMessage';
   }
 
   _login() {

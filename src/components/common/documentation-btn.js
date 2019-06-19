@@ -44,9 +44,8 @@ import '@polymer/iron-icons/communication-icons';
     return {
       url: {
         type: String,
-        value: 'https://unicef.service-now.com/' +
-               'cc/?id=sc_cat_item&sys_id=35b00b1bdb255f00085184735b9619e6' +
-               '&sysparm_category=c6ab1444db5b5700085184735b961920'
+        value: 'https://unicef.sharepoint.com/:w:/t/EMOPS-OSC/'
+                + 'EcDrjx9_qhtIg9hIH6ifjaEBUiWhLfS_u9UtCfL9AQbbYA?e=fVU0JG'
       }
     };
   }

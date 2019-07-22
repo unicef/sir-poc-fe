@@ -7,6 +7,9 @@ const fetchKey = () => {
   return makeRequest(Endpoints.myKey).then((result) => {
     updateStoredKey(result.key);
     return result.key;
+  }).catch((err) => {
+    window.dispatchEvent(new CustomEvent('no-access-error', {composed: true, bubbles: true}));
+    return err;
   });
 };
 

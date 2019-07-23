@@ -436,7 +436,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                             readonly$="[[readonly]]"
                             label="Incident Time (24h format)"
                             value="{{incident.incident_time}}"
-                            required auto-validate
                             hide-icon
                             error-message="Incident time is required">
                 </time-input>

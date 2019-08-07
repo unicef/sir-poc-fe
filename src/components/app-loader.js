@@ -38,7 +38,12 @@ class AppLoader extends PolymerElement {
 
       <div hidden$="[[loading]]">
         <template is="dom-if" if="[[authorized]]">
-          <app-shell></app-shell>
+          <template is="dom-if" if="[[noAccessGranted]]">
+            <no-access></no-access>
+          </template>
+          <template is="dom-if" if="[[!noAccessGranted]]">
+            <app-shell></app-shell>
+          </template>
         </template>
         <template is="dom-if" if="[[!authorized]]">
           <sir-login></sir-login>
@@ -64,6 +69,10 @@ class AppLoader extends PolymerElement {
       loading: {
         type: Boolean,
         value: false
+      },
+      noAccessGranted: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -71,6 +80,12 @@ class AppLoader extends PolymerElement {
   connectedCallback() {
     super.connectedCallback();
     this.checkAuth();
+    window.addEventListener('no-access-error', () => this.showNoAccessPage());
+  }
+
+  async showNoAccessPage() {
+    await import('./non-found-module/no-access.js');
+    this.set('noAccessGranted', true);
   }
 
   checkAuth() {

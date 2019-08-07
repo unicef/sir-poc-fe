@@ -2,13 +2,13 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-icons/communication-icons';
 
-/**
+ /**
  * @polymer
  * @customElement
  * @extends PolymerElement
 */
 
-class SupportBtn extends PolymerElement {
+ class SupportBtn extends PolymerElement {
   static get template() {
     return html`
       <style>
@@ -29,8 +29,7 @@ class SupportBtn extends PolymerElement {
           }
         }
       </style>
-
-      <a href="[[url]]"
+       <a href="[[url]]"
         target="_blank">
         <iron-icon icon="communication:textsms"></iron-icon>
         <span>Support</span>
@@ -38,11 +37,11 @@ class SupportBtn extends PolymerElement {
     `;
   }
 
-  static get is() {
+   static get is() {
     return 'support-btn';
   }
 
-  static get properties() {
+   static get properties() {
     return {
       url: {
         type: String,

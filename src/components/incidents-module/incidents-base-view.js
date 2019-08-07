@@ -436,7 +436,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                             readonly$="[[readonly]]"
                             label="Incident Time (24h format)"
                             value="{{incident.incident_time}}"
-                            required auto-validate
                             hide-icon
                             error-message="Incident time is required">
                 </time-input>
@@ -527,7 +526,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                         title="[[getFilenameFromURL(item.attachment)]]"
                         data-col-header-label="File">
                     <span>
-                      <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
+                      <a href$="[[item.attachment]]" download$="[[getFilenameFromURL(item.attachment)]]">
                           [[getFilenameFromURL(item.attachment)]]
                       </a>
                     </span>

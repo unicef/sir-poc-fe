@@ -16,7 +16,7 @@ RUN if [ "$DEVELOP" = "1" ]; then \
 #
 # end of builder
 #
-FROM node:10-alpine
+FROM node:8-alpine
 ARG VERSION
 ARG BUILD_DATE
 ARG COMMIT

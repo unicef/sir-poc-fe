@@ -26,8 +26,7 @@ import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
 // import './common/support-btn.js';
-// import './common/documentation-btn.js';
-import './common/no-access-overlay.js';
+import './common/documentation-btn.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
@@ -147,16 +146,6 @@ class AppShell extends connect(store)(PermissionsBase) {
           position: fixed;
           bottom: 128px;
         }
-        .boxed {
-          padding: 24px;
-          border: 4px solid red;
-        }
-        .link-cursor {
-          cursor: pointer;
-        }
-        .sidebar-dropdown {
-          width: 100%;
-        }
         .menu-icon {
           padding: 4px;
           border-right: solid;
@@ -173,10 +162,6 @@ class AppShell extends connect(store)(PermissionsBase) {
 
       <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" query-params="{{queryParams}}">
       </app-route>
-
-      <no-access-overlay id="noAccess" with-backdrop no-cancel-on-outside-click no-cancel-on-esc-key>
-        You do not have permission to access this application. Please contact your administrator to request access.
-      </no-access-overlay>
 
       <!-- menu will switch to mobile hamburger menu under 1280px -->
       <app-drawer-layout fullbleed="" narrow="{{narrow}}" responsive-width="1280px">
@@ -250,7 +235,7 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <div class="capitalize">[[_getPageTitle(page)]]</div>
               </div>
               <div>
-                <!-- <documentation-btn class="menu-icon"></documentation-btn> -->
+                <documentation-btn class="menu-icon"></documentation-btn>
                 <!-- <support-btn class="menu-icon"></support-btn> -->
                 <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
               </div>
@@ -289,18 +274,7 @@ class AppShell extends connect(store)(PermissionsBase) {
       route: Object,
       routeData: Object,
       queryParams: Object,
-      offline: Boolean,
-      requester: {
-        type: Object,
-        value: {}
-      },
-      countries: Array,
-      regions: Array,
-      userInactive: {
-        type: Boolean,
-        value: false,
-        notify: true
-      }
+      offline: Boolean
     };
   }
 
@@ -316,7 +290,6 @@ class AppShell extends connect(store)(PermissionsBase) {
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     this.showPrefferedBrowserMessage();
     this.checkForIdleState();
-    this._userIsInactive();
   }
 
   checkForIdleState() {
@@ -434,22 +407,6 @@ class AppShell extends connect(store)(PermissionsBase) {
       store.dispatch(showSnackbar('The preferred browser for this is Chrome'));
     }
   }
-
-  _userIsInactive() {
-    if (Object.keys(store.getState().staticData.profile).length === 0
-      && store.getState().staticData.profile.constructor === Object) {
-        this.set('userInactive', true);
-        this.shadowRoot.querySelector('#noAccess').open();
-    }
-    this.set('userInactive', false);
-  }
-
-  getCountriesForRegion(regionId) {
-    if (!regionId) {
-      return [];
-    }
-      return this.countries.filter(country => Number(country.region) === Number(regionId));
-    }
 }
 
 window.customElements.define('app-shell', AppShell);

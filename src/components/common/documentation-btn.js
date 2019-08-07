@@ -2,12 +2,12 @@ import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/iron-icons/communication-icons';
 
-/**
+ /**
  * @polymer
  * @customElement
 */
 
-class DocumentationBtn extends PolymerElement {
+ class DocumentationBtn extends PolymerElement {
   static get template() {
     return html`
       <style>
@@ -28,8 +28,7 @@ class DocumentationBtn extends PolymerElement {
           }
         }
       </style>
-
-      <a href="[[url]]"
+       <a href="[[url]]"
         target="_blank">
         <iron-icon icon="icons:description"></iron-icon>
         <span>Documentation</span>
@@ -37,16 +36,16 @@ class DocumentationBtn extends PolymerElement {
     `;
   }
 
-  static get is() {
+   static get is() {
     return 'documentation-btn';
   }
 
-  static get properties() {
+   static get properties() {
     return {
       url: {
         type: String,
         value: 'https://unicef.sharepoint.com/:w:/t/EMOPS-OSC/'
-          + 'ES5YDX0zziRIg8nj_nx0EkMBqjplq_JbHw7mUF2KLuO1iQ?e=4%3aNbNMmH&at=9'
+                + 'EcDrjx9_qhtIg9hIH6ifjaEBUiWhLfS_u9UtCfL9AQbbYA?e=fVU0JG'
       }
     };
   }

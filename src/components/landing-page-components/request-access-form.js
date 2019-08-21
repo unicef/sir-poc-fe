@@ -118,8 +118,8 @@ class RequestAccessForm extends PolymerElement {
         value: ''
       },
       countries: Array,
-      regions: Array,
-    }
+      regions: Array
+    };
   }
 
   _onVisibleChanged() {
@@ -128,7 +128,7 @@ class RequestAccessForm extends PolymerElement {
       this._fetchRegions();
     } else {
       this.set('errorMessage', '');
-      resetRequiredValidations(this)
+      resetRequiredValidations(this);
     }
   }
 

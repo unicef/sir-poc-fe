@@ -437,6 +437,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                             label="Incident Time (24h format)"
                             value="{{incident.incident_time}}"
                             hide-icon
+                            required
+                            auto-validate
                             error-message="Incident time is required">
                 </time-input>
               </div>
@@ -777,7 +779,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     }
   }
 
-  isTrafficAccident(incidentSubcategory) {
+  getSafetyCategory() {
+    if (this.staticData) {
+      return this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
+    }
+  }
+
+  async isTrafficAccident(incidentSubcategory) {
     if (!incidentSubcategory) {
       return false;
     }
@@ -785,14 +793,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     if (!this.staticData) {
       return false;
     }
-
-    let incident = this.getSafetyCategory().subcategories.find(elem => elem.id === incidentSubcategory.id);
+    let incident = await this.getSafetyCategory().subcategories.find(elem => elem.id === incidentSubcategory.id);
 
     return incident && incident.name === 'Road Traffic Accidents';
-  }
-
-  getSafetyCategory() {
-    return this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
   }
 
   showSubType(crashType) {

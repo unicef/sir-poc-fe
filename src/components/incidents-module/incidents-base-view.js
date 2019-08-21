@@ -779,13 +779,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     }
   }
 
-  getSafetyCategory() {
-    if (this.staticData) {
-      return this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
-    }
-  }
-
-  async isTrafficAccident(incidentSubcategory) {
+  isTrafficAccident(incidentSubcategory) {
     if (!incidentSubcategory) {
       return false;
     }
@@ -793,7 +787,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     if (!this.staticData) {
       return false;
     }
-    let incident = await this.getSafetyCategory().subcategories.find(elem => elem.id === incidentSubcategory.id);
+
+    let safetyCategory = this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
+    let incident = safetyCategory.subcategories.find(elem => elem.id === incidentSubcategory.id);
 
     return incident && incident.name === 'Road Traffic Accidents';
   }

@@ -528,7 +528,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                         title="[[getFilenameFromURL(item.attachment)]]"
                         data-col-header-label="File">
                     <span>
-                      <a href='' data-url$="[[item.attachment]]" on-click="dwRelatedDoc">
+                      <a href$="[[item.attachment]]" download$="[[getFilenameFromURL(item.attachment)]]" target="_blank">
                           [[getFilenameFromURL(item.attachment)]]
                       </a>
                     </span>

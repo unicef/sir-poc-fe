@@ -22,11 +22,11 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-collapse/iron-collapse.js';
 
-import 'etools-data-table/etools-data-table.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import { store } from '../../redux/store.js';
 import { syncIncidentOnList, exportIncidents, exportSingleIncident } from '../../actions/incidents.js';

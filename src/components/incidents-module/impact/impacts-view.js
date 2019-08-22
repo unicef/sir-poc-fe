@@ -7,7 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import { updatePath } from '../../common/navigation-helper.js';
 import { selectIncident } from '../../../reducers/incidents.js';
 import '@polymer/app-route/app-route.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 import { store } from '../../../redux/store.js';
 import '../../styles/shared-styles.js';
 import '../../styles/grid-layout-styles.js';

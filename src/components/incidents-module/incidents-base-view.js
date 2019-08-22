@@ -10,13 +10,13 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
-import 'etools-upload/etools-upload-multi.js';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-date-time/time-input.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-upload/etools-upload-multi.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-date-time/time-input.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
@@ -528,7 +528,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                         title="[[getFilenameFromURL(item.attachment)]]"
                         data-col-header-label="File">
                     <span>
-                      <a href$="[[item.attachment]]" download$="[[getFilenameFromURL(item.attachment)]]" target="_blank">
+                      <a href$="[[item.attachment]]"
+                         download$="[[getFilenameFromURL(item.attachment)]]"
+                         target="_blank">
                           [[getFilenameFromURL(item.attachment)]]
                       </a>
                     </span>

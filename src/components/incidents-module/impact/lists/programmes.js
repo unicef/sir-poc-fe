@@ -7,7 +7,7 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
-import 'etools-data-table';
+import '@unicef-polymer/etools-data-table/';
 import { getNameFromId } from '../../../common/utils.js';
 import { store } from '../../../../redux/store.js';
 import '../../../styles/shared-styles.js';

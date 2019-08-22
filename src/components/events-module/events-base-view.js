@@ -10,9 +10,9 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/device-icons.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';

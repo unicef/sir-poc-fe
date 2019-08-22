@@ -1,4 +1,4 @@
-import { DynamicDialogMixin } from 'etools-dialog/dynamic-dialog-mixin.js';
+import { DynamicDialogMixin } from '@unicef-polymer/etools-dialog/dynamic-dialog-mixin.js';
 import { store } from '../../../redux/store.js';
 import { PermissionsBase } from '../../common/permissions-base-class.js';
 

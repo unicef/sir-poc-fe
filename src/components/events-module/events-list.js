@@ -16,10 +16,10 @@ import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-collapse/iron-collapse.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
-import 'etools-data-table/etools-data-table.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import { store } from '../../redux/store.js';
 
@@ -27,7 +27,7 @@ import { syncEventOnList } from '../../actions/events.js';
 
 import { getNameFromId } from '../../components/common/utils.js';
 
-import 'etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
 import '../styles/grid-layout-styles.js';
@@ -173,10 +173,14 @@ class EventsList extends connect(store)(ListBaseClass) {
                   [[item.description]]
                 </span>
               </span>
-              <span class="col-data col-2" title="[[getName(item.event_category, 'incidentCategories')]]" data-col-header-label="Category">
+              <span class="col-data col-2"
+                    title="[[getName(item.event_category, 'incidentCategories')]]"
+                    data-col-header-label="Category">
                 [[getName(item.event_category, 'incidentCategories')]]
               </span>
-              <span class="col-data col-2" title="[[getName(item.threat_category, 'threatCategories')]]" data-col-header-label="Threat Category">
+              <span class="col-data col-2"
+                    title="[[getName(item.threat_category, 'threatCategories')]]"
+                    data-col-header-label="Threat Category">
                 [[getName(item.threat_category, 'threatCategories')]]
               </span>
               <span class="col-data col-1" title="[[item.start_date]]" data-col-header-label="Start date">

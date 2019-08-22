@@ -5,7 +5,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/image-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
-import 'etools-data-table';
+import '@unicef-polymer/etools-data-table/';
 
 import HistoryHelpers from '../../history-components/history-helpers.js';
 import DateMixin from '../../common/date-mixin.js';

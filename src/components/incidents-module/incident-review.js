@@ -2,7 +2,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import { addComment, notifySpecificUsers } from '../../actions/incidents.js';

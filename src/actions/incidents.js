@@ -220,6 +220,7 @@ export const submitIncident = incident => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.submitIncident, {id: incident.id});
 
   return makeRequest(endpoint).then((result) => {
+    updatePath('/incidents/list/');
     dispatch(editIncidentSuccess(result, result.id));
     return true;
   }).catch((error) => {

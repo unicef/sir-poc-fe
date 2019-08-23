@@ -118,7 +118,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
         <template is="dom-if" if="[[isSpecialConditionSubcategory(selectedEventSubcategory)]]">
           <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
             <div class="alert-text">
-              ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
+              ALERT: In an effort to protect the identity of victims, the ONLY required fields for the
               [[selectedEventSubcategory.name]] subcategory are Event Description, Region, Event Date, and Event Time.
               All other information is VOLUNTARY.
             </div>

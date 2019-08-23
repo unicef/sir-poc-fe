@@ -104,7 +104,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
           <template is="dom-if" if="[[isSpecialConditionImpact(selectedImpactType)]]">
             <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
               <div class="alert-text">
-                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required fields for the
                 [[selectedImpactType.name]] category are Impact, Description, Region, and Country.
                 The victim should be informed that all other information is VOLUNTARY.
               </div>

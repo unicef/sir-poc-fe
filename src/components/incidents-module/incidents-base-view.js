@@ -223,7 +223,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             <template is="dom-if" if="[[isSpecialConditionSubcategory(selectedIncidentSubcategory)]]">
               <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
                 <div class="alert-text">
-                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                  ALERT: In an effort to protect the identity of victims, the ONLY required fields for the
                   [[selectedIncidentSubcategory.name]] subcategory are Threat Category, Incident Category, 
                   Incident Subcategory, Incident Description, Region, Country, Incident Date, and Incident Time.
                   The victim should be informed that all other information is VOLUNTARY.
@@ -624,6 +624,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   static get properties() {
     return {
       staticData: Object,
+      staticDataLoaded: {
+        type: Boolean,
+        value: false
+      },
       title: String,
       state: Object,
       store: Object,
@@ -732,12 +736,12 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     return id;
   }
 
-  _idChanged(newId) {
-    if (!newId) {
+  _idChanged() {
+    if (!this.incidentId) {
       return;
     }
 
-    this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
+    this.set('incident', JSON.parse(JSON.stringify(selectIncident(this.state))));
     this.redirectIfNotEditable(this.incident, this.visible);
   }
 
@@ -765,6 +769,12 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
     this.staticData = state.staticData;
 
+    if (this.staticData.incidentCategories > 0) {
+      this.set('staticDataLoaded', true);
+    }
+
+    this._idChanged();
+
     this.events = state.events.list.map((elem) => {
       elem.name = elem.description;
       return elem;
@@ -782,6 +792,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   isTrafficAccident(incidentSubcategory) {
+    if (!this.staticDataLoaded) {
+      return false;
+    }
+
     if (!incidentSubcategory) {
       return false;
     }

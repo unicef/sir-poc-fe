@@ -41,7 +41,7 @@ import { updatePath } from '../components/common/navigation-helper.js';
 
 import { clearIncidentDraft } from '../actions/incidents.js';
 import {
-  showSnackbar,
+  showBrowserWarning,
   updateOffline,
   lazyLoadModules,
   updateLocationInfo
@@ -404,7 +404,9 @@ class AppShell extends connect(store)(PermissionsBase) {
 
   showPrefferedBrowserMessage() {
     if (!window.chrome) {
-      store.dispatch(showSnackbar('The preferred browser for this is Chrome'));
+      store.dispatch(showBrowserWarning(
+        'SIR will only work properly with the Chrome browser. Please download Chrome and try again.'
+      ));
     }
   }
 }

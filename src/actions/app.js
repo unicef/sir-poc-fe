@@ -41,7 +41,17 @@ export const showSnackbar = text => (dispatch) => {
   });
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() =>
-    dispatch({ type: ACTIONS.CLOSE_SNACKBAR }), 3000);
+    dispatch({ type: ACTIONS.CLOSE_SNACKBAR }), 5000);
+};
+
+export const showBrowserWarning = text => (dispatch) => {
+  dispatch({
+    type: ACTIONS.OPEN_SNACKBAR,
+    text
+  });
+  clearTimeout(snackbarTimer);
+  snackbarTimer = setTimeout(() =>
+    dispatch({ type: ACTIONS.CLOSE_SNACKBAR }), 5000000);
 };
 
 export const updateOffline = offline => (dispatch, getState) => {

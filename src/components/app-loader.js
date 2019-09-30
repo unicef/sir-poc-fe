@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
 import { SirMsalAuth } from './auth/jwt/msal-authentication.js';
 import './landing-page-components/sir-login.js';
+import {rootPath} from '@polymer/polymer/lib/utils/settings.js';
 
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 

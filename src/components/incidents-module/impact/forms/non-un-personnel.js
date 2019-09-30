@@ -296,7 +296,6 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
   }
 
   _stateChanged(state) {
-    debugger
     this.offline = state.app.offline;
     this.staticData = state.staticData;
     this.personnelList = state.incidents.personnel;

@@ -197,6 +197,8 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                                 readonly="[[readonly]]"
                                 options="[[staticData.regions]]"
                                 selected="{{data.person.region}}"
+                                option-label="name"
+                                option-value="id"
                                 required auto-validate
                                 error-message="Duty station region is required">
               </etools-dropdown>

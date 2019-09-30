@@ -201,7 +201,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
       </div>
 
 
-      <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
+      <!-- <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
           <div class="row-h flex-c">
             <div class="col col-6">
               <user-dropdown-multi label="Send special notification to users"
@@ -219,7 +219,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                 Notify selected users
               </paper-button>
             </div>
-          </div>
+          </div> -->
       </div>
     `;
   }

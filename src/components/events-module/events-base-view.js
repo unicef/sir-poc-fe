@@ -342,7 +342,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
       },
       specialConditionSubcategories: {
         type: Array,
-        value: ['Sexual assault', 'Sexual harassment', 'Stalking', 'Rape']
+        value: ['Sexual assault', 'Sexual harassment', 'Rape']
       }
     };
   }

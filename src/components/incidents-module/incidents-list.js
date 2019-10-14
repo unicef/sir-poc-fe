@@ -162,7 +162,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             </etools-dropdown>
 
             <paper-menu-button class="export"
-                               hidden="[[!hasExportPermission]]"
                                horizontal-align="right"
                                vertical-offset="8">
               <paper-button raised class="white" slot="dropdown-trigger">
@@ -309,7 +308,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                     </iron-icon>
                   </span>
                 </template>
-                <div class="export-btn hidden-on-mobile" hidden$="[[!hasPermission('export_data')]]">
+                <div class="export-btn hidden-on-mobile">
                   <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
                     <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
                     <paper-listbox slot="dropdown-content" on-iron-select="exportItem">
@@ -370,16 +369,8 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       selectedIncidentCategory: {
         type: Object,
         value: {}
-      },
-      hasExportPermission: {
-        type: Boolean,
-        notify: true
       }
     };
-  }
-
-  static get observers() {
-    return ['checkExportPermission(state.staticData.profile.teams)'];
   }
 
   _stateChanged(state) {
@@ -633,16 +624,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     let lastLogin = this.state.staticData.profile.last_login;
     let modifiedAfterLastLogin = moment(incident.last_modify_date).isAfter(moment(lastLogin));
     return modifiedAfterLastLogin && !this.showNewIncidentTooltip(incident);
-  }
-
-  checkExportPermission() {
-    if (!this.state || !this.state.staticData.profile.teams) {
-      this.set('hasExportPermission', false);
-      return;
-    }
-    let teams = this.state.staticData.profile.teams;
-    let permission = teams.some(t => t.team_type === 10 || t.team_type === 3);
-    this.set('hasExportPermission', permission);
   }
 
   showNewCommentsTooltip(incident) {

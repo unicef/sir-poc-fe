@@ -228,11 +228,11 @@ class AppShell extends connect(store)(PermissionsBase) {
         <!-- Main content -->
         <app-header-layout has-scrolling-region="">
 
-          <app-header slot="header" effects="waterfall">
+          <app-header id="header" slot="header" effects="waterfall">
             <app-toolbar>
               <div class="title-group">
                 <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-                <div class="capitalize">[[_getPageTitle(page)]]</div>
+                <div class="capitalize">[[_getPageTitle(page)]][[warningMessage]]</div>
               </div>
               <div>
                 <documentation-btn class="menu-icon"></documentation-btn>
@@ -274,7 +274,11 @@ class AppShell extends connect(store)(PermissionsBase) {
       route: Object,
       routeData: Object,
       queryParams: Object,
-      offline: Boolean
+      offline: Boolean,
+      warningMessage: {
+        type: String,
+        value: ''
+      }
     };
   }
 
@@ -290,6 +294,7 @@ class AppShell extends connect(store)(PermissionsBase) {
     installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     this.showPrefferedBrowserMessage();
     this.checkForIdleState();
+    this.setHeaderColor();
   }
 
   checkForIdleState() {
@@ -407,6 +412,13 @@ class AppShell extends connect(store)(PermissionsBase) {
       store.dispatch(showBrowserWarning(
         'SIR will only work properly with the Chrome browser. Please download Chrome and try again.'
       ));
+    }
+  }
+
+  setHeaderColor() {
+    if (window.location.host != 'sir.unicef.org') {
+      this.$.header.style.background = 'red';
+      this.warningMessage = ' - SIR TESTING ENVIRONMENT';
     }
   }
 }

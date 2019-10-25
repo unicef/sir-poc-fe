@@ -14,7 +14,7 @@ class IncidentCommentedCard extends TimelineCardBase {
     return html`
       ${this.styles}
       <div class$="[[getCardClass(item)]]">
-        [[item.last_modify_user_id]] commented on this:
+        [[item.created_by_user.email]] commented on this:
         <p> [[item.comment]] </p>
       </div>
     `;

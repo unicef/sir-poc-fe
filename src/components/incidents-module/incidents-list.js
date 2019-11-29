@@ -213,12 +213,15 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             City
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
+            Country
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
             Category
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Subcategory
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
             Status
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -268,8 +271,15 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                   [[item.description]]
                 </span>
               </span>
-              <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
+              <span class="col-data col-1"
+                    title="[[item.city]]"
+                    data-col-header-label="City">
                 <span>[[item.city]]</span>
+              </span>
+              <span class="col-data col-1"
+                    title="[[getCountryName(item.country)]]"
+                    data-col-header-label="Country">
+                <span>[[getCountryName(item.country)]]</span>
               </span>
               <span class="col-data col-1" title="[[item.incident_category_name]]"
                     data-col-header-label="Incident Category">
@@ -279,7 +289,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                     data-col-header-label="Incident Subcategory">
                 <span>[[item.incident_subcategory_name]]</span>
               </span>
-              <span class="col-data col-2 capitalize" data-col-header-label="Status">
+              <span class="col-data col-1 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
                   [[item.status]]
                 </template>
@@ -579,6 +589,10 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       target: this.filters.values.target,
       threat_category: this.filters.values.threatCategory
     });
+  }
+
+  getCountryName(id) {
+    return getNameFromId(id, 'countries');
   }
 
   exportItem(e) {

@@ -7,9 +7,9 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import { showSnackbar } from '../../../../actions/app.js';
 
 import {
@@ -140,7 +140,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           <template is="dom-if" if="[[isSpecialConditionImpact(selectedImpactType)]]">
             <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
               <div class="alert-text">
-                IMPORTANT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                IMPORTANT: In an effort to protect the identity of victims, the ONLY required fields for the
                 [[selectedImpactType.name]] subcategory are Status, Impact, Description, Duty Station Region,
                  and Duty Station Country.
                 The victim should be informed that all other information is VOLUNTARY.

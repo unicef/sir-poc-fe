@@ -1,4 +1,4 @@
-import { CommonFunctionality } from 'etools-dropdown/mixins/common-mixin.js';
+import { CommonFunctionality } from '@unicef-polymer/etools-dropdown/mixins/common-mixin.js';
 import { Endpoints } from '../../../config/endpoints.js';
 import { makeRequest, prepareEndpoint } from '../request-helper.js';
 

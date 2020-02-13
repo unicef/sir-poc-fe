@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import { validateAllRequired, resetRequiredValidations } from '../common/validations-helper.js';
 import { makeRequest } from '../common/request-helper.js';
 import { Endpoints } from '../../config/endpoints.js';
@@ -118,8 +118,8 @@ class RequestAccessForm extends PolymerElement {
         value: ''
       },
       countries: Array,
-      regions: Array,
-    }
+      regions: Array
+    };
   }
 
   _onVisibleChanged() {
@@ -128,7 +128,7 @@ class RequestAccessForm extends PolymerElement {
       this._fetchRegions();
     } else {
       this.set('errorMessage', '');
-      resetRequiredValidations(this)
+      resetRequiredValidations(this);
     }
   }
 

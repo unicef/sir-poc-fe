@@ -2,7 +2,7 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-input/paper-textarea.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 
 import { addComment, notifySpecificUsers } from '../../actions/incidents.js';
@@ -201,7 +201,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
       </div>
 
 
-      <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
+      <!-- <div class="card" hidden$="[[_hideCommentCard(offline, incident.status)]]">
           <div class="row-h flex-c">
             <div class="col col-6">
               <user-dropdown-multi label="Send special notification to users"
@@ -219,7 +219,7 @@ class IncidentReview extends connect(store)(DateMixin(PermissionsBase)) {
                 Notify selected users
               </paper-button>
             </div>
-          </div>
+          </div> -->
       </div>
     `;
   }

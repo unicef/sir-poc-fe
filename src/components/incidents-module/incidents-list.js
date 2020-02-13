@@ -22,11 +22,11 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-collapse/iron-collapse.js';
 
-import 'etools-data-table/etools-data-table.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import { store } from '../../redux/store.js';
 import { syncIncidentOnList, exportIncidents, exportSingleIncident } from '../../actions/incidents.js';
@@ -162,7 +162,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             </etools-dropdown>
 
             <paper-menu-button class="export"
-                               hidden="[[!hasExportPermission]]"
                                horizontal-align="right"
                                vertical-offset="8">
               <paper-button raised class="white" slot="dropdown-trigger">
@@ -214,12 +213,15 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             City
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
+            Country
+          </etools-data-table-column>
+          <etools-data-table-column class="col-1">
             Category
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Subcategory
           </etools-data-table-column>
-          <etools-data-table-column class="col-2">
+          <etools-data-table-column class="col-1">
             Status
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -269,8 +271,15 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                   [[item.description]]
                 </span>
               </span>
-              <span class="col-data col-1" title="[[item.city]]" data-col-header-label="City">
+              <span class="col-data col-1"
+                    title="[[item.city]]"
+                    data-col-header-label="City">
                 <span>[[item.city]]</span>
+              </span>
+              <span class="col-data col-1"
+                    title="[[getCountryName(item.country)]]"
+                    data-col-header-label="Country">
+                <span>[[getCountryName(item.country)]]</span>
               </span>
               <span class="col-data col-1" title="[[item.incident_category_name]]"
                     data-col-header-label="Incident Category">
@@ -280,7 +289,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                     data-col-header-label="Incident Subcategory">
                 <span>[[item.incident_subcategory_name]]</span>
               </span>
-              <span class="col-data col-2 capitalize" data-col-header-label="Status">
+              <span class="col-data col-1 capitalize" data-col-header-label="Status">
                 <template is="dom-if" if="[[!item.unsynced]]">
                   [[item.status]]
                 </template>
@@ -309,7 +318,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                     </iron-icon>
                   </span>
                 </template>
-                <div class="export-btn hidden-on-mobile" hidden$="[[!hasPermission('export_data')]]">
+                <div class="export-btn hidden-on-mobile">
                   <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
                     <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
                     <paper-listbox slot="dropdown-content" on-iron-select="exportItem">
@@ -370,16 +379,8 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       selectedIncidentCategory: {
         type: Object,
         value: {}
-      },
-      hasExportPermission: {
-        type: Boolean,
-        notify: true
       }
     };
-  }
-
-  static get observers() {
-    return ['checkExportPermission(state.staticData.profile.teams)'];
   }
 
   _stateChanged(state) {
@@ -590,6 +591,10 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     });
   }
 
+  getCountryName(id) {
+    return getNameFromId(id, 'countries');
+  }
+
   exportItem(e) {
     if (!e || !e.target || !e.detail || !e.detail.item) {
       return;
@@ -633,16 +638,6 @@ class IncidentsList extends connect(store)(ListBaseClass) {
     let lastLogin = this.state.staticData.profile.last_login;
     let modifiedAfterLastLogin = moment(incident.last_modify_date).isAfter(moment(lastLogin));
     return modifiedAfterLastLogin && !this.showNewIncidentTooltip(incident);
-  }
-
-  checkExportPermission() {
-    if (!this.state || !this.state.staticData.profile.teams) {
-      this.set('hasExportPermission', false);
-      return;
-    }
-    let teams = this.state.staticData.profile.teams;
-    let permission = teams.some(t => t.team_type === 10 || t.team_type === 3);
-    this.set('hasExportPermission', permission);
   }
 
   showNewCommentsTooltip(incident) {

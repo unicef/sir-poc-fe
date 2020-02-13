@@ -10,13 +10,13 @@ import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/iron-icons/device-icons.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 
-import 'etools-upload/etools-upload-multi.js';
-import 'etools-data-table/etools-data-table.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-date-time/time-input.js';
-import 'etools-dropdown/etools-dropdown-multi.js';
-import 'etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-upload/etools-upload-multi.js';
+import '@unicef-polymer/etools-data-table/etools-data-table.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-date-time/time-input.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import '../common/errors-box.js';
 import '../common/warn-message.js';
 import '../common/review-fields.js';
@@ -223,7 +223,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             <template is="dom-if" if="[[isSpecialConditionSubcategory(selectedIncidentSubcategory)]]">
               <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
                 <div class="alert-text">
-                  ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
+                  ALERT: In an effort to protect the identity of victims, the ONLY required fields for the
                   [[selectedIncidentSubcategory.name]] subcategory are Threat Category, Incident Category, 
                   Incident Subcategory, Incident Description, Region, Country, Incident Date, and Incident Time.
                   The victim should be informed that all other information is VOLUNTARY.
@@ -437,6 +437,8 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                             label="Incident Time (24h format)"
                             value="{{incident.incident_time}}"
                             hide-icon
+                            required
+                            auto-validate
                             error-message="Incident time is required">
                 </time-input>
               </div>
@@ -526,7 +528,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                         title="[[getFilenameFromURL(item.attachment)]]"
                         data-col-header-label="File">
                     <span>
-                      <a href$="[[item.attachment]]" download$="[[getFilenameFromURL(item.attachment)]]">
+                      <a href$="[[item.attachment]]"
+                         download$="[[getFilenameFromURL(item.attachment)]]"
+                         target="_blank">
                           [[getFilenameFromURL(item.attachment)]]
                       </a>
                     </span>
@@ -620,6 +624,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   static get properties() {
     return {
       staticData: Object,
+      staticDataLoaded: {
+        type: Boolean,
+        value: false
+      },
       title: String,
       state: Object,
       store: Object,
@@ -701,7 +709,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       },
       specialConditionSubcategories: {
         type: Array,
-        value: ['Sexual assault', 'Sexual harassment', 'Stalking', 'Rape']
+        value: ['Sexual assault', 'Sexual harassment', 'Rape']
       }
     };
   }
@@ -728,12 +736,12 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     return id;
   }
 
-  _idChanged(newId) {
-    if (!newId) {
+  _idChanged() {
+    if (!this.incidentId) {
       return;
     }
 
-    this.incident = JSON.parse(JSON.stringify(selectIncident(this.state)));
+    this.set('incident', JSON.parse(JSON.stringify(selectIncident(this.state))));
     this.redirectIfNotEditable(this.incident, this.visible);
   }
 
@@ -760,6 +768,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     this.state = state;
 
     this.staticData = state.staticData;
+    if (this.staticData.incidentCategories.length > 0) {
+      this.set('staticDataLoaded', true);
+    }
+
+    this._idChanged();
 
     this.events = state.events.list.map((elem) => {
       elem.name = elem.description;
@@ -778,6 +791,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   isTrafficAccident(incidentSubcategory) {
+    debugger
+    if (!this.staticDataLoaded) {
+      return false;
+    }
+
     if (!incidentSubcategory) {
       return false;
     }
@@ -786,13 +804,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       return false;
     }
 
-    let incident = this.getSafetyCategory().subcategories.find(elem => elem.id === incidentSubcategory.id);
+    let safetyCategory = this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
+    let incident = safetyCategory.subcategories.find(elem => elem.id === incidentSubcategory.id);
 
     return incident && incident.name === 'Road Traffic Accidents';
-  }
-
-  getSafetyCategory() {
-    return this.staticData.incidentCategories.find(elem => elem.name === 'Safety');
   }
 
   showSubType(crashType) {

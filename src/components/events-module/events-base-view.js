@@ -10,9 +10,9 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/iron-icons/device-icons.js';
-import 'etools-date-time/datepicker-lite.js';
-import 'etools-dropdown/etools-dropdown.js';
-import 'etools-info-tooltip/etools-info-tooltip.js';
+import '@unicef-polymer/etools-date-time/datepicker-lite.js';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
+import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
 
 import { selectEvent } from '../../reducers/events.js';
 import { store } from '../../redux/store.js';
@@ -118,7 +118,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
         <template is="dom-if" if="[[isSpecialConditionSubcategory(selectedEventSubcategory)]]">
           <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
             <div class="alert-text">
-              ALERT: In an effort to protect the identity of victims, the ONLY required feilds for the
+              ALERT: In an effort to protect the identity of victims, the ONLY required fields for the
               [[selectedEventSubcategory.name]] subcategory are Event Description, Region, Event Date, and Event Time.
               All other information is VOLUNTARY.
             </div>
@@ -342,7 +342,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
       },
       specialConditionSubcategories: {
         type: Array,
-        value: ['Sexual assault', 'Sexual harassment', 'Stalking', 'Rape']
+        value: ['Sexual assault', 'Sexual harassment', 'Rape']
       }
     };
   }

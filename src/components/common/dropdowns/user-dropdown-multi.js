@@ -4,10 +4,10 @@ import '@polymer/iron-dropdown/iron-dropdown.js';
 import '@polymer/neon-animation/neon-animations.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-import 'etools-dropdown/elements/searchbox-input.js';
-import 'etools-dropdown/elements/options-list.js';
-import 'etools-dropdown/styles/esmm-shared-styles.js';
-import 'etools-dropdown/elements/selected-options.js';
+import '@unicef-polymer/etools-dropdown/elements/searchbox-input.js';
+import '@unicef-polymer/etools-dropdown/elements/options-list.js';
+import '@unicef-polymer/etools-dropdown/styles/esmm-shared-styles.js';
+import '@unicef-polymer/etools-dropdown/elements/selected-options.js';
 import { UsersDDCommonFunctionality } from './users-dd-common-mixin.js';
 
 class UserDropdownMulti extends UsersDDCommonFunctionality(PolymerElement) {

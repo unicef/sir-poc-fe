@@ -768,8 +768,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     this.state = state;
 
     this.staticData = state.staticData;
-
-    if (this.staticData.incidentCategories > 0) {
+    if (this.staticData.incidentCategories.length > 0) {
       this.set('staticDataLoaded', true);
     }
 
@@ -792,6 +791,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   isTrafficAccident(incidentSubcategory) {
+    debugger
     if (!this.staticDataLoaded) {
       return false;
     }

@@ -791,7 +791,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   isTrafficAccident(incidentSubcategory) {
-    debugger
     if (!this.staticDataLoaded) {
       return false;
     }

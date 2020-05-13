@@ -21,9 +21,7 @@ class SubmitButton extends ButtonsBaseClass {
           margin-left: 4px;
         }
       </style>
-      <paper-button raised
-                    on-tap="openDialog"
-                    hidden$="[[!hasPermission('submit_incident')]]">
+      <paper-button raised on-tap="openDialog">
         [[getLabel(incident.status)]]
       </paper-button>
       `;

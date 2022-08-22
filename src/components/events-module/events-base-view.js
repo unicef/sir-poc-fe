@@ -103,7 +103,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
               <etools-dropdown id="threatCategory"
                                 slot="field"
                                 readonly="[[readonly]]"
-                                label="Threat Category"
+                                label="Was UN Targeted?"
                                 option-label="name"
                                 option-value="id"
                                 options="[[staticData.threatCategories]]"

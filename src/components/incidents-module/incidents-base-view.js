@@ -187,14 +187,14 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                   <etools-dropdown id="threatCategory"
                                     slot="field"
                                     readonly="[[readonly]]"
-                                    label="Threat Category"
+                                    label="Was UN Targeted?"
                                     option-label="name"
                                     option-value="id"
                                     options="[[staticData.threatCategories]]"
                                     selected="{{incident.threat_category}}"
                                     selected-item="{{selectedThreatCategory}}"
                                     required auto-validate
-                                    error-message="Threat category is required">
+                                    error-message="Was UN Targeted is required">
                   </etools-dropdown>
                   <span slot="message">[[selectedThreatCategory.description]]</span>
                 </etools-info-tooltip>

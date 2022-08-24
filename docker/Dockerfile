@@ -7,12 +7,12 @@ RUN mkdir /code
 WORKDIR /code
 ADD . /code
 
-RUN if [ "$DEVELOP" = "1" ]; then \
-        echo "$VERSION-develop"; \
-    else \
-        echo "Download package: https://github.com/unicef/sir-poc-fe/archive/${VERSION}.tar.gz"; \
-        curl -s -L -u "${GITHUB_TOKEN}:" "https://github.com/unicef/sir-poc-fe/archive/${VERSION}.tar.gz" | tar -xzf - --strip-components=1; \
-    fi
+# RUN if [ "$DEVELOP" = "1" ]; then \
+#         echo "$VERSION-develop"; \
+#     else \
+#         echo "Download package: https://github.com/unicef/sir-poc-fe/archive/${VERSION}.tar.gz"; \
+#         curl -s -L -u "${GITHUB_TOKEN}:" "https://github.com/unicef/sir-poc-fe/archive/${VERSION}.tar.gz" | tar -xzf - --strip-components=1; \
+#     fi
 #
 # end of builder
 #

@@ -1,4 +1,0 @@
-FROM unicef/sir-fe:latest
-VOLUME ".:/code"
-WORKDIR /code
-CMD ["polymer", "serve"]

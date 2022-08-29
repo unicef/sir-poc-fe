@@ -51,7 +51,7 @@ export const Endpoints = {
     method: 'GET'
   },
   exportSingleIncident: {
-    url: baseUrl + '/api/incidents/<%=id%>/?format=<%=docType%>',
+    url: baseUrl + '/api/incidents/?format=<%=docType%>&id=<%=id%>',
     method: 'GET',
     handleAs: 'blob'
   },

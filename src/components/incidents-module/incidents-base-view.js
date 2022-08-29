@@ -30,7 +30,7 @@ import { makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/r
 
 import { store } from '../../redux/store.js';
 import { selectIncident } from '../../reducers/incidents.js';
-import { fetchIncident } from '../../actions/incidents.js';
+import { fetchIncident, saveIncidentsAsDraft } from '../../actions/incidents.js';
 import { serverError } from '../../actions/errors.js';
 import { showSnackbar } from '../../actions/app.js';
 
@@ -109,9 +109,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
+            ${this.changeToDraftBtnTmpl}
             <paper-button class="danger" raised on-tap="_navigateBack">
               Cancel
             </paper-button>
+
           </div>
         </div>
 
@@ -224,7 +226,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
                 <div class="alert-text">
                   ALERT: In an effort to protect the identity of victims, the ONLY required fields for the
-                  [[selectedIncidentSubcategory.name]] subcategory are Threat Category, Incident Category, 
+                  [[selectedIncidentSubcategory.name]] subcategory are Threat Category, Incident Category,
                   Incident Subcategory, Incident Description, Region, Country, Incident Date, and Incident Time.
                   The victim should be informed that all other information is VOLUNTARY.
                 </div>
@@ -566,7 +568,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           </div>
 
         </template>
-
+        
         <div class="row-h flex-c padd-top buttons-area">
           <div>
             ${this.saveBtnTmpl}
@@ -577,12 +579,24 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
+            ${this.changeToDraftBtnTmpl}
             <paper-button class="danger" raised on-tap="_navigateBack">
               Cancel
             </paper-button>
+            
           </div>
         </div>
       </div>
+    `;
+  }
+
+  static get changeToDraftBtnTmpl() {
+    return html`
+    <template is="dom-if" if="[[isSubmitted(incident)]]">
+        <paper-button class="danger" raised on-click="_changeToDraft" incident-id$="[[incident.id]]">
+          Change to Draft
+       </paper-button>
+   <template>
     `;
   }
 
@@ -745,6 +759,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     this.redirectIfNotEditable(this.incident, this.visible);
   }
 
+  _changeToDraft(e) {
+    let incidentId = e.target.getAttribute('incident-id');
+    store.dispatch(saveIncidentsAsDraft(incidentId.toString()));
+  }
   redirectIfNotEditable(incident, visible) {
     return false;
   }
@@ -840,6 +858,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       return false;
     }
     return this.specialConditionSubcategories.indexOf(selectedIncidentSubcategory.name) > -1;
+  }
+
+  isSubmitted(incident) {
+    if (incident.status === 'submitted') {
+      return true;
+    }
+
   }
 
   eventNotOk(eventId, offline) {

@@ -312,5 +312,9 @@ export const Endpoints = {
   programmeTypes: {
     url: baseUrl + '/api/programme_types/',
     method: 'GET'
+  },
+  changeIncidentsToDraft: {
+    url: baseUrl + '/api/incidents/mark_as_draft/?id__inlist=<%=id%>',
+    method: 'PUT'
   }
 };

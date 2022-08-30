@@ -94,6 +94,7 @@ export const deleteIncidentFromRedux = (incidentId) => {
   };
 };
 
+
 export const fetchAllIncidentData = () => (dispatch) => {
   dispatch(fetchIncidents());
   dispatch(fetchIncidentEvacuations());
@@ -340,7 +341,8 @@ export const fetchIncident = id => (dispatch, getState) => {
     updatePath('/incidents/list/');
     return;
   }
-  let endpoint = prepareEndpoint(Endpoints.getIncident, {id});
+
+  let endpoint = prepareEndpoint(Endpoints.getIncident, {id });
   makeRequest(endpoint).then((response) => {
     dispatch(receiveIncident(response));
   });
@@ -455,7 +457,7 @@ export const exportSingleIncident = (id, docType) => (dispatch) => {
 };
 
 export const exportIncidents = (queryString, docType) => (dispatch) => {
-  let endpoint = prepareEndpoint(Endpoints.exportIncidentsList, {queryString});
+  let endpoint = prepareEndpoint(Endpoints.exportIncidentsList, { queryString });
   makeRequest(endpoint).then((blob) => {
     handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);
   }).catch((error) => {
@@ -464,6 +466,31 @@ export const exportIncidents = (queryString, docType) => (dispatch) => {
     // TODO: redirects and messages should be moved to the view
     dispatch(showSnackbar('An error occurred on incidents export!'));
   });
+};
+
+export const saveMultipleIncidentsAsDraft = ids => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.changeIncidentsToDraft, {id});
+  try {
+    const result = await makeRequest(endpoint);
+    dispatch(fetchIncidents());
+    return result;
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
+};
+export const saveIncidentsAsDraft = ids => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.changeIncidentsToDraft, {id});
+  try {
+    const result = await makeRequest(endpoint);
+    window.location.reload();
+    return result;
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
 };
 
 const getSanitizedIncident = (rawIncident) => {

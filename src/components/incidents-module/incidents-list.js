@@ -21,6 +21,7 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-collapse/iron-collapse.js';
+import '@polymer/paper-checkbox/paper-checkbox.js';
 
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
@@ -29,7 +30,10 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown-multi.js';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 
 import { store } from '../../redux/store.js';
-import { syncIncidentOnList, exportIncidents, exportSingleIncident } from '../../actions/incidents.js';
+import {
+  syncIncidentOnList, exportIncidents, exportSingleIncident,
+  saveMultipleIncidentsAsDraft
+} from '../../actions/incidents.js';
 import { getNameFromId } from '../common/utils.js';
 
 import '../styles/shared-styles.js';
@@ -203,10 +207,13 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         <etools-data-table-header id="listHeader"
                                   no-title
                                   low-resolution-layout="[[lowResolutionLayout]]">
+          <etools-data-table-column class="col-1">
+           Select
+          </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Case Number
           </etools-data-table-column>
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-2">
             Description
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
@@ -233,6 +240,14 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
+            <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
+           <span class="col-data col-1" data-col-header-label="Case number">
+                <span><paper-checkbox on-change="_handleCheckbox" incident-id$="[[item.id]]"> </paper-checkbox></span>
+           </span>
+           </template>
+           <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
+                <span class="col-data col-1" data-col-header-label="Case number"></span>
+           </template>
               <span class="col-data col-2" data-col-header-label="Case number">
                 <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
                   <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
@@ -266,7 +281,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 </etools-info-tooltip>
 
               </span>
-              <span class="col-data col-3" data-col-header-label="Case number">
+              <span class="col-data col-2" data-col-header-label="Case number">
                 <span class="truncate">
                   [[item.description]]
                 </span>
@@ -351,13 +366,18 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             </div>
           </etools-data-table-row>
         </template>
-
+      
         <etools-data-table-footer id="footer" page-size="{{pagination.pageSize}}"
                                   page-number="{{pagination.pageNumber}}"
                                   total-results="[[pagination.totalResults]]"
                                   visible-range="{{visibleRange}}"
                                   low-resolution-layout="[[lowResolutionLayout]]">
         </etools-data-table-footer>
+        <paper-button  on-click="_changeToDraft"
+        disabled$="[[disabled]]"
+                  >
+                  CHANGE TO DRAFT</paper-button>
+       
       </div>
     `;
   }
@@ -379,6 +399,14 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       selectedIncidentCategory: {
         type: Object,
         value: {}
+      },
+      incidentIds: {
+        type: Array,
+        value: []
+      },
+      disabled: {
+        type: Boolean,
+        value: true
       }
     };
   }
@@ -559,6 +587,29 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   _showSyncButton(unsynced, offline) {
     return !offline && unsynced && this.hasPermission('add_incident');
   }
+
+  _handleCheckbox(e) {
+    let incidentId = e.target.getAttribute('incident-id');
+    if (e.target.checked === true) {
+      this.push('incidentIds', JSON.parse(incidentId));
+    }
+    else {
+      var index = this.incidentIds.indexOf(incidentId);
+      this.splice('incidentIds', index, 1);
+    }
+    if (this.incidentIds.length === 0) {
+      this.set('disabled', true);
+    }
+    else {
+      this.set('disabled', false);
+    }
+  }
+  _changeToDraft() {
+    store.dispatch(saveMultipleIncidentsAsDraft(this.incidentIds.toString()));
+    this.set('incidentIds', []);
+    this.set('disabled', true);
+   }
+
 
   _syncItem(incident) {
     if (!incident || !incident.model || !incident.model.__data || !incident.model.__data.item) {

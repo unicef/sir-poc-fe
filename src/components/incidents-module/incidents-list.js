@@ -148,7 +148,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             </etools-dropdown>
 
             <etools-dropdown class="filter select"
-                              label="Target"
+                              label="Was the UN Targeted?"
                               enable-none-option
                               option-label="name"
                               option-value="id"
@@ -157,7 +157,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
             </etools-dropdown>
 
             <etools-dropdown class="filter select"
-                              label="Was UN Targeted?"
+                              label="Threat Category"
                               enable-none-option
                               option-label="name"
                               option-value="id"

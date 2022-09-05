@@ -141,7 +141,7 @@ class EventsList extends connect(store)(ListBaseClass) {
             Event Category
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
-           Was UN Targeted?
+          Threat Category
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
             Start date

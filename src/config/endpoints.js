@@ -317,6 +317,10 @@ export const Endpoints = {
     url: baseUrl + '/api/incidents/mark_as_draft/?id__inlist=<%=id%>',
     method: 'PUT'
   },
+  changeOwnerShip: {
+    url: baseUrl + '/api/incidents/change_ownership/<%=profId%>/?id__inlist=<%=id%>',
+    method: 'PUT'
+  },
   reportingList: {
     url: baseUrl + '/api/users/by_country/<%=id%>/',
     method: 'GET'

@@ -29,8 +29,9 @@ import { validateAllRequired, resetRequiredValidations } from '../common/validat
 import { makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/request-helper.js';
 
 import { store } from '../../redux/store.js';
-import { selectIncident } from '../../reducers/incidents.js';
-import { fetchIncident, saveIncidentsAsDraft } from '../../actions/incidents.js';
+import { selectIncident} from '../../reducers/incidents.js';
+import { fetchIncident, saveIncidentsAsDraft, changeOwnership } from '../../actions/incidents.js';
+import { fetchReportingUser } from '../../actions/reporting.js';
 import { serverError } from '../../actions/errors.js';
 import { showSnackbar } from '../../actions/app.js';
 
@@ -101,6 +102,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
         <div class="row-h flex-c buttons-area">
           <div>
+            ${this.changeOwnership}
             ${this.saveBtnTmpl}
             ${this.goToEditBtnTmpl}
             ${this.submitIncidentTmpl}
@@ -571,6 +573,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
         
         <div class="row-h flex-c padd-top buttons-area">
           <div>
+          ${this.changeOwnership}
             ${this.saveBtnTmpl}
             ${this.goToEditBtnTmpl}
             ${this.submitIncidentTmpl}
@@ -590,6 +593,31 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     `;
   }
 
+  static get changeOwnership() {
+    return html`
+    <paper-button raised on-click="widgetClicked">CHANGE OWNERSHIP</paper-button>
+           <paper-dialog id="modal" modal >
+                <h2>USERS</h2>
+                <div>
+                <etools-dropdown 
+                          class="filter select"
+                          label="Users"
+                          enable-none-option
+                          option-label="display_name"
+                          option-value="id"
+                          options="[[reportingUsers]]"
+                          selected="{{userId}}"
+                    </etools-dropdown>  
+                 </div>  
+                    
+              <div class="buttons">
+                  <paper-button dialog-dismiss on-click="_closeDialog">Cancel</paper-button>
+                  <paper-button  dialog-confirm on-click="_changeOwnership"
+                   disabled$="[[!userId]]">Accept</paper-button>
+             </div>
+       </paper-dialog> 
+    `;
+  }
   static get changeToDraftBtnTmpl() {
     return html`
     <template is="dom-if" if="[[isSubmitted(incident)]]">
@@ -645,6 +673,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       title: String,
       state: Object,
       store: Object,
+      userId: {
+        type: Number,
+        value: null
+      },
       lowResolutionLayout: Boolean,
       incident: {
         type: Object,
@@ -746,6 +778,21 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     }
   }
 
+  widgetClicked() {
+    store.dispatch(fetchReportingUser(this.incident.country));
+    document.body.appendChild(this.$.modal);
+    this.$.modal.open();
+  }
+
+  _changeOwnership() {
+    store.dispatch(changeOwnership(this.incident.id, this.userId));
+    this.set('userId', null);
+  }
+
+  _closeDialog() {
+    this.set('userId', null);
+  }
+
   _setIncidentId(id) {
     return id;
   }
@@ -784,6 +831,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
   _stateChanged(state) {
     this.state = state;
+    this.reportingUsers = state.reporting.list;
 
     this.staticData = state.staticData;
     if (this.staticData.incidentCategories.length > 0) {

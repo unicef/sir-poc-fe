@@ -493,6 +493,20 @@ export const saveIncidentsAsDraft = ids => async (dispatch) => {
   }
 };
 
+export const changeOwnership = (ids, profId) => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.changeOwnerShip, {id, profId});
+  try {
+    const result = await makeRequest(endpoint);
+    dispatch(showSnackbar('Ownership changed successfully.'));
+    dispatch(fetchIncidents());
+    return result;
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
+};
+
 const getSanitizedIncident = (rawIncident) => {
   let sanitizedIncident = JSON.parse(JSON.stringify(rawIncident));
 

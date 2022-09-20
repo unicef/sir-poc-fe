@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /**
  * @license
  * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
@@ -22,6 +23,7 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-collapse/iron-collapse.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
+import '@polymer/paper-dialog/paper-dialog.js';
 
 import '@unicef-polymer/etools-data-table/etools-data-table.js';
 import '@unicef-polymer/etools-info-tooltip/etools-info-tooltip.js';
@@ -32,8 +34,12 @@ import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import { store } from '../../redux/store.js';
 import {
   syncIncidentOnList, exportIncidents, exportSingleIncident,
-  saveMultipleIncidentsAsDraft
+  saveMultipleIncidentsAsDraft, changeOwnership
 } from '../../actions/incidents.js';
+import { showSnackbar } from '../../actions/app.js';
+import {
+  fetchReportingUser
+} from '../../actions/reporting.js';
 import { getNameFromId } from '../common/utils.js';
 
 import '../styles/shared-styles.js';
@@ -49,7 +55,16 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         :host {
           display: block;
         }
+       
+        .select {
+          min-width: 100px;
+          width: auto;
+        }
 
+        .card{
+          padding:45px
+        }
+        
         .col-data > span {
           max-width: 100%;
         }
@@ -208,7 +223,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                                   no-title
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
-           Select
+          Select
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Case Number
@@ -240,14 +255,17 @@ class IncidentsList extends connect(store)(ListBaseClass) {
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
-            <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
-           <span class="col-data col-1" data-col-header-label="Case number">
-                <span><paper-checkbox on-change="_handleCheckbox" incident-id$="[[item.id]]"> </paper-checkbox></span>
+
+           
+           <span class="col-data col-1"  data-col-header-label="Case number">
+                <span><paper-checkbox id="incident_checkbox" 
+                checked$="[[checked]]"
+                on-change="_handleCheckbox" 
+                country_id$="[[item.country]]" 
+                incident-id$="[[item.id]]" >
+                 </paper-checkbox></span>
            </span>
-           </template>
-           <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
-                <span class="col-data col-1" data-col-header-label="Case number"></span>
-           </template>
+
               <span class="col-data col-2" data-col-header-label="Case number">
                 <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
                   <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
@@ -333,6 +351,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                     </iron-icon>
                   </span>
                 </template>
+ 
                 <div class="export-btn hidden-on-mobile">
                   <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
                     <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
@@ -342,6 +361,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                     </paper-listbox>
                   </paper-menu-button>
                 </div>
+                
               </span>
             </div>
             <div slot="row-data-details">
@@ -373,11 +393,40 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                                   visible-range="{{visibleRange}}"
                                   low-resolution-layout="[[lowResolutionLayout]]">
         </etools-data-table-footer>
-        <paper-button  on-click="_changeToDraft"
-        disabled$="[[disabled]]"
-                  >
-                  CHANGE TO DRAFT</paper-button>
-       
+        <template is="dom-if" if="[[hasPermission('mark_incident_as_draft')]]">
+              <paper-button  
+                  on-click="_changeToDraft"
+                  disabled$="[[disabled]]">
+                    CHANGE TO DRAFT
+              </paper-button>
+        </template>
+        <template is="dom-if" if="[[hasPermission('change_ownership_incident')]]">
+            <paper-button raised on-click="widgetClicked" 
+              disabled$="[[disabledOwnerShip]]"
+            >
+              CHANGE OWNERSHIP
+            </paper-button>
+        </template>
+
+           <paper-dialog id="modal" modal >
+                <h2>USERS</h2>
+                <div>
+                <etools-dropdown 
+                          class="filter select"
+                          label="Users"
+                          enable-none-option
+                          option-label="display_name"
+                          option-value="id"
+                          options="[[reportingUsers]]"
+                          selected="{{userId}}"
+                    </etools-dropdown>  
+                 </div>  
+                    
+              <div class="buttons">
+                  <paper-button dialog-dismiss on-click="_closeDialog">Cancel</paper-button>
+                  <paper-button  dialog-confirm on-click="_changeOwnership" disabled$="[[!userId]]">Accept</paper-button>
+             </div>
+       </paper-dialog>   
       </div>
     `;
   }
@@ -389,6 +438,19 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       offline: Boolean,
       store: Object,
       state: Object,
+      reportingUsers: Array,
+      checked: {
+        type: Boolean,
+        value: false
+      },
+      countryId: {
+        type: Number,
+        value: null
+      },
+      userId: {
+        type: Number,
+        value: null
+      },
       itemSyncStatusOptions: {
         type: Array,
         value: [
@@ -407,11 +469,16 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       disabled: {
         type: Boolean,
         value: true
+      },
+      disabledOwnerShip: {
+        type: Boolean,
+        value: true
       }
     };
   }
 
   _stateChanged(state) {
+
     if (!state) {
       return;
     }
@@ -424,6 +491,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
       elem.incident_subcategory_name = this.getIncidentSubcategory(elem.incident_subcategory);
       return elem;
     });
+    this.reportingUsers = state.reporting.list;
   }
 
   initFilters() {
@@ -589,27 +657,63 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   }
 
   _handleCheckbox(e) {
+
+    // Adding and removing selected id from array.
     let incidentId = e.target.getAttribute('incident-id');
-    if (e.target.checked === true) {
-      this.push('incidentIds', JSON.parse(incidentId));
-    }
+    if (e.target.checked === true) {this.push('incidentIds', JSON.parse(incidentId));}
     else {
-      var index = this.incidentIds.indexOf(incidentId);
+      var index = this.incidentIds.indexOf(Number(incidentId));
       this.splice('incidentIds', index, 1);
     }
-    if (this.incidentIds.length === 0) {
+
+    // Check whether selected incident only include submitted status incidents
+    const Status = this.incidentIds.map(id => this.filteredItems.find(el => el.id == id).status);
+    if (this.incidentIds.length === 0 || Status.includes('created')) {
       this.set('disabled', true);
+        store.dispatch(showSnackbar('Only submitted incidents can be changed back to draft. Please select only submitted incidents to enable bulk change to draft'));
     }
     else {
       this.set('disabled', false);
     }
+
+    // Check whether all selected IDS has same country and return country ID
+    const Countries = this.incidentIds.map(id => this.filteredItems.find(el => el.id == id).country);
+    const temp = Countries.every((val, i, arr) => val === arr[0]);
+
+    if (temp && this.incidentIds.length) {
+      this.set('disabledOwnerShip', false);
+      this.set('countryId', e.target.getAttribute('country_id'));
+    }
+    else {
+      this.set('disabledOwnerShip', true);
+      this.set('countryId', null);
+      store.dispatch(showSnackbar('Changing the ownership of incidents is available only within one country'));
+    }
+  }
+
+  widgetClicked() {
+    store.dispatch(fetchReportingUser(this.countryId));
+    document.body.appendChild(this.$.modal);
+    this.$.modal.open();
   }
   _changeToDraft() {
     store.dispatch(saveMultipleIncidentsAsDraft(this.incidentIds.toString()));
     this.set('incidentIds', []);
     this.set('disabled', true);
-   }
+  }
 
+  _changeOwnership() {
+    store.dispatch(changeOwnership(this.incidentIds.toString(), this.userId));
+    this.set('incidentIds', []);
+    this.set('disabledOwnerShip', true);
+    this.set('countryId', null);
+    this.set('userId', null);
+    this.set('checked', false);
+  }
+
+  _closeDialog() {
+    this.set('userId', null);
+  }
 
   _syncItem(incident) {
     if (!incident || !incident.model || !incident.model.__data || !incident.model.__data.item) {

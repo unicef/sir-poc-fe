@@ -29,8 +29,9 @@ import { validateAllRequired, resetRequiredValidations } from '../common/validat
 import { makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/request-helper.js';
 
 import { store } from '../../redux/store.js';
-import { selectIncident } from '../../reducers/incidents.js';
-import { fetchIncident } from '../../actions/incidents.js';
+import { selectIncident} from '../../reducers/incidents.js';
+import { fetchIncident, saveIncidentsAsDraft, changeOwnership } from '../../actions/incidents.js';
+import { fetchReportingUser } from '../../actions/reporting.js';
 import { serverError } from '../../actions/errors.js';
 import { showSnackbar } from '../../actions/app.js';
 
@@ -101,6 +102,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
         <div class="row-h flex-c buttons-area">
           <div>
+            ${this.changeOwnership}
             ${this.saveBtnTmpl}
             ${this.goToEditBtnTmpl}
             ${this.submitIncidentTmpl}
@@ -109,9 +111,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
+            ${this.changeToDraftBtnTmpl}
             <paper-button class="danger" raised on-tap="_navigateBack">
               Cancel
             </paper-button>
+
           </div>
         </div>
 
@@ -187,14 +191,14 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                   <etools-dropdown id="threatCategory"
                                     slot="field"
                                     readonly="[[readonly]]"
-                                    label="Was UN Targeted?"
+                                    label="Threat Category"
                                     option-label="name"
                                     option-value="id"
                                     options="[[staticData.threatCategories]]"
                                     selected="{{incident.threat_category}}"
                                     selected-item="{{selectedThreatCategory}}"
                                     required auto-validate
-                                    error-message="Was UN Targeted is required">
+                                    error-message="Threat Category is required">
                   </etools-dropdown>
                   <span slot="message">[[selectedThreatCategory.description]]</span>
                 </etools-info-tooltip>
@@ -205,7 +209,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                   <etools-dropdown id="target"
                                     slot="field"
                                     readonly="[[readonly]]"
-                                    label="Target"
+                                    label="Was the UN Targeted?"
                                     option-label="name"
                                     option-value="id"
                                     options="[[staticData.targets]]"
@@ -224,7 +228,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               <div class="row-h flex-c" hidden$="[[useBasicLayout]]">
                 <div class="alert-text">
                   ALERT: In an effort to protect the identity of victims, the ONLY required fields for the
-                  [[selectedIncidentSubcategory.name]] subcategory are Threat Category, Incident Category, 
+                  [[selectedIncidentSubcategory.name]] subcategory are Threat Category, Incident Category,
                   Incident Subcategory, Incident Description, Region, Country, Incident Date, and Incident Time.
                   The victim should be informed that all other information is VOLUNTARY.
                 </div>
@@ -566,9 +570,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           </div>
 
         </template>
-
+        
         <div class="row-h flex-c padd-top buttons-area">
           <div>
+          ${this.changeOwnership}
             ${this.saveBtnTmpl}
             ${this.goToEditBtnTmpl}
             ${this.submitIncidentTmpl}
@@ -577,9 +582,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             ${this.deleteDraftTmpl}
             ${this.resetButtonTmpl}
+            ${this.changeToDraftBtnTmpl}
             <paper-button class="danger" raised on-tap="_navigateBack">
               Cancel
             </paper-button>
+            
           </div>
         </div>
       </div>
@@ -595,6 +602,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
         Save as Draft
       </paper-button>
     `;
+  }
+
+  static get changeToDraftBtnTmpl() {
+    return html``;
+  }
+  static get changeOwnership() {
+    return html``;
   }
 
   static get submitBtnTmpl() {
@@ -631,6 +645,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       title: String,
       state: Object,
       store: Object,
+      userId: {
+        type: Number,
+        value: null
+      },
       lowResolutionLayout: Boolean,
       incident: {
         type: Object,
@@ -732,6 +750,21 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     }
   }
 
+  widgetClicked() {
+    store.dispatch(fetchReportingUser(this.incident.country));
+    document.body.appendChild(this.$.modal);
+    this.$.modal.open();
+  }
+
+  _changeOwnership() {
+    store.dispatch(changeOwnership(this.incident.id, this.userId));
+    this.set('userId', null);
+  }
+
+  _closeDialog() {
+    this.set('userId', null);
+  }
+
   _setIncidentId(id) {
     return id;
   }
@@ -745,6 +778,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     this.redirectIfNotEditable(this.incident, this.visible);
   }
 
+  _changeToDraft(e) {
+    let incidentId = e.target.getAttribute('incident-id');
+    store.dispatch(saveIncidentsAsDraft(incidentId.toString()));
+  }
   redirectIfNotEditable(incident, visible) {
     return false;
   }
@@ -766,6 +803,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
   _stateChanged(state) {
     this.state = state;
+    this.reportingUsers = state.reporting.list;
 
     this.staticData = state.staticData;
     if (this.staticData.incidentCategories.length > 0) {
@@ -842,6 +880,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     return this.specialConditionSubcategories.indexOf(selectedIncidentSubcategory.name) > -1;
   }
 
+  isSubmitted(incident) {
+    if (incident.status === 'submitted' && this.hasPermission('mark_incident_as_draft')) {
+      return true;
+    }
+
+  }
+
   eventNotOk(eventId, offline) {
     if (!eventId || !this.events) {
       return false;
@@ -862,6 +907,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   canEdit(offline, status, unsynced) {
     return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
            (unsynced && this.hasPermission('add_incident'));
+  }
+
+  canViewBtn(offline, status, unsynced) {
+    return (['created', 'submitted'].indexOf(status) > -1 &&
+      this.hasPermission('change_ownership_incident') && !offline);
   }
 
   _hideInfoTooltip(...arg) {

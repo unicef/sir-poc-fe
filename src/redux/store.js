@@ -21,6 +21,7 @@ import app from '../reducers/app.js';
 import errors from '../reducers/errors.js';
 import events from '../reducers/events.js';
 import incidents from '../reducers/incidents.js';
+import reporting from '../reducers/reporting.js';
 import staticData from '../reducers/static-data.js';
 
 import { getStorage } from './storage/storage-loader.js';
@@ -42,6 +43,7 @@ const persistedReducer = persistCombineReducers(persistConfig, {
   errors,
   events,
   incidents,
+  reporting,
   staticData
 });
 

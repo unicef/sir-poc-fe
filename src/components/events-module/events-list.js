@@ -25,7 +25,7 @@ import { store } from '../../redux/store.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 
-import { getNameFromId } from '../../components/common/utils.js';
+import { getNameFromId } from '../common/utils.js';
 
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '../styles/shared-styles.js';
@@ -141,7 +141,7 @@ class EventsList extends connect(store)(ListBaseClass) {
             Event Category
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
-           Was UN Targeted?
+          Threat Category
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
             Start date

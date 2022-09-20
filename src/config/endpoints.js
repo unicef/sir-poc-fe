@@ -225,6 +225,9 @@ export const Endpoints = {
     url: baseUrl + '/api/users?q=<%=search%>',
     method: 'GET'
   },
+  getUsers: {
+    url: baseUrl + '/api/users/?user_id__inlist=<%=id%>'
+  },
   weapons: {
     url: baseUrl + '/api/weapons/',
     method: 'GET'
@@ -311,6 +314,18 @@ export const Endpoints = {
   },
   programmeTypes: {
     url: baseUrl + '/api/programme_types/',
+    method: 'GET'
+  },
+  changeIncidentsToDraft: {
+    url: baseUrl + '/api/incidents/mark_as_draft/?id__inlist=<%=id%>',
+    method: 'PUT'
+  },
+  changeOwnerShip: {
+    url: baseUrl + '/api/incidents/change_ownership/<%=profId%>/?id__inlist=<%=id%>',
+    method: 'PUT'
+  },
+  reportingList: {
+    url: baseUrl + '/api/users/by_country/<%=id%>/',
     method: 'GET'
   }
 };

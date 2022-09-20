@@ -94,6 +94,13 @@ export const deleteIncidentFromRedux = (incidentId) => {
   };
 };
 
+export const fetchUsersForHistory = (userForHistory) => {
+  return {
+    type: ACTIONS.RECEIVE_USER_FOR_HISTORY,
+    userForHistory
+  };
+};
+
 export const fetchAllIncidentData = () => (dispatch) => {
   dispatch(fetchIncidents());
   dispatch(fetchIncidentEvacuations());
@@ -340,7 +347,8 @@ export const fetchIncident = id => (dispatch, getState) => {
     updatePath('/incidents/list/');
     return;
   }
-  let endpoint = prepareEndpoint(Endpoints.getIncident, {id});
+
+  let endpoint = prepareEndpoint(Endpoints.getIncident, {id });
   makeRequest(endpoint).then((response) => {
     dispatch(receiveIncident(response));
   });
@@ -455,7 +463,7 @@ export const exportSingleIncident = (id, docType) => (dispatch) => {
 };
 
 export const exportIncidents = (queryString, docType) => (dispatch) => {
-  let endpoint = prepareEndpoint(Endpoints.exportIncidentsList, {queryString});
+  let endpoint = prepareEndpoint(Endpoints.exportIncidentsList, { queryString });
   makeRequest(endpoint).then((blob) => {
     handleBlobDataReceivedAndStartDownload(blob, 'incidents.' + docType);
   }).catch((error) => {
@@ -466,6 +474,45 @@ export const exportIncidents = (queryString, docType) => (dispatch) => {
   });
 };
 
+export const saveMultipleIncidentsAsDraft = ids => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.changeIncidentsToDraft, {id});
+  try {
+    const result = await makeRequest(endpoint);
+    dispatch(fetchIncidents());
+    return result;
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
+};
+export const saveIncidentsAsDraft = ids => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.changeIncidentsToDraft, {id});
+  try {
+    const result = await makeRequest(endpoint);
+    window.location.reload();
+    return result;
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
+};
+
+export const changeOwnership = (ids, profId) => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.changeOwnerShip, {id, profId});
+  try {
+    const result = await makeRequest(endpoint);
+    dispatch(showSnackbar('Ownership changed successfully.'));
+    dispatch(fetchIncidents());
+    return result;
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
+};
+
 const getSanitizedIncident = (rawIncident) => {
   let sanitizedIncident = JSON.parse(JSON.stringify(rawIncident));
 
@@ -473,6 +520,19 @@ const getSanitizedIncident = (rawIncident) => {
   sanitizedIncident.longitude = isNumber(sanitizedIncident.longitude)? sanitizedIncident.longitude : null;
 
   return sanitizedIncident;
+};
+
+export const fetchUserHistory = ids => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.getUsers, {id});
+  try {
+    return await makeRequest(endpoint).then((result) => {
+      dispatch(fetchUsersForHistory(result));
+    });
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
 };
 
 export const fetchIncidentHistory = id => async (dispatch, getState) => {

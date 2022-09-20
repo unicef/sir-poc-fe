@@ -10,7 +10,8 @@ let defaultState = {
   programmes: [],
   properties: [],
   evacuations: [],
-  draft: getIncidentModel()
+  draft: getIncidentModel(),
+  userForHistory: []
 };
 
 const incidents = (state = defaultState, action) => {
@@ -140,6 +141,11 @@ const incidents = (state = defaultState, action) => {
         ...state,
         personnel: getRefreshedData(state.personnel, action.personnel)
       };
+    case ACTIONS.RECEIVE_USER_FOR_HISTORY:
+        return {
+          ...state,
+          userForHistory: action.userForHistory
+        };
     default:
       return state;
   }

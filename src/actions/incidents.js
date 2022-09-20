@@ -94,6 +94,12 @@ export const deleteIncidentFromRedux = (incidentId) => {
   };
 };
 
+export const fetchUsersForHistory = (userForHistory) => {
+  return {
+    type: ACTIONS.RECEIVE_USER_FOR_HISTORY,
+    userForHistory
+  };
+};
 
 export const fetchAllIncidentData = () => (dispatch) => {
   dispatch(fetchIncidents());
@@ -514,6 +520,19 @@ const getSanitizedIncident = (rawIncident) => {
   sanitizedIncident.longitude = isNumber(sanitizedIncident.longitude)? sanitizedIncident.longitude : null;
 
   return sanitizedIncident;
+};
+
+export const fetchUserHistory = ids => async (dispatch) => {
+  let id = ids + ',';
+  let endpoint = prepareEndpoint(Endpoints.getUsers, {id});
+  try {
+    return await makeRequest(endpoint).then((result) => {
+      dispatch(fetchUsersForHistory(result));
+    });
+  } catch (error) {
+    dispatch(showSnackbar('You do not have permission to perform this action.'));
+    return false;
+  }
 };
 
 export const fetchIncidentHistory = id => async (dispatch, getState) => {

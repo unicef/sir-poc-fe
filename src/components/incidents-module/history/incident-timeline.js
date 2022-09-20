@@ -138,7 +138,9 @@ class IncidentTimeline extends PermissionsBase {
 
                       <template is="dom-if" if="[[!statusHasChanged(item.change)]]">
                       <template is="dom-if" if="[[!isSignOperation(item.change)]]">
-                        <incident-changed-card item="[[item]]"></incident-changed-card>
+                        <incident-changed-card 
+                        item="[[item]]" 
+                        items="[[usersHistory]]"></incident-changed-card>
                       </template>
                       </template>
                     </template>
@@ -211,7 +213,8 @@ class IncidentTimeline extends PermissionsBase {
       history: Array,
       comments: Array,
       timeline: Array,
-      profile: Object
+      profile: Object,
+      usersHistory: Array
     };
   }
 
@@ -219,6 +222,7 @@ class IncidentTimeline extends PermissionsBase {
     super.connectedCallback();
     let state = store.getState();
     this.profile = state.staticData.profile;
+    this.usersHistory = state.incidents.userForHistory;
   }
 
   _computeTimline(history, comments) {

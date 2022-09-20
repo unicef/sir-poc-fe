@@ -225,6 +225,9 @@ export const Endpoints = {
     url: baseUrl + '/api/users?q=<%=search%>',
     method: 'GET'
   },
+  getUsers: {
+    url: baseUrl + '/api/users/?user_id__inlist=<%=id%>'
+  },
   weapons: {
     url: baseUrl + '/api/weapons/',
     method: 'GET'

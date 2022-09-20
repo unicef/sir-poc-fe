@@ -223,7 +223,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                                   no-title
                                   low-resolution-layout="[[lowResolutionLayout]]">
           <etools-data-table-column class="col-1">
-           Select
+          Select
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
             Case Number
@@ -256,6 +256,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
             <div slot="row-data" class="p-relative">
 
+           
            <span class="col-data col-1"  data-col-header-label="Case number">
                 <span><paper-checkbox id="incident_checkbox" 
                 checked$="[[checked]]"
@@ -264,6 +265,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 incident-id$="[[item.id]]" >
                  </paper-checkbox></span>
            </span>
+
               <span class="col-data col-2" data-col-header-label="Case number">
                 <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
                   <a href="/incidents/view/[[item.id]]">[[item.case_number]]</a>
@@ -391,16 +393,21 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                                   visible-range="{{visibleRange}}"
                                   low-resolution-layout="[[lowResolutionLayout]]">
         </etools-data-table-footer>
+        <template is="dom-if" if="[[hasPermission('mark_incident_as_draft')]]">
+              <paper-button  
+                  on-click="_changeToDraft"
+                  disabled$="[[disabled]]">
+                    CHANGE TO DRAFT
+              </paper-button>
+        </template>
+        <template is="dom-if" if="[[hasPermission('change_ownership_incident')]]">
+            <paper-button raised on-click="widgetClicked" 
+              disabled$="[[disabledOwnerShip]]"
+            >
+              CHANGE OWNERSHIP
+            </paper-button>
+        </template>
 
-        <paper-button  
-            on-click="_changeToDraft"
-            disabled$="[[disabled]]">
-               CHANGE TO DRAFT
-        </paper-button>
-
-        <paper-button raised on-click="widgetClicked" 
-           disabled$="[[disabledOwnerShip]]"
-        >CHANGE OWNERSHIP</paper-button>
            <paper-dialog id="modal" modal >
                 <h2>USERS</h2>
                 <div>

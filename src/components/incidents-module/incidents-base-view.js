@@ -29,8 +29,9 @@ import { validateAllRequired, resetRequiredValidations } from '../common/validat
 import { makeRequest, handleBlobDataReceivedAndStartDownload } from '../common/request-helper.js';
 
 import { store } from '../../redux/store.js';
-import { selectIncident } from '../../reducers/incidents.js';
-import { fetchIncident, saveIncidentsAsDraft } from '../../actions/incidents.js';
+import { selectIncident} from '../../reducers/incidents.js';
+import { fetchIncident, saveIncidentsAsDraft, changeOwnership } from '../../actions/incidents.js';
+import { fetchReportingUser } from '../../actions/reporting.js';
 import { serverError } from '../../actions/errors.js';
 import { showSnackbar } from '../../actions/app.js';
 
@@ -101,6 +102,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
         <div class="row-h flex-c buttons-area">
           <div>
+            ${this.changeOwnership}
             ${this.saveBtnTmpl}
             ${this.goToEditBtnTmpl}
             ${this.submitIncidentTmpl}
@@ -571,6 +573,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
         
         <div class="row-h flex-c padd-top buttons-area">
           <div>
+          ${this.changeOwnership}
             ${this.saveBtnTmpl}
             ${this.goToEditBtnTmpl}
             ${this.submitIncidentTmpl}
@@ -590,16 +593,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     `;
   }
 
-  static get changeToDraftBtnTmpl() {
-    return html`
-    <template is="dom-if" if="[[isSubmitted(incident)]]">
-        <paper-button class="danger" raised on-click="_changeToDraft" incident-id$="[[incident.id]]">
-          Change to Draft
-       </paper-button>
-   <template>
-    `;
-  }
-
   static get saveBtnTmpl() {
     return html`
       <paper-button raised
@@ -609,6 +602,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
         Save as Draft
       </paper-button>
     `;
+  }
+
+  static get changeToDraftBtnTmpl() {
+    return html``;
+  }
+  static get changeOwnership() {
+    return html``;
   }
 
   static get submitBtnTmpl() {
@@ -645,6 +645,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       title: String,
       state: Object,
       store: Object,
+      userId: {
+        type: Number,
+        value: null
+      },
       lowResolutionLayout: Boolean,
       incident: {
         type: Object,
@@ -746,6 +750,21 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     }
   }
 
+  widgetClicked() {
+    store.dispatch(fetchReportingUser(this.incident.country));
+    document.body.appendChild(this.$.modal);
+    this.$.modal.open();
+  }
+
+  _changeOwnership() {
+    store.dispatch(changeOwnership(this.incident.id, this.userId));
+    this.set('userId', null);
+  }
+
+  _closeDialog() {
+    this.set('userId', null);
+  }
+
   _setIncidentId(id) {
     return id;
   }
@@ -784,6 +803,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
   _stateChanged(state) {
     this.state = state;
+    this.reportingUsers = state.reporting.list;
 
     this.staticData = state.staticData;
     if (this.staticData.incidentCategories.length > 0) {
@@ -861,7 +881,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   isSubmitted(incident) {
-    if (incident.status === 'submitted') {
+    if (incident.status === 'submitted' && this.hasPermission('mark_incident_as_draft')) {
       return true;
     }
 
@@ -887,6 +907,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   canEdit(offline, status, unsynced) {
     return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
            (unsynced && this.hasPermission('add_incident'));
+  }
+
+  canViewBtn(offline, status, unsynced) {
+    return (['created', 'submitted'].indexOf(status) > -1 &&
+      this.hasPermission('change_ownership_incident') && !offline);
   }
 
   _hideInfoTooltip(...arg) {

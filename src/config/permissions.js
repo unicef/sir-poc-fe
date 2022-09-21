@@ -60,5 +60,7 @@ export const allPermissions = [
   'delete_traffic',
 
   'view_admin',
-  'export_data'
+  'export_data',
+  'mark_incident_as_draft',
+  'change_ownership_incident'
 ];

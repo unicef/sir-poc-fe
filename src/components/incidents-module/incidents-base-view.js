@@ -124,7 +124,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <div>
             <div class="row-h flex-c p-relative">
               <div class="col col-4">
-                <etools-info-tooltip class="info" open-on-click form-field-align
+                <etools-info-tooltip class="info"  form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentCategory.description,
                                       selectedIncidentCategory.comment)]]">
                   <etools-dropdown id="incidentCat"
@@ -145,7 +145,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
               </div>
 
               <div class="col col-4">
-                <etools-info-tooltip class="info" open-on-click form-field-align
+                <etools-info-tooltip class="info"  form-field-align
                                     hide-tooltip$="[[_hideInfoTooltip(selectedIncidentSubcategory.description,
                                       selectedIncidentSubcategory.comment)]]">
                   <etools-dropdown id="incidentSubcat"
@@ -171,7 +171,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
             <div class="row-h flex-c p-relative">
               <div class="col col-4">
-                <etools-info-tooltip class="info" open-on-click form-field-align
+                <etools-info-tooltip class="info" form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
                   <etools-dropdown slot="field" readonly="[[readonly]]"
                                     label="Event"
@@ -186,7 +186,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                 </etools-info-tooltip>
               </div>
               <div class="col col-4">
-                <etools-info-tooltip class="info" open-on-click form-field-align
+                <etools-info-tooltip class="info"  form-field-align
                                     hide-tooltip$="[[!selectedThreatCategory.description]]">
                   <etools-dropdown id="threatCategory"
                                     slot="field"
@@ -204,7 +204,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                 </etools-info-tooltip>
               </div>
               <div class="col col-4">
-                <etools-info-tooltip class="info" open-on-click form-field-align
+                <etools-info-tooltip class="info"  form-field-align
                                     hide-tooltip$="[[!selectedTarget.description]]">
                   <etools-dropdown id="target"
                                     slot="field"
@@ -330,7 +330,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
             <div class="row-h flex-c">
               <div class="col col-3 p-relative">
-                <etools-info-tooltip class="info" open-on-click form-field-align
+                <etools-info-tooltip class="info"  form-field-align
                                     hide-tooltip$="[[!selectedCriticality.description]]">
                   <etools-dropdown slot="field" readonly="[[readonly]]"
                                     label="Criticality"

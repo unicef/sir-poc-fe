@@ -80,7 +80,7 @@ class ReportingList extends connect(store)(ListBaseClass) {
 
       <template id="rows" is="dom-repeat" items="[[selectedId]]">
       <div class="card list">
-        <div class="row-h flex-c">
+        <div class="row-h">
           <span class="col-9">
             <h3> Reporting Users </h3>
           </span>
@@ -91,7 +91,7 @@ class ReportingList extends connect(store)(ListBaseClass) {
         <etools-data-table-header no-collapse id="listHeader"
                                   no-title
                                   low-resolution-layout="[[lowResolutionLayout]]">
-          <etools-data-table-column class="col-3">
+          <etools-data-table-column class="col-12">
            Name
           </etools-data-table-column>
         </etools-data-table-header>
@@ -101,8 +101,8 @@ class ReportingList extends connect(store)(ListBaseClass) {
           <etools-data-table-row no-collapse id="listHeader"  
                                   no-title 
                                   low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
-            <div slot="row-data" class="p-relative">
-              <span class="col-data col-3" data-col-header-label="Name">
+            <div slot="row-data" class="p-relative flex-c">
+              <span class="col-data col-12" data-col-header-label="Name">
               [[item.display_name]]
               </span>
             </div>

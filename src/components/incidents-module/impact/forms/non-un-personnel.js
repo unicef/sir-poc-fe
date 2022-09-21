@@ -60,7 +60,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
           <div>
             <div class="row-h flex-c">
               <div class="col col-3">
-                <etools-info-tooltip class="info" open-on-click form-field-align
+                <etools-info-tooltip class="info"  form-field-align
                                      hide-tooltip$="[[_hideInfoTooltip(selectedImpactType.description)]]">
                   <etools-dropdown id="impact"
                                     slot="field"

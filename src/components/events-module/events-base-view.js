@@ -57,7 +57,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
 
         <div class="row-h flex-c">
           <div class="col col-4">
-            <etools-info-tooltip class="info" open-on-click form-field-align
+            <etools-info-tooltip class="info"  form-field-align
                                 hide-tooltip$="[[_hideInfoTooltip(selectedEventCategory.description,
                                   selectedEventCategory.comment)]]">
               <etools-dropdown id="eventCat"
@@ -76,7 +76,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
           </div>
 
           <div class="col col-4">
-            <etools-info-tooltip class="info" open-on-click form-field-align
+            <etools-info-tooltip class="info"  form-field-align
                                 hide-tooltip$="[[_hideInfoTooltip(selectedEventSubcategory.description,
                                   selectedEventSubcategory.comment)]]">
               <etools-dropdown id="eventSubcat"
@@ -98,7 +98,7 @@ export class EventsBaseView extends connect(store)(DateMixin(PermissionsBase)) {
           </div>
 
           <div class="col col-4">
-            <etools-info-tooltip class="info" open-on-click form-field-align
+            <etools-info-tooltip class="info"  form-field-align
                                 hide-tooltip$="[[!selectedThreatCategory.description]]">
               <etools-dropdown id="threatCategory"
                                 slot="field"

@@ -41,6 +41,7 @@ const DateMixin = baseClass => class extends baseClass {
   }
 
   toDate(dateStr) {
+    console.log(dateStr);
     return this._convertDate(dateStr);
   }
 

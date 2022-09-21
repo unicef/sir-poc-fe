@@ -114,6 +114,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                             label="From"></datepicker-lite>
 
             <datepicker-lite class="filter"
+            
                             value="{{filters.values.endDate}}"
                             min-date="[[toDate(filters.values.startDate)]]"
                             label="To"></datepicker-lite>
@@ -239,14 +240,14 @@ class IncidentsList extends connect(store)(ListBaseClass) {
         <template id="rows" is="dom-repeat" items="[[filteredItems]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]"
                                  low-resolution-layout="[[lowResolutionLayout]]" class="p-relative">
-            <div slot="row-data" class="p-relative">
+            <div slot="row-data" class="p-relative flex-c">
             <template is="dom-if" if="[[!canEdit(item.status, item.unsynced, offline)]]">
-           <span class="col-data col-1" data-col-header-label="Case number">
+           <span class="col-data col-1" data-col-header-label="Select">
                 <span><paper-checkbox on-change="_handleCheckbox" incident-id$="[[item.id]]"> </paper-checkbox></span>
            </span>
            </template>
            <template is="dom-if" if="[[canEdit(item.status, item.unsynced, offline)]]">
-                <span class="col-data col-1" data-col-header-label="Case number"></span>
+                <span class="col-data col-1" data-col-header-label="Select"></span>
            </template>
               <span class="col-data col-2" data-col-header-label="Case number">
                 <span class="truncate" hidden$="[[!hasPermission('view_incident')]]">
@@ -259,7 +260,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 <etools-info-tooltip class="notification-tooltip"
                                      hidden$="[[!showNewIncidentTooltip(item)]]"
                                      custom-icon
-                                     open-on-click>
+                                     >
                   <span slot="custom-icon"><iron-icon icon="av:fiber-new"></iron-icon></span>
                   <span slot="message"> This incident has been added since your last login </span>
                 </etools-info-tooltip>
@@ -267,7 +268,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 <etools-info-tooltip class="notification-tooltip"
                                      hidden$="[[!showNewCommentsTooltip(item)]]"
                                      custom-icon
-                                     open-on-click>
+                                     >
                   <span slot="custom-icon"><iron-icon class="smaller" icon="editor:insert-comment"></iron-icon></span>
                   <span slot="message"> New comments have been added since your last login </span>
                 </etools-info-tooltip>
@@ -275,13 +276,13 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                 <etools-info-tooltip class="notification-tooltip"
                                      hidden$="[[!showNewChangesTooltip(item)]]"
                                      custom-icon
-                                     open-on-click>
+                                     >
                   <span slot="custom-icon"><iron-icon class="smaller" icon="build"></iron-icon></span>
                   <span slot="message"> This incident has been changed since your last login </span>
                 </etools-info-tooltip>
 
               </span>
-              <span class="col-data col-2" data-col-header-label="Case number">
+              <span class="col-data col-2" data-col-header-label="Description">
                 <span class="truncate">
                   [[item.description]]
                 </span>
@@ -309,7 +310,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                   [[item.status]]
                 </template>
                 <template is="dom-if" if="[[item.unsynced]]">
-                  <etools-info-tooltip class="info" open-on-click>
+                  <etools-info-tooltip class="info">
                     <span slot="field">Not Synced</span>
                     <span slot="message">This incident has not been submitted to the server.
                                          Click the sync button when online to submit it.</span>

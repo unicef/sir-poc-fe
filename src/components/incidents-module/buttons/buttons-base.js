@@ -40,7 +40,7 @@ export class ButtonsBaseClass extends DynamicDialogMixin(PermissionsBase) {
 
     this.warningDialog = this.createDynamicDialog(config);
 
-    this.warningDialog.updateStyles({'--etools-dialog-confirm-btn-bg': 'var(--button-primary-bg-color)'});
+    this.warningDialog.style.setProperty('--etools-dialog-confirm-btn-bg', 'var(--button-primary-bg-color)');
   }
 
   dialogConfirmationCallback(event) {

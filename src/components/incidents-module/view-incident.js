@@ -31,6 +31,45 @@ class ViewIncident extends IncidentsBaseView {
     `;
   }
 
+  static get changeOwnership() {
+     // language=HTML
+    return html`
+    <paper-button raised on-click="widgetClicked"
+     hidden$="[[!canViewBtn(state.app.offline, incident.status, incident.unsynced)]]">CHANGE OWNERSHIP</paper-button>
+           <paper-dialog id="modal" modal >
+                <h2>USERS</h2>
+                <div>
+                <etools-dropdown 
+                          class="filter select"
+                          label="Users"
+                          enable-none-option
+                          option-label="display_name"
+                          option-value="id"
+                          options="[[reportingUsers]]"
+                          selected="{{userId}}"
+                    </etools-dropdown>  
+                 </div>  
+                    
+              <div class="buttons">
+                  <paper-button dialog-dismiss on-click="_closeDialog">Cancel</paper-button>
+                  <paper-button  dialog-confirm on-click="_changeOwnership"
+                   disabled$="[[!userId]]">Change</paper-button>
+             </div>
+       </paper-dialog> 
+    `;
+  }
+
+  static get changeToDraftBtnTmpl() {
+     // language=HTML
+    return html`
+    <template is="dom-if" if="[[isSubmitted(incident)]]">
+        <paper-button class="danger" raised on-click="_changeToDraft" incident-id$="[[incident.id]]">
+          Change to Draft
+       </paper-button>
+   <template>
+    `;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.readonly = true;

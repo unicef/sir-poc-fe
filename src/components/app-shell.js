@@ -216,6 +216,21 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <span>New Event</span>
             </a>
 
+            <a class="menu-heading"
+              selected$="[[pathsMatch(route.path, '/reporting/list/')]]"
+              hidden$="[[!canViewStaff(profile)]]"
+              href="[[rootPath]]reporting/list/">Reporting Users</a>
+
+            <a selected$="[[pathsMatch(route.path, '/reporting/list/')]]"
+            hidden$="[[!canViewStaff(profile)]]"
+              href="[[rootPath]]reporting/list/">
+                <iron-icon icon="list"></iron-icon>
+                <span> Reporting List </span>
+            </a>
+
+           
+
+        
             <a class="menu-heading" href="[[rootPath]]admin/" target="_blank" hidden$="[[!canViewAdmin(profile)]]">
                 <iron-icon icon="supervisor-account"></iron-icon>
                 <span>Admin</span>
@@ -245,6 +260,7 @@ class AppShell extends connect(store)(PermissionsBase) {
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main" selected-attribute="visible">
             <events-controller name="events" route="{{route}}"></events-controller>
             <incidents-controller name="incidents" route="{{route}}"></incidents-controller>
+            <reporting-controller name="reporting" route="{{route}}"></reporting-controller>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
 
@@ -267,7 +283,7 @@ class AppShell extends connect(store)(PermissionsBase) {
       },
       validPages: {
         type: Array,
-        value: ['events', 'incidents']
+        value: ['events', 'incidents', 'reporting']
       },
       snackbarOpened: Boolean,
       snackbarText: String,
@@ -352,6 +368,7 @@ class AppShell extends connect(store)(PermissionsBase) {
     this.set('profile', state.staticData.profile);
     this.set('events', state.events.list);
     this.set('incidents', state.incidents.list);
+    this.set('reporting', state.reporting.list);
     this.set('snackbarText', state.app.snackbarText);
     this.set('snackbarOpened', state.app.snackbarOpened);
   }
@@ -392,6 +409,13 @@ class AppShell extends connect(store)(PermissionsBase) {
       return false;
     }
     return this.hasPermission('view_admin');
+  }
+
+  canViewStaff(profile) {
+    if (!profile) {
+      return false;
+    }
+     return this.hasPermission('view_admin');
   }
 
   getNewCaseCount(allCases) {

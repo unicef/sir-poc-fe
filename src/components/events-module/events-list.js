@@ -25,7 +25,7 @@ import { store } from '../../redux/store.js';
 
 import { syncEventOnList } from '../../actions/events.js';
 
-import { getNameFromId } from '../../components/common/utils.js';
+import { getNameFromId } from '../common/utils.js';
 
 import '@unicef-polymer/etools-date-time/datepicker-lite.js';
 import '../styles/shared-styles.js';
@@ -141,7 +141,7 @@ class EventsList extends connect(store)(ListBaseClass) {
             Event Category
           </etools-data-table-column>
           <etools-data-table-column class="col-2">
-            Threat Category
+          Threat Category
           </etools-data-table-column>
           <etools-data-table-column class="col-1">
             Start date
@@ -159,7 +159,7 @@ class EventsList extends connect(store)(ListBaseClass) {
 
         <template id="rows" is="dom-repeat" items="[[filteredItems]]">
           <etools-data-table-row unsynced$="[[item.unsynced]]" low-resolution-layout="[[lowResolutionLayout]]">
-            <div slot="row-data" class="p-relative">
+            <div slot="row-data" class="p-relative flex-c">
               <span class="col-data col-1" data-col-header-label="Case Number">
                 <span class="truncate" hidden$="[[!hasPermission('view_event')]]">
                   <a href="/events/view/[[item.id]]">[[item.case_number]]</a>
@@ -194,7 +194,7 @@ class EventsList extends connect(store)(ListBaseClass) {
                   Synced
                 </template>
                 <template is="dom-if" if="[[item.unsynced]]">
-                  <etools-info-tooltip class="info" open-on-click>
+                  <etools-info-tooltip class="info" >
                     <span slot="field">Not Synced</span>
                     <span slot="message">This event has not been submitted to the server. Click the sync button when
                                           online to submit it. </span>

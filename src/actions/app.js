@@ -68,6 +68,17 @@ export const updateOffline = offline => (dispatch, getState) => {
   });
 };
 
+
+  export const lazyLoadReportingPages = page => (dispatch, getState) => {
+    switch (page) {
+      case 'list':
+        import('../components/reporting-user-module/reporting-list.js');
+        break;
+      default:
+        updatePath('/404/');
+        break;
+    }
+  };
 export const lazyLoadEventPages = page => (dispatch, getState) => {
   switch (page) {
     case 'list':
@@ -132,6 +143,9 @@ export const lazyLoadModules = selectedModule => (dispatch, getState) => {
     case 'incidents':
       import('../components/incidents-module/incidents-controller.js');
       break;
+      case 'reporting':
+        import('../components/reporting-user-module/reporting-controller.js');
+        break;
     case 'view404':
       import('../components/non-found-module/404.js');
       break;

@@ -3,7 +3,7 @@
 */
 import '@polymer/paper-button/paper-button.js';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { submitIncident } from '../../../actions/incidents.js';
+import { submitIncident, fetchIncidents } from '../../../actions/incidents.js';
 import { showSnackbar } from '../../../actions/app.js';
 import { ButtonsBaseClass } from './buttons-base.js';
 import '../../styles/button-styles.js';
@@ -21,9 +21,7 @@ class SubmitButton extends ButtonsBaseClass {
           margin-left: 4px;
         }
       </style>
-      <paper-button raised
-                    on-tap="openDialog"
-                    hidden$="[[!hasPermission('submit_incident')]]">
+      <paper-button raised on-tap="openDialog">
         [[getLabel(incident.status)]]
       </paper-button>
       `;
@@ -53,6 +51,7 @@ class SubmitButton extends ButtonsBaseClass {
     let result = await this.store.dispatch(submitIncident(this.incident));
     if (result) {
       this.showSuccessMessage();
+      this.store.dispatch(fetchIncidents());
     }
   }
 

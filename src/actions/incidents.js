@@ -449,11 +449,11 @@ export const deleteIncidentLocally = incidentId => (dispatch) => {
   return true;
 };
 
-export const exportSingleIncident = (id, docType) => (dispatch) => {
+export const exportSingleIncident = (id, docType, incidentCaseNumber) => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.exportSingleIncident, {id, docType});
 
   makeRequest(endpoint).then((blob) => {
-    handleBlobDataReceivedAndStartDownload(blob, 'incident.' + docType);
+    handleBlobDataReceivedAndStartDownload(blob, `${incidentCaseNumber}.` + docType);
   }).catch((error) => {
     // eslint-disable-next-line
     console.error(error);

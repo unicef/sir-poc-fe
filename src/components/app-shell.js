@@ -20,13 +20,15 @@ import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/av-icons.js';
+import '@polymer/paper-listbox/paper-listbox.js';
+import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './common/my-icons.js';
 import './styles/app-theme.js';
 import './styles/shared-styles.js';
 // import './common/support-btn.js';
-import './common/documentation-btn.js';
+// import './common/documentation-btn.js';
 
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
@@ -250,7 +252,46 @@ class AppShell extends connect(store)(PermissionsBase) {
                 <div class="capitalize">[[_getPageTitle(page)]][[warningMessage]]</div>
               </div>
               <div>
-                <documentation-btn class="menu-icon"></documentation-btn>
+
+              <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
+              <iron-icon icon="view-headline" class="action-btn" slot="dropdown-trigger"></iron-icon>
+              <paper-listbox slot="dropdown-content">
+                <paper-item >
+                    <a  
+                        href="https://unicef.service-now.com/cc?id=sc_cat_item&sys_id=dbf207abdb56d740085184735b9619d5"
+                        target="_blank"
+                    > 
+                    Assign / Revoke Access
+                    </a>
+                </paper-item>
+                <paper-item >
+                    <a  
+                        href="https://unicef.service-now.com/cc?id=sc_cat_item&sys_id=30a0503bdb437c504eaa2dcb0b961989"
+                        target="_blank"
+                    > 
+                    Data correction or modification
+                    </a>
+                </paper-item>
+                <paper-item >
+                    <a  
+                        href="https://unicef.service-now.com/cc?id=sc_cat_item&sys_id=c8e43760db622450f65a2aea4b9619ad&sysparm_category=b473317ddb0b30504eaa2dcb0b9619de"
+                        target="_blank"
+                    > 
+                    Report a technical problem
+                    </a>
+                </paper-item>
+                <paper-item >
+                    <a  
+                        href="https://unicef.sharepoint.com/:w:/t/EMOPS-OSC/EcDrjx9_qhtIg9hIH6ifjaEBUiWhLfS_u9UtCfL9AQbbYA?e=fVU0JG"
+                        target="_blank"
+                    > 
+                    Documentation
+                    </a>
+                </paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+                 
+                
                 <!-- <support-btn class="menu-icon"></support-btn> -->
                 <paper-icon-button id="logout" icon="exit-to-app" title="Logout" on-tap="_logout"></paper-icon-button>
               </div>

@@ -22,6 +22,7 @@ import { store } from '../../redux/store.js';
 import {
   fetchReportingUser
 } from '../../actions/reporting.js';
+import { getCountriesForRegion } from '../common/utils.js';
 
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
@@ -61,11 +62,22 @@ class ReportingList extends connect(store)(ListBaseClass) {
           <div class="filters">
           <etools-dropdown class="filter select"
             enable-none-option
+            label="Please Select Region"
+            option-label="name"
+            option-value="id"
+            options="[[staticData.regions]]"
+            selected="{{selectedRegionId}}"
+          >
+          </etools-dropdown>
+
+          <etools-dropdown class="filter select"
+            enable-none-option
             label="Please Select Country"
             option-label="name"
             option-value="id"
-            options="[[staticData.countries]]"
+            options="[[getCountriesForRegion(selectedRegionId, staticData.countries)]]"
             selected="{{selectedId}}"
+            disabled$="[[!selectedRegionId]]"
           >
         </etools-dropdown>
           </div>
@@ -120,6 +132,14 @@ class ReportingList extends connect(store)(ListBaseClass) {
         type: Number,
         value: null,
         observer: 'selectedCountry'
+      },
+      selectedRegionId: {
+        type: Number,
+        value: null
+      },
+      getCountriesForRegion: {
+        type: Function,
+        value: () => getCountriesForRegion
       }
     };
   }
@@ -128,7 +148,7 @@ class ReportingList extends connect(store)(ListBaseClass) {
     store.dispatch(fetchReportingUser(this.selectedId));
     }
     return false;
-  }
+   }
 
   _stateChanged(state) {
     this.set('reportingUsers', state.reporting.list);

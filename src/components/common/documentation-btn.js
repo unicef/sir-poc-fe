@@ -44,10 +44,11 @@ import '@polymer/iron-icons/communication-icons';
     return {
       url: {
         type: String,
-        value: 'https://unicef.sharepoint.com/:w:/t/EMOPS-OSC/'
-                + 'EcDrjx9_qhtIg9hIH6ifjaEBUiWhLfS_u9UtCfL9AQbbYA?e=fVU0JG'
+        value: 'https://unicef.sharepoint.com/teams/EMOPS-OSC/General%20Library/Forms/AllItems.aspx?id=%2fteams'
+          + '%2fEMOPS%2DOSC%2fGeneral%20Library%2fSIR%2fUNICEF%20SIR%20Manual'
+        + '%20%28v%2E2%29%2Epdf&parent=%2fteams%2fEMOPS%2DOSC%2fGeneral%20Library%2fSIR'
       }
     };
   }
-}
+ }
 customElements.define(DocumentationBtn.is, DocumentationBtn);

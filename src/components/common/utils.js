@@ -86,6 +86,7 @@ export const getCountriesForRegion = (regionId) => {
   }
 
   let allCountries = store.getState().staticData.countries;
-  return allCountries.filter(country => Number(country.region) === Number(regionId));
+  const temp = allCountries.filter(country => Number(country.region) === Number(regionId));
+  return temp.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 };
 

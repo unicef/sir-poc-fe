@@ -26,10 +26,18 @@ const defaultStaticData = {
     cities: [],
     users: [],
     teams: [],
-    genders: [
-      {id: 'male', name: 'Male'},
-      {id: 'female', name: 'Female'}
+    sex: [
+      { id: 'male', name: 'Male'},
+      { id: 'female', name: 'Female' },
+      { id: 'prefer_not_to_state', name: 'Prefer not to state'}
+  ],
+    gender: [
+      { id: 'man', name: 'Man' },
+      { id: 'woman', name: 'Woman' },
+      { id: 'gender_diverse', name: 'Gender diverse' },
+      { id: 'prefer_not_to_say', name: 'Prefer not to stat'}
     ]
+
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {

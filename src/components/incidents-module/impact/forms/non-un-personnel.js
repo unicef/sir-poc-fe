@@ -139,12 +139,27 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                                 hide-search
                                 option-label="name"
                                 option-value="id"
-                                options="[[staticData.genders]]"
+                                options="[[staticData.gender]]"
                                 selected="{{data.person.gender}}"
                                 required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
                                 error-message="Gender is required">
               </etools-dropdown>
             </div>
+
+            <div class="col col-3">
+            <etools-dropdown id="sex"
+                              label="Sex"
+                              readonly="[[readonly]]"
+                              hide-search
+                              option-label="name"
+                              option-value="id"
+                              options="[[staticData.sex]]"
+                              selected="{{data.person.sex}}"
+                              required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
+                              error-message="Sex is required">
+            </etools-dropdown>
+          </div>
+
             <div class="col col-3">
               <etools-dropdown id="nationality"
                                 label="Nationality"
@@ -281,7 +296,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
         value: [
           '#firstName',
           '#lastName',
-          '#gender',
+          '#sex',
           '#impact',
           '#description'
         ]

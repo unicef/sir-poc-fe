@@ -231,10 +231,23 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                                 hide-search
                                 option-label="name"
                                 option-value="id"
-                                options="[[staticData.genders]]"
+                                options="[[staticData.gender]]"
                                 selected="{{data.person.gender}}">
               </etools-dropdown>
             </div>
+            <div class="col col-3">
+            <etools-dropdown id="sex"
+                              label="Sex"
+                              required$="[[!isSpecialConditionImpact(selectedImpactType)]]"
+                              auto-validate
+                              readonly="[[readonly]]"
+                              hide-search
+                              option-label="name"
+                              option-value="id"
+                              options="[[staticData.sex]]"
+                              selected="{{data.person.sex}}">
+            </etools-dropdown>
+          </div>
             <div class="col col-3">
               <paper-input id="email"
                            type="email"
@@ -377,7 +390,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
           '#firstName',
           '#lastName',
           '#nationality',
-          '#gender',
+          '#sex',
           '#category',
           '#dutyStationRegion',
           '#dutyStationCountry',
@@ -464,7 +477,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
     this.set('data.person.last_name', event.detail.selectedItem.last_name);
     this.set('data.person.email', event.detail.selectedItem.email);
     this.set('data.person.nationality', event.detail.selectedItem.nationality);
-    this.set('data.person.gender', event.detail.selectedItem.gender);
+    this.set('data.person.sex', event.detail.selectedItem.sex);
     this.set('data.person.date_of_birth', event.detail.selectedItem.date_of_birth);
     this.set('data.person.index_number', event.detail.selectedItem.index_number);
     this.set('data.person.job_title', event.detail.selectedItem.job_title);

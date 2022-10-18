@@ -76,6 +76,7 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'person_contact': 'Contact',
           'person_agency': 'Agency',
           'person_gender': 'Gender',
+          'person_sex': 'Sex',
           'person_region': 'Region',
           'person_email': 'Email',
           'person_city': 'City'

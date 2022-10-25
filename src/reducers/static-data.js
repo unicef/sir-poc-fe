@@ -21,7 +21,8 @@ const defaultStaticData = {
     impacts: [],
     regions: [],
     factors: [],
-    targets: [],
+  targets: [],
+    injuries: [],
     weapons: [],
     cities: [],
     users: [],
@@ -138,6 +139,11 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         targets: action.targets
       };
+      case ACTIONS.RECEIVE_INJURIES:
+        return {
+          ...state,
+          injuries: action.injuries
+        };
     case ACTIONS.RECEIVE_WEAPONS:
       return {
         ...state,

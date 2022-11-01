@@ -28,6 +28,7 @@ export const loadAllStaticData = () => (dispatch) => {
   dispatch(fetchAndStoreRegions());
   dispatch(fetchAndStoreFactors());
   dispatch(fetchAndStoreTargets());
+  dispatch(fetchAndStoreInjuries());
   dispatch(fetchAndStoreWeapons());
   dispatch(fetchAndStoreCities());
   dispatch(fetchAndStoreTeams());
@@ -176,6 +177,19 @@ const receiveTargets = (targets) => {
   return {
     type: ACTIONS.RECEIVE_TARGETS,
     targets
+  };
+};
+
+export const fetchAndStoreInjuries = () => (dispatch, getState) => {
+  makeRequest(Endpoints.injuries).then((result) => {
+    dispatch(receiveInjuries(result || []));
+  });
+};
+
+const receiveInjuries = (injuries) => {
+  return {
+    type: ACTIONS.RECEIVE_INJURIES,
+    injuries
   };
 };
 

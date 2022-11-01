@@ -260,6 +260,10 @@ export const Endpoints = {
     url: baseUrl + '/api/target/',
     method: 'GET'
   },
+  injuries: {
+    url: baseUrl + '/api/injuries_sustained/',
+    method: 'GET'
+  },
   incidentCategories: {
     url: baseUrl + '/api/incident_categories/',
     method: 'GET'

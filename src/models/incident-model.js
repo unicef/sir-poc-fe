@@ -3,7 +3,6 @@ const IncidentModel = {
   status: 'new',
   incident_date: null,
   incident_time: null,
-  injuries: '',
   on_duty: false,
   street: '',
   note: '',

@@ -336,17 +336,17 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             <div class="row-h flex-c">
               <div class="col col-3 p-relative">
                 <etools-info-tooltip class="info"  form-field-align
-                                    hide-tooltip$="[[!selectedCriticality.description]]">
+                                    hide-tooltip$="[[!selectedImpactSeverity.description]]">
                   <etools-dropdown slot="field" readonly="[[readonly]]"
                                     label="Impact"
                                     option-label="name"
                                     option-value="id"
                                     options="[[staticData.criticalities]]"
-                                    selected="{{incident.criticality}}"
+                                    selected="{{incident.impact_severity}}"
                                     enable-none-option
-                                    selected-item="{{selectedCriticality}}">
+                                    selected-item="{{selectedImpactSeverity}}">
                   </etools-dropdown>
-                  <span slot="message">[[selectedCriticality.description]]</span>
+                  <span slot="message">[[selectedImpactSeverity.description]]</span>
                 </etools-info-tooltip>
               </div>
               <div class="col col-3" hidden$="[[isSafetyIncident(selectedIncidentCategory)]]">
@@ -713,7 +713,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
         type: Object,
         value: {}
       },
-      selectedCriticality: {
+      selectedImpactSeverity: {
         type: Object,
         value: {}
       },
@@ -754,6 +754,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   incidentChanged() {
+    console.log(this.incident);
     if (this.incident && this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
@@ -782,7 +783,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     if (!this.incidentId) {
       return;
     }
-
     this.set('incident', JSON.parse(JSON.stringify(selectIncident(this.state))));
     this.redirectIfNotEditable(this.incident, this.visible);
   }

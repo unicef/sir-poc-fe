@@ -343,7 +343,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                                     option-value="id"
                                     options="[[staticData.criticalities]]"
                                     selected="{{incident.impact_severity}}"
-                                    enable-none-option
                                     required auto-validate
                                     selected-item="{{selectedImpactSeverity}}">
                   </etools-dropdown>

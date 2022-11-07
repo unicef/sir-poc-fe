@@ -115,8 +115,8 @@ export class DiffViewBase extends DateMixin(HistoryHelpers(connect(store)(Polyme
         return getNameFromId(value, 'threatCategories');
       case 'vehicle_type':
         return getNameFromId(value, 'vehicleTypes');
-      case 'criticality':
-        return getNameFromId(value, 'criticalities');
+      case 'impact_severity':
+        return getNameFromId(value, 'impact_severity');
       case 'crash_type':
         return getNameFromId(value, 'crashTypes');
       case 'crash_sub_type':

@@ -66,7 +66,10 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
                                 option-label="name"
                                 option-value="id"
                                 options="[[staticData.agencies]]"
-                                selected="{{data.agency}}">
+                                selected="{{data.agency}}"
+                                required auto-validate
+                                error-message="Owner is required"
+                                >
               </etools-dropdown>
             </div>
             <div class="col col-2">
@@ -86,7 +89,7 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
                            type="number"
                            placeholder="&#8212;"
                            value="{{data.value}}"
-                           required
+                           required auto-validate
                            error-message="Value is required">
                 <span  slot="prefix">$</span>
               </paper-input>
@@ -176,7 +179,8 @@ export class PropertyForm extends connect(store)(ImpactFormBase) {
         value: [
           '#category',
           '#description',
-          '#value'
+          '#value',
+          '#agency'
         ]
       }
     };

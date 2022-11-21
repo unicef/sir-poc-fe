@@ -139,6 +139,8 @@ export class DiffViewBase extends DateMixin(HistoryHelpers(connect(store)(Polyme
           return getNameFromId(value, 'injuries');
       case 'incident_date':
         return this.prettyDate(value);
+        case 'person_gender':
+          return getNameFromId(value, 'gender');
       default:
         return value;
     }

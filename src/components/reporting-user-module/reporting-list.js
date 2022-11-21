@@ -108,7 +108,6 @@ class ReportingList extends connect(store)(ListBaseClass) {
           </etools-data-table-column>
         </etools-data-table-header>
 
-        
         <template id="rows" is="dom-repeat" items="[[reportingUsers]]">
           <etools-data-table-row no-collapse id="listHeader"  
                                   no-title 
@@ -143,11 +142,15 @@ class ReportingList extends connect(store)(ListBaseClass) {
       }
     };
   }
-   selectedCountry() {
-    if (this.selectedId !== null) {
-    store.dispatch(fetchReportingUser(this.selectedId));
+  selectedCountry() {
+    if (this.selectedRegionId) {
+      const data = getCountriesForRegion(this.selectedRegionId, this.staticData.countries);
+    const selectedCountryName = data.find(x => x.id === this.selectedId).name;
+    if (selectedCountryName !== null) {
+    store.dispatch(fetchReportingUser(selectedCountryName));
     }
     return false;
+    }
    }
 
   _stateChanged(state) {

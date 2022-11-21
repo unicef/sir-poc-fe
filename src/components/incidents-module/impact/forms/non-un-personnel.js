@@ -141,8 +141,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                                 option-value="id"
                                 options="[[staticData.gender]]"
                                 selected="{{data.person.gender}}"
-                                required$="[[!isSpecialConditionImpact(selectedImpactType)]]" auto-validate
-                                error-message="Gender is required">
+                                >
               </etools-dropdown>
             </div>
 
@@ -325,6 +324,7 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
       return;
     }
     this.data.person.un_official = false;
+    this.data.person.gender = this.data.person.gender || null;
 
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));

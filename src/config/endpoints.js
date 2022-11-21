@@ -329,7 +329,7 @@ export const Endpoints = {
     method: 'PUT'
   },
   reportingList: {
-    url: baseUrl + '/api/users/by_country/<%=id%>/',
+    url: baseUrl + '/api/users/in_country_by_teams/<%=id%>/?user__is_active=True',
     method: 'GET'
   }
 };

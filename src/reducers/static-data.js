@@ -35,8 +35,8 @@ const defaultStaticData = {
     gender: [
       { id: 'man', name: 'Man' },
       { id: 'woman', name: 'Woman' },
-      { id: 'gender_diverse', name: 'Gender diverse' },
-      { id: 'prefer_not_to_say', name: 'Prefer not to stat'}
+      { id: 'gender_diverse', name: 'Gender diverse/non-binary/third gender/gender-fluid' },
+      { id: 'prefer_not_to_say', name: 'Prefer not to state'}
     ]
 
 };

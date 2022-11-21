@@ -225,8 +225,6 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
             <div class="col col-3">
               <etools-dropdown id="gender"
                                 label="Gender"
-                                required$="[[!isSpecialConditionImpact(selectedImpactType)]]"
-                                auto-validate
                                 readonly="[[readonly]]"
                                 hide-search
                                 option-label="name"
@@ -425,6 +423,7 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
       return;
     }
     this.data.person.un_official = true;
+    this.data.person.gender = this.data.person.gender || null;
 
     if (this.isNew) {
       result = await store.dispatch(addPersonnel(this.data));

@@ -158,19 +158,18 @@ export class NonUnPersonnelForm extends connect(store)(ImpactFormBase) {
                               error-message="Sex is required">
             </etools-dropdown>
           </div>
-
-            <div class="col col-3">
-              <etools-dropdown id="nationality"
-                                label="Nationality"
-                                readonly="[[readonly]]"
-                                option-label="name"
-                                option-value="id"
-                                options="[[staticData.nationalities]]"
-                                selected="{{data.person.nationality}}">
-              </etools-dropdown>
-            </div>
           </div>
           <div class="row-h flex-c">
+          <div class="col col-3">
+          <etools-dropdown id="nationality"
+                            label="Nationality"
+                            readonly="[[readonly]]"
+                            option-label="name"
+                            option-value="id"
+                            options="[[staticData.nationalities]]"
+                            selected="{{data.person.nationality}}">
+          </etools-dropdown>
+        </div>
             <div class="col col-3">
               <datepicker-lite id="birthDate"
                                value="{{data.person.date_of_birth}}"

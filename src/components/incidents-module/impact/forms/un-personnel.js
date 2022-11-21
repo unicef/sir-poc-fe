@@ -255,17 +255,17 @@ export class UnPersonnelForm extends connect(store)(DateMixin(ImpactFormBase)) {
                            value="{{data.person.email}}">
               </paper-input>
             </div>
-            <div class="col col-3">
-              <paper-input id="index"
-                           placeholder="&#8212;"
-                           readonly$="[[readonly]]"
-                           label="Index Number"
-                           value="{{data.person.index_number}}">
-              </paper-input>
-            </div>
           </div>
 
           <div class="row-h flex-c">
+          <div class="col col-3">
+          <paper-input id="index"
+                       placeholder="&#8212;"
+                       readonly$="[[readonly]]"
+                       label="Index Number"
+                       value="{{data.person.index_number}}">
+          </paper-input>
+        </div>
             <div class="col col-3">
               <etools-dropdown id="dutyStationRegion"
                                 label="Duty Station Region"

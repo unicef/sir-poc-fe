@@ -222,7 +222,7 @@ export const Endpoints = {
     method: 'GET'
   },
   usersSearch: {
-    url: baseUrl + '/api/users?q=<%=search%>',
+    url: baseUrl + '/api/users/?q=<%=search%>',
     method: 'GET'
   },
   getUsers: {

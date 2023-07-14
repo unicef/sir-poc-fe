@@ -126,7 +126,7 @@ export class ProgrammeForm extends connect(store)(DateMixin(ImpactFormBase)) {
                                   readonly$="[[readonly]]"
                                   option-label="name"
                                   option-value="id"
-                                  options="[[staticData.impacts.property]]"
+                                  options="[[staticData.impacts.programme]]"
                                   selected="{{data.impact}}"
                                   selected-item="{{selectedImpactType}}"
                                   required auto-validate

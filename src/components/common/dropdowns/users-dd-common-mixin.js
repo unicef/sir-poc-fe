@@ -32,7 +32,7 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
     ];
   }
 
-  searchChanged(search) {
+  _searchChanged(search) {
     if (search && this.hasThreeChars(search) && !this.options.length) {
       this._fetchOptionsList();
       return;

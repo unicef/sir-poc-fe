@@ -59,7 +59,7 @@ export class ProgrammesList extends connect(store)(PermissionsBase) {
               </span>
               <span class="col-data col-3" data-col-header-label="Impact">
                 <span class="truncate">
-                  [[getNameFromId(item.impact, 'impacts.property')]]
+                  [[getNameFromId(item.impact, 'impacts.programme')]]
                 </span>
               </span>
               <span class="col-data col-1" data-col-header-label="Actions">

@@ -2,7 +2,7 @@ import { CommonFunctionality } from '@unicef-polymer/etools-dropdown/mixins/comm
 import { Endpoints } from '../../../config/endpoints.js';
 import { makeRequest, prepareEndpoint } from '../request-helper.js';
 
-export const UsersDDCommonFunctionality = (superClass) => class extends CommonFunctionality(superClass) {
+export const UsersDDCommonFunctionality = superClass => class extends CommonFunctionality(superClass) {
   static get properties() {
     return {
       ...super.properties,
@@ -22,13 +22,13 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
         type: Array,
         value: []
       }
-    }
+    };
   }
 
   static get observers() {
     return [
       'resetIronDropdownSize(shownOptions.length)',
-      'searchChanged(search)'
+      '_searchChanged(search)'
     ];
   }
 
@@ -50,7 +50,7 @@ export const UsersDDCommonFunctionality = (superClass) => class extends CommonFu
       this.options = result.map((elem) => {
         elem.name = elem.display_name || (elem.first_name + ' ' + elem.last_name);
         return elem;
-      })
+      });
     });
   }
 

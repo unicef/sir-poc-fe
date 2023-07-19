@@ -1003,7 +1003,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       this.push('incident.attachments', fileinfo);
     });
 
-    this.store.dispatch(fetchIncident(this.incidentId));
+    // this.store.dispatch(fetchIncident(this.incidentId));
   }
 
   getLocation() {
@@ -1037,7 +1037,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       handleBlobDataReceivedAndStartDownload(blob, this.getFilenameFromURL(url));
     }).catch((error) => {
       // eslint-disable-next-line
-      console.error(error);
       store.dispatch(showSnackbar('An error occurred while downloading'));
     });
   }

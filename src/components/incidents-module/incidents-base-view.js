@@ -1008,7 +1008,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       this.push('incident.attachments', fileinfo);
     });
 
-    this.store.dispatch(fetchIncident(this.incidentId));
+    // this.store.dispatch(fetchIncident(this.incidentId));
   }
 
   getLocation() {

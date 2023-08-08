@@ -1007,6 +1007,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     uploadedFiles.forEach((fileinfo) => {
       this.push('incident.attachments', fileinfo);
     });
+
     this.store.dispatch(fetchIncident(this.incidentId));
   }
 

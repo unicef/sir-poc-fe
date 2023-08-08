@@ -508,11 +508,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <legend><h3>Related documents</h3></legend>
 
           <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
-            <etools-upload-multi  endpoint-info="[[getAttachmentInfo(incidentId)]]"
-                                  on-upload-finished="handleUploadedFiles"
-                                  jwt-local-storage-key="[[jwtLocalStorageKey]]"
-                                  accept="image/*,.doc,.docx,.pdf">
-            </etools-upload-multi>
+          <etools-upload-multi
+          endpoint-info="[[getAttachmentInfo(incidentId)]]"
+          on-upload-finished="handleUploadedFiles"
+          jwt-local-storage-key="[[jwtLocalStorageKey]]"
+          accept="image/png, image/jpg, .pdf, .csv, .xlsx"
+        >
+        </etools-upload-multi>
             <br>
             Max individual file upload size is 10MB.
           </div>
@@ -990,6 +992,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       return;
     }
     if (ev.detail.error) {
+      if (ev.detail.error[0] && ev.detail.error[0].includes('400')) {
+        store.dispatch(showSnackbar('File cannot be larger than 10MB.'));
+      }
       this.store.dispatch(serverError(ev.detail.error));
     }
     if (!ev.detail.success || !ev.detail.success.length) {

@@ -401,7 +401,7 @@ export const editAttachmentsNotes = incident => (dispatch, getState) => {
   });
 
   for (let i = 0; i < currAtt.length; i++) {
-    if (currAtt[i].note !== origAtt[currAtt[i].id].note) {
+    if (currAtt[i].note !== (origAtt[currAtt[i].id] && origAtt[currAtt[i].id].note)) {
       attChanges.push({
         id: currAtt[i].id,
         note: currAtt[i].note

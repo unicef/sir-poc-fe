@@ -756,7 +756,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   incidentChanged() {
-    console.log(this.incident);
     if (this.incident && this.incident.press_coverage) {
       this.set('pressCoverageSelected', true);
     }
@@ -1008,7 +1007,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       this.push('incident.attachments', fileinfo);
     });
 
-    // this.store.dispatch(fetchIncident(this.incidentId));
+    if (this.incidentId) this.store.dispatch(fetchIncident(this.incidentId));
   }
 
   getLocation() {

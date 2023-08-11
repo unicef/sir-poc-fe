@@ -22,6 +22,7 @@ import { store } from '../../redux/store.js';
 import {
   fetchReportingUser
 } from '../../actions/reporting.js';
+import { getCountriesForRegion } from '../common/utils.js';
 
 import '../styles/shared-styles.js';
 import '../styles/form-fields-styles.js';
@@ -61,11 +62,22 @@ class ReportingList extends connect(store)(ListBaseClass) {
           <div class="filters">
           <etools-dropdown class="filter select"
             enable-none-option
+            label="Please Select Region"
+            option-label="name"
+            option-value="id"
+            options="[[staticData.regions]]"
+            selected="{{selectedRegionId}}"
+          >
+          </etools-dropdown>
+
+          <etools-dropdown class="filter select"
+            enable-none-option
             label="Please Select Country"
             option-label="name"
             option-value="id"
-            options="[[staticData.countries]]"
+            options="[[getCountriesForRegion(selectedRegionId, staticData.countries)]]"
             selected="{{selectedId}}"
+            disabled$="[[!selectedRegionId]]"
           >
         </etools-dropdown>
           </div>
@@ -96,7 +108,6 @@ class ReportingList extends connect(store)(ListBaseClass) {
           </etools-data-table-column>
         </etools-data-table-header>
 
-        
         <template id="rows" is="dom-repeat" items="[[reportingUsers]]">
           <etools-data-table-row no-collapse id="listHeader"  
                                   no-title 
@@ -120,15 +131,27 @@ class ReportingList extends connect(store)(ListBaseClass) {
         type: Number,
         value: null,
         observer: 'selectedCountry'
+      },
+      selectedRegionId: {
+        type: Number,
+        value: null
+      },
+      getCountriesForRegion: {
+        type: Function,
+        value: () => getCountriesForRegion
       }
     };
   }
-   selectedCountry() {
-    if (this.selectedId !== null) {
-    store.dispatch(fetchReportingUser(this.selectedId));
+  selectedCountry() {
+    if (this.selectedRegionId) {
+      const data = getCountriesForRegion(this.selectedRegionId, this.staticData.countries);
+    const selectedCountryName = data.find(x => x.id === this.selectedId).name;
+    if (selectedCountryName !== null) {
+    store.dispatch(fetchReportingUser(selectedCountryName));
     }
     return false;
-  }
+    }
+   }
 
   _stateChanged(state) {
     this.set('reportingUsers', state.reporting.list);

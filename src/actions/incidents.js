@@ -401,7 +401,7 @@ export const editAttachmentsNotes = incident => (dispatch, getState) => {
   });
 
   for (let i = 0; i < currAtt.length; i++) {
-    if (currAtt[i].note !== origAtt[currAtt[i].id].note) {
+    if (currAtt[i].note !== (origAtt[currAtt[i].id] && origAtt[currAtt[i].id].note)) {
       attChanges.push({
         id: currAtt[i].id,
         note: currAtt[i].note
@@ -449,11 +449,11 @@ export const deleteIncidentLocally = incidentId => (dispatch) => {
   return true;
 };
 
-export const exportSingleIncident = (id, docType) => (dispatch) => {
+export const exportSingleIncident = (id, docType, incidentCaseNumber) => (dispatch) => {
   let endpoint = prepareEndpoint(Endpoints.exportSingleIncident, {id, docType});
 
   makeRequest(endpoint).then((blob) => {
-    handleBlobDataReceivedAndStartDownload(blob, 'incident.' + docType);
+    handleBlobDataReceivedAndStartDownload(blob, `${incidentCaseNumber}.` + docType);
   }).catch((error) => {
     // eslint-disable-next-line
     console.error(error);

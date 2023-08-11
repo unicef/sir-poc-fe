@@ -115,8 +115,8 @@ export class DiffViewBase extends DateMixin(HistoryHelpers(connect(store)(Polyme
         return getNameFromId(value, 'threatCategories');
       case 'vehicle_type':
         return getNameFromId(value, 'vehicleTypes');
-      case 'criticality':
-        return getNameFromId(value, 'criticalities');
+      case 'impact_severity':
+        return getNameFromId(value, 'impact_severity');
       case 'crash_type':
         return getNameFromId(value, 'crashTypes');
       case 'crash_sub_type':
@@ -135,8 +135,12 @@ export class DiffViewBase extends DateMixin(HistoryHelpers(connect(store)(Polyme
         return getNameFromId(value, 'countries');
       case 'target':
         return getNameFromId(value, 'targets');
+        case 'injuries':
+          return getNameFromId(value, 'injuries');
       case 'incident_date':
         return this.prettyDate(value);
+        case 'person_gender':
+          return getNameFromId(value, 'gender');
       default:
         return value;
     }

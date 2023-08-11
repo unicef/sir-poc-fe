@@ -21,15 +21,24 @@ const defaultStaticData = {
     impacts: [],
     regions: [],
     factors: [],
-    targets: [],
+  targets: [],
+    injuries: [],
     weapons: [],
     cities: [],
     users: [],
     teams: [],
-    genders: [
-      {id: 'male', name: 'Male'},
-      {id: 'female', name: 'Female'}
+    sex: [
+      { id: 'male', name: 'Male'},
+      { id: 'female', name: 'Female' },
+      { id: 'prefer_not_to_state', name: 'Prefer not to state'}
+  ],
+    gender: [
+      { id: 'man', name: 'Man' },
+      { id: 'woman', name: 'Woman' },
+      { id: 'gender_diverse', name: 'Gender diverse/non-binary/third gender/gender-fluid' },
+      { id: 'prefer_not_to_say', name: 'Prefer not to state'}
     ]
+
 };
 const staticData = (state = defaultStaticData, action) => {
   switch (action.type) {
@@ -130,6 +139,11 @@ const staticData = (state = defaultStaticData, action) => {
         ...state,
         targets: action.targets
       };
+      case ACTIONS.RECEIVE_INJURIES:
+        return {
+          ...state,
+          injuries: action.injuries
+        };
     case ACTIONS.RECEIVE_WEAPONS:
       return {
         ...state,

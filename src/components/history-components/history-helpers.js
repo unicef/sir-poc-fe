@@ -36,7 +36,7 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'start_date': 'Start Date',
           'crash_type': 'Crash Type',
           'from_region': 'From Region',
-          'criticality': 'Criticality',
+          'impact_severity': 'Impact Severity',
           'description': 'Description',
           'from_country': 'From Country',
           'premise_type': 'Premise Type',
@@ -76,6 +76,7 @@ const HistoryHelpers = baseClass => class extends baseClass {
           'person_contact': 'Contact',
           'person_agency': 'Agency',
           'person_gender': 'Gender',
+          'person_sex': 'Sex',
           'person_region': 'Region',
           'person_email': 'Email',
           'person_city': 'City'

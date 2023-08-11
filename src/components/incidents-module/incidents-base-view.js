@@ -170,7 +170,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             </div>
 
             <div class="row-h flex-c p-relative">
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info" form-field-align
                                     hide-tooltip$="[[!selectedEvent.note]]">
                   <etools-dropdown slot="field" readonly="[[readonly]]"
@@ -185,7 +185,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                   <span slot="message">[[selectedEvent.note]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info"  form-field-align
                                     hide-tooltip$="[[!selectedThreatCategory.description]]">
                   <etools-dropdown id="threatCategory"
@@ -203,7 +203,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                   <span slot="message">[[selectedThreatCategory.description]]</span>
                 </etools-info-tooltip>
               </div>
-              <div class="col col-4">
+              <div class="col col-3">
                 <etools-info-tooltip class="info"  form-field-align
                                     hide-tooltip$="[[!selectedTarget.description]]">
                   <etools-dropdown id="target"
@@ -221,6 +221,22 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
                   </etools-dropdown>
                   <span slot="message">[[selectedTarget.description]]</span>
                 </etools-info-tooltip>
+              </div>
+
+              <div class="col col-3">
+              <etools-dropdown id="injuries"
+                                    slot="field"
+                                    readonly="[[readonly]]"
+                                    label="Injuries"
+                                    option-label="name"
+                                    option-value="id"
+                                    options="[[staticData.injuries]]"
+                                    selected="{{incident.injuries}}"
+                                    selected-item="{{selectedInjuries}}"
+                                    required$="[[!isSpecialConditionSubcategory(selectedIncidentSubcategory)]]"
+                                    auto-validate
+                                    error-message="Injuries details are required">
+                  </etools-dropdown>
               </div>
             </div>
 
@@ -300,17 +316,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
 
             <div class="row-h flex-c">
               <div class="col col-12">
-                <paper-textarea id="injuries" readonly$="[[readonly]]" label="Injuries"
-                                placeholder="&#8212;"
-                                value="{{incident.injuries}}"
-                                required$="[[!isSpecialConditionSubcategory(selectedIncidentSubcategory)]]"
-                                auto-validate
-                                error-message="Injuries details are required"></paper-textarea>
-              </div>
-            </div>
-
-            <div class="row-h flex-c">
-              <div class="col col-12">
                 <paper-textarea id="description" readonly$="[[readonly]]" label="Incident Description"
                                 placeholder="&#8212;"
                                 value="{{incident.description}}"
@@ -331,17 +336,17 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
             <div class="row-h flex-c">
               <div class="col col-3 p-relative">
                 <etools-info-tooltip class="info"  form-field-align
-                                    hide-tooltip$="[[!selectedCriticality.description]]">
+                                    hide-tooltip$="[[!selectedImpactSeverity.description]]">
                   <etools-dropdown slot="field" readonly="[[readonly]]"
-                                    label="Criticality"
+                                    label="Impact"
                                     option-label="name"
                                     option-value="id"
                                     options="[[staticData.criticalities]]"
-                                    selected="{{incident.criticality}}"
-                                    enable-none-option
-                                    selected-item="{{selectedCriticality}}">
+                                    selected="{{incident.impact_severity}}"
+                                    required auto-validate
+                                    selected-item="{{selectedImpactSeverity}}">
                   </etools-dropdown>
-                  <span slot="message">[[selectedCriticality.description]]</span>
+                  <span slot="message">[[selectedImpactSeverity.description]]</span>
                 </etools-info-tooltip>
               </div>
               <div class="col col-3" hidden$="[[isSafetyIncident(selectedIncidentCategory)]]">
@@ -503,11 +508,13 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
           <legend><h3>Related documents</h3></legend>
 
           <div class="margin-b" hidden$="[[hideUploadBtn(readonly, state.app.offline, incident.unsynced)]]">
-            <etools-upload-multi  endpoint-info="[[getAttachmentInfo(incidentId)]]"
-                                  on-upload-finished="handleUploadedFiles"
-                                  jwt-local-storage-key="[[jwtLocalStorageKey]]"
-                                  accept="image/*,.doc,.docx,.pdf">
-            </etools-upload-multi>
+          <etools-upload-multi
+          endpoint-info="[[getAttachmentInfo(incidentId)]]"
+          on-upload-finished="handleUploadedFiles"
+          jwt-local-storage-key="[[jwtLocalStorageKey]]"
+          accept="image/png, image/jpg, .pdf, .csv, .xlsx"
+        >
+        </etools-upload-multi>
             <br>
             Max individual file upload size is 10MB.
           </div>
@@ -704,7 +711,11 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
         type: Object,
         value: {}
       },
-      selectedCriticality: {
+      selectedInjuries: {
+        type: Object,
+        value: {}
+      },
+      selectedImpactSeverity: {
         type: Object,
         value: {}
       },
@@ -773,7 +784,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
     if (!this.incidentId) {
       return;
     }
-
     this.set('incident', JSON.parse(JSON.stringify(selectIncident(this.state))));
     this.redirectIfNotEditable(this.incident, this.visible);
   }
@@ -905,7 +915,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
   }
 
   canEdit(offline, status, unsynced) {
-    return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
+    return (['created', 'rejected', 'submitted'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
            (unsynced && this.hasPermission('add_incident'));
   }
 
@@ -981,6 +991,9 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       return;
     }
     if (ev.detail.error) {
+      if ((ev.detail.error[0] && ev.detail.error[0].includes('400')) || (ev.detail.error[0] && ev.detail.error[0].includes('413'))) {
+        store.dispatch(showSnackbar('It looks like the attachment you are trying to add is too big'));
+      }
       this.store.dispatch(serverError(ev.detail.error));
     }
     if (!ev.detail.success || !ev.detail.success.length) {
@@ -991,10 +1004,10 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       this.incident.attachments = [];
     }
     uploadedFiles.forEach((fileinfo) => {
-      this.push('incident.attachments', JSON.parse(fileinfo));
+      this.push('incident.attachments', fileinfo);
     });
 
-    this.store.dispatch(fetchIncident(this.incidentId));
+    if (this.incidentId) this.store.dispatch(fetchIncident(this.incidentId));
   }
 
   getLocation() {
@@ -1028,7 +1041,6 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       handleBlobDataReceivedAndStartDownload(blob, this.getFilenameFromURL(url));
     }).catch((error) => {
       // eslint-disable-next-line
-      console.error(error);
       store.dispatch(showSnackbar('An error occurred while downloading'));
     });
   }

@@ -356,8 +356,8 @@ class IncidentsList extends connect(store)(ListBaseClass) {
                   <paper-menu-button class="export" horizontal-align="right" vertical-offset="8">
                     <iron-icon icon="file-download" class="action-btn" slot="dropdown-trigger"></iron-icon>
                     <paper-listbox slot="dropdown-content" on-iron-select="exportItem">
-                      <paper-item doc-type="pdf" incident-id$="[[item.id]]">PDF</paper-item>
-                      <paper-item doc-type="docx" incident-id$="[[item.id]]">DOCX</paper-item>
+                      <paper-item doc-type="pdf" incident-case$="[[item.case_number]]" incident-id$="[[item.id]]">PDF</paper-item>
+                      <paper-item doc-type="docx" incident-case$="[[item.case_number]]" incident-id$="[[item.id]]">DOCX</paper-item>
                     </paper-listbox>
                   </paper-menu-button>
                 </div>
@@ -648,7 +648,7 @@ class IncidentsList extends connect(store)(ListBaseClass) {
   }
 
   canEdit(status, unsynced, offline) {
-    return (['created', 'rejected'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
+    return (['created', 'rejected', 'submitted'].indexOf(status) > -1 && this.hasPermission('change_incident') && !offline) ||
            (unsynced && this.hasPermission('add_incident'));
   }
 
@@ -759,8 +759,9 @@ class IncidentsList extends connect(store)(ListBaseClass) {
 
     let docType = e.detail.item.getAttribute('doc-type');
     let incidentId = e.detail.item.getAttribute('incident-id');
+    let incidentCaseNumber= e.detail.item.getAttribute('incident-case');
 
-    store.dispatch(exportSingleIncident(incidentId, docType));
+    store.dispatch(exportSingleIncident(incidentId, docType, incidentCaseNumber));
   }
 
   exportList(e) {

@@ -991,7 +991,7 @@ export class IncidentsBaseView extends connect(store)(PermissionsBase) {
       return;
     }
     if (ev.detail.error) {
-      if (ev.detail.error[0] && ev.detail.error[0].includes('400') || ev.detail.error[0] && ev.detail.error[0].includes('413')) {
+      if ((ev.detail.error[0] && ev.detail.error[0].includes('400')) || (ev.detail.error[0] && ev.detail.error[0].includes('413'))) {
         store.dispatch(showSnackbar('It looks like the attachment you are trying to add is too big'));
       }
       this.store.dispatch(serverError(ev.detail.error));
